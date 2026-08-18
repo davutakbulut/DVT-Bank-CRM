@@ -30,6 +30,7 @@ class SuperPanelProvider extends PanelProvider
             ->path('super')
             ->login()
             ->brandName('DVT Bank CRM — Süper Admin')
+            ->font('Plus Jakarta Sans')
             ->colors([
                 'primary' => Color::Red,
             ])
@@ -53,6 +54,10 @@ class SuperPanelProvider extends PanelProvider
                     ->url('/admin')
                     ->icon('heroicon-o-shield-check'),
             ])
+            ->renderHook(
+                PanelsRenderHook::HEAD_END,
+                fn () => view('filament.custom-head'),
+            )
             ->renderHook(
                 PanelsRenderHook::TOPBAR_START,
                 fn () => view('filament.custom-topbar-start'),

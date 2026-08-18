@@ -31,6 +31,7 @@ class AdminPanelProvider extends PanelProvider
             ->path('admin')
             ->login()
             ->brandName('DVT Bank CRM — Yönetim Paneli')
+            ->font('Plus Jakarta Sans')
             ->colors([
                 'primary' => Color::Indigo,
             ])
@@ -54,6 +55,10 @@ class AdminPanelProvider extends PanelProvider
                     ->url('/super')
                     ->icon('heroicon-o-cog-6-tooth'),
             ])
+            ->renderHook(
+                PanelsRenderHook::HEAD_END,
+                fn () => view('filament.custom-head'),
+            )
             ->renderHook(
                 PanelsRenderHook::TOPBAR_START,
                 fn () => view('filament.custom-topbar-start'),
