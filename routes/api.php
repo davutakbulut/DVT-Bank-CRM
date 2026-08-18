@@ -22,10 +22,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::prefix('v1')->group(function () {
+Route::prefix('v1')->name('api.')->group(function () {
     // Açık / Auth Rotaları
-    Route::post('/auth/register', [AuthController::class, 'register']);
-    Route::post('/auth/login', [AuthController::class, 'login']);
+    Route::post('/auth/register', [AuthController::class, 'register'])->name('auth.register');
+    Route::post('/auth/login', [AuthController::class, 'login'])->name('auth.login');
 
     // Korumalı API Rotaları (Sanctum Token)
     Route::middleware('auth:sanctum')->group(function () {
