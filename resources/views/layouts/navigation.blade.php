@@ -68,14 +68,8 @@
                 </div>
             </div>
 
-            <!-- Right Side: Return to Home + User Profile & Role Panels Menu (Desktop) -->
-            <div class="hidden md:flex items-center gap-2.5 shrink-0">
-                <!-- Direct Return to Public Homepage Button -->
-                <a href="{{ route('home') }}" class="inline-flex items-center gap-1.5 px-3 py-1.5 border border-gray-200 text-xs font-bold rounded-lg text-gray-700 bg-gray-50 hover:bg-gray-100 hover:text-indigo-600 transition-colors shadow-xs" title="Tanıtım ve Ana Sayfaya Dön">
-                    <span>🌐</span>
-                    <span>Ana Sayfa</span>
-                </a>
-
+            <!-- Right Side: User Profile & Role Panels Menu (Desktop) -->
+            <div class="hidden md:flex items-center shrink-0">
                 <x-dropdown align="right" width="56">
                     <x-slot name="trigger">
                         <button class="inline-flex items-center gap-2 px-3.5 py-2 border border-gray-200 text-xs sm:text-sm font-bold rounded-lg text-gray-800 bg-gray-50 hover:bg-gray-100 hover:border-gray-300 focus:outline-none transition-all duration-150 shadow-xs">
