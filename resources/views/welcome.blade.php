@@ -437,6 +437,11 @@
 
             @php
                 $databaseBanks = \App\Models\Bank::where('is_system', true)->get();
+                $firstBank = $databaseBanks->first();
+                $firstBankName = $firstBank ? $firstBank->name : 'Ziraat Bankası';
+                $firstBankColor = $firstBank->color ?? '#e11d48';
+                $firstKmhName = str_contains(strtolower($firstBankName), 'garanti') ? 'Avans Hesap' : (str_contains(strtolower($firstBankName), 'yapı') ? 'Esnek Hesap' : (str_contains(strtolower($firstBankName), 'akbank') ? 'Artı Para' : (str_contains(strtolower($firstBankName), 'iş') ? 'Ek Hesap' : 'KMH / Eksi Bakiye')));
+                $firstCardName = str_contains(strtolower($firstBankName), 'garanti') ? 'Bonus & Miles&Smiles' : (str_contains(strtolower($firstBankName), 'yapı') ? 'Worldcard' : (str_contains(strtolower($firstBankName), 'akbank') ? 'Axess & Wings' : (str_contains(strtolower($firstBankName), 'iş') ? 'Maximum Kart' : 'Kredi Kartı')));
             @endphp
 
             <!-- ========================================================================= -->
@@ -486,14 +491,14 @@
                 <div class="md:col-span-5 bg-slate-900 border border-indigo-500/40 rounded-xl p-6 sm:p-7 shadow-2xl space-y-5 relative overflow-hidden">
                     <div class="absolute top-0 right-0 w-48 h-48 bg-indigo-600/10 rounded-full blur-3xl pointer-events-none"></div>
 
-                    <!-- Header -->
+                    <!-- Header (Başlangıçta İlk Bankayla %100 Senkronize) -->
                     <div class="flex items-center justify-between border-b border-slate-800 pb-4">
                         <div class="flex items-center gap-3">
-                            <div class="terminal-bank-logo-el w-10 h-10 rounded-xl text-white font-black flex items-center justify-center text-sm shadow-md bg-emerald-600">
-                                GA
+                            <div class="terminal-bank-logo-el w-10 h-10 rounded-xl text-white font-black flex items-center justify-center text-sm shadow-md" style="background-color: {{ $firstBankColor }};">
+                                {{ mb_substr($firstBankName, 0, 2) }}
                             </div>
                             <div>
-                                <h3 class="terminal-bank-name-el font-bold text-base text-white">Garanti BBVA</h3>
+                                <h3 class="terminal-bank-name-el font-bold text-base text-white">{{ $firstBankName }}</h3>
                                 <p class="text-[11px] text-slate-400">DVT CRM Tam Entegrasyon</p>
                             </div>
                         </div>
@@ -508,7 +513,7 @@
                             <span class="text-base mt-0.5">💳</span>
                             <div class="flex-1">
                                 <div class="flex items-center justify-between">
-                                    <h5 class="terminal-card-title-el font-bold text-xs text-white">Bonus & Miles&Smiles</h5>
+                                    <h5 class="terminal-card-title-el font-bold text-xs text-white">{{ $firstCardName }}</h5>
                                     <span class="text-[9px] text-emerald-400 font-bold bg-emerald-950 px-1.5 py-0.5 rounded">Kredi Kartı</span>
                                 </div>
                                 <p class="text-[11px] text-slate-400 mt-1">Dönem borcu, son ödeme günü ve akdi faiz / gecikme faizi doğrudan hesaplanır.</p>
@@ -519,7 +524,7 @@
                             <span class="text-base mt-0.5">⚡</span>
                             <div class="flex-1">
                                 <div class="flex items-center justify-between">
-                                    <h5 class="terminal-kmh-title-el font-bold text-xs text-white">Avans Hesap (KMH)</h5>
+                                    <h5 class="terminal-kmh-title-el font-bold text-xs text-white">{{ $firstKmhName }}</h5>
                                     <span class="text-[9px] text-amber-400 font-bold bg-amber-950 px-1.5 py-0.5 rounded">Günlük Faiz</span>
                                 </div>
                                 <p class="text-[11px] text-slate-400 mt-1">Eksi bakiyedeki her gün için günlük faiz işleyişi takip edilir ve Çığ stratejisinde eritilir.</p>
@@ -556,7 +561,7 @@
                             <span>Doğrudan Veritabanı</span>
                         </span>
                         <a href="{{ route('register') }}" class="btn-desktop-bank-cta px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs rounded-lg shadow-md transition-all flex items-center gap-1.5">
-                            <span class="btn-desktop-bank-text">Garanti BBVA'yı Tanımla</span>
+                            <span class="btn-desktop-bank-text">{{ $firstBankName }}'yı Tanımla</span>
                             <span>→</span>
                         </a>
                     </div>
@@ -564,52 +569,52 @@
             </div>
 
             <!-- ========================================================================= -->
-            <!-- 📱 MOBİL GÖRÜNÜM: YATAY ÜST ÜSTE BİNEN DESTE & ALTINDA CANLI İNCELEME       -->
+            <!-- 📱 MOBİL GÖRÜNÜM: KOMPAKT YATAY DESTE & ALTINDA CANLI İNCELEME KARTI      -->
             <!-- ========================================================================= -->
-            <div class="block md:hidden mt-10 space-y-6 reveal-on-scroll text-left">
+            <div class="block md:hidden mt-8 space-y-4 reveal-on-scroll text-left">
                 
-                <!-- Üst Alan: Yatayda Birbirinin Üstüne Kısmen Binen Banka Kartları Deste Akışı -->
-                <div class="space-y-2">
-                    <div class="flex items-center justify-between px-2">
-                        <span class="text-xs font-bold text-slate-400 flex items-center gap-1.5">
-                            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                <!-- Üst Alan: Kompakt Yatayda Birbirinin Üstüne Kısmen Binen Banka Kartları Deste Akışı -->
+                <div class="space-y-1.5">
+                    <div class="flex items-center justify-between px-1">
+                        <span class="text-[11px] font-bold text-slate-400 flex items-center gap-1.5">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
                             <span>Banka Deste Akışı ({{ $databaseBanks->count() }} Banka)</span>
                         </span>
                         <span class="text-[10px] text-indigo-400 font-bold">Kaydırın & Seçin →</span>
                     </div>
 
-                    <!-- Yatay Üst Üste Binen Kartlar Carousel -->
-                    <div class="flex overflow-x-auto no-scrollbar py-3 px-2 space-x-[-20px] snap-x snap-mandatory">
+                    <!-- Yatay Üst Üste Binen Kompakt Kartlar Carousel -->
+                    <div class="flex overflow-x-auto no-scrollbar py-2 px-1 space-x-[-16px] snap-x snap-mandatory">
                         @foreach ($databaseBanks as $index => $dbBank)
                             @php
                                 $kmhName = str_contains(strtolower($dbBank->name), 'garanti') ? 'Avans Hesap' : (str_contains(strtolower($dbBank->name), 'yapı') ? 'Esnek Hesap' : (str_contains(strtolower($dbBank->name), 'akbank') ? 'Artı Para' : (str_contains(strtolower($dbBank->name), 'iş') ? 'Ek Hesap' : 'KMH / Eksi Bakiye')));
                                 $cardName = str_contains(strtolower($dbBank->name), 'garanti') ? 'Bonus & Miles&Smiles' : (str_contains(strtolower($dbBank->name), 'yapı') ? 'Worldcard' : (str_contains(strtolower($dbBank->name), 'akbank') ? 'Axess & Wings' : (str_contains(strtolower($dbBank->name), 'iş') ? 'Maximum Kart' : 'Kredi Kartı')));
                             @endphp
-                            <div class="bank-stream-card snap-center shrink-0 w-60 h-36 p-4 rounded-xl border transition-all duration-300 cursor-pointer shadow-xl relative overflow-hidden flex flex-col justify-between select-none {{ $index === 0 ? 'active-bank-card ring-2 ring-indigo-500 scale-105 z-30 shadow-indigo-950/80 -translate-y-2 bg-gradient-to-br from-slate-900 via-slate-950 to-slate-900' : 'z-10 hover:z-20 hover:-translate-y-1 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 border-slate-800' }}"
+                            <div class="bank-stream-card snap-center shrink-0 w-48 h-28 p-3 rounded-xl border transition-all duration-300 cursor-pointer shadow-lg relative overflow-hidden flex flex-col justify-between select-none {{ $index === 0 ? 'active-bank-card ring-2 ring-indigo-500 scale-105 z-30 shadow-indigo-950/80 -translate-y-1.5 bg-gradient-to-br from-slate-900 via-slate-950 to-slate-900' : 'z-10 hover:z-20 hover:-translate-y-1 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 border-slate-800' }}"
                                  data-bank-name="{{ $dbBank->name }}"
                                  data-bank-color="{{ $dbBank->color ?? '#6366f1' }}"
                                  data-kmh-name="{{ $kmhName }}"
                                  data-card-name="{{ $cardName }}">
                                 
                                 <div class="flex items-center justify-between">
-                                    <div class="flex items-center gap-2">
-                                        <div class="w-6 h-6 rounded-lg text-white font-black flex items-center justify-center text-[10px] shadow-md" style="background-color: {{ $dbBank->color ?? '#6366f1' }};">
+                                    <div class="flex items-center gap-1.5">
+                                        <div class="w-5 h-5 rounded text-white font-black flex items-center justify-center text-[9px] shadow-sm" style="background-color: {{ $dbBank->color ?? '#6366f1' }};">
                                             {{ mb_substr($dbBank->name, 0, 2) }}
                                         </div>
-                                        <span class="text-xs font-bold text-white truncate max-w-[130px]">{{ $dbBank->name }}</span>
+                                        <span class="text-[11px] font-bold text-white truncate max-w-[105px]">{{ $dbBank->name }}</span>
                                     </div>
-                                    <div class="w-6 h-4 rounded bg-amber-400/80 border border-amber-300 text-[7px] font-bold flex items-center justify-center text-amber-950">CHIP</div>
+                                    <div class="w-5 h-3 rounded bg-amber-400/80 text-[6px] font-bold flex items-center justify-center text-amber-950">CHIP</div>
                                 </div>
 
-                                <div class="my-1">
-                                    <span class="font-mono text-[10px] text-slate-400 tracking-wider">•••• •••• •••• {{ 1000 + ($index * 347) % 9000 }}</span>
-                                    <span class="text-[10px] text-emerald-400 font-semibold block mt-0.5">{{ $cardName }}</span>
+                                <div class="my-0.5">
+                                    <span class="font-mono text-[9px] text-slate-400 tracking-wider">•••• •••• •••• {{ 1000 + ($index * 347) % 9000 }}</span>
+                                    <span class="text-[9px] text-emerald-400 font-semibold block truncate">{{ $cardName }}</span>
                                 </div>
 
-                                <div class="pt-1.5 border-t border-slate-800/80 flex items-center justify-between text-[9px]">
+                                <div class="pt-1 border-t border-slate-800/80 flex items-center justify-between text-[8px]">
                                     <span class="text-slate-400">Entegrasyon:</span>
                                     <span class="text-indigo-300 font-bold flex items-center gap-1">
-                                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                                        <span class="w-1 h-1 rounded-full bg-emerald-400"></span>
                                         <span>Aktif</span>
                                     </span>
                                 </div>
@@ -618,51 +623,51 @@
                     </div>
                 </div>
 
-                <!-- Alt Alan: Seçilen Bankanın Altında Açılan Canlı "Hemen Tanımla →" İnceleme Kartı -->
-                <div class="bg-slate-900/95 border border-indigo-500/40 rounded-xl p-5 shadow-2xl space-y-4 relative overflow-hidden backdrop-blur-xl">
+                <!-- Alt Alan: Seçilen Bankanın Altında Açılan Canlı "Hemen Tanımla →" Kompakt İnceleme Kartı -->
+                <div class="bg-slate-900/95 border border-indigo-500/40 rounded-xl p-4 shadow-xl space-y-3 relative overflow-hidden backdrop-blur-xl">
                     <!-- Header -->
-                    <div class="flex items-center justify-between border-b border-slate-800 pb-3">
-                        <div class="flex items-center gap-3">
-                            <div class="terminal-bank-logo-el w-10 h-10 rounded-xl text-white font-black flex items-center justify-center text-sm shadow-md bg-emerald-600">
-                                GA
+                    <div class="flex items-center justify-between border-b border-slate-800 pb-2.5">
+                        <div class="flex items-center gap-2.5">
+                            <div class="terminal-bank-logo-el w-8 h-8 rounded-lg text-white font-black flex items-center justify-center text-xs shadow-md" style="background-color: {{ $firstBankColor }};">
+                                {{ mb_substr($firstBankName, 0, 2) }}
                             </div>
                             <div>
-                                <h3 class="terminal-bank-name-el font-bold text-sm text-white">Garanti BBVA</h3>
-                                <span class="text-[9px] text-emerald-300 font-bold bg-emerald-950/80 px-1.5 py-0.5 rounded border border-emerald-800/50">
+                                <h3 class="terminal-bank-name-el font-bold text-xs text-white">{{ $firstBankName }}</h3>
+                                <span class="text-[8px] text-emerald-300 font-bold bg-emerald-950/80 px-1 py-0.5 rounded border border-emerald-800/50">
                                     🟢 BDDK MEVZUAT UYUMLU
                                 </span>
                             </div>
                         </div>
                     </div>
 
-                    <!-- 2 Desteklenen Borç Ürünü Grid (Mobil Kompakt) -->
-                    <div class="grid grid-cols-1 gap-2.5">
-                        <div class="p-3 rounded-lg bg-slate-950 border border-slate-800 flex items-start gap-2.5">
-                            <span class="text-base mt-0.5">💳</span>
+                    <!-- 2 Desteklenen Borç Ürünü Grid (Mobil Ultra Kompakt) -->
+                    <div class="grid grid-cols-1 gap-2">
+                        <div class="p-2.5 rounded-lg bg-slate-950 border border-slate-800 flex items-start gap-2">
+                            <span class="text-sm mt-0.5">💳</span>
                             <div class="flex-1">
                                 <div class="flex items-center justify-between">
-                                    <h5 class="terminal-card-title-el font-bold text-xs text-white">Bonus & Miles&Smiles</h5>
-                                    <span class="text-[8px] text-emerald-400 font-bold bg-emerald-950 px-1 py-0.5 rounded">Kart & KMH</span>
+                                    <h5 class="terminal-card-title-el font-bold text-[11px] text-white">{{ $firstCardName }}</h5>
+                                    <span class="text-[8px] text-emerald-400 font-bold bg-emerald-950 px-1 py-0.2 rounded">Kart & KMH</span>
                                 </div>
-                                <p class="text-[10px] text-slate-400 mt-0.5">Dönem borcu, asgari tutar ve gecikme faizi doğrudan hesaplanır.</p>
+                                <p class="text-[9px] text-slate-400 mt-0.5">Dönem borcu, asgari ve gecikme faizi doğrudan hesaplanır.</p>
                             </div>
                         </div>
 
-                        <div class="p-3 rounded-lg bg-slate-950 border border-slate-800 flex items-start gap-2.5">
-                            <span class="text-base mt-0.5">🚨</span>
+                        <div class="p-2.5 rounded-lg bg-slate-950 border border-slate-800 flex items-start gap-2">
+                            <span class="text-sm mt-0.5">🚨</span>
                             <div class="flex-1">
                                 <div class="flex items-center justify-between">
-                                    <h5 class="font-bold text-xs text-white">90 Gün Yasal Takip Kalkanı</h5>
-                                    <span class="text-[8px] text-red-400 font-bold bg-red-950 px-1 py-0.5 rounded">İcrayı Önleme</span>
+                                    <h5 class="font-bold text-[11px] text-white">90 Gün Yasal Takip Kalkanı</h5>
+                                    <span class="text-[8px] text-red-400 font-bold bg-red-950 px-1 py-0.2 rounded">İcrayı Önleme</span>
                                 </div>
-                                <p class="text-[10px] text-slate-400 mt-0.5">3 dönem üst üste asgari ödenmediğinde devreye giren takip 7/24 sayılır.</p>
+                                <p class="text-[9px] text-slate-400 mt-0.5">3 dönem üst üste asgari ödenmediğinde devreye giren takip 7/24 sayılır.</p>
                             </div>
                         </div>
                     </div>
 
                     <!-- HEMEN TANIMLA DİNAMİK BUTON -->
-                    <a href="{{ route('register') }}" class="w-full py-3 px-5 bg-indigo-600 hover:bg-indigo-500 text-white font-black text-xs rounded-xl shadow-lg shadow-indigo-600/30 active:scale-95 transition-all flex items-center justify-center gap-2">
-                        <span class="btn-mobile-bank-text">Garanti BBVA'yı Hemen Tanımla</span>
+                    <a href="{{ route('register') }}" class="w-full py-2.5 px-4 bg-indigo-600 hover:bg-indigo-500 text-white font-black text-xs rounded-lg shadow-md shadow-indigo-600/30 active:scale-95 transition-all flex items-center justify-center gap-1.5">
+                        <span class="btn-mobile-bank-text">{{ $firstBankName }}'yı Hemen Tanımla</span>
                         <span>→</span>
                     </a>
                 </div>
