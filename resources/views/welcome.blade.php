@@ -418,18 +418,20 @@
         </section>
 
         <!-- ========================================================================= -->
-        <!-- 5. TÜM BANKALAR TAM ENTEGRASYON VE DOĞRUDAN VERİTABANI                   -->
+        <!-- 5. 2026 TÜRKİYE BANKALARI İNTERAKTİF FİNANSAL RADAR & DESTEK MERKEZİ      -->
         <!-- ========================================================================= -->
-        <section class="py-16 sm:py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-slate-800/80">
+        <section class="py-16 sm:py-28 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-slate-800/80">
             <div class="text-center space-y-3 sm:space-y-4 max-w-3xl mx-auto reveal-on-scroll">
-                <span class="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-emerald-400 bg-emerald-950/60 border border-emerald-800/50 px-3 py-1 rounded-full">
-                    🛡️ SIFIR SAHTE VERİ & DOĞRUDAN VERİTABANI
+                <span class="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-emerald-400 bg-emerald-950/60 border border-emerald-800/50 px-3.5 py-1.5 rounded-full inline-flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                    <span>🛡️ SIFIR SAHTE VERİ • DOĞRUDAN MYSQL VERİTABANI</span>
                 </span>
                 <h2 class="text-3xl sm:text-5xl font-black text-white tracking-tight">
-                    Türkiye'deki Tüm Bankalarla Uyumlu.
+                    Türkiye'deki Tüm Bankalar.<br>
+                    <span class="bg-gradient-to-r from-emerald-400 via-sky-300 to-indigo-400 bg-clip-text text-transparent">Tek Bir Akıllı Radarda.</span>
                 </h2>
                 <p class="text-sm sm:text-lg text-slate-300 leading-relaxed">
-                    Sistemde hiçbir sahte veya mock veri yer almaz. Eklediğiniz her kart ve borç doğrudan MySQL veritabanına yazılır, matematiksel formüllerle anlık işlenir.
+                    Türkiye'deki tüm mevduat, katılım ve kamu bankalarıyla %100 uyumludur. İstediğiniz bankaya tıklayarak DVT Bank CRM'in o banka için çalıştırdığı koruma ve analiz motorunu inceleyin:
                 </p>
             </div>
 
@@ -437,17 +439,122 @@
                 $databaseBanks = \App\Models\Bank::where('is_system', true)->get();
             @endphp
 
-            <!-- Banka Kartları - Doğrudan MySQL Veritabanından Dinamik -->
-            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-4 mt-12 sm:mt-16">
-                @foreach ($databaseBanks as $dbBank)
-                    <div class="p-4 sm:p-5 rounded-xl bg-slate-900 border border-slate-800 text-center space-y-2 hover:border-indigo-500 transition-all hover:scale-105 reveal-on-scroll">
-                        <div class="w-10 h-10 rounded-lg text-white font-black flex items-center justify-center mx-auto text-xs shadow-md" style="background-color: {{ $dbBank->color ?? '#6366f1' }};">
-                            {{ mb_substr($dbBank->name, 0, 2) }}
-                        </div>
-                        <h4 class="font-bold text-white text-xs truncate" title="{{ $dbBank->name }}">{{ $dbBank->name }}</h4>
-                        <span class="text-[10px] text-slate-400 block">Kart + KMH + Kredi</span>
+            <!-- 2026 FinTech Bank Hub (İki Kolonlu İnteraktif Panel) -->
+            <div class="mt-12 sm:mt-16 grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-start">
+                
+                <!-- Sol Kolon: Banka Seçim Matrisi & Filtreler (7 Kolon) -->
+                <div class="lg:col-span-7 space-y-4 reveal-on-scroll">
+                    <div class="flex items-center justify-between px-1">
+                        <span class="text-xs font-bold text-slate-400 flex items-center gap-2">
+                            <span>🏛️ Sistemde Tanımlı Bankalar ({{ $databaseBanks->count() }})</span>
+                        </span>
+                        <span class="text-[11px] text-indigo-400 font-bold">Bir banka seçin ↑</span>
                     </div>
-                @endforeach
+
+                    <!-- Banka Buton Kartları Grid -->
+                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                        @foreach ($databaseBanks as $index => $dbBank)
+                            <button type="button" 
+                                    class="bank-select-btn p-3.5 sm:p-4 rounded-xl text-left transition-all duration-200 border group relative overflow-hidden flex flex-col justify-between h-24 {{ $index === 0 ? 'bg-slate-900 border-indigo-500 shadow-lg shadow-indigo-950/60 ring-1 ring-indigo-500' : 'bg-slate-900/70 border-slate-800 hover:border-slate-700 hover:bg-slate-900' }}"
+                                    data-bank-name="{{ $dbBank->name }}"
+                                    data-bank-code="{{ $dbBank->code ?? mb_substr($dbBank->name, 0, 3) }}"
+                                    data-bank-color="{{ $dbBank->color ?? '#6366f1' }}"
+                                    data-kmh-name="{{ str_contains(strtolower($dbBank->name), 'garanti') ? 'Avans Hesap' : (str_contains(strtolower($dbBank->name), 'yapı') ? 'Esnek Hesap' : (str_contains(strtolower($dbBank->name), 'akbank') ? 'Artı Para' : (str_contains(strtolower($dbBank->name), 'iş') ? 'Ek Hesap' : 'KMH / Eksi Bakiye'))) }}"
+                                    data-card-name="{{ str_contains(strtolower($dbBank->name), 'garanti') ? 'Bonus & Miles&Smiles' : (str_contains(strtolower($dbBank->name), 'yapı') ? 'Worldcard' : (str_contains(strtolower($dbBank->name), 'akbank') ? 'Axess & Wings' : (str_contains(strtolower($dbBank->name), 'iş') ? 'Maximum Kart' : 'Kredi Kartı'))) }}">
+                                
+                                <div class="flex items-center justify-between">
+                                    <div class="w-8 h-8 rounded-lg text-white font-black flex items-center justify-center text-xs shadow-md transition-transform group-hover:scale-110" style="background-color: {{ $dbBank->color ?? '#6366f1' }};">
+                                        {{ mb_substr($dbBank->name, 0, 2) }}
+                                    </div>
+                                    <span class="w-2 h-2 rounded-full {{ $index === 0 ? 'bg-emerald-400' : 'bg-slate-700 group-hover:bg-slate-500' }} transition-colors bank-active-dot"></span>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-white text-xs truncate group-hover:text-indigo-300 transition-colors">{{ $dbBank->name }}</h4>
+                                    <span class="text-[10px] text-slate-400 block mt-0.5">Tam Uyumlu</span>
+                                </div>
+                            </button>
+                        @endforeach
+                    </div>
+                </div>
+
+                <!-- Sağ Kolon: Canlı Banka Terminali & Yetenek Taraması (5 Kolon) -->
+                <div class="lg:col-span-5 bg-slate-900 border border-indigo-500/40 rounded-xl p-6 sm:p-7 shadow-2xl space-y-5 reveal-on-scroll relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-48 h-48 bg-indigo-600/10 rounded-full blur-3xl pointer-events-none"></div>
+
+                    <!-- Header -->
+                    <div class="flex items-center justify-between border-b border-slate-800 pb-4">
+                        <div class="flex items-center gap-3">
+                            <div id="terminal-bank-logo" class="w-10 h-10 rounded-xl text-white font-black flex items-center justify-center text-sm shadow-md bg-emerald-600">
+                                GA
+                            </div>
+                            <div>
+                                <h3 id="terminal-bank-name" class="font-bold text-base text-white">Garanti BBVA</h3>
+                                <p class="text-[11px] text-slate-400">DVT CRM Tam Entegrasyon</p>
+                            </div>
+                        </div>
+                        <span class="px-2.5 py-1 rounded-md bg-emerald-500/20 text-emerald-300 text-[10px] font-black border border-emerald-500/30">
+                            🟢 MEVZUAT AKTİF
+                        </span>
+                    </div>
+
+                    <!-- Desteklenen Borç Ürünleri Listesi -->
+                    <div class="space-y-3">
+                        <div class="p-3 rounded-lg bg-slate-950 border border-slate-800 flex items-start gap-3">
+                            <span class="text-base mt-0.5">💳</span>
+                            <div class="flex-1">
+                                <div class="flex items-center justify-between">
+                                    <h5 id="terminal-card-title" class="font-bold text-xs text-white">Bonus & Miles&Smiles</h5>
+                                    <span class="text-[9px] text-emerald-400 font-bold bg-emerald-950 px-1.5 py-0.5 rounded">Asgari & Gecikme Takibi</span>
+                                </div>
+                                <p class="text-[11px] text-slate-400 mt-1">Dönem borcu, son ödeme günü ve aylık %4.25 - %5.30 gecikme faizi doğrudan hesaplanır.</p>
+                            </div>
+                        </div>
+
+                        <div class="p-3 rounded-lg bg-slate-950 border border-slate-800 flex items-start gap-3">
+                            <span class="text-base mt-0.5">⚡</span>
+                            <div class="flex-1">
+                                <div class="flex items-center justify-between">
+                                    <h5 id="terminal-kmh-title" class="font-bold text-xs text-white">Avans Hesap (KMH)</h5>
+                                    <span class="text-[9px] text-amber-400 font-bold bg-amber-950 px-1.5 py-0.5 rounded">Günlük Faiz Radarı</span>
+                                </div>
+                                <p class="text-[11px] text-slate-400 mt-1">Eksi bakiyedeki her gün için günlük faiz işleyişi takip edilir ve Çığ algoritmasında önceliklendirilir.</p>
+                            </div>
+                        </div>
+
+                        <div class="p-3 rounded-lg bg-slate-950 border border-slate-800 flex items-start gap-3">
+                            <span class="text-base mt-0.5">🏦</span>
+                            <div class="flex-1">
+                                <div class="flex items-center justify-between">
+                                    <h5 class="font-bold text-xs text-white">İhtiyaç & Taşıt Kredisi</h5>
+                                    <span class="text-[9px] text-indigo-400 font-bold bg-indigo-950 px-1.5 py-0.5 rounded">Taksit Planı</span>
+                                </div>
+                                <p class="text-[11px] text-slate-400 mt-1">Kalan anapara ve aylık taksitler ödeme takvimine otomatik işlenir.</p>
+                            </div>
+                        </div>
+
+                        <div class="p-3 rounded-lg bg-slate-950 border border-slate-800 flex items-start gap-3">
+                            <span class="text-base mt-0.5">🚨</span>
+                            <div class="flex-1">
+                                <div class="flex items-center justify-between">
+                                    <h5 class="font-bold text-xs text-white">90 Gün Yasal Takip Kalkanı</h5>
+                                    <span class="text-[9px] text-red-400 font-bold bg-red-950 px-1.5 py-0.5 rounded">İcrayı Önleme</span>
+                                </div>
+                                <p class="text-[11px] text-slate-400 mt-1">3 dönem üst üste asgari ödenmediğinde devreye giren idari takip ve ihtarname süreci 7/24 sayılır.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Terminal Alt Footer -->
+                    <div class="pt-2 border-t border-slate-800 flex items-center justify-between text-xs text-slate-400">
+                        <span class="flex items-center gap-1.5">
+                            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+                            <span>Doğrudan MySQL Veritabanı</span>
+                        </span>
+                        <a href="{{ route('register') }}" class="text-indigo-400 font-bold hover:underline">
+                            Hemen Tanımla →
+                        </a>
+                    </div>
+                </div>
             </div>
         </section>
 
@@ -743,8 +850,47 @@
                         mobilePill.classList.add('translate-y-24', 'opacity-0', 'pointer-events-none');
                         mobilePill.classList.remove('translate-y-0', 'opacity-100');
                     }
-                }
-            }, { passive: true });
+            // 6. Interactive 2026 Bank Hub Scanner
+            const bankBtns = document.querySelectorAll('.bank-select-btn');
+            const termLogo = document.getElementById('terminal-bank-logo');
+            const termName = document.getElementById('terminal-bank-name');
+            const termCard = document.getElementById('terminal-card-title');
+            const termKmh = document.getElementById('terminal-kmh-title');
+
+            bankBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    bankBtns.forEach(b => {
+                        b.classList.remove('bg-slate-900', 'border-indigo-500', 'shadow-lg', 'shadow-indigo-950/60', 'ring-1', 'ring-indigo-500');
+                        b.classList.add('bg-slate-900/70', 'border-slate-800');
+                        const dot = b.querySelector('.bank-active-dot');
+                        if (dot) {
+                            dot.classList.remove('bg-emerald-400');
+                            dot.classList.add('bg-slate-700');
+                        }
+                    });
+
+                    btn.classList.add('bg-slate-900', 'border-indigo-500', 'shadow-lg', 'shadow-indigo-950/60', 'ring-1', 'ring-indigo-500');
+                    btn.classList.remove('bg-slate-900/70', 'border-slate-800');
+                    const activeDot = btn.querySelector('.bank-active-dot');
+                    if (activeDot) {
+                        activeDot.classList.remove('bg-slate-700');
+                        activeDot.classList.add('bg-emerald-400');
+                    }
+
+                    const name = btn.getAttribute('data-bank-name');
+                    const color = btn.getAttribute('data-bank-color');
+                    const card = btn.getAttribute('data-card-name');
+                    const kmh = btn.getAttribute('data-kmh-name');
+
+                    if (termName && name) termName.textContent = name;
+                    if (termLogo && color && name) {
+                        termLogo.style.backgroundColor = color;
+                        termLogo.textContent = name.substring(0, 2).toUpperCase();
+                    }
+                    if (termCard && card) termCard.textContent = card;
+                    if (termKmh && kmh) termKmh.textContent = kmh;
+                });
+            });
         });
     </script>
 </body>
