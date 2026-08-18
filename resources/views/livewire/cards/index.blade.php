@@ -16,7 +16,7 @@
     @endif
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        @foreach ($cards as $card)
+        @forelse ($cards as $card)
             @php
                 $daysOverdue = 0;
                 if ($card->last_payment_date) {
@@ -68,7 +68,22 @@
                 <!-- Banka Vurgu Çizgisi -->
                 <div class="absolute top-0 right-0 left-0 h-1" style="background-color: {{ $card->bank?->color ?? '#6366f1' }}"></div>
             </div>
-        @endforeach
+        @empty
+            <div class="col-span-full bg-white rounded-3xl p-12 text-center border-2 border-dashed border-gray-200 space-y-4">
+                <div class="w-16 h-16 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center mx-auto text-3xl">
+                    💳
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold text-gray-900">Henüz Kayıtlı Kredi Kartınız Yok</h3>
+                    <p class="text-sm text-gray-500 max-w-md mx-auto mt-1">
+                        Bankalardaki kredi kartlarınızı, güncel dönem borçlarını ve asgari tutarlarını ekleyerek faiz ve yasal takip sayaçlarınızı başlatın.
+                    </p>
+                </div>
+                <button wire:click="openCreateModal" class="inline-flex items-center gap-2 px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm rounded-xl shadow-md transition-colors">
+                    <span>+ İlk Kredi Kartınızı Ekleyin</span>
+                </button>
+            </div>
+        @endforelse
     </div>
 
     <!-- MODAL -->

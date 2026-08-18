@@ -14,26 +14,28 @@
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body class="font-sans antialiased">
-        <div class="min-h-screen bg-gray-100">
-            @include('layouts.navigation')
+    <body class="font-sans antialiased bg-gray-100 min-h-screen">
+        <div class="min-h-screen flex flex-col justify-between">
+            <div class="flex-1 flex flex-col">
+                @include('layouts.navigation')
 
-            <!-- Page Heading -->
-            @isset($header)
-                <header class="bg-white shadow">
-                    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                        {{ $header }}
-                    </div>
-                </header>
-            @endisset
+                <!-- Page Heading -->
+                @isset($header)
+                    <header class="bg-white shadow">
+                        <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+                            {{ $header }}
+                        </div>
+                    </header>
+                @endisset
 
-            <!-- Page Content -->
-            <main class="py-6">
-                {{ $slot }}
-            </main>
+                <!-- Page Content -->
+                <main class="py-6 flex-1">
+                    {{ $slot }}
+                </main>
+            </div>
 
             <!-- Application Footer -->
-            <footer class="bg-white border-t border-gray-200 mt-16 text-gray-600 text-sm">
+            <footer class="bg-white border-t border-gray-200 mt-auto text-gray-600 text-sm shrink-0">
                 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
                     <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
                         <!-- Brand Column -->
