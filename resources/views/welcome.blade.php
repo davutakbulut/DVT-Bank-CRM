@@ -850,6 +850,9 @@
                         mobilePill.classList.add('translate-y-24', 'opacity-0', 'pointer-events-none');
                         mobilePill.classList.remove('translate-y-0', 'opacity-100');
                     }
+                }
+            }, { passive: true });
+
             // 6. Interactive 2026 Bank Hub Scanner
             const bankBtns = document.querySelectorAll('.bank-select-btn');
             const termLogo = document.getElementById('terminal-bank-logo');
