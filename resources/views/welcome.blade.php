@@ -569,52 +569,63 @@
             </div>
 
             <!-- ========================================================================= -->
-            <!-- 📱 MOBİL GÖRÜNÜM: KOMPAKT YATAY DESTE & ALTINDA CANLI İNCELEME KARTI      -->
+            <!-- 📱 MOBİL GÖRÜNÜM: 3D ARDIŞIK SONSUZ DÖNEN DESTE & CANLI İNCELEME KARTI    -->
             <!-- ========================================================================= -->
             <div class="block md:hidden mt-8 space-y-4 reveal-on-scroll text-left">
                 
-                <!-- Üst Alan: Kompakt Yatayda Birbirinin Üstüne Kısmen Binen Banka Kartları Deste Akışı -->
-                <div class="space-y-1.5">
+                <!-- Üst Alan: 3D Ardışık Sonsuz Dönen Deste Sahnesi -->
+                <div class="space-y-2">
                     <div class="flex items-center justify-between px-1">
                         <span class="text-[11px] font-bold text-slate-400 flex items-center gap-1.5">
                             <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-                            <span>Banka Deste Akışı ({{ $databaseBanks->count() }} Banka)</span>
+                            <span>3D Banka Deste Çarkı ({{ $databaseBanks->count() }} Banka)</span>
                         </span>
-                        <span class="text-[10px] text-indigo-400 font-bold">Kaydırın & Seçin →</span>
+                        
+                        <!-- Mini Önceki / Sonraki Butonları -->
+                        <div class="flex items-center gap-1">
+                            <button type="button" id="btn-bank-deck-prev" class="w-7 h-7 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 hover:text-white hover:border-indigo-500 active:scale-95 flex items-center justify-center text-xs transition-all shadow">
+                                ‹
+                            </button>
+                            <button type="button" id="btn-bank-deck-next" class="w-7 h-7 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 hover:text-white hover:border-indigo-500 active:scale-95 flex items-center justify-center text-xs transition-all shadow">
+                                ›
+                            </button>
+                        </div>
                     </div>
 
-                    <!-- Yatay Kompakt Kartlar Carousel (Temiz, Taşıntısız & Snap Akış) -->
-                    <div class="flex overflow-x-auto no-scrollbar py-3 px-1.5 gap-2.5 snap-x snap-mandatory">
+                    <!-- 3D Deste Sahnesi (Perspective Stage) -->
+                    <div id="mobile-3d-deck-stage" class="relative h-40 w-full flex items-center justify-center overflow-hidden py-2 select-none touch-pan-y" style="perspective: 1000px;">
                         @foreach ($databaseBanks as $index => $dbBank)
                             @php
                                 $kmhName = str_contains(strtolower($dbBank->name), 'garanti') ? 'Avans Hesap' : (str_contains(strtolower($dbBank->name), 'yapı') ? 'Esnek Hesap' : (str_contains(strtolower($dbBank->name), 'akbank') ? 'Artı Para' : (str_contains(strtolower($dbBank->name), 'iş') ? 'Ek Hesap' : 'KMH / Eksi Bakiye')));
                                 $cardName = str_contains(strtolower($dbBank->name), 'garanti') ? 'Bonus & Miles&Smiles' : (str_contains(strtolower($dbBank->name), 'yapı') ? 'Worldcard' : (str_contains(strtolower($dbBank->name), 'akbank') ? 'Axess & Wings' : (str_contains(strtolower($dbBank->name), 'iş') ? 'Maximum Kart' : 'Kredi Kartı')));
                             @endphp
-                            <div class="bank-stream-card snap-start shrink-0 w-44 h-26 p-3 rounded-xl border transition-all duration-200 cursor-pointer relative overflow-hidden flex flex-col justify-between select-none {{ $index === 0 ? 'active-bank-card border-indigo-500 ring-2 ring-indigo-500/80 bg-slate-900 shadow-md shadow-indigo-950/70' : 'border-slate-800 bg-slate-950/90 hover:border-slate-700' }}"
+                            <div class="bank-3d-card absolute w-56 h-32 p-3.5 rounded-xl border border-slate-800 bg-gradient-to-br from-slate-900 via-slate-950 to-slate-900 transition-all duration-500 ease-out cursor-pointer shadow-2xl flex flex-col justify-between"
+                                 data-index="{{ $index }}"
                                  data-bank-name="{{ $dbBank->name }}"
                                  data-bank-color="{{ $dbBank->color ?? '#6366f1' }}"
                                  data-kmh-name="{{ $kmhName }}"
-                                 data-card-name="{{ $cardName }}">
+                                 data-card-name="{{ $cardName }}"
+                                 style="transform-style: preserve-3d; will-change: transform, opacity;">
                                 
                                 <div class="flex items-center justify-between">
-                                    <div class="flex items-center gap-1.5">
-                                        <div class="w-5 h-5 rounded text-white font-black flex items-center justify-center text-[9px] shadow-sm" style="background-color: {{ $dbBank->color ?? '#6366f1' }};">
+                                    <div class="flex items-center gap-2">
+                                        <div class="w-6 h-6 rounded text-white font-black flex items-center justify-center text-[10px] shadow-sm" style="background-color: {{ $dbBank->color ?? '#6366f1' }};">
                                             {{ mb_substr($dbBank->name, 0, 2) }}
                                         </div>
-                                        <span class="text-[11px] font-bold text-white truncate max-w-[95px]">{{ $dbBank->name }}</span>
+                                        <span class="text-xs font-bold text-white truncate max-w-[110px]">{{ $dbBank->name }}</span>
                                     </div>
-                                    <div class="w-5 h-3 rounded bg-amber-400/80 text-[6px] font-bold flex items-center justify-center text-amber-950">CHIP</div>
+                                    <div class="w-6 h-4 rounded bg-amber-400/90 text-[7px] font-black flex items-center justify-center text-amber-950 shadow">CHIP</div>
                                 </div>
 
-                                <div class="my-0.5">
-                                    <span class="font-mono text-[9px] text-slate-400 tracking-wider">•••• {{ 1000 + ($index * 347) % 9000 }}</span>
-                                    <span class="text-[9px] text-emerald-400 font-semibold block truncate">{{ $cardName }}</span>
+                                <div class="my-1">
+                                    <span class="font-mono text-[10px] text-slate-400 tracking-wider">•••• •••• •••• {{ 1000 + ($index * 347) % 9000 }}</span>
+                                    <span class="text-[10px] text-emerald-400 font-semibold block truncate mt-0.5">{{ $cardName }}</span>
                                 </div>
 
-                                <div class="pt-1 border-t border-slate-800/80 flex items-center justify-between text-[8px]">
+                                <div class="pt-1.5 border-t border-slate-800 flex items-center justify-between text-[9px]">
                                     <span class="text-slate-400">Entegrasyon:</span>
                                     <span class="text-indigo-300 font-bold flex items-center gap-1">
-                                        <span class="w-1 h-1 rounded-full bg-emerald-400"></span>
+                                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
                                         <span>Aktif</span>
                                     </span>
                                 </div>
@@ -969,9 +980,13 @@
                 }
             }, { passive: true });
 
-            // 6. Interactive 2026 Bank Hub Scanner (Desktop Matrix & Mobile Stream)
+            // 6. Interactive 2026 Bank Hub Scanner (Desktop Matrix & Mobile 3D Revolving Deck)
             const desktopBankBtns = document.querySelectorAll('.bank-select-btn');
-            const mobileBankCards = document.querySelectorAll('.bank-stream-card');
+            const mobile3DCards = document.querySelectorAll('.bank-3d-card');
+            const btnDeckPrev = document.getElementById('btn-bank-deck-prev');
+            const btnDeckNext = document.getElementById('btn-bank-deck-next');
+            const deckStage = document.getElementById('mobile-3d-deck-stage');
+
             const termLogos = document.querySelectorAll('.terminal-bank-logo-el');
             const termNames = document.querySelectorAll('.terminal-bank-name-el');
             const termCards = document.querySelectorAll('.terminal-card-title-el');
@@ -991,6 +1006,7 @@
                 termKmhs.forEach(el => el.textContent = kmhTitle);
             };
 
+            // Desktop Matrix Click Handler
             desktopBankBtns.forEach(btn => {
                 btn.addEventListener('click', () => {
                     desktopBankBtns.forEach(b => {
@@ -1020,24 +1036,118 @@
                 });
             });
 
-            mobileBankCards.forEach(card => {
-                card.addEventListener('click', () => {
-                    mobileBankCards.forEach(c => {
-                        c.classList.remove('active-bank-card', 'border-indigo-500', 'ring-2', 'ring-indigo-500/80', 'bg-slate-900', 'shadow-md', 'shadow-indigo-950/70');
-                        c.classList.add('border-slate-800', 'bg-slate-950/90');
+            // 7. 3D SHINGLED INFINITE REVOLVING DECK (MOBİL 3D SONSUZ DÖNEN DESTE)
+            if (mobile3DCards.length > 0) {
+                let activeDeckIndex = 0;
+                const totalDeckCards = mobile3DCards.length;
+
+                const render3DDeck = () => {
+                    mobile3DCards.forEach((card, i) => {
+                        let offset = (i - activeDeckIndex) % totalDeckCards;
+                        if (offset > totalDeckCards / 2) offset -= totalDeckCards;
+                        if (offset < -totalDeckCards / 2) offset += totalDeckCards;
+
+                        const absOffset = Math.abs(offset);
+
+                        if (offset === 0) {
+                            // AKTİF ORTA KART (Tam net, en önde, parlak mor halka ve gölge)
+                            card.style.transform = 'translate3d(0, 0, 0) scale(1) rotate(0deg)';
+                            card.style.opacity = '1';
+                            card.style.zIndex = '50';
+                            card.style.filter = 'blur(0px)';
+                            card.style.pointerEvents = 'auto';
+                            card.classList.add('border-indigo-500', 'ring-2', 'ring-indigo-500/80', 'shadow-indigo-950/80');
+                            card.classList.remove('border-slate-800');
+
+                            // Alt panelin içeriğini güncelle
+                            const name = card.getAttribute('data-bank-name');
+                            const color = card.getAttribute('data-bank-color');
+                            const cardTitle = card.getAttribute('data-card-name');
+                            const kmhTitle = card.getAttribute('data-kmh-name');
+                            applyBankSelection(name, color, cardTitle, kmhTitle);
+
+                        } else if (absOffset <= 2) {
+                            // SAĞDA VEYA SOLDA KADEMELİ SOLUKLAŞAN VE ARDIŞIK ÜST ÜSTE BİNEN KARTLAR
+                            const dir = Math.sign(offset);
+                            const xShift = dir * (absOffset === 1 ? 55 : 105);
+                            const zShift = -(absOffset * 45);
+                            const rot = dir * (absOffset === 1 ? 4 : 8);
+                            const scale = absOffset === 1 ? 0.88 : 0.76;
+                            const opacity = absOffset === 1 ? 0.6 : 0.3;
+                            const zIndex = 50 - absOffset * 10;
+
+                            card.style.transform = `translate3d(${xShift}px, -2px, ${zShift}px) scale(${scale}) rotate(${rot}deg)`;
+                            card.style.opacity = `${opacity}`;
+                            card.style.zIndex = `${zIndex}`;
+                            card.style.filter = `blur(${absOffset * 0.4}px)`;
+                            card.style.pointerEvents = 'auto';
+                            card.classList.remove('border-indigo-500', 'ring-2', 'ring-indigo-500/80', 'shadow-indigo-950/80');
+                            card.classList.add('border-slate-800');
+
+                        } else {
+                            // 3+ KADEME UZAKTAKİ KARTLAR (Gizlenir, dönüşte devreye girer)
+                            const dir = Math.sign(offset);
+                            card.style.transform = `translate3d(${dir * 140}px, 0, -150px) scale(0.6)`;
+                            card.style.opacity = '0';
+                            card.style.zIndex = '10';
+                            card.style.pointerEvents = 'none';
+                            card.classList.remove('border-indigo-500', 'ring-2', 'ring-indigo-500/80');
+                            card.classList.add('border-slate-800');
+                        }
                     });
+                };
 
-                    card.classList.add('active-bank-card', 'border-indigo-500', 'ring-2', 'ring-indigo-500/80', 'bg-slate-900', 'shadow-md', 'shadow-indigo-950/70');
-                    card.classList.remove('border-slate-800', 'bg-slate-950/90');
+                // İlk yüklemede 3D desteyi kur
+                render3DDeck();
 
-                    const name = card.getAttribute('data-bank-name');
-                    const color = card.getAttribute('data-bank-color');
-                    const cardTitle = card.getAttribute('data-card-name');
-                    const kmhTitle = card.getAttribute('data-kmh-name');
-
-                    applyBankSelection(name, color, cardTitle, kmhTitle);
+                // Kart tıklandığında ortaya gelip odakta kalsın
+                mobile3DCards.forEach(card => {
+                    card.addEventListener('click', () => {
+                        const targetIdx = parseInt(card.getAttribute('data-index'), 10);
+                        if (!isNaN(targetIdx)) {
+                            activeDeckIndex = targetIdx;
+                            render3DDeck();
+                        }
+                    });
                 });
-            });
+
+                // Önceki / Sonraki butonları
+                if (btnDeckPrev) {
+                    btnDeckPrev.addEventListener('click', () => {
+                        activeDeckIndex = (activeDeckIndex - 1 + totalDeckCards) % totalDeckCards;
+                        render3DDeck();
+                    });
+                }
+
+                if (btnDeckNext) {
+                    btnDeckNext.addEventListener('click', () => {
+                        activeDeckIndex = (activeDeckIndex + 1) % totalDeckCards;
+                        render3DDeck();
+                    });
+                }
+
+                // Dokunmatik Swipe (Kaydırma) Desteği
+                if (deckStage) {
+                    let touchStartX = 0;
+                    deckStage.addEventListener('touchstart', (e) => {
+                        touchStartX = e.changedTouches[0].screenX;
+                    }, { passive: true });
+
+                    deckStage.addEventListener('touchend', (e) => {
+                        const touchEndX = e.changedTouches[0].screenX;
+                        const diff = touchEndX - touchStartX;
+                        if (diff < -35) {
+                            // Sola kaydır -> Sonraki kart
+                            activeDeckIndex = (activeDeckIndex + 1) % totalDeckCards;
+                            render3DDeck();
+                        } else if (diff > 35) {
+                            // Sağa kaydır -> Önceki kart
+                            activeDeckIndex = (activeDeckIndex - 1 + totalDeckCards) % totalDeckCards;
+                            render3DDeck();
+                        }
+                    }, { passive: true });
+                }
+            }
         });
     </script>
 </body>
