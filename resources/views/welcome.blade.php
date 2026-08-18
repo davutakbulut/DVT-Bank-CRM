@@ -172,48 +172,49 @@
         <!-- ========================================================================= -->
         <!-- 1. APPLE-STYLE HERO SECTION (F KURALI: ÜST YATAY & GÖZ ALICI CTA)         -->
         <!-- ========================================================================= -->
-        <section class="relative pt-12 sm:pt-20 pb-16 sm:pb-28 px-3 sm:px-6 lg:px-8 max-w-7xl mx-auto text-center perspective-container overflow-hidden">
+        <section class="relative pt-10 sm:pt-20 pb-14 sm:pb-28 px-3 sm:px-6 lg:px-8 max-w-7xl mx-auto text-center perspective-container overflow-hidden">
             <!-- Ambient Lighting Glows -->
             <div class="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] sm:w-[600px] h-[300px] sm:h-[600px] bg-indigo-600/20 rounded-full blur-[80px] sm:blur-[130px] pointer-events-none animate-glow"></div>
             <div class="absolute top-1/3 left-1/4 w-[200px] sm:w-[400px] h-[200px] sm:h-[400px] bg-purple-600/15 rounded-full blur-[70px] sm:blur-[110px] pointer-events-none animate-glow" style="animation-delay: 2s;"></div>
             <div class="absolute top-1/3 right-1/4 w-[200px] sm:w-[400px] h-[200px] sm:h-[400px] bg-emerald-600/15 rounded-full blur-[70px] sm:blur-[110px] pointer-events-none animate-glow" style="animation-delay: 4s;"></div>
 
-            <!-- Top Pill Badge (F Pattern Top Anchor) -->
-            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-indigo-950/80 border border-indigo-500/40 text-indigo-300 text-[11px] sm:text-xs font-bold mb-6 shadow-xl backdrop-blur-md hover:border-indigo-400 transition-all">
-                <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 pulse-radar-emerald"></span>
-                <span>TÜRKİYE BANKACILIK MEVZUATI & 90 GÜN KURALI MOTORU</span>
+            <!-- Top Pill Badge (Kompakt ve Zarif) -->
+            <div class="inline-flex items-center gap-1.5 px-3 py-1 sm:px-4 sm:py-1.5 rounded-full bg-indigo-950/80 border border-indigo-500/30 text-indigo-300 text-[10px] sm:text-xs font-bold mb-4 sm:mb-6 shadow-xl backdrop-blur-md hover:border-indigo-400 transition-all">
+                <span class="w-2 h-2 rounded-full bg-emerald-400 pulse-radar-emerald"></span>
+                <span>BDDK & 90 GÜN YASAL TAKİP MOTORU</span>
             </div>
 
-            <!-- Display Header with Gradient Flow Animation -->
-            <h1 class="text-3.5xl sm:text-6xl lg:text-7xl font-black tracking-tight text-white max-w-5xl mx-auto leading-[1.1] sm:leading-[1.05]">
+            <!-- Display Header (Mobilde Çok Daha Büyük, Net ve Çarpıcı) -->
+            <h1 class="text-4xl sm:text-6xl lg:text-7xl font-black tracking-tight text-white max-w-5xl mx-auto leading-[1.08] sm:leading-[1.05]">
                 Finansal Krizden<br>
-                <span class="bg-gradient-to-r from-indigo-400 via-sky-300 to-emerald-300 bg-clip-text text-transparent text-gradient-flow">Matematiksel Çıkış.</span>
+                <span class="bg-gradient-to-r from-indigo-400 via-sky-300 to-emerald-300 bg-clip-text text-transparent text-gradient-flow drop-shadow-sm">Matematiksel Çıkış.</span>
             </h1>
 
-            <p class="mt-5 sm:mt-7 text-sm sm:text-xl text-slate-300 max-w-3xl mx-auto font-normal leading-relaxed px-2">
-                Tüm bankalarınızın kredi kartları, KMH eksi bakiyeleri ve kredi taksitleri arasında boğulmayın. Sıfır panik, doğrudan veritabanı ve 7/24 AI koç ile borçlarınızı adım adım sıfırlayın.
+            <!-- Açıklayıcı, Net ve Kısa Alt Metin -->
+            <p class="mt-4 sm:mt-6 text-sm sm:text-xl text-slate-300 max-w-2xl mx-auto font-normal leading-relaxed px-2">
+                Tüm kart, KMH ve kredi borçlarınızı tek merkezde toplayın. 90 gün yasal takip kalkanı ve 7/24 AI koç ile borç batağından kesin çıkış yapın.
             </p>
 
-            <!-- Trust Badges with Floating Micro-Animations -->
-            <div class="mt-6 flex flex-wrap items-center justify-center gap-2.5 text-xs font-bold text-slate-300">
-                <span class="anim-badge-1 inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-slate-900/90 border border-slate-800 shadow-md hover:border-indigo-500/40 transition-all">
-                    <span class="text-indigo-400 text-sm">⚡</span> Çığ & Kartopu Algoritması
+            <!-- Trust Badges with Floating Micro-Animations (Kompakt Rozetler) -->
+            <div class="mt-5 sm:mt-6 flex flex-wrap items-center justify-center gap-2 sm:gap-2.5 text-[11px] sm:text-xs font-bold text-slate-300">
+                <span class="anim-badge-1 inline-flex items-center gap-1.5 px-3 py-1 sm:px-3.5 sm:py-1.5 rounded-xl bg-slate-900/90 border border-slate-800 shadow-md hover:border-indigo-500/40 transition-all">
+                    <span class="text-indigo-400 text-xs sm:text-sm">⚡</span> Çığ & Kartopu
                 </span>
-                <span class="anim-badge-2 inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-slate-900/90 border border-slate-800 shadow-md hover:border-red-500/40 transition-all">
-                    <span class="text-red-400 text-sm">🚨</span> 90 Gün Yasal Takip Sayacı
+                <span class="anim-badge-2 inline-flex items-center gap-1.5 px-3 py-1 sm:px-3.5 sm:py-1.5 rounded-xl bg-slate-900/90 border border-slate-800 shadow-md hover:border-red-500/40 transition-all">
+                    <span class="text-red-400 text-xs sm:text-sm">🚨</span> 90 Gün Takip Kalkanı
                 </span>
-                <span class="anim-badge-3 inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-slate-900/90 border border-slate-800 shadow-md hover:border-emerald-500/40 transition-all">
-                    <span class="text-emerald-400 text-sm">🤖</span> 7/24 AI Finans Koçu
+                <span class="anim-badge-3 inline-flex items-center gap-1.5 px-3 py-1 sm:px-3.5 sm:py-1.5 rounded-xl bg-slate-900/90 border border-slate-800 shadow-md hover:border-emerald-500/40 transition-all">
+                    <span class="text-emerald-400 text-xs sm:text-sm">🤖</span> 7/24 AI Finans Koçu
                 </span>
             </div>
 
             <!-- Call to Actions with Shimmer Light Sweep -->
-            <div class="mt-8 sm:mt-10 flex flex-col sm:flex-row items-center justify-center gap-3.5 sm:gap-4 px-4">
-                <a href="{{ route('register') }}" class="btn-shimmer w-full sm:w-auto px-8 sm:px-9 py-4 bg-indigo-600 hover:bg-indigo-500 text-white font-black text-sm sm:text-base rounded-xl shadow-2xl shadow-indigo-600/40 hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-2 group">
+            <div class="mt-7 sm:mt-10 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 px-4">
+                <a href="{{ route('register') }}" class="btn-shimmer w-full sm:w-auto px-8 sm:px-9 py-3.5 sm:py-4 bg-indigo-600 hover:bg-indigo-500 text-white font-black text-sm sm:text-base rounded-xl shadow-2xl shadow-indigo-600/40 hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-2 group">
                     <span>Ücretsiz Borç Analizini Başlat</span>
                     <svg class="w-4 h-4 group-hover:translate-x-1.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 7l5 5m0 0l-5 5m5-5H6"></path></svg>
                 </a>
-                <a href="#nasil-calisir" class="w-full sm:w-auto px-7 sm:px-8 py-4 bg-slate-900/90 hover:bg-slate-800 text-slate-300 hover:text-white font-bold text-sm sm:text-base rounded-xl border border-slate-800 hover:border-slate-700 shadow-md backdrop-blur-md transition-all active:scale-95">
+                <a href="#nasil-calisir" class="w-full sm:w-auto px-7 sm:px-8 py-3.5 sm:py-4 bg-slate-900/90 hover:bg-slate-800 text-slate-300 hover:text-white font-bold text-sm sm:text-base rounded-xl border border-slate-800 hover:border-slate-700 shadow-md backdrop-blur-md transition-all active:scale-95">
                     Stratejiyi İncele ↓
                 </a>
             </div>
