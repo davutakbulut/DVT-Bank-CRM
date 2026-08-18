@@ -35,6 +35,11 @@ class Index extends Component
     // Gider Formu
     public ?int $expenseId = null;
     public ?int $expense_category_id = null;
+    public string $payment_method = 'credit_card'; // credit_card, account, kmh, cash
+    public ?int $expense_credit_card_id = null;
+    public ?int $expense_account_id = null;
+    public bool $is_installment = false;
+    public int $installment_count = 3;
     public string $expense_title = '';
     public float $expense_amount = 0.0;
     public string $expense_date = '';
@@ -45,92 +50,11 @@ class Index extends Component
         $this->setDatePreset('this_month');
     }
 
-    public function setDatePreset(string $preset): void
-    {
-        $this->date_preset = $preset;
-
-        if ($preset === 'this_month') {
-            $this->date_from = Carbon::now()->startOfMonth()->format('Y-m-d');
-            $this->date_to = Carbon::now()->endOfMonth()->format('Y-m-d');
-        } elseif ($preset === 'last_30') {
-            $this->date_from = Carbon::now()->subDays(30)->format('Y-m-d');
-            $this->date_to = Carbon::now()->format('Y-m-d');
-        } elseif ($preset === 'last_month') {
-            $this->date_from = Carbon::now()->subMonth()->startOfMonth()->format('Y-m-d');
-            $this->date_to = Carbon::now()->subMonth()->endOfMonth()->format('Y-m-d');
-        } elseif ($preset === 'this_year') {
-            $this->date_from = Carbon::now()->startOfYear()->format('Y-m-d');
-            $this->date_to = Carbon::now()->endOfYear()->format('Y-m-d');
-        } else {
-            $this->date_from = null;
-            $this->date_to = null;
-        }
-    }
-
-    public function resetFilters(): void
-    {
-        $this->reset([
-            'search',
-            'selected_category_id',
-            'activeTab',
-            'date_from',
-            'date_to',
-            'date_preset',
-            'sortBy',
-        ]);
-        $this->sortBy = 'date_desc';
-        $this->setDatePreset('this_month');
-    }
-
-    public function openIncomeModal(): void
-    {
-        $this->reset(['incomeId', 'income_title', 'income_amount']);
-        $this->income_type = 'salary';
-        $this->income_frequency = 'monthly';
-        $this->showIncomeModal = true;
-    }
-
-    public function openEditIncome(int $id): void
-    {
-        $inc = Income::where('user_id', Auth::id())->findOrFail($id);
-        $this->incomeId = $inc->id;
-        $this->income_title = $inc->title;
-        $this->income_amount = (float) $inc->amount;
-        $this->income_type = $inc->type ?? 'salary';
-        $this->income_frequency = $inc->frequency ?? 'monthly';
-        $this->showIncomeModal = true;
-    }
-
-    public function saveIncome(): void
-    {
-        $this->validate([
-            'income_title' => 'required|string|max:100',
-            'income_amount' => 'required|numeric|min:1',
-        ]);
-
-        $data = [
-            'user_id' => Auth::id(),
-            'title' => $this->income_title,
-            'amount' => $this->income_amount,
-            'type' => $this->income_type,
-            'frequency' => $this->income_frequency,
-            'is_recurring' => true,
-        ];
-
-        if ($this->incomeId) {
-            Income::where('user_id', Auth::id())->findOrFail($this->incomeId)->update($data);
-        } else {
-            Income::create($data);
-        }
-
-        $this->showIncomeModal = false;
-        $this->reset(['incomeId', 'income_title', 'income_amount']);
-        session()->flash('message', 'Gelir kaydı başarıyla kaydedildi.');
-    }
-
     public function openExpenseModal(): void
     {
-        $this->reset(['expenseId', 'expense_title', 'expense_amount', 'expense_category_id', 'expense_is_recurring']);
+        $this->reset(['expenseId', 'expense_title', 'expense_amount', 'expense_category_id', 'expense_credit_card_id', 'expense_account_id', 'is_installment', 'expense_is_recurring']);
+        $this->payment_method = 'credit_card';
+        $this->installment_count = 3;
         $this->expense_date = Carbon::now()->format('Y-m-d');
         $this->showExpenseModal = true;
     }
@@ -140,8 +64,13 @@ class Index extends Component
         $exp = Expense::where('user_id', Auth::id())->findOrFail($id);
         $this->expenseId = $exp->id;
         $this->expense_category_id = $exp->category_id;
+        $this->payment_method = $exp->payment_method ?? 'credit_card';
+        $this->expense_credit_card_id = $exp->credit_card_id;
+        $this->expense_account_id = $exp->account_id;
+        $this->is_installment = (bool) ($exp->installment_count > 1);
+        $this->installment_count = $exp->installment_count ?: 3;
         $this->expense_title = $exp->title;
-        $this->expense_amount = (float) $exp->amount;
+        $this->expense_amount = (float) ($exp->total_amount ?: $exp->amount);
         $this->expense_date = $exp->expense_date ? Carbon::parse($exp->expense_date)->format('Y-m-d') : Carbon::now()->format('Y-m-d');
         $this->expense_is_recurring = (bool) $exp->is_recurring;
         $this->showExpenseModal = true;
@@ -151,29 +80,110 @@ class Index extends Component
     {
         $this->validate([
             'expense_title' => 'required|string|max:100',
-            'expense_amount' => 'required|numeric|min:1',
+            'expense_amount' => 'required|numeric|min:0.01',
             'expense_date' => 'required|date',
+            'payment_method' => 'required|in:credit_card,account,kmh,cash',
+            'expense_credit_card_id' => 'nullable|exists:credit_cards,id',
+            'expense_account_id' => 'nullable|exists:accounts,id',
         ]);
 
-        $data = [
-            'user_id' => Auth::id(),
-            'category_id' => $this->expense_category_id ?: null,
-            'title' => $this->expense_title,
-            'amount' => $this->expense_amount,
-            'expense_date' => $this->expense_date,
-            'is_recurring' => $this->expense_is_recurring,
-        ];
+        $userId = Auth::id();
 
-        if ($this->expenseId) {
-            Expense::where('user_id', Auth::id())->findOrFail($this->expenseId)->update($data);
+        // 1. Taksitli Harcama Senaryosu
+        if ($this->is_installment && $this->installment_count > 1 && !$this->expenseId) {
+            $totalAmount = $this->expense_amount;
+            $monthlyAmount = round($totalAmount / $this->installment_count, 2);
+
+            // İlgili kredi kartı bilgisi
+            $card = $this->expense_credit_card_id ? \App\Models\CreditCard::where('user_id', $userId)->find($this->expense_credit_card_id) : null;
+
+            // Her bir taksiti ilgili aylara oluştur
+            for ($i = 1; $i <= $this->installment_count; $i++) {
+                $instDate = Carbon::parse($this->expense_date)->copy()->addMonthsNoOverflow($i - 1)->format('Y-m-d');
+                Expense::create([
+                    'user_id' => $userId,
+                    'category_id' => $this->expense_category_id ?: null,
+                    'credit_card_id' => $this->payment_method === 'credit_card' ? $this->expense_credit_card_id : null,
+                    'account_id' => in_array($this->payment_method, ['account', 'kmh']) ? $this->expense_account_id : null,
+                    'payment_method' => $this->payment_method,
+                    'title' => $this->expense_title . ' (' . $i . '/' . $this->installment_count . ' Taksit)',
+                    'amount' => $monthlyAmount,
+                    'total_amount' => $totalAmount,
+                    'installment_count' => $this->installment_count,
+                    'current_installment' => $i,
+                    'expense_date' => $instDate,
+                    'is_recurring' => true,
+                ]);
+            }
+
+            // Ayrıca Borçlar tablosuna taksitli borç olarak ekle
+            \App\Models\Debt::create([
+                'user_id' => $userId,
+                'bank_id' => $card?->bank_id,
+                'credit_card_id' => $this->payment_method === 'credit_card' ? $this->expense_credit_card_id : null,
+                'account_id' => in_array($this->payment_method, ['account', 'kmh']) ? $this->expense_account_id : null,
+                'type' => $this->payment_method === 'kmh' ? 'kmh' : 'credit_card',
+                'title' => $this->expense_title . ' (' . $this->installment_count . ' Taksit)',
+                'merchant_name' => $this->expense_title,
+                'principal' => $totalAmount,
+                'remaining' => $totalAmount,
+                'installment_amount' => $monthlyAmount,
+                'installment_count' => $this->installment_count,
+                'current_installment' => 1,
+                'total_installments' => $this->installment_count,
+                'transaction_date' => $this->expense_date,
+                'next_due_date' => $this->expense_date,
+                'status' => 'active',
+            ]);
+
+            // Kredi kartının güncel borcunu ilk taksit kadar artır
+            if ($card) {
+                $card->increment('current_debt', $monthlyAmount);
+            }
         } else {
-            Expense::create($data);
+            // 2. Tek Çekim / Peşin Harcama Senaryosu
+            $data = [
+                'user_id' => $userId,
+                'category_id' => $this->expense_category_id ?: null,
+                'credit_card_id' => $this->payment_method === 'credit_card' ? $this->expense_credit_card_id : null,
+                'account_id' => in_array($this->payment_method, ['account', 'kmh']) ? $this->expense_account_id : null,
+                'payment_method' => $this->payment_method,
+                'title' => $this->expense_title,
+                'amount' => $this->expense_amount,
+                'total_amount' => $this->expense_amount,
+                'installment_count' => null,
+                'current_installment' => null,
+                'expense_date' => $this->expense_date,
+                'is_recurring' => $this->expense_is_recurring,
+            ];
+
+            if ($this->expenseId) {
+                Expense::where('user_id', $userId)->findOrFail($this->expenseId)->update($data);
+            } else {
+                Expense::create($data);
+
+                // Kredi kartı seçildiyse kart borcunu otomatik artır
+                if ($this->payment_method === 'credit_card' && $this->expense_credit_card_id) {
+                    $card = \App\Models\CreditCard::where('user_id', $userId)->find($this->expense_credit_card_id);
+                    if ($card) {
+                        $card->increment('current_debt', $this->expense_amount);
+                    }
+                }
+                // KMH veya Vadesiz Hesap seçildiyse bakiyeyi düşür
+                elseif (in_array($this->payment_method, ['account', 'kmh']) && $this->expense_account_id) {
+                    $acc = \App\Models\Account::where('user_id', $userId)->find($this->expense_account_id);
+                    if ($acc) {
+                        $acc->decrement('balance', $this->expense_amount);
+                    }
+                }
+            }
         }
 
         $this->showExpenseModal = false;
-        $this->reset(['expenseId', 'expense_title', 'expense_amount']);
-        session()->flash('message', 'Gider kaydı başarıyla kaydedildi.');
+        $this->reset(['expenseId', 'expense_title', 'expense_amount', 'expense_credit_card_id', 'expense_account_id']);
+        session()->flash('message', 'Harcama kaydı başarıyla kaydedildi ve ilgili kart/hesap borcu senkronize edildi.');
     }
+
 
     public function deleteIncome(int $id): void
     {
@@ -335,11 +345,16 @@ class Index extends Component
         $netRemaining = $totalIncome - $totalExpense;
         $savingsRate = $totalIncome > 0 ? max(0, round(($netRemaining / $totalIncome) * 100)) : 0;
 
+        $userCards = \App\Models\CreditCard::where('user_id', $userId)->with('bank')->get();
+        $userAccounts = \App\Models\Account::where('user_id', $userId)->with('bank')->get();
+
         return view('livewire.cashflow.index', [
             'incomes' => $incomes,
             'expenses' => $expenses,
             'stream' => $stream,
             'categories' => $categories,
+            'userCards' => $userCards,
+            'userAccounts' => $userAccounts,
             'totalIncome' => $totalIncome,
             'totalExpense' => $totalExpense,
             'netRemaining' => $netRemaining,
@@ -347,4 +362,5 @@ class Index extends Component
         ])->layout('layouts.app');
     }
 }
+
 

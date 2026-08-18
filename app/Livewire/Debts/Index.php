@@ -203,12 +203,20 @@ class Index extends Component
 
     public function save(): void
     {
-        $this->validate();
+        // Kredi kartı borcu eklendiğinde kart limiti aşım kontrolü
+        if ($this->type === 'credit_card' && $this->credit_card_id) {
+            $card = \App\Models\CreditCard::where('user_id', Auth::id())->find($this->credit_card_id);
+            if ($card && $card->credit_limit > 0 && $this->remaining > $card->credit_limit) {
+                $this->addError('remaining', '🚫 İşlem Engellendi: Girilen borç tutarı (₺' . number_format($this->remaining, 2, ',', '.') . ') kartın toplam limitini (₺' . number_format($card->credit_limit, 2, ',', '.') . ') aşıyor! Kredi kartı limitinin üzerinde borç tanımlanamaz.');
+                return;
+            }
+        }
 
         // Eğer şahıs borcu ise ve alacaklı adı girildiyse başlığı güncelle
         if ($this->type === 'personal' && !empty($this->creditor_name) && empty($this->title)) {
             $this->title = $this->creditor_name . ' (Şahıs Borcu)';
         }
+
 
         $data = [
             'user_id' => Auth::id(),

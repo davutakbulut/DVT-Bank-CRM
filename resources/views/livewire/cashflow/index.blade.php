@@ -485,9 +485,45 @@
 
                 <div class="space-y-3.5">
                     <div>
-                        <label class="block text-xs font-bold text-gray-700 mb-1">Gider Başlığı</label>
-                        <input type="text" wire:model="expense_title" class="w-full rounded-xl border-gray-300 text-sm font-medium focus:ring-rose-500 focus:border-rose-500" placeholder="Örn: Ev Kirası, Doğalgaz veya Market">
+                        <label class="block text-xs font-bold text-gray-700 mb-1">Harcama Başlığı</label>
+                        <input type="text" wire:model="expense_title" class="w-full rounded-xl border-gray-300 text-sm font-medium focus:ring-rose-500 focus:border-rose-500" placeholder="Örn: Market Alışverişi veya Sigorta Poliçesi">
                         @error('expense_title') <span class="text-red-500 text-xs font-bold">{{ $message }}</span> @enderror
+                    </div>
+
+                    <!-- Ödeme Yöntemi & İlgili Kart/Hesap -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 p-3 bg-slate-50 rounded-xl border border-slate-200/80">
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 mb-1">Nereden Ödendi?</label>
+                            <select wire:model.live="payment_method" class="w-full rounded-xl border-gray-300 text-xs font-bold focus:ring-rose-500 focus:border-rose-500">
+                                <option value="credit_card">💳 Kredi Kartı</option>
+                                <option value="kmh">⚡ KMH / Ek Para (Avans)</option>
+                                <option value="account">🏛️ Vadesiz Banka Hesabı</option>
+                                <option value="cash">💵 Nakit / Cüzdan</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            @if ($payment_method === 'credit_card')
+                                <label class="block text-xs font-bold text-gray-700 mb-1">Hangi Kredi Kartınız?</label>
+                                <select wire:model="expense_credit_card_id" class="w-full rounded-xl border-gray-300 text-xs font-medium focus:ring-rose-500 focus:border-rose-500">
+                                    <option value="">Kart Seçin</option>
+                                    @foreach ($userCards as $uc)
+                                        <option value="{{ $uc->id }}">{{ $uc->bank?->name }} - {{ $uc->name }} ({{ $uc->masked_card_number }})</option>
+                                    @endforeach
+                                </select>
+                            @elseif (in_array($payment_method, ['account', 'kmh']))
+                                <label class="block text-xs font-bold text-gray-700 mb-1">Hangi Banka Hesabı?</label>
+                                <select wire:model="expense_account_id" class="w-full rounded-xl border-gray-300 text-xs font-medium focus:ring-rose-500 focus:border-rose-500">
+                                    <option value="">Hesap Seçin</option>
+                                    @foreach ($userAccounts as $ua)
+                                        <option value="{{ $ua->id }}">{{ $ua->bank?->name }} - {{ $ua->name }} ({{ $ua->masked_iban }})</option>
+                                    @endforeach
+                                </select>
+                            @else
+                                <label class="block text-xs font-bold text-gray-700 mb-1">Ödeme Türü</label>
+                                <div class="text-xs text-gray-500 font-bold py-2">Elden / Nakit Harcama</div>
+                            @endif
+                        </div>
                     </div>
 
                     <div class="grid grid-cols-2 gap-3">
@@ -508,17 +544,55 @@
                     </div>
 
                     <div>
-                        <label class="block text-xs font-bold text-gray-700 mb-1">Tutar (TL)</label>
-                        <input type="number" step="0.01" wire:model="expense_amount" class="w-full rounded-xl border-gray-300 text-sm font-black text-rose-600 focus:ring-rose-500 focus:border-rose-500" placeholder="18500">
+                        <label class="block text-xs font-bold text-gray-700 mb-1">Toplam Tutar (TL)</label>
+                        <input type="number" step="0.01" wire:model.live="expense_amount" class="w-full rounded-xl border-gray-300 text-sm font-black text-rose-600 focus:ring-rose-500 focus:border-rose-500" placeholder="1500.00">
                         @error('expense_amount') <span class="text-red-500 text-xs font-bold">{{ $message }}</span> @enderror
                     </div>
 
-                    <div class="flex items-center gap-2 pt-1">
-                        <input type="checkbox" id="expense_recurring" wire:model="expense_is_recurring" class="rounded border-gray-300 text-rose-600 focus:ring-rose-500">
-                        <label for="expense_recurring" class="text-xs font-bold text-gray-700 cursor-pointer">
-                            Her ay tekrarlayan sabit gider (Kira, Fatura, Aidat vb.)
+                    <!-- Taksitli İşlem Seçeneği -->
+                    <div class="p-3 bg-amber-50/70 rounded-xl border border-amber-200/80 space-y-2.5">
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <input type="checkbox" wire:model.live="is_installment" class="rounded border-amber-400 text-amber-600 focus:ring-amber-500">
+                            <span class="text-xs font-black text-amber-900">💳 Taksitli İşlem (Gelecek Aylara Eşit Dağıt)</span>
                         </label>
+
+                        @if ($is_installment)
+                            <div class="grid grid-cols-2 gap-3 pt-1 border-t border-amber-200/60 items-center">
+                                <div>
+                                    <label class="block text-[11px] font-bold text-amber-800 mb-1">Taksit Sayısı</label>
+                                    <select wire:model.live="installment_count" class="w-full rounded-xl border-amber-300 text-xs font-bold bg-white focus:ring-amber-500 focus:border-amber-500">
+                                        <option value="2">2 Taksit</option>
+                                        <option value="3">3 Taksit</option>
+                                        <option value="4">4 Taksit</option>
+                                        <option value="6">6 Taksit</option>
+                                        <option value="9">9 Taksit</option>
+                                        <option value="12">12 Taksit</option>
+                                        <option value="18">18 Taksit</option>
+                                        <option value="24">24 Taksit</option>
+                                    </select>
+                                </div>
+                                <div class="text-right">
+                                    <span class="text-[10px] font-bold text-amber-700 block uppercase">Aylık Taksit</span>
+                                    <span class="text-sm font-black text-amber-900">
+                                        ₺{{ $installment_count > 0 && $expense_amount > 0 ? number_format($expense_amount / $installment_count, 2, ',', '.') : '0,00' }} / Ay
+                                    </span>
+                                </div>
+                            </div>
+                            <p class="text-[10px] text-amber-700">
+                                ℹ️ {{ $installment_count }} ay boyunca her aya ₺{{ $installment_count > 0 && $expense_amount > 0 ? number_format($expense_amount / $installment_count, 2, ',', '.') : '0,00' }} taksit harcaması otomatik işlenir.
+                            </p>
+                        @endif
                     </div>
+
+                    @if (!$is_installment)
+                        <div class="flex items-center gap-2 pt-0.5">
+                            <input type="checkbox" id="expense_recurring" wire:model="expense_is_recurring" class="rounded border-gray-300 text-rose-600 focus:ring-rose-500">
+                            <label for="expense_recurring" class="text-xs font-bold text-gray-700 cursor-pointer">
+                                Her ay tekrarlayan sabit gider (Kira, Fatura, Aidat vb.)
+                            </label>
+                        </div>
+                    @endif
+
                 </div>
 
                 <div class="flex justify-end gap-3 pt-3 border-t border-gray-100">
