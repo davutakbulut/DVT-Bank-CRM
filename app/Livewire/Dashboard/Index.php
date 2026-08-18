@@ -106,10 +106,11 @@ class Index extends Component
             ->latest()
             ->first();
 
-        // Aylık Gelir & Sabit Gider Özeti
-        $totalMonthlyIncome = Income::where('user_id', $user->id)->sum('amount');
-        $totalMonthlyExpense = Expense::where('user_id', $user->id)->sum('amount');
-        $availableForDebt = max(0, $totalMonthlyIncome - $totalMonthlyExpense);
+        // Ekstra Zengin Finansal Metrikler
+        $activeDebtsCount = Debt::where('user_id', $user->id)->where('status', 'active')->count();
+        $activeCardsCount = CreditCard::where('user_id', $user->id)->count();
+        $activeAccountsCount = Account::where('user_id', $user->id)->count();
+        $debtToIncomeRatio = $totalMonthlyIncome > 0 ? round(($riskSummary['total_monthly_commitment'] / $totalMonthlyIncome) * 100, 1) : 0;
 
         return view('livewire.dashboard.index', [
             'riskSummary' => $riskSummary,
@@ -119,6 +120,10 @@ class Index extends Component
             'totalMonthlyIncome' => $totalMonthlyIncome,
             'totalMonthlyExpense' => $totalMonthlyExpense,
             'availableForDebt' => $availableForDebt,
+            'activeDebtsCount' => $activeDebtsCount,
+            'activeCardsCount' => $activeCardsCount,
+            'activeAccountsCount' => $activeAccountsCount,
+            'debtToIncomeRatio' => $debtToIncomeRatio,
         ])->layout('layouts.app');
     }
 }

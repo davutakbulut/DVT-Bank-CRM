@@ -1,4 +1,4 @@
-<div class="py-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-8">
+<div class="py-1 sm:py-6 px-3 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-6">
     <div>
         <h1 class="text-2xl font-black text-gray-900 tracking-tight">📊 Finansal Analiz & Faiz Yükü Raporları</h1>
         <p class="text-sm text-gray-600">Banka bazlı faiz maliyetleri, borç kapanış projeksiyonu ve ödeme geçmişiniz</p>
