@@ -246,11 +246,26 @@ class Index extends Component
             } else {
                 Expense::create($data);
 
-                // Kredi kartı seçildiyse kart borcunu otomatik artır
+                // Kredi kartı seçildiyse hem kart borcunu hem de Borçlar tablosundaki dönem borcunu otomatik artır
                 if ($this->payment_method === 'credit_card' && $this->expense_credit_card_id) {
                     $card = \App\Models\CreditCard::where('user_id', $userId)->find($this->expense_credit_card_id);
                     if ($card) {
                         $card->increment('current_debt', $this->expense_amount);
+                        // Asgari ödemeyi de güncelle (%20)
+                        $card->update(['minimum_payment' => round($card->current_debt * 0.20, 2)]);
+                    }
+
+                    // Borçlar tablosundaki ekstre borcunu güncelle
+                    $debt = \App\Models\Debt::where('user_id', $userId)
+                        ->where('credit_card_id', $this->expense_credit_card_id)
+                        ->where(function($q) {
+                            $q->whereNull('total_installments')->orWhere('total_installments', '<=', 1);
+                        })
+                        ->first();
+
+                    if ($debt) {
+                        $debt->increment('remaining', $this->expense_amount);
+                        $debt->increment('principal', $this->expense_amount);
                     }
                 }
                 // KMH veya Vadesiz Hesap seçildiyse bakiyeyi düşür
@@ -265,9 +280,8 @@ class Index extends Component
 
         $this->showExpenseModal = false;
         $this->reset(['expenseId', 'expense_title', 'expense_amount', 'expense_credit_card_id', 'expense_account_id']);
-        session()->flash('message', 'Harcama kaydı başarıyla kaydedildi ve ilgili kart/hesap borcu senkronize edildi.');
+        session()->flash('message', 'Harcama kaydı başarıyla kaydedildi ve Borçlar & Kartlar alanları anında senkronize edildi.');
     }
-
 
     public function deleteIncome(int $id): void
     {
@@ -280,12 +294,25 @@ class Index extends Component
         $userId = Auth::id();
         $exp = Expense::where('user_id', $userId)->findOrFail($id);
 
-        // 1. Kredi kartı borcunu otomatik geri düşür
+        // 1. Kredi kartı borcunu ve Borçlar tablosundaki kaydı otomatik geri düşür
         if ($exp->credit_card_id && $exp->payment_method === 'credit_card') {
             $card = \App\Models\CreditCard::where('user_id', $userId)->find($exp->credit_card_id);
             if ($card && $card->current_debt > 0) {
                 $reduction = min((float)$card->current_debt, (float)$exp->amount);
                 $card->decrement('current_debt', $reduction);
+                $card->update(['minimum_payment' => round($card->current_debt * 0.20, 2)]);
+            }
+
+            $debt = \App\Models\Debt::where('user_id', $userId)
+                ->where('credit_card_id', $exp->credit_card_id)
+                ->where(function($q) {
+                    $q->whereNull('total_installments')->orWhere('total_installments', '<=', 1);
+                })
+                ->first();
+
+            if ($debt && $debt->remaining > 0) {
+                $reduction = min((float)$debt->remaining, (float)$exp->amount);
+                $debt->decrement('remaining', $reduction);
             }
         }
         // 2. Banka / KMH hesabı bakiyesini otomatik geri iade et
@@ -311,8 +338,9 @@ class Index extends Component
         }
 
         $exp->delete();
-        session()->flash('message', 'Gider kaydı silindi ve ilgili kart/hesap bakiyesi otomatik olarak geri güncellendi.');
+        session()->flash('message', 'Gider kaydı silindi ve Borçlar & Kartlar bakiyesi otomatik olarak geri düşürüldü.');
     }
+
 
 
     public function exportExcel()
