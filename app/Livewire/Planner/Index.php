@@ -79,6 +79,62 @@ class Index extends Component
         }
     }
 
+    public function exportExcel()
+    {
+        $user = Auth::user();
+        $activePlan = PaymentPlan::where('user_id', $user->id)
+            ->where('status', 'active')
+            ->with(['items.debt.bank'])
+            ->latest()
+            ->first();
+
+        $headers = [
+            'Content-Type' => 'text/csv; charset=UTF-8',
+            'Content-Disposition' => 'attachment; filename="dvt_bank_odeme_plani_' . date('Y-m-d_His') . '.csv"',
+        ];
+
+        $callback = function () use ($activePlan) {
+            $file = fopen('php://output', 'w');
+            fprintf($file, chr(0xEF).chr(0xBB).chr(0xBF));
+
+            fputcsv($file, [
+                'Plan Adı',
+                'Strateji Türü',
+                'Ödeme Ayı',
+                'Banka Adı',
+                'Borç Kalemi',
+                'Aylık Faiz Oranı (%)',
+                'Planlanan Ödeme Tutarı (TL)',
+                'Ödeme Durumu',
+            ], ';');
+
+            if ($activePlan) {
+                foreach ($activePlan->items as $item) {
+                    $strategyLabel = match($activePlan->strategy) {
+                        'avalanche' => 'Çığ (En Yüksek Faiz Öncelikli)',
+                        'snowball' => 'Kartopu (En Küçük Borç Öncelikli)',
+                        default => 'DVT 90 Gün Hibrit Kalkanı',
+                    };
+
+                    fputcsv($file, [
+                        $activePlan->name,
+                        $strategyLabel,
+                        Carbon::parse($item->month)->translatedFormat('F Y'),
+                        $item->debt?->bank?->name ?? 'Diğer Banka',
+                        $item->debt?->title ?? 'Borç Kalemi',
+                        '%' . number_format($item->debt?->interest_rate ?? 0, 2, ',', ''),
+                        number_format($item->allocated_amount, 2, ',', ''),
+                        $item->status === 'paid' ? 'Ödendi ✓' : 'Beklemede',
+                    ], ';');
+                }
+            }
+
+            fclose($file);
+        };
+
+        return response()->streamDownload($callback, 'dvt_bank_odeme_plani_' . date('Y-m-d') . '.csv', $headers);
+    }
+
     public function render()
     {
         $user = Auth::user();

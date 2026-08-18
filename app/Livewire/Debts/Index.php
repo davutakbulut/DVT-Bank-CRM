@@ -156,6 +156,66 @@ class Index extends Component
         session()->flash('message', 'Borç kaydı silindi.');
     }
 
+    public function exportExcel()
+    {
+        $userId = Auth::id();
+        $debts = Debt::where('user_id', $userId)->with('bank')->get();
+
+        $headers = [
+            'Content-Type' => 'text/csv; charset=UTF-8',
+            'Content-Disposition' => 'attachment; filename="dvt_bank_borclar_' . date('Y-m-d_His') . '.csv"',
+        ];
+
+        $callback = function () use ($debts) {
+            $file = fopen('php://output', 'w');
+            // UTF-8 BOM for Excel Turkish character compatibility
+            fprintf($file, chr(0xEF).chr(0xBB).chr(0xBF));
+
+            // Başlık Satırı
+            fputcsv($file, [
+                'Banka Adı',
+                'Borç Başlığı',
+                'Borç Türü',
+                'Kalan Borç (TL)',
+                'Aylık Taksit / Asgari (TL)',
+                'Aylık Faiz Oranı (%)',
+                'Gecikme Süresi (Gün)',
+                'Vade Tarihi',
+                'Son Ödeme Tarihi',
+                'Durum',
+                'Notlar',
+            ], ';');
+
+            foreach ($debts as $d) {
+                $typeLabel = match($d->type) {
+                    'loan' => 'İhtiyaç / Taşıt / Konut Kredisi',
+                    'kmh' => 'KMH / Eksi Bakiye',
+                    'credit_card' => 'Kredi Kartı Borcu',
+                    'personal' => 'Şahıs / Elden Borç',
+                    default => 'Diğer Borç',
+                };
+
+                fputcsv($file, [
+                    $d->bank?->name ?? 'Diğer / Şahıs',
+                    $d->title,
+                    $typeLabel,
+                    number_format($d->remaining, 2, ',', ''),
+                    number_format($d->installment_amount ?: 0, 2, ',', ''),
+                    '%' . number_format($d->interest_rate, 2, ',', ''),
+                    $d->days_overdue . ' Gün',
+                    $d->next_due_date ? Carbon::parse($d->next_due_date)->format('d.m.Y') : '-',
+                    $d->last_payment_date ? Carbon::parse($d->last_payment_date)->format('d.m.Y') : '-',
+                    $d->remaining <= 0 ? 'Ödendi' : ($d->days_overdue >= 65 ? 'Kritik Risk' : ($d->days_overdue > 0 ? 'Gecikmede' : 'Düzenli')),
+                    $d->notes ?? '',
+                ], ';');
+            }
+
+            fclose($file);
+        };
+
+        return response()->streamDownload($callback, 'dvt_bank_borclar_' . date('Y-m-d') . '.csv', $headers);
+    }
+
     public function render()
     {
         $userId = Auth::id();

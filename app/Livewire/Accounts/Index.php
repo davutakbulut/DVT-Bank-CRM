@@ -95,6 +95,64 @@ class Index extends Component
         session()->flash('message', 'Hesap silindi.');
     }
 
+    public function exportExcel()
+    {
+        $accounts = Account::where('user_id', Auth::id())->with('bank')->get();
+
+        $headers = [
+            'Content-Type' => 'text/csv; charset=UTF-8',
+            'Content-Disposition' => 'attachment; filename="dvt_bank_hesaplar_' . date('Y-m-d_His') . '.csv"',
+        ];
+
+        $callback = function () use ($accounts) {
+            $file = fopen('php://output', 'w');
+            fprintf($file, chr(0xEF).chr(0xBB).chr(0xBF));
+
+            fputcsv($file, [
+                'Banka Adı',
+                'Hesap Adı',
+                'Hesap Türü',
+                'IBAN No',
+                'Bakiye (TL)',
+                'KMH Limiti (TL)',
+                'Kullanılan KMH (Eksi Bakiye) (TL)',
+                'Kullanılabilir Kalan Limit (TL)',
+                'Aylık KMH Faiz Oranı (%)',
+                'Hesap Durumu',
+            ], ';');
+
+            foreach ($accounts as $acc) {
+                $isNegative = $acc->balance < 0;
+                $usedKmh = $isNegative ? abs($acc->balance) : 0;
+                $availableLimit = max(0, ($acc->kmh_limit ?? 0) - $usedKmh);
+
+                $typeLabel = match($acc->type) {
+                    'checking' => 'Vadesiz Mevduat Hesabı',
+                    'savings' => 'Vadeli / Birikim Hesabı',
+                    'kmh' => 'KMH / Eksi Bakiye Hesabı',
+                    default => 'Banka Hesabı',
+                };
+
+                fputcsv($file, [
+                    $acc->bank?->name ?? 'Banka',
+                    $acc->name,
+                    $typeLabel,
+                    $acc->iban ? 'TR' . $acc->iban : '-',
+                    number_format($acc->balance, 2, ',', ''),
+                    number_format($acc->kmh_limit ?: 0, 2, ',', ''),
+                    number_format($usedKmh, 2, ',', ''),
+                    number_format($availableLimit, 2, ',', ''),
+                    '%' . number_format($acc->kmh_interest_rate ?: 5.0, 2, ',', ''),
+                    $isNegative ? 'Eksi Bakiyede (KMH Devrede)' : 'Artı Bakiyede (Pozitif Likidite)',
+                ], ';');
+            }
+
+            fclose($file);
+        };
+
+        return response()->streamDownload($callback, 'dvt_bank_hesaplar_' . date('Y-m-d') . '.csv', $headers);
+    }
+
     public function render()
     {
         $userId = Auth::id();

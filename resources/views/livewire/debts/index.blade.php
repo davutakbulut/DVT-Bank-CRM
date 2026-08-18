@@ -8,7 +8,32 @@
             </h1>
             <p class="text-sm text-gray-600">Tüm banka kredileri, KMH eksi bakiyeleri, şahıs borçları ve 90 günlük yasal takip sayaçları</p>
         </div>
-        <div class="flex items-center gap-2.5">
+        <div class="flex items-center gap-2.5 flex-wrap">
+            <!-- Excel / CSV İndirme Butonu (Tooltip Popup ile) -->
+            <div class="relative group/tooltip" x-data="{ show: false }">
+                <button wire:click="exportExcel" 
+                        @mouseenter="show = true" 
+                        @mouseleave="show = false"
+                        class="inline-flex items-center gap-1.5 px-3.5 py-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300 font-black text-xs sm:text-sm rounded-xl shadow-2xs transition-all active:scale-95">
+                    <span>📥</span>
+                    <span>Excel'e Aktar</span>
+                </button>
+
+                <!-- Açıklayıcı Bilgi Popup (Tooltip) -->
+                <div x-show="show" 
+                     x-cloak
+                     class="absolute right-0 top-full mt-2 w-72 p-3 bg-slate-900 text-white rounded-2xl shadow-2xl border border-slate-700 text-xs z-50 pointer-events-none transition-all">
+                    <div class="flex items-center gap-1.5 font-bold text-emerald-300 border-b border-slate-800 pb-1.5 mb-1.5">
+                        <span>📊</span>
+                        <span>Borç Verisi Excel Raporu</span>
+                    </div>
+                    <p class="text-[11px] text-slate-300 leading-relaxed">
+                        Tüm banka borçlarınızı, kalan ana para bakiyelerini, aylık taksit yüklerini, faiz oranlarını ve 90 günlük yasal takip gecikme sayaçlarını içeren <strong>UTF-8 uyumlu Excel tablosunu</strong> anında bilgisayarınıza indirir.
+                    </p>
+                    <span class="block mt-2 text-[10px] font-bold text-emerald-400">✓ Excel & Google Sheets Uyumlu</span>
+                </div>
+            </div>
+
             <!-- Görünüm Modu Değiştirici -->
             <div class="inline-flex rounded-xl bg-gray-100 p-1 border border-gray-200 shadow-2xs">
                 <button wire:click="$set('viewMode', 'flow')" class="px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 {{ $viewMode === 'flow' ? 'bg-white text-indigo-700 shadow-xs' : 'text-gray-600 hover:text-gray-900' }}">
@@ -26,6 +51,7 @@
             </button>
         </div>
     </div>
+
 
     @if (session()->has('message'))
         <div class="p-4 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-xl text-sm font-bold flex items-center gap-2 shadow-xs">

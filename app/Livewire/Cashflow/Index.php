@@ -187,6 +187,58 @@ class Index extends Component
         session()->flash('message', 'Gider kaydı silindi.');
     }
 
+    public function exportExcel()
+    {
+        $userId = Auth::id();
+        $incomes = Income::where('user_id', $userId)->get();
+        $expenses = Expense::where('user_id', $userId)->with('category')->get();
+
+        $headers = [
+            'Content-Type' => 'text/csv; charset=UTF-8',
+            'Content-Disposition' => 'attachment; filename="dvt_bank_nakit_akisi_' . date('Y-m-d_His') . '.csv"',
+        ];
+
+        $callback = function () use ($incomes, $expenses) {
+            $file = fopen('php://output', 'w');
+            fprintf($file, chr(0xEF).chr(0xBB).chr(0xBF));
+
+            fputcsv($file, [
+                'Tarih',
+                'İşlem Türü',
+                'Kategori / Gelir Tipi',
+                'Açıklama / Başlık',
+                'Tutar (TL)',
+                'Tekrarlayan Durum',
+            ], ';');
+
+            foreach ($incomes as $inc) {
+                fputcsv($file, [
+                    date('d.m.Y'),
+                    'Gelir (+)',
+                    $inc->type === 'salary' ? 'Maaş Geliri' : 'Ek Gelir',
+                    $inc->title,
+                    number_format($inc->amount, 2, ',', ''),
+                    $inc->is_recurring ? 'Aylık Tekrarlayan' : 'Tek Seferlik',
+                ], ';');
+            }
+
+            foreach ($expenses as $exp) {
+                fputcsv($file, [
+                    $exp->expense_date ? Carbon::parse($exp->expense_date)->format('d.m.Y') : date('d.m.Y'),
+                    'Gider (-)',
+                    $exp->category?->name ?? 'Genel Gider',
+                    $exp->title,
+                    number_format($exp->amount, 2, ',', ''),
+                    $exp->is_recurring ? 'Aylık Sabit Fatura/Kira' : 'Değişken Harcama',
+                ], ';');
+            }
+
+            fclose($file);
+        };
+
+        return response()->streamDownload($callback, 'dvt_bank_nakit_akisi_' . date('Y-m-d') . '.csv', $headers);
+    }
+
     public function render()
     {
         $userId = Auth::id();

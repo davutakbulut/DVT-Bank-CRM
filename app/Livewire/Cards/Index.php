@@ -100,6 +100,60 @@ class Index extends Component
         session()->flash('message', 'Kart silindi.');
     }
 
+    public function exportExcel()
+    {
+        $cards = CreditCard::where('user_id', Auth::id())->with('bank')->get();
+
+        $headers = [
+            'Content-Type' => 'text/csv; charset=UTF-8',
+            'Content-Disposition' => 'attachment; filename="dvt_bank_kredi_kartlari_' . date('Y-m-d_His') . '.csv"',
+        ];
+
+        $callback = function () use ($cards) {
+            $file = fopen('php://output', 'w');
+            fprintf($file, chr(0xEF).chr(0xBB).chr(0xBF));
+
+            fputcsv($file, [
+                'Banka Adı',
+                'Kart Adı',
+                'Son 4 Hane',
+                'Kart Limiti (TL)',
+                'Güncel Borç (TL)',
+                'Kullanılabilir Limit (TL)',
+                'Asgari Ödeme (TL)',
+                'Doluluk Oranı (%)',
+                'Hesap Kesim Günü',
+                'Son Ödeme Günü',
+                'Aylık Akdi Faiz (%)',
+                'Yapılandırma Durumu',
+            ], ';');
+
+            foreach ($cards as $c) {
+                $available = max(0, $c->credit_limit - $c->current_debt);
+                $util = $c->credit_limit > 0 ? round(($c->current_debt / $c->credit_limit) * 100, 1) : 0;
+
+                fputcsv($file, [
+                    $c->bank?->name ?? 'Banka',
+                    $c->name,
+                    $c->last_four ? '•••• ' . $c->last_four : '-',
+                    number_format($c->credit_limit, 2, ',', ''),
+                    number_format($c->current_debt, 2, ',', ''),
+                    number_format($available, 2, ',', ''),
+                    number_format($c->minimum_payment ?: ($c->current_debt * 0.40), 2, ',', ''),
+                    '%' . $util,
+                    'Ayın ' . $c->statement_day . '. Günü',
+                    'Ayın ' . $c->due_day . '. Günü',
+                    '%' . number_format($c->interest_rate, 2, ',', ''),
+                    $c->is_restructured ? 'Yapılandırılmış' : 'Standart',
+                ], ';');
+            }
+
+            fclose($file);
+        };
+
+        return response()->streamDownload($callback, 'dvt_bank_kredi_kartlari_' . date('Y-m-d') . '.csv', $headers);
+    }
+
     public function render()
     {
         $cards = CreditCard::where('user_id', Auth::id())->with('bank')->get();
