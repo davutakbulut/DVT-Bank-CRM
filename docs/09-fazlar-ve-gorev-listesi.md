@@ -20,15 +20,15 @@ Her fazın sonundaki **"Faz Çıkış Kriteri"** sağlanmadan sonraki faza geçi
 
 ## FAZ 1 — Auth, Roller, Veritabanı Çekirdeği (2-3 gün)
 
-- [ ] **[G1.01]** Laravel Breeze (Blade) kur; kayıt/giriş/şifre sıfırlama Türkçeleştir
-- [ ] **[G1.02]** spatie/laravel-permission kur; RoleSeeder (super_admin, admin, user)
-- [ ] **[G1.03]** Migration seti #1-2: plans → users alter → subscriptions → payments + PlanSeeder
-- [ ] **[G1.04]** Migration seti #3: banks → accounts → credit_cards → debts → payments_log + BankSeeder + CategorySeeder
-- [ ] **[G1.05]** Migration seti #4-5: categories → incomes → expenses → payment_plans → payment_plan_items → reminders → goals
-- [ ] **[G1.06]** Migration seti #6-7-8: ai_* tabloları, içerik tabloları, settings, audit_logs, import_jobs
-- [ ] **[G1.07]** Tüm modellere BelongsToUser global scope + softDeletes + encrypted cast'ler (iban vb.)
-- [ ] **[G1.08]** SuperAdminSeeder (.env'den email, rastgele şifre ilk girişte değişir) + DemoUserSeeder (6 banka senaryosu)
-- [ ] **[G1.09]** Middleware'ler: role:user / role:admin / role:super_admin + kayıt sonrası onboarding yönlendirmesi
+- [x] **[G1.01]** Laravel Breeze (Blade) kur; kayıt/giriş/şifre sıfırlama Türkçeleştir
+- [x] **[G1.02]** spatie/laravel-permission kur; RoleSeeder (super_admin, admin, user)
+- [x] **[G1.03]** Migration seti #1-2: plans → users alter → subscriptions → payments + PlanSeeder
+- [x] **[G1.04]** Migration seti #3: banks → accounts → credit_cards → debts → payments_log + BankSeeder + CategorySeeder
+- [x] **[G1.05]** Migration seti #4-5: categories → incomes → expenses → payment_plans → payment_plan_items → reminders → goals
+- [x] **[G1.06]** Migration seti #6-7-8: ai_* tabloları, içerik tabloları, settings, audit_logs, import_jobs
+- [x] **[G1.07]** Tüm modellere BelongsToUser global scope + softDeletes + encrypted cast'ler (iban vb.)
+- [x] **[G1.08]** SuperAdminSeeder (.env'den email, rastgele şifre ilk girişte değişir) + DemoUserSeeder (6 banka senaryosu)
+- [x] **[G1.09]** Middleware'ler: role:user / role:admin / role:super_admin + kayıt sonrası onboarding yönlendirmesi
 
 **Çıkış kriteri:** `migrate:fresh --seed` hatasız; 3 rolle giriş yapılıp doğru panele düşülüyor; IDOR testi (başkasının kaydına URL ile erişim) 403 dönüyor.
 

@@ -34,13 +34,23 @@ class RegisteredUserController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'terms' => ['accepted'],
+        ], [
+            'terms.accepted' => 'Devam etmek için Kullanım Koşulları ve KVKK Aydınlatma Metnini kabul etmelisiniz.',
         ]);
+
+        $freePlan = \App\Models\Plan::where('slug', 'free')->first();
 
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'plan_id' => $freePlan?->id,
+            'status' => 'active',
+            'onboarding_completed' => false,
         ]);
+
+        $user->assignRole('user');
 
         event(new Registered($user));
 
