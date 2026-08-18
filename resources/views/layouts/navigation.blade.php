@@ -68,7 +68,7 @@
                 </div>
             </div>
 
-            <!-- Right Side: User Profile & Dedicated Role Panels Menu (Desktop) -->
+            <!-- Right Side: User Profile & Role Panels Menu (Desktop) -->
             <div class="hidden md:flex items-center gap-3 shrink-0">
                 <x-dropdown align="right" width="56">
                     <x-slot name="trigger">
@@ -93,8 +93,8 @@
 
                         <!-- Management & Admin Roles Section -->
                         @if (Auth::user()->hasRole('super_admin') || Auth::user()->hasRole('admin'))
-                            <div class="py-1 border-b border-gray-100 bg-indigo-50/30">
-                                <span class="px-4 py-1 text-[10px] font-black uppercase tracking-wider text-indigo-500 block">Yönetim Panelleri</span>
+                            <div class="py-1 border-b border-gray-100 bg-indigo-50/40">
+                                <span class="px-4 py-1 text-[10px] font-black uppercase tracking-wider text-indigo-600 block">Yönetim Panelleri</span>
                                 @if (Auth::user()->hasRole('super_admin'))
                                     <x-dropdown-link href="/super" target="_blank" class="flex items-center justify-between text-red-600 font-bold hover:bg-red-50">
                                         <span>⚙️ Süper Admin Paneli</span>
@@ -102,9 +102,9 @@
                                     </x-dropdown-link>
                                 @endif
                                 @if (Auth::user()->hasRole('admin'))
-                                    <x-dropdown-link href="/admin" target="_blank" class="flex items-center justify-between text-purple-600 font-bold hover:bg-purple-50">
+                                    <x-dropdown-link href="/admin" target="_blank" class="flex items-center justify-between text-indigo-600 font-bold hover:bg-indigo-50">
                                         <span>🛡️ Yönetim Paneli</span>
-                                        <span class="text-[9px] px-1.5 py-0.5 rounded bg-purple-100 text-purple-700 font-black">ADMIN</span>
+                                        <span class="text-[9px] px-1.5 py-0.5 rounded bg-indigo-100 text-indigo-700 font-black">ADMIN</span>
                                     </x-dropdown-link>
                                 @endif
                             </div>
@@ -153,7 +153,7 @@
     </div>
 
     <!-- ========================================================================= -->
-    <!-- 📱 MOBILE SLIDE-OVER DRAWER (SAĞDAN AÇILAN MODERN ÇEKMECE MENÜ)             -->
+    <!-- 📱 MOBILE SLIDE-OVER DRAWER (TEMA İLE %100 UYUMLU BEYAZ/AÇIK DÜZEN)       -->
     <!-- ========================================================================= -->
     <div x-show="open" 
          x-cloak
@@ -161,7 +161,7 @@
          class="fixed inset-0 z-50 md:hidden" 
          style="display: none;">
         
-        <!-- Dimmed Backdrop Overlay (Sayfayı etkilemez, üstünde kalır) -->
+        <!-- Dimmed Backdrop Overlay -->
         <div x-show="open"
              x-transition:enter="transition-opacity ease-linear duration-300"
              x-transition:enter-start="opacity-0"
@@ -170,10 +170,10 @@
              x-transition:leave-start="opacity-100"
              x-transition:leave-end="opacity-0"
              @click="open = false"
-             class="fixed inset-0 bg-slate-950/70 backdrop-blur-sm transition-opacity">
+             class="fixed inset-0 bg-gray-900/50 backdrop-blur-xs transition-opacity">
         </div>
 
-        <!-- Right Slide-Over Panel -->
+        <!-- Right Slide-Over Panel (Light Theme: White background & Gray borders) -->
         <div x-show="open"
              x-transition:enter="transition ease-out duration-300 transform"
              x-transition:enter-start="translate-x-full"
@@ -181,131 +181,131 @@
              x-transition:leave="transition ease-in duration-200 transform"
              x-transition:leave-start="translate-x-0"
              x-transition:leave-end="translate-x-full"
-             class="fixed inset-y-0 right-0 w-full max-w-xs bg-slate-900 border-l border-slate-800 shadow-2xl flex flex-col justify-between overflow-hidden z-50 text-slate-100">
+             class="fixed inset-y-0 right-0 w-full max-w-xs bg-white border-l border-gray-200 shadow-2xl flex flex-col justify-between overflow-hidden z-50 text-gray-900">
             
             <!-- Drawer Header & Navigation (Scrollable) -->
             <div class="flex-1 overflow-y-auto px-5 py-6 space-y-6">
                 <!-- Top Brand & Close Button Bar -->
-                <div class="flex items-center justify-between border-b border-slate-800 pb-4">
+                <div class="flex items-center justify-between border-b border-gray-100 pb-4">
                     <div class="flex items-center gap-2">
-                        <x-application-logo class="h-7 w-auto text-indigo-400" />
-                        <span class="font-black text-sm text-white tracking-tight">DVT CRM</span>
+                        <x-application-logo class="h-7 w-auto text-indigo-700" />
+                        <span class="font-black text-sm text-gray-900 tracking-tight">DVT CRM</span>
                     </div>
-                    <button @click="open = false" class="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white transition-colors">
+                    <button @click="open = false" class="p-2 rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-600 hover:text-gray-900 transition-colors">
                         <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12" />
                         </svg>
                     </button>
                 </div>
 
-                <!-- User Profile Card -->
-                <div class="p-3.5 rounded-2xl bg-slate-950 border border-slate-800 flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-xl bg-indigo-600 text-white flex items-center justify-center font-black text-sm shadow-md">
+                <!-- User Profile Card (Light Gray Card) -->
+                <div class="p-3.5 rounded-2xl bg-gray-50 border border-gray-200 flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-indigo-600 text-white flex items-center justify-center font-black text-sm shadow-sm">
                         {{ mb_substr(Auth::user()->name, 0, 1) }}
                     </div>
                     <div class="min-w-0 flex-1">
-                        <p class="font-bold text-sm text-white truncate">{{ Auth::user()->name }}</p>
-                        <p class="text-[11px] text-slate-400 truncate">{{ Auth::user()->email }}</p>
+                        <p class="font-bold text-sm text-gray-900 truncate">{{ Auth::user()->name }}</p>
+                        <p class="text-[11px] text-gray-500 truncate">{{ Auth::user()->email }}</p>
                     </div>
                 </div>
 
                 <!-- Management Panels (If Super Admin / Admin) -->
                 @if (Auth::user()->hasRole('super_admin') || Auth::user()->hasRole('admin'))
                     <div class="space-y-2">
-                        <span class="text-[10px] font-black uppercase tracking-wider text-indigo-400 px-1 block">Yetkili Panelleri</span>
+                        <span class="text-[10px] font-black uppercase tracking-wider text-indigo-600 px-1 block">Yetkili Panelleri</span>
                         <div class="grid grid-cols-1 gap-2">
                             @if (Auth::user()->hasRole('super_admin'))
-                                <a href="/super" target="_blank" class="flex items-center justify-between p-3 rounded-xl bg-red-950/40 border border-red-800/50 text-red-300 font-bold text-xs hover:bg-red-900/50 transition-colors">
+                                <a href="/super" target="_blank" class="flex items-center justify-between p-3 rounded-xl bg-red-50 border border-red-200 text-red-700 font-bold text-xs hover:bg-red-100 transition-colors">
                                     <span class="flex items-center gap-2">
                                         <span>⚙️</span>
                                         <span>Süper Admin Paneli</span>
                                     </span>
-                                    <span class="text-[9px] px-1.5 py-0.5 rounded bg-red-500/20 text-red-400 font-black">SUPER</span>
+                                    <span class="text-[9px] px-1.5 py-0.5 rounded bg-red-200 text-red-800 font-black">SUPER</span>
                                 </a>
                             @endif
                             @if (Auth::user()->hasRole('admin'))
-                                <a href="/admin" target="_blank" class="flex items-center justify-between p-3 rounded-xl bg-purple-950/40 border border-purple-800/50 text-purple-300 font-bold text-xs hover:bg-purple-900/50 transition-colors">
+                                <a href="/admin" target="_blank" class="flex items-center justify-between p-3 rounded-xl bg-indigo-50 border border-indigo-200 text-indigo-700 font-bold text-xs hover:bg-indigo-100 transition-colors">
                                     <span class="flex items-center gap-2">
                                         <span>🛡️</span>
                                         <span>Yönetim Paneli</span>
                                     </span>
-                                    <span class="text-[9px] px-1.5 py-0.5 rounded bg-purple-500/20 text-purple-400 font-black">ADMIN</span>
+                                    <span class="text-[9px] px-1.5 py-0.5 rounded bg-indigo-200 text-indigo-800 font-black">ADMIN</span>
                                 </a>
                             @endif
                         </div>
                     </div>
                 @endif
 
-                <!-- Core Navigation Links -->
-                <div class="space-y-1.5">
-                    <span class="text-[10px] font-black uppercase tracking-wider text-slate-500 px-1 block">Finansal Menü</span>
+                <!-- Core Navigation Links (Clean Light Theme) -->
+                <div class="space-y-1">
+                    <span class="text-[10px] font-black uppercase tracking-wider text-gray-400 px-1 block mb-2">Finansal Menü</span>
                     
-                    <a href="{{ route('dashboard') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-bold transition-all {{ request()->routeIs('dashboard') ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/30' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
+                    <a href="{{ route('dashboard') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-bold transition-all {{ request()->routeIs('dashboard') ? 'bg-indigo-50 text-indigo-700 border-l-4 border-indigo-600' : 'text-gray-700 hover:bg-gray-50 hover:text-indigo-600' }}">
                         <span>📊</span>
                         <span>Kontrol Paneli</span>
                     </a>
 
-                    <a href="{{ route('debts.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-bold transition-all {{ request()->routeIs('debts.*') ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/30' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
+                    <a href="{{ route('debts.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-bold transition-all {{ request()->routeIs('debts.*') ? 'bg-indigo-50 text-indigo-700 border-l-4 border-indigo-600' : 'text-gray-700 hover:bg-gray-50 hover:text-indigo-600' }}">
                         <span>💳</span>
                         <span>Borçlarım</span>
                     </a>
 
-                    <a href="{{ route('cards.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-bold transition-all {{ request()->routeIs('cards.*') ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/30' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
+                    <a href="{{ route('cards.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-bold transition-all {{ request()->routeIs('cards.*') ? 'bg-indigo-50 text-indigo-700 border-l-4 border-indigo-600' : 'text-gray-700 hover:bg-gray-50 hover:text-indigo-600' }}">
                         <span>💳</span>
                         <span>Kartlarım</span>
                     </a>
 
-                    <a href="{{ route('accounts.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-bold transition-all {{ request()->routeIs('accounts.*') ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/30' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
+                    <a href="{{ route('accounts.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-bold transition-all {{ request()->routeIs('accounts.*') ? 'bg-indigo-50 text-indigo-700 border-l-4 border-indigo-600' : 'text-gray-700 hover:bg-gray-50 hover:text-indigo-600' }}">
                         <span>🏦</span>
                         <span>Hesaplarım & KMH</span>
                     </a>
 
-                    <a href="{{ route('cashflow.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-bold transition-all {{ request()->routeIs('cashflow.*') ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/30' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
+                    <a href="{{ route('cashflow.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-bold transition-all {{ request()->routeIs('cashflow.*') ? 'bg-indigo-50 text-indigo-700 border-l-4 border-indigo-600' : 'text-gray-700 hover:bg-gray-50 hover:text-indigo-600' }}">
                         <span>📈</span>
                         <span>Gelir / Gider</span>
                     </a>
 
-                    <a href="{{ route('planner.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-bold transition-all {{ request()->routeIs('planner.*') ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/30' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
+                    <a href="{{ route('planner.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-bold transition-all {{ request()->routeIs('planner.*') ? 'bg-indigo-50 text-indigo-700 border-l-4 border-indigo-600' : 'text-gray-700 hover:bg-gray-50 hover:text-indigo-600' }}">
                         <span>🎯</span>
                         <span>Ödeme Planı (Çığ / Kartopu)</span>
                     </a>
 
-                    <a href="{{ route('calendar.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-bold transition-all {{ request()->routeIs('calendar.*') ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/30' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
+                    <a href="{{ route('calendar.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-bold transition-all {{ request()->routeIs('calendar.*') ? 'bg-indigo-50 text-indigo-700 border-l-4 border-indigo-600' : 'text-gray-700 hover:bg-gray-50 hover:text-indigo-600' }}">
                         <span>📅</span>
                         <span>Ödeme Takvimi & Vadeler</span>
                     </a>
 
-                    <a href="{{ route('reports.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-bold transition-all {{ request()->routeIs('reports.*') ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/30' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
+                    <a href="{{ route('reports.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-bold transition-all {{ request()->routeIs('reports.*') ? 'bg-indigo-50 text-indigo-700 border-l-4 border-indigo-600' : 'text-gray-700 hover:bg-gray-50 hover:text-indigo-600' }}">
                         <span>📑</span>
                         <span>Finansal Raporlar</span>
                     </a>
 
                     <!-- AI Coach Highlight Link -->
-                    <a href="{{ route('ai.coach') }}" class="flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-black transition-all bg-indigo-950/80 border border-indigo-500/40 text-indigo-300 hover:bg-indigo-900 shadow-md">
+                    <a href="{{ route('ai.coach') }}" class="flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-bold transition-all {{ request()->routeIs('ai.*') ? 'bg-indigo-100 text-indigo-800 border-l-4 border-indigo-600' : 'bg-indigo-50/80 border border-indigo-100 text-indigo-700 hover:bg-indigo-100' }}">
                         <span class="flex items-center gap-2">
                             <span>🤖</span>
                             <span>AI Finans Koçu</span>
                         </span>
-                        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+                        <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
                     </a>
 
-                    <a href="{{ route('banks.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-bold transition-all {{ request()->routeIs('banks.*') ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/30' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
+                    <a href="{{ route('banks.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-bold transition-all {{ request()->routeIs('banks.*') ? 'bg-indigo-50 text-indigo-700 border-l-4 border-indigo-600' : 'text-gray-700 hover:bg-gray-50 hover:text-indigo-600' }}">
                         <span>🏛️</span>
                         <span>Bankalarım</span>
                     </a>
                 </div>
             </div>
 
-            <!-- Drawer Bottom Actions (Pinned) -->
-            <div class="p-5 border-t border-slate-800 bg-slate-950 space-y-2">
-                <a href="{{ route('profile.edit') }}" class="flex items-center gap-3 w-full px-3 py-2 rounded-xl text-xs font-bold text-slate-300 hover:bg-slate-800 hover:text-white transition-colors">
+            <!-- Drawer Bottom Actions (Pinned Light Theme) -->
+            <div class="p-5 border-t border-gray-100 bg-gray-50/80 space-y-2">
+                <a href="{{ route('profile.edit') }}" class="flex items-center gap-3 w-full px-3 py-2 rounded-xl text-xs font-bold text-gray-700 hover:bg-white hover:text-indigo-600 border border-transparent hover:border-gray-200 transition-all">
                     <span>👤</span>
                     <span>Profil & Güvenlik Ayarları</span>
                 </a>
 
                 <form method="POST" action="{{ route('logout') }}" class="w-full">
                     @csrf
-                    <button type="submit" class="flex items-center gap-3 w-full px-3 py-2 rounded-xl text-xs font-bold text-red-400 hover:bg-red-950/40 hover:text-red-300 transition-colors text-left">
+                    <button type="submit" class="flex items-center gap-3 w-full px-3 py-2 rounded-xl text-xs font-bold text-red-600 hover:bg-red-50 transition-colors text-left">
                         <span>🚪</span>
                         <span>Güvenli Çıkış Yap</span>
                     </button>
