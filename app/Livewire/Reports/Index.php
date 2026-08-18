@@ -18,12 +18,14 @@ class Index extends Component
         $debts = Debt::where('user_id', $user->id)->where('status', 'active')->with('bank')->get();
         $paymentLogs = PaymentLog::where('user_id', $user->id)->latest('paid_at')->take(10)->get();
 
-        $totalRemaining = $debts->sum('remaining');
-        $totalMonthlyIncome = Income::where('user_id', $user->id)->sum('amount');
-        $totalMonthlyExpense = Expense::where('user_id', $user->id)->sum('amount');
-        $netMonthlySavings = max(500, $totalMonthlyIncome - $totalMonthlyExpense);
+        $totalRemaining = (float) $debts->sum('remaining');
+        $totalMonthlyIncome = (float) Income::where('user_id', $user->id)->sum('amount');
+        $totalMonthlyExpense = (float) Expense::where('user_id', $user->id)->sum('amount');
+        $netMonthlySavings = $totalMonthlyIncome - $totalMonthlyExpense;
 
-        $estimatedPayoffMonths = $netMonthlySavings > 0 ? ceil($totalRemaining / $netMonthlySavings) : 0;
+        $estimatedPayoffMonths = ($netMonthlySavings > 0 && $totalRemaining > 0) 
+            ? ceil($totalRemaining / $netMonthlySavings) 
+            : 0;
 
         // Banka bazında toplam faiz yükü
         $bankCostSummary = $debts->groupBy(fn($d) => $d->bank?->name ?? 'Diğer')->map(function ($group) {

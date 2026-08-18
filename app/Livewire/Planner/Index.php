@@ -24,9 +24,9 @@ class Index extends Component
     public function mount(): void
     {
         $user = Auth::user();
-        $totalIncome = Income::where('user_id', $user->id)->sum('amount');
-        $totalExpense = Expense::where('user_id', $user->id)->sum('amount');
-        $this->monthlyBudget = max(1000, $totalIncome - $totalExpense);
+        $totalIncome = (float) Income::where('user_id', $user->id)->sum('amount');
+        $totalExpense = (float) Expense::where('user_id', $user->id)->sum('amount');
+        $this->monthlyBudget = max(0.0, $totalIncome - $totalExpense);
     }
 
     public function generateNewPlan(): void
