@@ -27,6 +27,80 @@ class Index extends Component
         $this->activeTab = $tab;
     }
 
+    public function exportExcel()
+    {
+        $userId = Auth::id();
+        $debts = Debt::where('user_id', $userId)->with('bank')->get();
+        $cards = CreditCard::where('user_id', $userId)->with('bank')->get();
+        $accounts = Account::where('user_id', $userId)->with('bank')->get();
+        $expenses = Expense::where('user_id', $userId)->with('category')->get();
+        $incomes = Income::where('user_id', $userId)->with('category')->get();
+
+        $headers = [
+            'Content-Type' => 'text/csv; charset=UTF-8',
+            'Content-Disposition' => 'attachment; filename="dvt_bank_finansal_rapor_' . date('Y-m-d') . '.csv"',
+            'Pragma' => 'no-cache',
+            'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
+            'Expires' => '0',
+        ];
+
+        $callback = function () use ($debts, $cards, $accounts, $expenses, $incomes) {
+            $file = fopen('php://output', 'w');
+            // Excel UTF-8 BOM
+            fprintf($file, chr(0xEF) . chr(0xBB) . chr(0xBF));
+
+            // 1. Özet Başlığı
+            fputcsv($file, ['=== DVT BANK CRM - KAPSAMLI FİNANSAL RAPOR ==='], ';');
+            fputcsv($file, ['Rapor Tarihi', date('d.m.Y H:i:s')], ';');
+            fputcsv($file, ['Toplam Borç (TL)', number_format($debts->sum('remaining'), 2, ',', '')], ';');
+            fputcsv($file, ['Toplam Kart Limiti (TL)', number_format($cards->sum('credit_limit'), 2, ',', '')], ';');
+            fputcsv($file, ['Toplam Kart Borcu (TL)', number_format($cards->sum('current_debt'), 2, ',', '')], ';');
+            fputcsv($file, ['Toplam Gelir (TL)', number_format($incomes->sum('amount'), 2, ',', '')], ';');
+            fputcsv($file, ['Toplam Gider (TL)', number_format($expenses->sum('amount'), 2, ',', '')], ';');
+            fputcsv($file, [], ';');
+
+            // 2. Borçlar Dökümü
+            fputcsv($file, ['=== AKTİF BORÇLAR & KREDİLER ==='], ';');
+            fputcsv($file, ['Banka', 'Borç Başlığı', 'Tür', 'Kalan Borç (TL)', 'Aylık Taksit (TL)', 'Aylık Faiz %', 'Gecikme Günü', 'Sonraki Vade'], ';');
+            foreach ($debts as $d) {
+                fputcsv($file, [
+                    $d->bank?->name ?? 'Diğer',
+                    $d->title,
+                    $d->type,
+                    number_format($d->remaining, 2, ',', ''),
+                    number_format($d->installment_amount ?: 0, 2, ',', ''),
+                    '%' . number_format($d->interest_rate, 2, ',', ''),
+                    $d->days_overdue . ' Gün',
+                    $d->next_due_date ? Carbon::parse($d->next_due_date)->format('d.m.Y') : '-',
+                ], ';');
+            }
+
+            fputcsv($file, [], ';');
+
+            // 3. Kredi Kartları Dökümü
+            fputcsv($file, ['=== KREDİ KARTLARI LİMİT & BORÇ ANALİZİ ==='], ';');
+            fputcsv($file, ['Banka', 'Kart Adı', 'Kart No', 'Limit (TL)', 'Dönem Borcu (TL)', 'Asgari (TL)', 'Puan/Jest Lira (TL)', 'Nakit Avans (TL)', 'Durum'], ';');
+            foreach ($cards as $c) {
+                fputcsv($file, [
+                    $c->bank?->name ?? 'Banka',
+                    $c->name,
+                    $c->masked_card_number,
+                    number_format($c->credit_limit, 2, ',', ''),
+                    number_format($c->current_debt, 2, ',', ''),
+                    number_format($c->minimum_payment, 2, ',', ''),
+                    number_format($c->reward_balance ?: 0, 2, ',', ''),
+                    number_format($c->cash_advance_limit ?: 0, 2, ',', ''),
+                    $c->is_cash_advance_blocked ? 'Avans Kapalı' : 'Aktif',
+                ], ';');
+            }
+
+            fclose($file);
+        };
+
+        return response()->streamDownload($callback, 'dvt_bank_finansal_rapor_' . date('Y-m-d') . '.csv', $headers);
+    }
+
+
     public function render()
     {
         $user = Auth::user();

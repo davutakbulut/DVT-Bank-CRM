@@ -9,28 +9,47 @@
             <p class="text-sm text-gray-600">Ne harcıyorum, nereye harcıyorum, ne zaman daha çok harcıyorum ve bankalara ne kadar faiz ödüyorum?</p>
         </div>
 
-        <!-- Dönem Filtresi Hapları -->
-        <div class="inline-flex rounded-2xl bg-gray-100 p-1 border border-gray-200 shadow-2xs overflow-x-auto no-scrollbar max-w-full text-xs font-bold">
-            <button wire:click="setPeriod('this_month')" class="px-3 py-1.5 rounded-xl transition-all whitespace-nowrap {{ $period === 'this_month' ? 'bg-indigo-600 text-white shadow-xs' : 'text-gray-600 hover:text-gray-900' }}">
-                Bu Ay
-            </button>
-            <button wire:click="setPeriod('last_30')" class="px-3 py-1.5 rounded-xl transition-all whitespace-nowrap {{ $period === 'last_30' ? 'bg-indigo-600 text-white shadow-xs' : 'text-gray-600 hover:text-gray-900' }}">
-                Son 30 Gün
-            </button>
-            <button wire:click="setPeriod('last_month')" class="px-3 py-1.5 rounded-xl transition-all whitespace-nowrap {{ $period === 'last_month' ? 'bg-indigo-600 text-white shadow-xs' : 'text-gray-600 hover:text-gray-900' }}">
-                Geçen Ay
-            </button>
-            <button wire:click="setPeriod('last_90')" class="px-3 py-1.5 rounded-xl transition-all whitespace-nowrap {{ $period === 'last_90' ? 'bg-indigo-600 text-white shadow-xs' : 'text-gray-600 hover:text-gray-900' }}">
-                Son 3 Ay (Çeyrek)
-            </button>
-            <button wire:click="setPeriod('this_year')" class="px-3 py-1.5 rounded-xl transition-all whitespace-nowrap {{ $period === 'this_year' ? 'bg-indigo-600 text-white shadow-xs' : 'text-gray-600 hover:text-gray-900' }}">
-                Bu Yıl
-            </button>
-            <button wire:click="setPeriod('all')" class="px-3 py-1.5 rounded-xl transition-all whitespace-nowrap {{ $period === 'all' ? 'bg-indigo-600 text-white shadow-xs' : 'text-gray-600 hover:text-gray-900' }}">
-                Tümü
-            </button>
+        <div class="flex items-center gap-2 flex-wrap">
+            <!-- Excel İndir Butonu & Bilgi Kutucuğu -->
+            <div class="relative inline-block group">
+                <button wire:click="exportExcel" 
+                        class="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white text-xs font-black rounded-xl shadow-sm transition-all cursor-pointer">
+                    <span>📗</span>
+                    <span>Excel Raporu İndir</span>
+                </button>
+                <!-- Tooltip Popup -->
+                <div class="absolute right-0 top-full mt-2 hidden group-hover:block z-50 w-72 p-3 bg-slate-900 text-white text-xs rounded-xl shadow-2xl border border-slate-700 pointer-events-none transition-all">
+                    <p class="font-bold text-emerald-400 mb-1">📊 Kapsamlı Finansal Rapor (CSV/Excel)</p>
+                    <p class="text-slate-300 text-[11px] leading-relaxed">
+                        Tüm aktif borçlarınızı, kredi kartı limit/borç/jest lira/avans durumlarını, gelir ve gider kalemlerinizi tek bir Excel dosyasında UTF-8 formatında indirir.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Dönem Filtresi Hapları -->
+            <div class="inline-flex rounded-2xl bg-gray-100 p-1 border border-gray-200 shadow-2xs overflow-x-auto no-scrollbar max-w-full text-xs font-bold">
+                <button wire:click="setPeriod('this_month')" class="px-3 py-1.5 rounded-xl transition-all whitespace-nowrap {{ $period === 'this_month' ? 'bg-indigo-600 text-white shadow-xs' : 'text-gray-600 hover:text-gray-900' }}">
+                    Bu Ay
+                </button>
+                <button wire:click="setPeriod('last_30')" class="px-3 py-1.5 rounded-xl transition-all whitespace-nowrap {{ $period === 'last_30' ? 'bg-indigo-600 text-white shadow-xs' : 'text-gray-600 hover:text-gray-900' }}">
+                    Son 30 Gün
+                </button>
+                <button wire:click="setPeriod('last_month')" class="px-3 py-1.5 rounded-xl transition-all whitespace-nowrap {{ $period === 'last_month' ? 'bg-indigo-600 text-white shadow-xs' : 'text-gray-600 hover:text-gray-900' }}">
+                    Geçen Ay
+                </button>
+                <button wire:click="setPeriod('last_90')" class="px-3 py-1.5 rounded-xl transition-all whitespace-nowrap {{ $period === 'last_90' ? 'bg-indigo-600 text-white shadow-xs' : 'text-gray-600 hover:text-gray-900' }}">
+                    Son 3 Ay (Çeyrek)
+                </button>
+                <button wire:click="setPeriod('this_year')" class="px-3 py-1.5 rounded-xl transition-all whitespace-nowrap {{ $period === 'this_year' ? 'bg-indigo-600 text-white shadow-xs' : 'text-gray-600 hover:text-gray-900' }}">
+                    Bu Yıl
+                </button>
+                <button wire:click="setPeriod('all')" class="px-3 py-1.5 rounded-xl transition-all whitespace-nowrap {{ $period === 'all' ? 'bg-indigo-600 text-white shadow-xs' : 'text-gray-600 hover:text-gray-900' }}">
+                    Tümü
+                </button>
+            </div>
         </div>
     </div>
+
 
     <!-- 2. FİNANSAL SAĞLIK & İNTEL SKOR PANOSU -->
     <div class="relative rounded-3xl bg-gradient-to-br from-slate-950 via-indigo-950 to-slate-900 border border-indigo-500/30 p-6 sm:p-8 text-white shadow-2xl overflow-hidden">

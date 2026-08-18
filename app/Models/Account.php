@@ -93,7 +93,16 @@ class Account extends Model
         return '•••• ' . $last4;
     }
 
+    /**
+     * Kullanılan KMH Tutarı (Bakiye eksi ise pozitif tutarı döner)
+     */
+    public function getKmhUsedAttribute(): float
+    {
+        return $this->balance < 0 ? abs((float) $this->balance) : 0.0;
+    }
+
     public function bank(): BelongsTo
+
     {
         return $this->belongsTo(Bank::class);
     }
