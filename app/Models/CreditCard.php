@@ -22,10 +22,16 @@ class CreditCard extends Model
         'expiry_date',
         'last_four',
         'credit_limit',
+        'cash_advance_limit',
+        'is_cash_advance_blocked',
         'current_debt',
         'minimum_payment',
+        'reward_balance',
         'statement_day',
         'due_day',
+        'statement_date',
+        'next_statement_date',
+        'next_due_date',
         'interest_rate',
         'overdue_interest_rate',
         'last_payment_date',
@@ -38,16 +44,23 @@ class CreditCard extends Model
         return [
             'card_number' => 'encrypted',
             'credit_limit' => 'decimal:2',
+            'cash_advance_limit' => 'decimal:2',
+            'is_cash_advance_blocked' => 'boolean',
             'current_debt' => 'decimal:2',
             'minimum_payment' => 'decimal:2',
+            'reward_balance' => 'decimal:2',
             'interest_rate' => 'decimal:4',
             'overdue_interest_rate' => 'decimal:4',
+            'statement_date' => 'date',
+            'next_statement_date' => 'date',
+            'next_due_date' => 'date',
             'last_payment_date' => 'date',
             'is_restructured' => 'boolean',
             'statement_day' => 'integer',
             'due_day' => 'integer',
         ];
     }
+
 
     protected static function booted(): void
     {

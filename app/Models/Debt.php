@@ -20,11 +20,16 @@ class Debt extends Model
         'credit_card_id',
         'type',
         'title',
+        'merchant_name',
         'principal',
         'remaining',
         'interest_rate',
         'installment_count',
+        'current_installment',
+        'total_installments',
         'installment_amount',
+        'transaction_date',
+        'city',
         'start_date',
         'end_date',
         'next_due_date',
@@ -42,7 +47,10 @@ class Debt extends Model
             'remaining' => 'decimal:2',
             'interest_rate' => 'decimal:4',
             'installment_count' => 'integer',
+            'current_installment' => 'integer',
+            'total_installments' => 'integer',
             'installment_amount' => 'decimal:2',
+            'transaction_date' => 'date',
             'start_date' => 'date',
             'end_date' => 'date',
             'next_due_date' => 'date',
@@ -51,6 +59,7 @@ class Debt extends Model
             'is_restructured' => 'boolean',
         ];
     }
+
 
     public function bank(): BelongsTo
     {

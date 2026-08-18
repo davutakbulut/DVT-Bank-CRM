@@ -21,11 +21,13 @@ class Account extends Model
         'iban',
         'account_number',
         'branch_code',
+        'branch_name',
         'balance',
         'kmh_limit',
         'kmh_interest_rate',
         'currency',
     ];
+
 
     protected function casts(): array
     {

@@ -298,7 +298,20 @@
                                             </div>
                                         @endif
                                     </div>
+
+                                    <!-- Şube & Hesap No Bilgisi -->
+                                    @if ($acc->branch_name || $acc->account_number)
+                                        <div class="mt-1.5 flex items-center justify-between text-[10px] text-slate-300 px-0.5">
+                                            <span class="truncate max-w-[200px]" title="{{ $acc->branch_name }}">
+                                                🏛️ {{ $acc->branch_name ?: 'Şube Kodu: ' . $acc->branch_code }}
+                                            </span>
+                                            @if ($acc->account_number)
+                                                <span class="font-mono text-slate-400">No: {{ $acc->account_number }}</span>
+                                            @endif
+                                        </div>
+                                    @endif
                                 </div>
+
 
 
                                 <!-- Alt Kısım: Bakiye + KMH Limiti + Aksiyonlar -->
@@ -574,17 +587,23 @@
                         <input type="text" wire:model="iban" maxlength="32" class="w-full rounded-xl border-gray-300 text-sm font-mono focus:ring-indigo-500 focus:border-indigo-500 uppercase tracking-wide" placeholder="TR00 0000 0000 0000 0000 0000 00">
                     </div>
 
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
                         <div>
                             <label class="block text-xs font-bold text-gray-700 mb-1">Hesap No (İsteğe Bağlı)</label>
-                            <input type="text" wire:model="account_number" class="w-full rounded-xl border-gray-300 text-sm font-mono focus:ring-indigo-500 focus:border-indigo-500" placeholder="12345678">
+                            <input type="text" wire:model="account_number" class="w-full rounded-xl border-gray-300 text-sm font-mono focus:ring-indigo-500 focus:border-indigo-500" placeholder="83242619-5001">
                         </div>
 
                         <div>
                             <label class="block text-xs font-bold text-gray-700 mb-1">Şube Kodu</label>
-                            <input type="text" wire:model="branch_code" class="w-full rounded-xl border-gray-300 text-sm font-mono focus:ring-indigo-500 focus:border-indigo-500" placeholder="0123">
+                            <input type="text" wire:model="branch_code" class="w-full rounded-xl border-gray-300 text-sm font-mono focus:ring-indigo-500 focus:border-indigo-500" placeholder="2724">
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 mb-1">Şube Adı</label>
+                            <input type="text" wire:model="branch_name" class="w-full rounded-xl border-gray-300 text-sm focus:ring-indigo-500 focus:border-indigo-500" placeholder="Örn: Osmangazi Cd. - Bağcılar">
                         </div>
                     </div>
+
 
                     <div>
                         <label class="block text-xs font-bold text-gray-700 mb-1">Güncel Bakiye (Eksi ise eksi olarak girin, örn: -50000)</label>

@@ -250,12 +250,22 @@
                             <div class="min-w-0">
                                 <span class="text-[10px] font-black uppercase tracking-wider text-gray-400 block truncate">{{ $debt->bank?->name ?? 'Şahıs / Diğer' }}</span>
                                 <h3 class="font-bold text-gray-900 text-sm truncate leading-tight mt-0.5">{{ $debt->title }}</h3>
+                                @if ($debt->merchant_name)
+                                    <span class="text-[10px] text-indigo-600 font-medium truncate block">🏢 {{ $debt->merchant_name }}</span>
+                                @endif
                             </div>
                         </div>
 
-                        <span class="px-2.5 py-0.5 rounded-full text-[11px] font-black shrink-0 {{ $debt->type === 'kmh' ? 'bg-red-100 text-red-700' : ($debt->type === 'credit_card' ? 'bg-amber-100 text-amber-700' : ($debt->type === 'personal' ? 'bg-purple-100 text-purple-700' : 'bg-blue-100 text-blue-700')) }}">
-                            {{ $debt->type === 'kmh' ? 'KMH' : ($debt->type === 'credit_card' ? 'Kredi Kartı' : ($debt->type === 'personal' ? 'Şahıs' : 'Kredi')) }}
-                        </span>
+                        <div class="flex flex-col items-end gap-1 shrink-0">
+                            <span class="px-2.5 py-0.5 rounded-full text-[11px] font-black {{ $debt->type === 'kmh' ? 'bg-red-100 text-red-700' : ($debt->type === 'credit_card' ? 'bg-amber-100 text-amber-700' : ($debt->type === 'personal' ? 'bg-purple-100 text-purple-700' : 'bg-blue-100 text-blue-700')) }}">
+                                {{ $debt->type === 'kmh' ? 'KMH' : ($debt->type === 'credit_card' ? 'Kredi Kartı' : ($debt->type === 'personal' ? 'Şahıs' : 'Kredi')) }}
+                            </span>
+                            @if ($debt->current_installment && $debt->total_installments)
+                                <span class="px-2 py-0.5 rounded-md bg-indigo-50 border border-indigo-200 text-indigo-700 font-black text-[10px]">
+                                    {{ $debt->current_installment }}/{{ $debt->total_installments }} Taksit
+                                </span>
+                            @endif
+                        </div>
                     </div>
 
                     <!-- Orta Kısım: Finansal Rakamlar & Faiz -->
@@ -276,6 +286,7 @@
                             </div>
                         </div>
                     </div>
+
 
                     <!-- Vade & Gecikme Çubuğu -->
                     <div class="space-y-1.5">

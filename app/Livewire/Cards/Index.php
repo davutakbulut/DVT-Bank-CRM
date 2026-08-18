@@ -19,8 +19,11 @@ class Index extends Component
     public string $expiry_date = '';
     public string $last_four = '';
     public float $credit_limit = 0.0;
+    public ?float $cash_advance_limit = 0.0;
+    public bool $is_cash_advance_blocked = false;
     public float $current_debt = 0.0;
     public float $minimum_payment = 0.0;
+    public float $reward_balance = 0.0;
     public int $statement_day = 1;
     public int $due_day = 10;
     public float $interest_rate = 4.25;
@@ -35,8 +38,11 @@ class Index extends Component
         'expiry_date' => 'nullable|string|max:7',
         'last_four' => 'nullable|string|max:4',
         'credit_limit' => 'required|numeric|min:0',
+        'cash_advance_limit' => 'nullable|numeric|min:0',
+        'is_cash_advance_blocked' => 'boolean',
         'current_debt' => 'required|numeric|min:0',
         'minimum_payment' => 'required|numeric|min:0',
+        'reward_balance' => 'nullable|numeric|min:0',
         'statement_day' => 'required|integer|between:1,31',
         'due_day' => 'required|integer|between:1,31',
         'interest_rate' => 'required|numeric|min:0',
@@ -44,7 +50,7 @@ class Index extends Component
 
     public function openCreateModal(): void
     {
-        $this->reset(['cardId', 'bank_id', 'name', 'card_number', 'card_holder', 'expiry_date', 'last_four', 'credit_limit', 'current_debt', 'minimum_payment', 'last_payment_date']);
+        $this->reset(['cardId', 'bank_id', 'name', 'card_number', 'card_holder', 'expiry_date', 'last_four', 'credit_limit', 'cash_advance_limit', 'is_cash_advance_blocked', 'current_debt', 'minimum_payment', 'reward_balance', 'last_payment_date']);
         $this->interest_rate = 4.25;
         $this->statement_day = 1;
         $this->due_day = 10;
@@ -63,8 +69,11 @@ class Index extends Component
         $this->expiry_date = $card->expiry_date ?? '';
         $this->last_four = $card->last_four ?? '';
         $this->credit_limit = (float) $card->credit_limit;
+        $this->cash_advance_limit = (float) ($card->cash_advance_limit ?? 0);
+        $this->is_cash_advance_blocked = (bool) ($card->is_cash_advance_blocked ?? false);
         $this->current_debt = (float) $card->current_debt;
         $this->minimum_payment = (float) $card->minimum_payment;
+        $this->reward_balance = (float) ($card->reward_balance ?? 0);
         $this->statement_day = (int) $card->statement_day;
         $this->due_day = (int) $card->due_day;
         $this->interest_rate = (float) $card->interest_rate;
@@ -90,8 +99,11 @@ class Index extends Component
             'expiry_date' => $this->expiry_date ?: null,
             'last_four' => $computedLastFour,
             'credit_limit' => $this->credit_limit,
+            'cash_advance_limit' => $this->cash_advance_limit ?: null,
+            'is_cash_advance_blocked' => $this->is_cash_advance_blocked,
             'current_debt' => $this->current_debt,
             'minimum_payment' => $this->minimum_payment ?: ($this->current_debt * 0.40),
+            'reward_balance' => $this->reward_balance ?: 0,
             'statement_day' => $this->statement_day,
             'due_day' => $this->due_day,
             'interest_rate' => $this->interest_rate,
@@ -106,9 +118,10 @@ class Index extends Component
         }
 
         $this->showModal = false;
-        $this->reset(['cardId', 'bank_id', 'name', 'card_number', 'card_holder', 'expiry_date', 'last_four', 'credit_limit', 'current_debt', 'minimum_payment']);
+        $this->reset(['cardId', 'bank_id', 'name', 'card_number', 'card_holder', 'expiry_date', 'last_four', 'credit_limit', 'cash_advance_limit', 'is_cash_advance_blocked', 'current_debt', 'minimum_payment', 'reward_balance']);
         session()->flash('message', 'Kredi kartı başarıyla kaydedildi.');
     }
+
 
 
     public function delete(int $id): void

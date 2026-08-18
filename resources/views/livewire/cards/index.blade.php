@@ -201,8 +201,27 @@
                     </div>
                 </div>
 
+                <!-- 3.5. Satır: Puan / Jest Lira & Nakit Avans Rozetleri -->
+                <div class="relative z-10 my-1 flex items-center justify-between text-[10px] gap-2 pt-1">
+                    @if ((float)$card->reward_balance > 0)
+                        <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-amber-400/20 border border-amber-300/40 text-amber-200 font-bold text-[10px]">
+                            <span>🪙</span>
+                            <span>₺{{ number_format($card->reward_balance, 2, ',', '.') }} Puan/Jest Lira</span>
+                        </span>
+                    @else
+                        <span></span>
+                    @endif
+
+                    @if ($card->cash_advance_limit)
+                        <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md {{ $card->is_cash_advance_blocked ? 'bg-red-500/25 border border-red-400/40 text-red-200' : 'bg-sky-500/20 border border-sky-400/40 text-sky-200' }} font-bold text-[10px]">
+                            <span>🏧</span>
+                            <span>Avans: ₺{{ number_format($card->cash_advance_limit, 0, ',', '.') }} {{ $card->is_cash_advance_blocked ? '(Kapalı 🚫)' : '' }}</span>
+                        </span>
+                    @endif
+                </div>
+
                 <!-- 4. Satır: Dönem Borcu / Asgari / Aksiyonlar -->
-                <div class="relative z-10 pt-2.5 border-t border-white/15 flex items-end justify-between">
+                <div class="relative z-10 pt-2 border-t border-white/15 flex items-end justify-between">
                     <div>
                         <span class="text-[9px] font-black tracking-wider text-slate-300/80 block uppercase">DÖNEM BORCU / ASGARİ</span>
                         <div class="flex items-baseline gap-1.5">
@@ -210,6 +229,7 @@
                             <span class="text-xs font-semibold text-slate-300">/ ₺{{ number_format($card->minimum_payment, 2, ',', '.') }}</span>
                         </div>
                     </div>
+
 
                     <!-- Hologram Mastercard/Visa & Butonlar -->
                     <div class="flex items-center gap-2">
@@ -343,11 +363,31 @@
                         </div>
                     </div>
 
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 mb-1">Puan / Jest Lira (TL)</label>
+                            <input type="number" step="0.01" wire:model="reward_balance" class="w-full rounded-xl border-gray-300 text-sm font-bold text-amber-600 focus:ring-indigo-500 focus:border-indigo-500" placeholder="150.16">
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 mb-1">Nakit Avans Limiti (TL)</label>
+                            <input type="number" step="0.01" wire:model="cash_advance_limit" class="w-full rounded-xl border-gray-300 text-sm focus:ring-indigo-500 focus:border-indigo-500" placeholder="12500">
+                        </div>
+
+                        <div class="flex items-center pt-5">
+                            <label class="inline-flex items-center gap-2 cursor-pointer">
+                                <input type="checkbox" wire:model="is_cash_advance_blocked" class="rounded border-gray-300 text-red-600 focus:ring-red-500">
+                                <span class="text-xs font-bold text-red-600">Nakit Avansa Kapalı</span>
+                            </label>
+                        </div>
+                    </div>
+
                     <div>
                         <label class="block text-xs font-bold text-gray-700 mb-1">En Son Ödeme Yapılan Tarih</label>
                         <input type="date" wire:model="last_payment_date" class="w-full rounded-xl border-gray-300 text-sm">
                         <p class="text-[10px] text-gray-500 mt-0.5">90 Günlük Yasal Takip kalkanı bu tarihe göre geriye sayım yapar.</p>
                     </div>
+
                 </div>
 
                 <div class="flex justify-end gap-3 pt-3 border-t border-gray-100">
