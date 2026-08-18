@@ -634,53 +634,86 @@
                     </div>
                 </div>
 
-                <!-- Alt Alan: Seçilen Bankanın Altında Açılan Canlı "Hemen Tanımla →" Kompakt İnceleme Kartı -->
-                <div class="bg-slate-900/95 border border-indigo-500/40 rounded-xl p-4 shadow-xl space-y-3 relative overflow-hidden backdrop-blur-xl">
+                <!-- Alt Alan: Seçilen Bankanın Altında Açılan Canlı "Hemen Tanımla →" Tam Yetenek Kartı (Masaüstü ile 1-e-1 Aynı) -->
+                <div class="bg-slate-900/95 border border-indigo-500/40 rounded-xl p-4 sm:p-5 shadow-2xl space-y-3.5 relative overflow-hidden backdrop-blur-xl">
                     <!-- Header -->
-                    <div class="flex items-center justify-between border-b border-slate-800 pb-2.5">
+                    <div class="flex items-center justify-between border-b border-slate-800 pb-3">
                         <div class="flex items-center gap-2.5">
-                            <div class="terminal-bank-logo-el w-8 h-8 rounded-lg text-white font-black flex items-center justify-center text-xs shadow-md" style="background-color: {{ $firstBankColor }};">
+                            <div class="terminal-bank-logo-el w-9 h-9 rounded-xl text-white font-black flex items-center justify-center text-xs shadow-md" style="background-color: {{ $firstBankColor }};">
                                 {{ mb_substr($firstBankName, 0, 2) }}
                             </div>
                             <div>
-                                <h3 class="terminal-bank-name-el font-bold text-xs text-white">{{ $firstBankName }}</h3>
-                                <span class="text-[8px] text-emerald-300 font-bold bg-emerald-950/80 px-1 py-0.5 rounded border border-emerald-800/50">
-                                    🟢 BDDK MEVZUAT UYUMLU
-                                </span>
+                                <h3 class="terminal-bank-name-el font-bold text-sm text-white">{{ $firstBankName }}</h3>
+                                <p class="text-[10px] text-slate-400">DVT CRM Tam Entegrasyon</p>
                             </div>
                         </div>
+                        <span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 text-[9px] font-black border border-emerald-500/30">
+                            🟢 BDDK UYUMLU
+                        </span>
                     </div>
 
-                    <!-- 2 Desteklenen Borç Ürünü Grid (Mobil Ultra Kompakt) -->
-                    <div class="grid grid-cols-1 gap-2">
-                        <div class="p-2.5 rounded-lg bg-slate-950 border border-slate-800 flex items-start gap-2">
+                    <!-- 4 Desteklenen Borç Ürünü (Eksiksiz) -->
+                    <div class="space-y-2">
+                        <!-- 1. Kredi Kartı -->
+                        <div class="p-2.5 rounded-lg bg-slate-950 border border-slate-800 flex items-start gap-2.5">
                             <span class="text-sm mt-0.5">💳</span>
                             <div class="flex-1">
                                 <div class="flex items-center justify-between">
-                                    <h5 class="terminal-card-title-el font-bold text-[11px] text-white">{{ $firstCardName }}</h5>
-                                    <span class="text-[8px] text-emerald-400 font-bold bg-emerald-950 px-1 py-0.2 rounded">Kart & KMH</span>
+                                    <h5 class="terminal-card-title-el font-bold text-xs text-white">{{ $firstCardName }}</h5>
+                                    <span class="text-[8px] text-emerald-400 font-bold bg-emerald-950 px-1.5 py-0.5 rounded">Kredi Kartı</span>
                                 </div>
-                                <p class="text-[9px] text-slate-400 mt-0.5">Dönem borcu, asgari ve gecikme faizi doğrudan hesaplanır.</p>
+                                <p class="text-[10px] text-slate-400 mt-0.5 leading-relaxed">Dönem borcu, son ödeme günü ve akdi faiz / gecikme faizi doğrudan hesaplanır.</p>
                             </div>
                         </div>
 
-                        <div class="p-2.5 rounded-lg bg-slate-950 border border-slate-800 flex items-start gap-2">
+                        <!-- 2. KMH (Eksi Bakiye) -->
+                        <div class="p-2.5 rounded-lg bg-slate-950 border border-slate-800 flex items-start gap-2.5">
+                            <span class="text-sm mt-0.5">⚡</span>
+                            <div class="flex-1">
+                                <div class="flex items-center justify-between">
+                                    <h5 class="terminal-kmh-title-el font-bold text-xs text-white">{{ $firstKmhName }}</h5>
+                                    <span class="text-[8px] text-amber-400 font-bold bg-amber-950 px-1.5 py-0.5 rounded">Günlük Faiz</span>
+                                </div>
+                                <p class="text-[10px] text-slate-400 mt-0.5 leading-relaxed">Eksi bakiyedeki her gün için günlük faiz işleyişi takip edilir ve Çığ stratejisinde eritilir.</p>
+                            </div>
+                        </div>
+
+                        <!-- 3. Kredi Taksitleri -->
+                        <div class="p-2.5 rounded-lg bg-slate-950 border border-slate-800 flex items-start gap-2.5">
+                            <span class="text-sm mt-0.5">🏦</span>
+                            <div class="flex-1">
+                                <div class="flex items-center justify-between">
+                                    <h5 class="font-bold text-xs text-white">İhtiyaç & Taşıt Kredisi</h5>
+                                    <span class="text-[8px] text-indigo-400 font-bold bg-indigo-950 px-1.5 py-0.5 rounded">Taksit Planı</span>
+                                </div>
+                                <p class="text-[10px] text-slate-400 mt-0.5 leading-relaxed">Kalan anapara ve aylık taksitler ödeme takvimine senkronize edilir.</p>
+                            </div>
+                        </div>
+
+                        <!-- 4. 90 Gün Yasal Takip Kalkanı -->
+                        <div class="p-2.5 rounded-lg bg-slate-950 border border-slate-800 flex items-start gap-2.5">
                             <span class="text-sm mt-0.5">🚨</span>
                             <div class="flex-1">
                                 <div class="flex items-center justify-between">
-                                    <h5 class="font-bold text-[11px] text-white">90 Gün Yasal Takip Kalkanı</h5>
-                                    <span class="text-[8px] text-red-400 font-bold bg-red-950 px-1 py-0.2 rounded">İcrayı Önleme</span>
+                                    <h5 class="font-bold text-xs text-white">90 Gün Yasal Takip Kalkanı</h5>
+                                    <span class="text-[8px] text-red-400 font-bold bg-red-950 px-1.5 py-0.5 rounded">İcrayı Önleme</span>
                                 </div>
-                                <p class="text-[9px] text-slate-400 mt-0.5">3 dönem üst üste asgari ödenmediğinde devreye giren takip 7/24 sayılır.</p>
+                                <p class="text-[10px] text-slate-400 mt-0.5 leading-relaxed">3 dönem üst üste asgari ödenmediğinde devreye giren idari takip ve ihtarname süreci 7/24 sayılır.</p>
                             </div>
                         </div>
                     </div>
 
-                    <!-- HEMEN TANIMLA DİNAMİK BUTON -->
-                    <a href="{{ route('register') }}" class="w-full py-2.5 px-4 bg-indigo-600 hover:bg-indigo-500 text-white font-black text-xs rounded-lg shadow-md shadow-indigo-600/30 active:scale-95 transition-all flex items-center justify-center gap-1.5">
-                        <span class="btn-mobile-bank-text">{{ $firstBankName }}'yı Hemen Tanımla</span>
-                        <span>→</span>
-                    </a>
+                    <!-- Alt Footer: Doğrudan Veritabanı & Dinamik Hemen Tanımla Butonu -->
+                    <div class="pt-2.5 border-t border-slate-800 flex items-center justify-between gap-2">
+                        <span class="text-[10px] text-slate-400 flex items-center gap-1.5 shrink-0">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
+                            <span>Doğrudan Veritabanı</span>
+                        </span>
+                        <a href="{{ route('register') }}" class="px-4 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs rounded-xl shadow-lg shadow-indigo-600/30 active:scale-95 transition-all flex items-center gap-1.5">
+                            <span class="btn-mobile-bank-text">{{ $firstBankName }}'yı Tanımla</span>
+                            <span>→</span>
+                        </a>
+                    </div>
                 </div>
             </div>
         </section>
