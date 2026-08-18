@@ -6,10 +6,13 @@ use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
+use Filament\Navigation\MenuItem;
+use Filament\Navigation\NavigationItem;
 use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
+use Filament\View\PanelsRenderHook;
 use Filament\Widgets;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
@@ -31,6 +34,34 @@ class AdminPanelProvider extends PanelProvider
             ->colors([
                 'primary' => Color::Indigo,
             ])
+            ->navigationItems([
+                NavigationItem::make('Kullanıcı Paneline Dön')
+                    ->url('/app')
+                    ->icon('heroicon-o-arrow-left')
+                    ->sort(-100),
+                NavigationItem::make('Süper Admin Paneli')
+                    ->url('/super')
+                    ->icon('heroicon-o-cog-6-tooth')
+                    ->group('Paneller Arası Geçiş'),
+            ])
+            ->userMenuItems([
+                MenuItem::make()
+                    ->label('Kullanıcı Paneline Dön')
+                    ->url('/app')
+                    ->icon('heroicon-o-arrow-left'),
+                MenuItem::make()
+                    ->label('Süper Admin Paneli')
+                    ->url('/super')
+                    ->icon('heroicon-o-cog-6-tooth'),
+            ])
+            ->renderHook(
+                PanelsRenderHook::TOPBAR_START,
+                fn () => view('filament.custom-topbar-start'),
+            )
+            ->renderHook(
+                PanelsRenderHook::FOOTER,
+                fn () => view('filament.custom-footer'),
+            )
             ->discoverResources(in: app_path('Filament/Admin/Resources'), for: 'App\\Filament\\Admin\\Resources')
             ->discoverPages(in: app_path('Filament/Admin/Pages'), for: 'App\\Filament\\Admin\\Pages')
             ->pages([
