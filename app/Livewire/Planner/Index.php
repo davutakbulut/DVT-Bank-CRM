@@ -17,23 +17,26 @@ use Livewire\Component;
 class Index extends Component
 {
     public bool $isCreatingPlan = false;
-    public float $monthlyBudget = 0.0;
-    public string $strategy = 'avalanche'; // avalanche (Çığ), snowball (Kartopu)
-    public string $planName = 'Öncelikli Borç Kapatma Planı';
+    public float $monthlyBudget = 15000.0;
+    public string $strategy = 'avalanche'; // avalanche (Çığ), snowball (Kartopu), hybrid (90 Gün Hibrit)
+    public string $planName = 'Matematiksel Çığ Borç Kapatma Planı';
+    public string $activeStrategyTab = 'avalanche'; // avalanche, snowball, hybrid
 
     public function mount(): void
     {
         $user = Auth::user();
         $totalIncome = (float) Income::where('user_id', $user->id)->sum('amount');
         $totalExpense = (float) Expense::where('user_id', $user->id)->sum('amount');
-        $this->monthlyBudget = max(0.0, $totalIncome - $totalExpense);
+        $availableNet = max(0.0, $totalIncome - $totalExpense);
+        
+        $this->monthlyBudget = $availableNet > 500 ? $availableNet : 15000.0;
     }
 
     public function generateNewPlan(): void
     {
         $this->validate([
             'monthlyBudget' => 'required|numeric|min:500',
-            'strategy' => 'required|in:avalanche,snowball,custom',
+            'strategy' => 'required|in:avalanche,snowball,custom,hybrid',
         ]);
 
         $planner = new PaymentPlanner();
@@ -79,7 +82,7 @@ class Index extends Component
     public function render()
     {
         $user = Auth::user();
-        $debts = Debt::where('user_id', $user->id)->where('status', 'active')->get();
+        $debts = Debt::where('user_id', $user->id)->where('status', 'active')->with('bank')->get();
 
         // Strateji karşılaştırma simülasyonu
         $calc = new DebtCalculator();
@@ -92,15 +95,61 @@ class Index extends Component
             ->first();
 
         $monthlyGroups = [];
+        $totalAllocated = 0;
+        $totalPaidInPlan = 0;
+        $planProgressPercent = 0;
+
         if ($activePlan) {
             $monthlyGroups = $activePlan->items->groupBy(fn($item) => Carbon::parse($item->month)->format('Y-m'));
+            $totalAllocated = $activePlan->items->sum('allocated_amount');
+            $totalPaidInPlan = $activePlan->items->where('status', 'paid')->sum('allocated_amount');
+            $planProgressPercent = $totalAllocated > 0 ? min(100, round(($totalPaidInPlan / $totalAllocated) * 100)) : 0;
         }
+
+        // Borç Kapatma Sıralaması & Yol Haritası (Simülasyon Hedefleri)
+        $roadmap = [];
+        $sortedDebts = $debts;
+
+        if ($this->activeStrategyTab === 'avalanche') {
+            $sortedDebts = $debts->sortByDesc('interest_rate')->values();
+        } elseif ($this->activeStrategyTab === 'snowball') {
+            $sortedDebts = $debts->sortBy('remaining')->values();
+        } else {
+            // Hibrit: önce gecikmedeki borçlar, sonra yüksek faiz
+            $sortedDebts = $debts->sortByDesc('days_overdue')->values();
+        }
+
+        $cumulativeMonths = 0;
+        foreach ($sortedDebts as $index => $d) {
+            $debtMonthlyAlloc = max(1, $this->monthlyBudget * 0.70); // %70 ana odak
+            $approxMonths = ceil($d->remaining / $debtMonthlyAlloc);
+            $cumulativeMonths += $approxMonths;
+
+            $roadmap[] = [
+                'order' => $index + 1,
+                'debt' => $d,
+                'target_month' => Carbon::now()->addMonths($cumulativeMonths)->translatedFormat('F Y'),
+                'months_to_kill' => $cumulativeMonths,
+                'is_current_target' => $index === 0,
+            ];
+        }
+
+        $totalDebtSum = $debts->sum('remaining');
+        $freedomMonths = $comparison['avalanche']['months'] ?? 12;
+        $freedomDate = Carbon::now()->addMonths($freedomMonths)->translatedFormat('F Y');
 
         return view('livewire.planner.index', [
             'activePlan' => $activePlan,
             'monthlyGroups' => $monthlyGroups,
             'comparison' => $comparison,
             'debts' => $debts,
+            'roadmap' => $roadmap,
+            'totalDebtSum' => $totalDebtSum,
+            'freedomDate' => $freedomDate,
+            'freedomMonths' => $freedomMonths,
+            'planProgressPercent' => $planProgressPercent,
+            'totalPaidInPlan' => $totalPaidInPlan,
         ])->layout('layouts.app');
     }
 }
+
