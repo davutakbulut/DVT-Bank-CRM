@@ -24,17 +24,13 @@
         .perspective-container {
             perspective: 1200px;
         }
-        .perspective-mobile {
-            perspective: 900px;
-            transform-style: preserve-3d;
-        }
 
         /* 3D Card Base with Hardware Acceleration */
         .card-3d {
             transform-style: preserve-3d;
             backface-visibility: hidden;
-            transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.4s ease;
-            will-change: transform;
+            transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.4s ease, opacity 0.3s ease;
+            will-change: transform, opacity;
         }
 
         /* Ambient Glow Animations */
@@ -48,46 +44,10 @@
             50% { opacity: 0.65; transform: scale(1.08); }
         }
 
-        @keyframes shimmer-sweep {
-            0% { transform: translateX(-100%) rotate(25deg); }
-            100% { transform: translateX(200%) rotate(25deg); }
-        }
-
-        @keyframes radar-pulse {
-            0% { transform: scale(0.95); opacity: 0.8; }
-            50% { transform: scale(1.4); opacity: 0; }
-            100% { transform: scale(0.95); opacity: 0; }
-        }
-
         .animate-float-1 { animation: float-slow 7s ease-in-out infinite; }
         .animate-float-2 { animation: float-slow 9s ease-in-out 1.5s infinite; }
         .animate-float-3 { animation: float-slow 8s ease-in-out 3s infinite; }
         .animate-glow { animation: pulse-glow 6s ease-in-out infinite; }
-        .radar-wave { animation: radar-pulse 2.5s infinite cubic-bezier(0.215, 0.61, 0.355, 1); }
-
-        /* Holographic Shimmer Effect */
-        .hologram-card {
-            background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.02) 50%, rgba(255,255,255,0.1) 100%);
-            backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-        }
-
-        .shimmer-element::after {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(
-                60deg,
-                rgba(255, 255, 255, 0) 20%,
-                rgba(255, 255, 255, 0.15) 50%,
-                rgba(255, 255, 255, 0) 80%
-            );
-            animation: shimmer-sweep 5s infinite linear;
-            pointer-events: none;
-        }
 
         /* Scroll reveal class */
         .reveal-on-scroll {
@@ -100,17 +60,6 @@
             opacity: 1;
             transform: translateY(0) scale(1);
         }
-
-        /* Mobile Wallet Deck Transition States */
-        .deck-stacked .card-stack-1 { transform: translateY(0px) scale(1) rotate(0deg); z-index: 40; }
-        .deck-stacked .card-stack-2 { transform: translateY(22px) scale(0.95) rotate(-2deg); z-index: 30; opacity: 0.9; }
-        .deck-stacked .card-stack-3 { transform: translateY(44px) scale(0.90) rotate(2deg); z-index: 20; opacity: 0.8; }
-        .deck-stacked .card-stack-4 { transform: translateY(66px) scale(0.85) rotate(-1deg); z-index: 10; opacity: 0.7; }
-
-        .deck-fanned .card-stack-1 { transform: translateY(-110px) rotate(-6deg) scale(0.96); z-index: 40; }
-        .deck-fanned .card-stack-2 { transform: translateY(-35px) rotate(4deg) scale(0.98); z-index: 30; }
-        .deck-fanned .card-stack-3 { transform: translateY(40px) rotate(-3deg) scale(1); z-index: 20; }
-        .deck-fanned .card-stack-4 { transform: translateY(115px) rotate(5deg) scale(1.02); z-index: 10; }
 
         /* Custom Slider Thumb Styling */
         input[type="range"]::-webkit-slider-thumb {
@@ -174,94 +123,100 @@
             </div>
 
             <!-- ========================================================================= -->
-            <!-- 📱 MOBILE SPECIAL: INTERACTIVE 3D APPLE WALLET CARD DECK                  -->
+            <!-- 📱 MOBILE SPECIAL: APPLE-STYLE 3D INTERACTIVE CARD SHOWCASE (CLEAN SLIDER)-->
             <!-- ========================================================================= -->
             <div class="block md:hidden mt-12 px-2">
-                <div class="flex items-center justify-between px-3 mb-3">
-                    <span class="text-xs font-black uppercase tracking-wider text-indigo-400">📱 İnteraktif Kart Destesi</span>
-                    <button id="btn-toggle-deck" class="px-3 py-1 bg-indigo-600/30 hover:bg-indigo-600 text-indigo-200 hover:text-white text-xs font-bold rounded-lg border border-indigo-500/40 transition-all active:scale-95 flex items-center gap-1">
-                        <span id="deck-btn-icon">🎴</span>
-                        <span id="deck-btn-text">Desteyi Aç / İncele</span>
+                <!-- Bank Selector Tabs -->
+                <div class="flex items-center justify-center gap-1.5 p-1 bg-slate-900/90 border border-slate-800 rounded-2xl mb-4 max-w-sm mx-auto shadow-lg">
+                    <button class="mobile-bank-tab flex-1 py-1.5 px-2 rounded-xl text-[11px] font-bold transition-all bg-indigo-600 text-white shadow-md" data-target="m-card-garanti">
+                        Garanti
+                    </button>
+                    <button class="mobile-bank-tab flex-1 py-1.5 px-2 rounded-xl text-[11px] font-bold transition-all text-slate-400 hover:text-white" data-target="m-card-yapi-kredi">
+                        Yapı Kredi
+                    </button>
+                    <button class="mobile-bank-tab flex-1 py-1.5 px-2 rounded-xl text-[11px] font-bold transition-all text-slate-400 hover:text-white" data-target="m-card-akbank">
+                        Akbank
+                    </button>
+                    <button class="mobile-bank-tab flex-1 py-1.5 px-2 rounded-xl text-[11px] font-bold transition-all text-slate-400 hover:text-white" data-target="m-card-ziraat">
+                        Ziraat
                     </button>
                 </div>
 
-                <!-- 3D Mobile Deck Container -->
-                <div id="mobile-card-deck" class="perspective-mobile deck-stacked relative w-full h-[320px] transition-all duration-500 flex items-center justify-center">
-                    
-                    <!-- Mobile Card 1: Garanti BBVA -->
-                    <div class="card-3d card-stack-1 shimmer-element absolute w-[92%] max-w-[340px] p-5 rounded-2xl bg-gradient-to-br from-emerald-950 via-slate-900 to-slate-950 border border-emerald-500/40 shadow-2xl text-left transition-all duration-500 cursor-pointer">
+                <!-- 3D Card Display Stage (Zero Overlap, 100% Readable) -->
+                <div class="relative w-full max-w-sm mx-auto min-h-[220px]">
+                    <!-- Card 1: Garanti BBVA -->
+                    <div id="m-card-garanti" class="mobile-card-slide p-6 rounded-3xl bg-gradient-to-br from-emerald-950 via-slate-900 to-slate-950 border-2 border-emerald-500/50 shadow-2xl text-left transition-all duration-300 block">
                         <div class="flex items-center justify-between">
                             <span class="text-xs font-black uppercase tracking-wider text-emerald-400">Garanti BBVA • Bonus</span>
-                            <div class="w-7 h-4 rounded bg-amber-400 border border-amber-300 font-mono text-[8px] font-bold flex items-center justify-center text-amber-950">CHIP</div>
+                            <div class="w-8 h-5 rounded bg-amber-400 border border-amber-300 font-mono text-[9px] font-bold flex items-center justify-center text-amber-950">CHIP</div>
                         </div>
-                        <div class="my-3">
-                            <span class="font-mono text-xs tracking-widest text-slate-300">•••• •••• •••• 8412</span>
-                            <div class="mt-1 flex items-center gap-1 text-[10px] font-bold text-amber-400">
-                                <span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-ping"></span>
-                                <span>18 Gündür Ödeme Yok</span>
+                        <div class="my-4">
+                            <span class="font-mono text-sm tracking-widest text-slate-300">•••• •••• •••• 8412</span>
+                            <div class="mt-1.5 flex items-center gap-1.5 text-xs font-bold text-amber-400">
+                                <span class="w-2 h-2 rounded-full bg-amber-400 animate-ping"></span>
+                                <span>18 Gündür Ödeme Yok (72 Gün Kaldı)</span>
                             </div>
                         </div>
-                        <div class="pt-2 border-t border-slate-800 flex justify-between items-end">
+                        <div class="pt-3 border-t border-slate-800 flex justify-between items-end">
                             <div>
-                                <span class="text-[9px] text-slate-400 font-bold block">DÖNEM BORCU</span>
-                                <span class="text-lg font-black text-red-400">₺78.450</span>
+                                <span class="text-[10px] text-slate-400 font-bold block">DÖNEM BORCU</span>
+                                <span class="text-xl font-black text-red-400">₺78.450</span>
                             </div>
-                            <span class="text-[11px] font-bold text-slate-300">Asgari: ₺31.380</span>
+                            <span class="text-xs font-bold text-slate-300">Asgari: ₺31.380</span>
                         </div>
                     </div>
 
-                    <!-- Mobile Card 2: Yapı Kredi KMH -->
-                    <div class="card-3d card-stack-2 shimmer-element absolute w-[92%] max-w-[340px] p-5 rounded-2xl bg-gradient-to-br from-blue-950 via-slate-900 to-slate-950 border border-blue-500/40 shadow-2xl text-left transition-all duration-500 cursor-pointer">
+                    <!-- Card 2: Yapı Kredi KMH -->
+                    <div id="m-card-yapi-kredi" class="mobile-card-slide p-6 rounded-3xl bg-gradient-to-br from-blue-950 via-slate-900 to-slate-950 border-2 border-blue-500/50 shadow-2xl text-left transition-all duration-300 hidden">
                         <div class="flex items-center justify-between">
                             <span class="text-xs font-black uppercase tracking-wider text-blue-400">Yapı Kredi • Esnek Hesap</span>
-                            <span class="px-1.5 py-0.5 rounded bg-red-500/20 text-red-300 text-[9px] font-black border border-red-500/30">FAİZ: %5.0</span>
+                            <span class="px-2 py-0.5 rounded bg-red-500/20 text-red-300 text-[10px] font-black border border-red-500/30">FAİZ: %5.0</span>
                         </div>
-                        <div class="my-3">
-                            <span class="text-[10px] text-slate-400 font-semibold block">EK HESAP EKSİ BAKİYE</span>
-                            <span class="text-xl font-black text-red-500">-₺65.000</span>
+                        <div class="my-4">
+                            <span class="text-xs text-slate-400 font-semibold block">EK HESAP EKSİ BAKİYE</span>
+                            <span class="text-2xl font-black text-red-500">-₺65.000</span>
                         </div>
-                        <div class="pt-2 border-t border-slate-800 flex justify-between items-center text-[10px]">
+                        <div class="pt-3 border-t border-slate-800 flex justify-between items-center text-xs">
                             <span class="text-slate-400">Aylık Faiz Maliyeti:</span>
                             <span class="font-bold text-red-400">₺3.250 / ay</span>
                         </div>
                     </div>
 
-                    <!-- Mobile Card 3: Akbank Axess -->
-                    <div class="card-3d card-stack-3 shimmer-element absolute w-[92%] max-w-[340px] p-5 rounded-2xl bg-gradient-to-br from-rose-950 via-slate-900 to-slate-950 border border-rose-500/40 shadow-2xl text-left transition-all duration-500 cursor-pointer">
+                    <!-- Card 3: Akbank Axess -->
+                    <div id="m-card-akbank" class="mobile-card-slide p-6 rounded-3xl bg-gradient-to-br from-rose-950 via-slate-900 to-slate-950 border-2 border-rose-500/50 shadow-2xl text-left transition-all duration-300 hidden">
                         <div class="flex items-center justify-between">
                             <span class="text-xs font-black uppercase tracking-wider text-rose-400">Akbank • Axess</span>
-                            <div class="w-7 h-4 rounded bg-amber-400 border border-amber-300 font-mono text-[8px] font-bold flex items-center justify-center text-amber-950">CHIP</div>
+                            <div class="w-8 h-5 rounded bg-amber-400 border border-amber-300 font-mono text-[9px] font-bold flex items-center justify-center text-amber-950">CHIP</div>
                         </div>
-                        <div class="my-3">
-                            <span class="font-mono text-xs tracking-widest text-slate-300">•••• •••• •••• 1907</span>
-                            <span class="text-[10px] text-red-400 font-bold block mt-1">⚠️ Son Ödeme: 4 Gün Kaldı</span>
+                        <div class="my-4">
+                            <span class="font-mono text-sm tracking-widest text-slate-300">•••• •••• •••• 1907</span>
+                            <span class="text-xs text-red-400 font-bold block mt-1.5">⚠️ Son Ödeme: 4 Gün Kaldı</span>
                         </div>
-                        <div class="pt-2 border-t border-slate-800 flex justify-between items-end">
+                        <div class="pt-3 border-t border-slate-800 flex justify-between items-end">
                             <div>
-                                <span class="text-[9px] text-slate-400 font-bold block">DÖNEM BORCU</span>
-                                <span class="text-lg font-black text-red-400">₺52.000</span>
+                                <span class="text-[10px] text-slate-400 font-bold block">DÖNEM BORCU</span>
+                                <span class="text-xl font-black text-red-400">₺52.000</span>
                             </div>
-                            <span class="text-[11px] font-bold text-slate-300">Asgari: ₺20.800</span>
+                            <span class="text-xs font-bold text-slate-300">Asgari: ₺20.800</span>
                         </div>
                     </div>
 
-                    <!-- Mobile Card 4: Ziraat Kredi -->
-                    <div class="card-3d card-stack-4 shimmer-element absolute w-[92%] max-w-[340px] p-5 rounded-2xl bg-gradient-to-br from-red-950 via-slate-900 to-slate-950 border border-red-500/40 shadow-2xl text-left transition-all duration-500 cursor-pointer">
+                    <!-- Card 4: Ziraat Kredi -->
+                    <div id="m-card-ziraat" class="mobile-card-slide p-6 rounded-3xl bg-gradient-to-br from-red-950 via-slate-900 to-slate-950 border-2 border-red-500/50 shadow-2xl text-left transition-all duration-300 hidden">
                         <div class="flex items-center justify-between">
                             <span class="text-xs font-black uppercase tracking-wider text-red-400">Ziraat Bankası • Kredi</span>
-                            <span class="text-[9px] text-emerald-400 font-bold">24 Taksit Kaldı</span>
+                            <span class="text-[10px] text-emerald-400 font-bold">24 Taksit Kaldı</span>
                         </div>
-                        <div class="my-3">
-                            <span class="text-[10px] text-slate-400 font-semibold block">KALAN ANAPARA</span>
-                            <span class="text-xl font-black text-white">₺140.000</span>
+                        <div class="my-4">
+                            <span class="text-xs text-slate-400 font-semibold block">KALAN ANAPARA</span>
+                            <span class="text-2xl font-black text-white">₺140.000</span>
                         </div>
-                        <div class="pt-2 border-t border-slate-800 flex justify-between items-center text-[10px]">
+                        <div class="pt-3 border-t border-slate-800 flex justify-between items-center text-xs">
                             <span class="text-slate-400">Aylık Taksit:</span>
                             <span class="font-bold text-white">₺7.200 / ay</span>
                         </div>
                     </div>
                 </div>
-                <p class="text-[11px] text-slate-500 italic mt-2 text-center">💡 Kartlara dokunarak veya telefonu hafifçe eğerek 3D hareketi hissedin.</p>
             </div>
 
             <!-- ========================================================================= -->
@@ -659,7 +614,7 @@
     <x-public-footer />
 
     <!-- ========================================================================= -->
-    <!-- JAVASCRIPT: 3D PERSPECTIVE SCROLL, GYROSCOPE & TOUCH DECK ENGINE          -->
+    <!-- JAVASCRIPT: 3D PERSPECTIVE SCROLL, MOBILE TAB SWITCHER & SLIDER ENGINE    -->
     <!-- ========================================================================= -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -681,34 +636,38 @@
                 revealObserver.observe(el);
             });
 
-            // 2. Mobile Interactive 3D Apple Wallet Deck Toggle
-            const deck = document.getElementById('mobile-card-deck');
-            const toggleBtn = document.getElementById('btn-toggle-deck');
-            const btnIcon = document.getElementById('deck-btn-icon');
-            const btnText = document.getElementById('deck-btn-text');
+            // 2. Mobile Interactive Bank Tab Switcher (Clean 3D Stage)
+            const mobileTabs = document.querySelectorAll('.mobile-bank-tab');
+            const mobileSlides = document.querySelectorAll('.mobile-card-slide');
 
-            if (toggleBtn && deck) {
-                let isFanned = false;
-                const toggleDeck = () => {
-                    isFanned = !isFanned;
-                    if (isFanned) {
-                        deck.classList.remove('deck-stacked');
-                        deck.classList.add('deck-fanned');
-                        deck.style.height = '420px';
-                        btnIcon.textContent = '📁';
-                        btnText.textContent = 'Desteyi Topla';
-                    } else {
-                        deck.classList.remove('deck-fanned');
-                        deck.classList.add('deck-stacked');
-                        deck.style.height = '320px';
-                        btnIcon.textContent = '🎴';
-                        btnText.textContent = 'Desteyi Aç';
-                    }
-                };
+            mobileTabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const targetId = tab.getAttribute('data-target');
 
-                toggleBtn.addEventListener('click', toggleDeck);
-                deck.addEventListener('click', toggleDeck);
-            }
+                    // Reset active tabs
+                    mobileTabs.forEach(t => {
+                        t.classList.remove('bg-indigo-600', 'text-white', 'shadow-md');
+                        t.classList.add('text-slate-400');
+                    });
+                    tab.classList.add('bg-indigo-600', 'text-white', 'shadow-md');
+                    tab.classList.remove('text-slate-400');
+
+                    // Switch cards
+                    mobileSlides.forEach(slide => {
+                        if (slide.id === targetId) {
+                            slide.classList.remove('hidden');
+                            slide.style.opacity = '0';
+                            slide.style.transform = 'scale(0.95) translateY(6px)';
+                            setTimeout(() => {
+                                slide.style.opacity = '1';
+                                slide.style.transform = 'scale(1) translateY(0)';
+                            }, 20);
+                        } else {
+                            slide.classList.add('hidden');
+                        }
+                    });
+                });
+            });
 
             // 3. Interactive Debt Melt Simulator Slider
             const slider = document.getElementById('interactive-slider');
@@ -775,24 +734,7 @@
                 }
             }, { passive: true });
 
-            // 5. Gyroscope / Device Orientation 3D Tilt for Mobile Devices
-            if (window.DeviceOrientationEvent && 'ontouchstart' in window) {
-                window.addEventListener('deviceorientation', (e) => {
-                    if (e.gamma !== null && e.beta !== null) {
-                        const tiltX = Math.min(15, Math.max(-15, e.gamma / 2)).toFixed(1);
-                        const tiltY = Math.min(15, Math.max(-15, (e.beta - 45) / 3)).toFixed(1);
-
-                        if (deck && !deck.classList.contains('deck-fanned')) {
-                            const topCard = deck.querySelector('.card-stack-1');
-                            if (topCard) {
-                                topCard.style.transform = `perspective(800px) rotateY(${tiltX}deg) rotateX(${-tiltY}deg)`;
-                            }
-                        }
-                    }
-                }, { passive: true });
-            }
-
-            // 6. Desktop Mouse Tilt Interaction on Center Card
+            // 5. Desktop Mouse Tilt Interaction on Center Card
             if (cardCenter) {
                 cardCenter.addEventListener('mousemove', (e) => {
                     const rect = cardCenter.getBoundingClientRect();
