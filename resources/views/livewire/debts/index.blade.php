@@ -421,33 +421,88 @@
                 </div>
 
                 <div class="space-y-3.5">
-                    <div class="grid grid-cols-2 gap-3">
+                    <!-- 1. Adım: Borç Türü & Senaryo Seçimi -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         <div>
-                            <label class="block text-xs font-bold text-gray-700 mb-1">Banka</label>
-                            <select wire:model="bank_id" class="w-full rounded-xl border-gray-300 text-sm font-medium focus:ring-indigo-500 focus:border-indigo-500">
-                                <option value="">Banka Seçin (veya Şahıs)</option>
-                                @foreach ($banks as $b)
-                                    <option value="{{ $b->id }}">{{ $b->name }}</option>
-                                @endforeach
+                            <label class="block text-xs font-bold text-gray-700 mb-1">Borç Türü & Senaryosu</label>
+                            <select wire:model.live="type" class="w-full rounded-xl border-gray-300 text-sm font-bold focus:ring-indigo-500 focus:border-indigo-500 bg-indigo-50/50">
+                                <option value="loan">🏦 Banka Kredisi (İhtiyaç/Konut/Taşıt)</option>
+                                <option value="credit_card">💳 Kredi Kartı Dönem / Asgari Borcu</option>
+                                <option value="kmh">⚡ KMH / Eksi Bakiye (Artı Para/Avans)</option>
+                                <option value="personal">🤝 Şahıs / Elden / Senetli Borç</option>
+                                <option value="other">📑 Diğer / Ticari Borç</option>
                             </select>
                         </div>
 
-                        <div>
-                            <label class="block text-xs font-bold text-gray-700 mb-1">Borç Türü</label>
-                            <select wire:model="type" class="w-full rounded-xl border-gray-300 text-sm font-medium focus:ring-indigo-500 focus:border-indigo-500">
-                                <option value="loan">İhtiyaç / Taşıt Kredisi</option>
-                                <option value="kmh">KMH (Ek Hesap / Avans)</option>
-                                <option value="credit_card">Kredi Kartı Borcu</option>
-                                <option value="personal">Şahıs / Diğer Borç</option>
-                            </select>
-                        </div>
+                        <!-- Senaryoya Göre Dinamik Seçim -->
+                        @if ($type === 'credit_card')
+                            <div>
+                                <label class="block text-xs font-bold text-gray-700 mb-1">Hangi Kredi Kartınız?</label>
+                                <select wire:model.live="credit_card_id" class="w-full rounded-xl border-gray-300 text-sm font-medium focus:ring-indigo-500 focus:border-indigo-500">
+                                    <option value="">Kayıtlı Kart Seçin (veya elle girin)</option>
+                                    @foreach ($userCards as $uc)
+                                        <option value="{{ $uc->id }}">
+                                            {{ $uc->bank?->name }} - {{ $uc->name }} ({{ $uc->masked_card_number }})
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        @elseif ($type === 'kmh')
+                            <div>
+                                <label class="block text-xs font-bold text-gray-700 mb-1">Hangi Banka Hesabı / KMH?</label>
+                                <select wire:model.live="account_id" class="w-full rounded-xl border-gray-300 text-sm font-medium focus:ring-indigo-500 focus:border-indigo-500">
+                                    <option value="">Kayıtlı Hesap Seçin (veya elle girin)</option>
+                                    @foreach ($userAccounts as $ua)
+                                        <option value="{{ $ua->id }}">
+                                            {{ $ua->bank?->name }} - {{ $ua->name }} ({{ $ua->masked_iban }})
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        @elseif ($type === 'loan')
+                            <div>
+                                <label class="block text-xs font-bold text-gray-700 mb-1">Kredi Kategorisi</label>
+                                <select wire:model.live="loan_category" class="w-full rounded-xl border-gray-300 text-sm font-medium focus:ring-indigo-500 focus:border-indigo-500">
+                                    <option value="consumer">İhtiyaç Kredisi</option>
+                                    <option value="vehicle">Taşıt Kredisi</option>
+                                    <option value="housing">Konut Kredisi</option>
+                                    <option value="commercial">Ticari / KOBİ Kredisi</option>
+                                </select>
+                            </div>
+                        @elseif ($type === 'personal')
+                            <div>
+                                <label class="block text-xs font-bold text-gray-700 mb-1">Alacaklı Kişi / Kurum</label>
+                                <input type="text" wire:model.live="creditor_name" class="w-full rounded-xl border-gray-300 text-sm focus:ring-indigo-500 focus:border-indigo-500" placeholder="Örn: Ahmet Bey, Ev Sahibi">
+                            </div>
+                        @endif
                     </div>
 
-                    <div>
-                        <label class="block text-xs font-bold text-gray-700 mb-1">Borç Başlığı / Açıklama</label>
-                        <input type="text" wire:model="title" class="w-full rounded-xl border-gray-300 text-sm font-medium focus:ring-indigo-500 focus:border-indigo-500" placeholder="Örn: Garanti İhtiyaç Kredisi">
-                        @error('title') <span class="text-red-500 text-xs font-bold">{{ $message }}</span> @enderror
-                    </div>
+                    <!-- 2. Banka Seçimi (Şahıs borcu değilse) -->
+                    @if ($type !== 'personal')
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-xs font-bold text-gray-700 mb-1">İlgili Banka</label>
+                                <select wire:model.live="bank_id" class="w-full rounded-xl border-gray-300 text-sm font-medium focus:ring-indigo-500 focus:border-indigo-500">
+                                    <option value="">Banka Seçin</option>
+                                    @foreach ($banks as $b)
+                                        <option value="{{ $b->id }}">{{ $b->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-gray-700 mb-1">Borç Başlığı</label>
+                                <input type="text" wire:model="title" class="w-full rounded-xl border-gray-300 text-sm font-medium focus:ring-indigo-500 focus:border-indigo-500" placeholder="Örn: Garanti İhtiyaç Kredisi">
+                                @error('title') <span class="text-red-500 text-xs font-bold">{{ $message }}</span> @enderror
+                            </div>
+                        </div>
+                    @else
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 mb-1">Borç Başlığı / Tanımı</label>
+                            <input type="text" wire:model="title" class="w-full rounded-xl border-gray-300 text-sm font-medium focus:ring-indigo-500 focus:border-indigo-500" placeholder="Örn: Ahmet Bey'e Elden Borç">
+                            @error('title') <span class="text-red-500 text-xs font-bold">{{ $message }}</span> @enderror
+                        </div>
+                    @endif
+
 
                     <div class="grid grid-cols-2 gap-3">
                         <div>

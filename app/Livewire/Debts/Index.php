@@ -27,7 +27,11 @@ class Index extends Component
     public bool $showModal = false;
     public ?int $debtId = null;
     public ?int $bank_id = null;
+    public ?int $credit_card_id = null;
+    public ?int $account_id = null;
     public string $type = 'loan';
+    public string $loan_category = 'consumer'; // consumer, vehicle, housing, commercial
+    public string $creditor_name = ''; // Şahıs / Kurum Alacaklı Adı
     public string $title = '';
     public float $principal = 0.0;
     public float $remaining = 0.0;
@@ -41,7 +45,11 @@ class Index extends Component
 
     protected $rules = [
         'bank_id' => 'nullable|exists:banks,id',
+        'credit_card_id' => 'nullable|exists:credit_cards,id',
+        'account_id' => 'nullable|exists:accounts,id',
         'type' => 'required|in:loan,kmh,credit_card,personal,other',
+        'loan_category' => 'nullable|string',
+        'creditor_name' => 'nullable|string|max:100',
         'title' => 'required|string|max:150',
         'principal' => 'required|numeric|min:0',
         'remaining' => 'required|numeric|min:0',
@@ -53,6 +61,78 @@ class Index extends Component
         'days_overdue' => 'nullable|integer|min:0',
         'notes' => 'nullable|string',
     ];
+
+    public function updatedType(string $newType): void
+    {
+        if ($newType === 'personal') {
+            $this->bank_id = null;
+            $this->credit_card_id = null;
+            $this->account_id = null;
+            $this->interest_rate = 0.0;
+            if (empty($this->title)) {
+                $this->title = 'Elden / Şahıs Borcu';
+            }
+        } elseif ($newType === 'credit_card') {
+            $this->interest_rate = 4.25;
+            $this->account_id = null;
+        } elseif ($newType === 'kmh') {
+            $this->interest_rate = 5.00;
+            $this->credit_card_id = null;
+        } elseif ($newType === 'loan') {
+            $this->interest_rate = 3.90;
+            $this->credit_card_id = null;
+            $this->account_id = null;
+        }
+    }
+
+    public function updatedCreditCardId(?int $cardId): void
+    {
+        if ($cardId) {
+            $card = \App\Models\CreditCard::where('user_id', Auth::id())->with('bank')->find($cardId);
+            if ($card) {
+                $this->bank_id = $card->bank_id;
+                $this->title = ($card->bank?->name ?? 'Banka') . ' - ' . $card->name . ' Kart Borcu';
+                $this->principal = (float) $card->credit_limit;
+                $this->remaining = (float) $card->current_debt;
+                $this->installment_amount = (float) ($card->minimum_payment ?: ($card->current_debt * 0.40));
+                $this->interest_rate = (float) $card->interest_rate;
+                $this->installment_count = null;
+                $this->next_due_date = $card->due_day ? Carbon::now()->day($card->due_day)->format('Y-m-d') : null;
+            }
+        }
+    }
+
+    public function updatedAccountId(?int $accId): void
+    {
+        if ($accId) {
+            $acc = \App\Models\Account::where('user_id', Auth::id())->with('bank')->find($accId);
+            if ($acc) {
+                $this->bank_id = $acc->bank_id;
+                $this->title = ($acc->bank?->name ?? 'Banka') . ' - ' . $acc->name . ' KMH / Ek Avans';
+                $this->principal = (float) ($acc->kmh_limit ?: abs($acc->balance));
+                $this->remaining = (float) ($acc->balance < 0 ? abs($acc->balance) : 0);
+                $this->interest_rate = (float) ($acc->kmh_interest_rate ?: 5.0);
+                $this->installment_amount = round($this->remaining * 0.15, 2);
+                $this->installment_count = null;
+            }
+        }
+    }
+
+    public function updatedLoanCategory(string $category): void
+    {
+        $categoryNames = [
+            'consumer' => 'İhtiyaç Kredisi',
+            'vehicle' => 'Taşıt Kredisi',
+            'housing' => 'Konut Kredisi',
+            'commercial' => 'Ticari / Kobi Kredisi',
+        ];
+
+        if ($this->type === 'loan' && $this->bank_id) {
+            $bank = \App\Models\Bank::find($this->bank_id);
+            $catLabel = $categoryNames[$category] ?? 'Kredi';
+            $this->title = ($bank?->name ?? 'Banka') . ' ' . $catLabel;
+        }
+    }
 
     public function setDatePreset(string $preset): void
     {
@@ -93,8 +173,9 @@ class Index extends Component
 
     public function openCreateModal(): void
     {
-        $this->reset(['debtId', 'bank_id', 'title', 'principal', 'remaining', 'installment_count', 'installment_amount', 'next_due_date', 'last_payment_date', 'notes']);
+        $this->reset(['debtId', 'bank_id', 'credit_card_id', 'account_id', 'creditor_name', 'title', 'principal', 'remaining', 'installment_count', 'installment_amount', 'next_due_date', 'last_payment_date', 'notes']);
         $this->type = 'loan';
+        $this->loan_category = 'consumer';
         $this->interest_rate = 3.90;
         $this->showModal = true;
     }
@@ -104,6 +185,8 @@ class Index extends Component
         $debt = Debt::where('user_id', Auth::id())->findOrFail($id);
         $this->debtId = $debt->id;
         $this->bank_id = $debt->bank_id;
+        $this->credit_card_id = $debt->credit_card_id;
+        $this->account_id = $debt->account_id;
         $this->type = $debt->type;
         $this->title = $debt->title;
         $this->principal = (float) $debt->principal;
@@ -122,9 +205,16 @@ class Index extends Component
     {
         $this->validate();
 
+        // Eğer şahıs borcu ise ve alacaklı adı girildiyse başlığı güncelle
+        if ($this->type === 'personal' && !empty($this->creditor_name) && empty($this->title)) {
+            $this->title = $this->creditor_name . ' (Şahıs Borcu)';
+        }
+
         $data = [
             'user_id' => Auth::id(),
             'bank_id' => $this->bank_id ?: null,
+            'credit_card_id' => $this->type === 'credit_card' ? $this->credit_card_id : null,
+            'account_id' => $this->type === 'kmh' ? $this->account_id : null,
             'type' => $this->type,
             'title' => $this->title,
             'principal' => $this->principal,
@@ -146,9 +236,10 @@ class Index extends Component
         }
 
         $this->showModal = false;
-        $this->reset(['debtId', 'bank_id', 'title', 'principal', 'remaining']);
+        $this->reset(['debtId', 'bank_id', 'credit_card_id', 'account_id', 'creditor_name', 'title', 'principal', 'remaining']);
         session()->flash('message', 'Borç kaydı başarıyla kaydedildi.');
     }
+
 
     public function delete(int $id): void
     {
@@ -293,6 +384,8 @@ class Index extends Component
 
         $debts = $query->get();
         $banks = Bank::all();
+        $userCards = \App\Models\CreditCard::where('user_id', $userId)->with('bank')->get();
+        $userAccounts = \App\Models\Account::where('user_id', $userId)->with('bank')->get();
 
         // Finansal Özet İstatistikleri (Tüm Filtrelenen Borçlar Üzerinden)
         $totalRemaining = $debts->sum('remaining');
@@ -303,6 +396,8 @@ class Index extends Component
         return view('livewire.debts.index', [
             'debts' => $debts,
             'banks' => $banks,
+            'userCards' => $userCards,
+            'userAccounts' => $userAccounts,
             'totalRemaining' => $totalRemaining,
             'totalMonthly' => $totalMonthly,
             'criticalCount' => $criticalCount,
@@ -310,4 +405,5 @@ class Index extends Component
         ])->layout('layouts.app');
     }
 }
+
 
