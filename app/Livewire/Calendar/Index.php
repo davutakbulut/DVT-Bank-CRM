@@ -56,9 +56,12 @@ class Index extends Component
 
         // 1. KREDİ KARTLARI (due_day ile aylık son ödeme günü)
         $cards = CreditCard::where('user_id', $userId)->with('bank')->get();
+        $trackedCardIds = [];
+
         foreach ($cards as $card) {
             $day = $card->due_day ? min($daysInMonth, (int)$card->due_day) : 15;
             $eventDate = $date->copy()->day($day)->format('Y-m-d');
+            $trackedCardIds[] = $card->id;
 
             $events->push((object) [
                 'id' => 'card-' . $card->id,
@@ -84,11 +87,16 @@ class Index extends Component
             ->get();
 
         foreach ($debts as $debt) {
+            // Eğer bu borç zaten yukarıda eklenen bir kredi kartının genel ekstre borcunu temsil ediyorsa mükerrer ekleme
+            if ($debt->type === 'credit_card' && $debt->credit_card_id && in_array($debt->credit_card_id, $trackedCardIds) && empty($debt->merchant_name)) {
+                continue;
+            }
+
             $dueCarbon = $debt->next_due_date ? Carbon::parse($debt->next_due_date) : null;
             $day = $dueCarbon ? $dueCarbon->day : 1;
             $eventDate = $date->copy()->day(min($daysInMonth, $day))->format('Y-m-d');
 
-            $typeLabel = $debt->type === 'kmh' ? 'KMH / Eksi Bakiye' : ($debt->type === 'credit_card' ? 'Kart Borcu' : 'Kredi Taksiti');
+            $typeLabel = $debt->type === 'kmh' ? 'KMH / Eksi Bakiye' : ($debt->type === 'credit_card' ? 'Kart Taksiti' : 'Kredi Taksiti');
             $typeIcon = $debt->type === 'kmh' ? '⚡' : ($debt->type === 'credit_card' ? '💳' : '🏦');
 
             $events->push((object) [
@@ -108,6 +116,7 @@ class Index extends Component
                 'badge_style' => $debt->type === 'kmh' ? 'bg-red-100 text-red-800 border-red-300' : 'bg-blue-100 text-blue-800 border-blue-300',
             ]);
         }
+
 
         // 3. ÖDEME PLANI KALEMLERİ
         $planItems = PaymentPlanItem::whereHas('paymentPlan', fn($q) => $q->where('user_id', $userId)->where('status', 'active'))

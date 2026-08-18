@@ -245,11 +245,23 @@
                                     <h3 class="font-black text-gray-900 text-base">
                                         {{ \Carbon\Carbon::parse($currentMonth . '-' . sprintf('%02d', $dayNum))->translatedFormat('d F Y, l') }}
                                     </h3>
+                                    @php
+                                        $uniqueBanks = $dayEvs->pluck('bank_name')->unique();
+                                    @endphp
                                     <span class="text-xs {{ $hasCollision ? 'text-red-600 font-bold' : 'text-gray-500' }}">
-                                        {{ $hasCollision ? '🚨 Farklı bankaların ' . $dayEvs->count() . ' ödemesi aynı gün çakışıyor!' : $dayEvs->count() . ' ödeme planlandı' }}
+                                        @if ($hasCollision)
+                                            @if ($uniqueBanks->count() > 1)
+                                                🚨 Farklı bankaların {{ $dayEvs->count() }} ödemesi aynı gün çakışıyor!
+                                            @else
+                                                ⚠️ {{ $uniqueBanks->first() }} bankasına ait {{ $dayEvs->count() }} ödeme aynı gün toplanıyor!
+                                            @endif
+                                        @else
+                                            {{ $dayEvs->count() }} ödeme planlandı
+                                        @endif
                                     </span>
                                 </div>
                             </div>
+
 
                             <div class="bg-gray-50 px-4 py-2 rounded-2xl border border-gray-100 self-start sm:self-center">
                                 <span class="text-xs font-bold text-gray-500">Günlük Toplam Yük:</span>
