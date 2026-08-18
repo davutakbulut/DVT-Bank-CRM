@@ -583,14 +583,14 @@
                         <span class="text-[10px] text-indigo-400 font-bold">Kaydırın & Seçin →</span>
                     </div>
 
-                    <!-- Yatay Üst Üste Binen Kompakt Kartlar Carousel -->
-                    <div class="flex overflow-x-auto no-scrollbar py-2 px-1 space-x-[-16px] snap-x snap-mandatory">
+                    <!-- Yatay Kompakt Kartlar Carousel (Temiz, Taşıntısız & Snap Akış) -->
+                    <div class="flex overflow-x-auto no-scrollbar py-3 px-1.5 gap-2.5 snap-x snap-mandatory">
                         @foreach ($databaseBanks as $index => $dbBank)
                             @php
                                 $kmhName = str_contains(strtolower($dbBank->name), 'garanti') ? 'Avans Hesap' : (str_contains(strtolower($dbBank->name), 'yapı') ? 'Esnek Hesap' : (str_contains(strtolower($dbBank->name), 'akbank') ? 'Artı Para' : (str_contains(strtolower($dbBank->name), 'iş') ? 'Ek Hesap' : 'KMH / Eksi Bakiye')));
                                 $cardName = str_contains(strtolower($dbBank->name), 'garanti') ? 'Bonus & Miles&Smiles' : (str_contains(strtolower($dbBank->name), 'yapı') ? 'Worldcard' : (str_contains(strtolower($dbBank->name), 'akbank') ? 'Axess & Wings' : (str_contains(strtolower($dbBank->name), 'iş') ? 'Maximum Kart' : 'Kredi Kartı')));
                             @endphp
-                            <div class="bank-stream-card snap-center shrink-0 w-48 h-28 p-3 rounded-xl border transition-all duration-300 cursor-pointer shadow-lg relative overflow-hidden flex flex-col justify-between select-none {{ $index === 0 ? 'active-bank-card ring-2 ring-indigo-500 scale-105 z-30 shadow-indigo-950/80 -translate-y-1.5 bg-gradient-to-br from-slate-900 via-slate-950 to-slate-900' : 'z-10 hover:z-20 hover:-translate-y-1 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 border-slate-800' }}"
+                            <div class="bank-stream-card snap-start shrink-0 w-44 h-26 p-3 rounded-xl border transition-all duration-200 cursor-pointer relative overflow-hidden flex flex-col justify-between select-none {{ $index === 0 ? 'active-bank-card border-indigo-500 ring-2 ring-indigo-500/80 bg-slate-900 shadow-md shadow-indigo-950/70' : 'border-slate-800 bg-slate-950/90 hover:border-slate-700' }}"
                                  data-bank-name="{{ $dbBank->name }}"
                                  data-bank-color="{{ $dbBank->color ?? '#6366f1' }}"
                                  data-kmh-name="{{ $kmhName }}"
@@ -601,13 +601,13 @@
                                         <div class="w-5 h-5 rounded text-white font-black flex items-center justify-center text-[9px] shadow-sm" style="background-color: {{ $dbBank->color ?? '#6366f1' }};">
                                             {{ mb_substr($dbBank->name, 0, 2) }}
                                         </div>
-                                        <span class="text-[11px] font-bold text-white truncate max-w-[105px]">{{ $dbBank->name }}</span>
+                                        <span class="text-[11px] font-bold text-white truncate max-w-[95px]">{{ $dbBank->name }}</span>
                                     </div>
                                     <div class="w-5 h-3 rounded bg-amber-400/80 text-[6px] font-bold flex items-center justify-center text-amber-950">CHIP</div>
                                 </div>
 
                                 <div class="my-0.5">
-                                    <span class="font-mono text-[9px] text-slate-400 tracking-wider">•••• •••• •••• {{ 1000 + ($index * 347) % 9000 }}</span>
+                                    <span class="font-mono text-[9px] text-slate-400 tracking-wider">•••• {{ 1000 + ($index * 347) % 9000 }}</span>
                                     <span class="text-[9px] text-emerald-400 font-semibold block truncate">{{ $cardName }}</span>
                                 </div>
 
@@ -1023,12 +1023,12 @@
             mobileBankCards.forEach(card => {
                 card.addEventListener('click', () => {
                     mobileBankCards.forEach(c => {
-                        c.classList.remove('active-bank-card', 'ring-2', 'ring-indigo-500', 'scale-105', 'z-30', 'shadow-indigo-950/80', '-translate-y-2');
-                        c.classList.add('z-10', 'border-slate-800');
+                        c.classList.remove('active-bank-card', 'border-indigo-500', 'ring-2', 'ring-indigo-500/80', 'bg-slate-900', 'shadow-md', 'shadow-indigo-950/70');
+                        c.classList.add('border-slate-800', 'bg-slate-950/90');
                     });
 
-                    card.classList.add('active-bank-card', 'ring-2', 'ring-indigo-500', 'scale-105', 'z-30', 'shadow-indigo-950/80', '-translate-y-2');
-                    card.classList.remove('z-10', 'border-slate-800');
+                    card.classList.add('active-bank-card', 'border-indigo-500', 'ring-2', 'ring-indigo-500/80', 'bg-slate-900', 'shadow-md', 'shadow-indigo-950/70');
+                    card.classList.remove('border-slate-800', 'bg-slate-950/90');
 
                     const name = card.getAttribute('data-bank-name');
                     const color = card.getAttribute('data-bank-color');
