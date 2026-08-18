@@ -28,27 +28,27 @@
         /* 3D Card Base with Smooth Hardware Transitions */
         .card-3d {
             transform-style: preserve-3d;
-            transition: transform 0.4s cubic-bezier(0.2, 1, 0.3, 1), opacity 0.3s ease, z-index 0.2s ease, box-shadow 0.3s ease;
+            transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease, z-index 0.2s ease, box-shadow 0.3s ease;
             will-change: transform, opacity;
             cursor: pointer;
         }
 
         /* Ambient Glow & Floating Animations */
         @keyframes float-slow-1 {
-            0%, 100% { transform: translate3d(var(--tx, 0px), var(--ty, 0px), var(--tz, 0px)) rotate(var(--rot, -12deg)); }
-            50% { transform: translate3d(var(--tx, 0px), calc(var(--ty, 0px) - 8px), var(--tz, 0px)) rotate(calc(var(--rot, -12deg) + 1.5deg)); }
+            0%, 100% { transform: translate3d(0, 0, 0) rotate(-12deg); }
+            50% { transform: translate3d(0, -8px, 0) rotate(-10.5deg); }
         }
         @keyframes float-slow-2 {
-            0%, 100% { transform: translate3d(var(--tx, 0px), var(--ty, 0px), var(--tz, 0px)) rotate(var(--rot, 12deg)); }
-            50% { transform: translate3d(var(--tx, 0px), calc(var(--ty, 0px) - 9px), var(--tz, 0px)) rotate(calc(var(--rot, 12deg) - 1.5deg)); }
+            0%, 100% { transform: translate3d(0, 0, 0) rotate(12deg); }
+            50% { transform: translate3d(0, -9px, 0) rotate(10.5deg); }
         }
         @keyframes float-slow-3 {
-            0%, 100% { transform: translate3d(var(--tx, 0px), var(--ty, 0px), var(--tz, 0px)) rotate(var(--rot, 6deg)); }
-            50% { transform: translate3d(var(--tx, 0px), calc(var(--ty, 0px) - 6px), var(--tz, 0px)) rotate(calc(var(--rot, 6deg) + 1deg)); }
+            0%, 100% { transform: translate3d(0, 0, 0) rotate(6deg); }
+            50% { transform: translate3d(0, -6px, 0) rotate(7deg); }
         }
         @keyframes float-slow-4 {
-            0%, 100% { transform: translate3d(var(--tx, 0px), var(--ty, 0px), var(--tz, 0px)) rotate(var(--rot, -6deg)); }
-            50% { transform: translate3d(var(--tx, 0px), calc(var(--ty, 0px) - 7px), var(--tz, 0px)) rotate(calc(var(--rot, -6deg) - 1deg)); }
+            0%, 100% { transform: translate3d(0, 0, 0) rotate(-6deg); }
+            50% { transform: translate3d(0, -7px, 0) rotate(-7deg); }
         }
 
         @keyframes pulse-glow {
@@ -61,25 +61,12 @@
             100% { transform: translateX(250%) skewX(-20deg); }
         }
 
-        .anim-garanti { animation: float-slow-1 7s ease-in-out infinite; }
-        .anim-yk { animation: float-slow-2 8s ease-in-out 1s infinite; }
-        .anim-ziraat { animation: float-slow-3 6.5s ease-in-out 2s infinite; }
-        .anim-akbank { animation: float-slow-4 7.5s ease-in-out 1.5s infinite; }
+        .anim-float-1 { animation: float-slow-1 7s ease-in-out infinite; }
+        .anim-float-2 { animation: float-slow-2 8s ease-in-out 1s infinite; }
+        .anim-float-3 { animation: float-slow-3 6.5s ease-in-out 2s infinite; }
+        .anim-float-4 { animation: float-slow-4 7.5s ease-in-out 1.5s infinite; }
         .animate-glow { animation: pulse-glow 5s ease-in-out infinite; }
         .animate-shimmer { animation: shimmer-sweep 3.5s ease-in-out infinite; }
-
-        /* Default Initial Rotations for 3D Fan Layout */
-        #card-garanti { --rot: -12deg; --tx: 0px; --ty: 0px; --tz: 0px; }
-        #card-yapi-kredi { --rot: 12deg; --tx: 0px; --ty: 0px; --tz: 0px; }
-        #card-ziraat { --rot: 6deg; --tx: 0px; --ty: 0px; --tz: 0px; }
-        #card-akbank { --rot: -6deg; --tx: 0px; --ty: 0px; --tz: 0px; }
-
-        @media (max-width: 767px) {
-            #card-garanti { --rot: -8deg; }
-            #card-yapi-kredi { --rot: 8deg; }
-            #card-ziraat { --rot: 5deg; }
-            #card-akbank { --rot: -5deg; }
-        }
 
         /* Scroll reveal */
         .reveal-on-scroll {
@@ -113,7 +100,7 @@
 
     <main class="flex-1">
         <!-- ========================================================================= -->
-        <!-- 1. APPLE-STYLE HERO SECTION (DİNAMİK 3D DAĞINIK FAN DESTE)                -->
+        <!-- 1. APPLE-STYLE HERO SECTION (DİNAMİK 3D DAĞINIK FAN & GEÇİŞ DÖNGÜSÜ)     -->
         <!-- ========================================================================= -->
         <section class="relative pt-14 sm:pt-20 pb-16 sm:pb-28 px-3 sm:px-6 lg:px-8 max-w-7xl mx-auto text-center perspective-container overflow-hidden">
             <!-- Ambient Lighting Glows -->
@@ -162,12 +149,12 @@
             </div>
 
             <!-- ========================================================================= -->
-            <!-- 🌟 3D DAĞINIK DESTE (MOBİL & MASAÜSTÜ: KAYDIKÇA DİNAMİK DEĞİŞEN KARTLAR)   -->
+            <!-- 🌟 3D GEÇİŞLİ DAĞINIK DESTE (KAYDIKÇA SIRAYLA DEĞİŞEN & KAYBOLAN KARTLAR)  -->
             <!-- ========================================================================= -->
-            <div id="hero-scattered-deck" class="mt-12 sm:mt-20 relative w-full max-w-sm sm:max-w-5xl mx-auto min-h-[380px] sm:min-h-[480px] flex items-center justify-center">
+            <div id="hero-scattered-deck" class="mt-12 sm:mt-20 relative w-full max-w-sm sm:max-w-5xl mx-auto min-h-[390px] sm:min-h-[490px] flex items-center justify-center perspective-container">
                 
-                <!-- Card 1: Garanti BBVA (Sol Üst - Eğimli Deste) -->
-                <div id="card-garanti" class="card-3d anim-garanti absolute -left-3 sm:left-4 -top-2 sm:top-4 w-56 sm:w-80 p-4 sm:p-6 rounded-xl bg-gradient-to-br from-emerald-950 via-slate-900 to-slate-950 border border-emerald-500/40 shadow-2xl text-left z-20 hover:scale-105">
+                <!-- Card 1: Garanti BBVA (Sol Üst - İlk Sahneden Uçarak Çıkacak) -->
+                <div id="card-garanti" class="card-3d absolute -left-3 sm:left-4 -top-2 sm:top-4 w-56 sm:w-80 p-4 sm:p-6 rounded-xl bg-gradient-to-br from-emerald-950 via-slate-900 to-slate-950 border border-emerald-500/40 shadow-2xl text-left z-30" style="transform: rotate(-12deg);">
                     <div class="flex items-center justify-between">
                         <span class="text-[11px] sm:text-xs font-black uppercase tracking-wider text-emerald-400">Garanti BBVA</span>
                         <div class="w-7 h-4.5 sm:w-8 sm:h-5 rounded bg-amber-400/90 border border-amber-300 font-mono text-[8px] sm:text-[9px] font-bold flex items-center justify-center text-amber-950">CHIP</div>
@@ -187,8 +174,8 @@
                     </div>
                 </div>
 
-                <!-- Card 2: Yapı Kredi KMH (Sağ Üst - Eğimli Deste) -->
-                <div id="card-yapi-kredi" class="card-3d anim-yk absolute -right-3 sm:right-4 top-2 sm:top-8 w-56 sm:w-80 p-4 sm:p-6 rounded-xl bg-gradient-to-br from-blue-950 via-slate-900 to-slate-950 border border-blue-500/40 shadow-2xl text-left z-20 hover:scale-105">
+                <!-- Card 2: Yapı Kredi KMH (Sağ Üst - 2. Sırada Öne Gelip Uçacak) -->
+                <div id="card-yapi-kredi" class="card-3d absolute -right-3 sm:right-4 top-2 sm:top-8 w-56 sm:w-80 p-4 sm:p-6 rounded-xl bg-gradient-to-br from-blue-950 via-slate-900 to-slate-950 border border-blue-500/40 shadow-2xl text-left z-25" style="transform: rotate(12deg);">
                     <div class="flex items-center justify-between">
                         <span class="text-[11px] sm:text-xs font-black uppercase tracking-wider text-blue-400">Yapı Kredi • KMH</span>
                         <span class="px-1.5 py-0.5 rounded-md bg-red-500/20 text-red-300 border border-red-500/30 text-[9px] sm:text-[10px] font-black">FAİZ: %5.00</span>
@@ -203,8 +190,22 @@
                     </div>
                 </div>
 
-                <!-- Card 3: Ana Dashboard Önizleme Paneli (Merkez & Önde) -->
-                <div id="card-center-dashboard" class="card-3d relative w-full max-w-[340px] sm:max-w-xl p-5 sm:p-8 rounded-xl bg-slate-900/95 border-2 border-indigo-500/40 shadow-2xl shadow-indigo-950/80 backdrop-blur-2xl text-left z-30 transform hover:scale-[1.02]">
+                <!-- Card 3: Akbank Kart (Sağ Alt - 3. Sırada Öne Gelecek) -->
+                <div id="card-akbank" class="card-3d absolute -right-5 sm:right-12 -bottom-4 sm:-bottom-6 w-52 sm:w-72 p-3.5 sm:p-5 rounded-xl bg-gradient-to-br from-rose-950 via-slate-900 to-slate-950 border border-rose-500/30 shadow-2xl text-left z-20" style="transform: rotate(-6deg);">
+                    <span class="text-[10px] sm:text-xs font-black uppercase text-rose-400 block">Akbank • Wings Kart</span>
+                    <span class="text-base sm:text-lg font-black text-white mt-0.5 sm:mt-1 block">Dönem Borcu: ₺52.000</span>
+                    <span class="text-[10px] sm:text-[11px] text-amber-400 font-bold">⚠️ Son Ödeme: 4 Gün Kaldı</span>
+                </div>
+
+                <!-- Card 4: Ziraat Bankası Kredi (Sol Alt) -->
+                <div id="card-ziraat" class="card-3d absolute -left-5 sm:left-12 -bottom-4 sm:-bottom-6 w-52 sm:w-72 p-3.5 sm:p-5 rounded-xl bg-gradient-to-br from-red-950 via-slate-900 to-slate-950 border border-red-500/30 shadow-2xl text-left z-15" style="transform: rotate(6deg);">
+                    <span class="text-[10px] sm:text-xs font-black uppercase text-red-400 block">Ziraat Bankası • Kredi</span>
+                    <span class="text-base sm:text-lg font-black text-white mt-0.5 sm:mt-1 block">Kalan: ₺140.000</span>
+                    <span class="text-[10px] sm:text-[11px] text-slate-400">Taksit: ₺7.200 / ay (24 Taksit Kaldı)</span>
+                </div>
+
+                <!-- Card 5: Ana Dashboard Önizleme Paneli (EN SON ÜSTTE VE SABİT KALACAK KART) -->
+                <div id="card-center-dashboard" class="card-3d relative w-full max-w-[340px] sm:max-w-xl p-5 sm:p-8 rounded-xl bg-slate-900/95 border-2 border-indigo-500/40 shadow-2xl shadow-indigo-950/80 backdrop-blur-2xl text-left z-10">
                     <div class="flex items-center justify-between border-b border-slate-800 pb-3 sm:pb-4">
                         <div class="flex items-center gap-2.5 sm:gap-3">
                             <span class="w-2.5 sm:w-3 h-2.5 sm:h-3 rounded-full bg-red-500 animate-ping"></span>
@@ -238,20 +239,6 @@
                             <strong>AI Koç Önerisi:</strong> "Yapı Kredi KMH faizi en yüksek (%5.0). Bu ay fazladan ₺8.000 buraya aktarılırsa ₺4.800 faiz silinecektir."
                         </p>
                     </div>
-                </div>
-
-                <!-- Card 4: Ziraat Bankası Kredi (Sol Alt - Eğimli Deste) -->
-                <div id="card-ziraat" class="card-3d anim-ziraat absolute -left-5 sm:left-12 -bottom-4 sm:-bottom-6 w-52 sm:w-72 p-3.5 sm:p-5 rounded-xl bg-gradient-to-br from-red-950 via-slate-900 to-slate-950 border border-red-500/30 shadow-2xl text-left z-10 hover:scale-105">
-                    <span class="text-[10px] sm:text-xs font-black uppercase text-red-400 block">Ziraat Bankası • Kredi</span>
-                    <span class="text-base sm:text-lg font-black text-white mt-0.5 sm:mt-1 block">Kalan: ₺140.000</span>
-                    <span class="text-[10px] sm:text-[11px] text-slate-400">Taksit: ₺7.200 / ay (24 Taksit Kaldı)</span>
-                </div>
-
-                <!-- Card 5: Akbank Kart (Sağ Alt - Eğimli Deste) -->
-                <div id="card-akbank" class="card-3d anim-akbank absolute -right-5 sm:right-12 -bottom-4 sm:-bottom-6 w-52 sm:w-72 p-3.5 sm:p-5 rounded-xl bg-gradient-to-br from-rose-950 via-slate-900 to-slate-950 border border-rose-500/30 shadow-2xl text-left z-10 hover:scale-105">
-                    <span class="text-[10px] sm:text-xs font-black uppercase text-rose-400 block">Akbank • Wings Kart</span>
-                    <span class="text-base sm:text-lg font-black text-white mt-0.5 sm:mt-1 block">Dönem Borcu: ₺52.000</span>
-                    <span class="text-[10px] sm:text-[11px] text-amber-400 font-bold">⚠️ Son Ödeme: 4 Gün Kaldı</span>
                 </div>
             </div>
         </section>
@@ -509,24 +496,11 @@
     </div>
 
     <!-- ========================================================================= -->
-    <!-- JAVASCRIPT: 3D CARD SHUFFLE & SCROLL PHYSICS                              -->
+    <!-- JAVASCRIPT: AKICI 3D KART DEĞİŞİM & KAYBOLUŞ DÖNGÜSÜ (SCROLL SHUFFLE)     -->
     <!-- ========================================================================= -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // 1. Interactive Card Click: Pop clicked card to front!
-            const allDeckCards = document.querySelectorAll('#hero-scattered-deck .card-3d');
-            allDeckCards.forEach(card => {
-                card.addEventListener('click', () => {
-                    allDeckCards.forEach(c => {
-                        c.style.zIndex = '10';
-                        c.style.opacity = '0.75';
-                    });
-                    card.style.zIndex = '50';
-                    card.style.opacity = '1';
-                });
-            });
-
-            // 2. Scroll Reveal for Sections
+            // 1. Scroll Reveal for Sections
             const revealElements = document.querySelectorAll('.reveal-on-scroll');
             if ('IntersectionObserver' in window) {
                 const revealObserver = new IntersectionObserver((entries, observer) => {
@@ -542,7 +516,7 @@
                 revealElements.forEach(el => el.classList.add('is-revealed'));
             }
 
-            // 3. Interactive 90-Day Legal Timeline Phase Tabs
+            // 2. Interactive 90-Day Legal Timeline Phase Tabs
             const phaseTabs = document.querySelectorAll('.phase-tab');
             const phaseBadge = document.getElementById('phase-badge');
             const phaseTitle = document.getElementById('phase-title');
@@ -602,7 +576,7 @@
                 });
             });
 
-            // 4. Interactive AI Koç Prompt Chips
+            // 3. Interactive AI Koç Prompt Chips
             const promptChips = document.querySelectorAll('.ai-prompt-chip');
             const aiResponseText = document.getElementById('ai-response-text');
 
@@ -626,7 +600,7 @@
                 });
             });
 
-            // 5. Interactive Avalanche Calculator Slider
+            // 4. Interactive Avalanche Calculator Slider
             const slider = document.getElementById('sim-slider');
             const extraLabel = document.getElementById('sim-extra-budget-label');
             const monthsText = document.getElementById('sim-months-text');
@@ -657,77 +631,105 @@
                 });
             }
 
-            // 6. Dynamic 3D Card Shuffling Scroll Physics (Mobile & Desktop)
+            // =========================================================================
+            // 5. AKICI VE KUSURSUZ 3D KART DEĞİŞİM & KAYBOLUŞ DÖNGÜSÜ (SCROLL PROGRESS)
+            // =========================================================================
             const cGaranti = document.getElementById('card-garanti');
             const cYK = document.getElementById('card-yapi-kredi');
-            const cCenter = document.getElementById('card-center-dashboard');
-            const cZiraat = document.getElementById('card-ziraat');
             const cAkbank = document.getElementById('card-akbank');
+            const cZiraat = document.getElementById('card-ziraat');
+            const cCenter = document.getElementById('card-center-dashboard');
             const mobilePill = document.getElementById('mobile-floating-pill');
+
+            // Helper clamp function
+            const clamp = (val, min, max) => Math.min(Math.max(val, min), max);
 
             window.addEventListener('scroll', () => {
                 const scrolled = window.pageYOffset;
 
-                if (scrolled < 700) {
-                    const p = Math.min(1, scrolled / 400); // 0 to 1 progress
+                if (cGaranti && cYK && cAkbank && cZiraat && cCenter) {
+                    if (scrolled === 0) {
+                        // Tam en tepede: 2. Görseldeki ilk dağınık yelpaze konumu
+                        cGaranti.style.transform = 'translate3d(0, 0, 0) rotate(-12deg)';
+                        cGaranti.style.opacity = '1';
+                        cGaranti.style.zIndex = '30';
 
-                    if (cGaranti && cYK && cCenter && cZiraat && cAkbank) {
-                        if (p === 0) {
-                            // En tepedeyken tam ilk dağınık pozisyonlar
-                            cGaranti.style.setProperty('--tx', '0px');
-                            cGaranti.style.setProperty('--ty', '0px');
-                            cGaranti.style.setProperty('--tz', '0px');
-                            cGaranti.style.zIndex = '20';
+                        cYK.style.transform = 'translate3d(0, 0, 0) rotate(12deg)';
+                        cYK.style.opacity = '1';
+                        cYK.style.zIndex = '25';
+
+                        cAkbank.style.transform = 'translate3d(0, 0, 0) rotate(-6deg)';
+                        cAkbank.style.opacity = '1';
+                        cAkbank.style.zIndex = '20';
+
+                        cZiraat.style.transform = 'translate3d(0, 0, 0) rotate(6deg)';
+                        cZiraat.style.opacity = '1';
+                        cZiraat.style.zIndex = '15';
+
+                        cCenter.style.transform = 'translate3d(0, 0, 0) scale(1)';
+                        cCenter.style.opacity = '1';
+                        cCenter.style.zIndex = '10';
+                    } else if (scrolled < 750) {
+                        // KART 1: Garanti BBVA (0 - 240px arası öne gelir, sonra sola/yukarı uçarak kaybolur)
+                        const p1 = clamp(scrolled / 240, 0, 1);
+                        if (p1 < 0.4) {
+                            const sub = p1 / 0.4;
+                            cGaranti.style.transform = `translate3d(${sub * 15}px, ${sub * 10}px, ${sub * 40}px) rotate(${ -12 + sub * 8 }deg) scale(${1 + sub * 0.04})`;
                             cGaranti.style.opacity = '1';
-
-                            cYK.style.setProperty('--tx', '0px');
-                            cYK.style.setProperty('--ty', '0px');
-                            cYK.style.setProperty('--tz', '0px');
-                            cYK.style.zIndex = '20';
-                            cYK.style.opacity = '1';
-
-                            cCenter.style.transform = 'translate3d(0, 0, 0) scale(1)';
-                            cCenter.style.zIndex = '30';
-
-                            cAkbank.style.setProperty('--tx', '0px');
-                            cAkbank.style.setProperty('--ty', '0px');
-                            cAkbank.style.zIndex = '10';
-
-                            cZiraat.style.setProperty('--tx', '0px');
-                            cZiraat.style.setProperty('--ty', '0px');
-                            cZiraat.style.zIndex = '10';
-                        } else if (p > 0 && p <= 0.5) {
-                            // Aşama 1: Garanti ve Yapı Kredi açılır, Yapı Kredi öne gelir
-                            const subP = p / 0.5;
-                            cGaranti.style.setProperty('--tx', `${-subP * 35}px`);
-                            cGaranti.style.setProperty('--ty', `${subP * 20}px`);
-                            cGaranti.style.setProperty('--tz', `${-subP * 60}px`);
-                            cGaranti.style.opacity = `${1 - subP * 0.3}`;
-
-                            cYK.style.setProperty('--tx', `${-subP * 15}px`);
-                            cYK.style.setProperty('--ty', `${-subP * 15}px`);
-                            cYK.style.setProperty('--tz', `${subP * 80}px`);
-                            cYK.style.zIndex = '35';
-
-                            cCenter.style.transform = `translate3d(0, ${-subP * 15}px, ${-subP * 40}px) scale(${1 - subP * 0.03})`;
+                            cGaranti.style.zIndex = '35';
                         } else {
-                            // Aşama 2: Akbank ve Ziraat alttan sahneye adım atar
-                            const subP = (p - 0.5) / 0.5;
-                            cYK.style.setProperty('--tx', `${35 * (1 - subP)}px`);
-                            cYK.style.setProperty('--tz', `${80 * (1 - subP)}px`);
-                            cYK.style.zIndex = '15';
-
-                            cAkbank.style.setProperty('--tx', `${-subP * 25}px`);
-                            cAkbank.style.setProperty('--ty', `${-subP * 45}px`);
-                            cAkbank.style.zIndex = '40';
-
-                            cZiraat.style.setProperty('--tx', `${subP * 25}px`);
-                            cZiraat.style.setProperty('--ty', `${-subP * 35}px`);
-                            cZiraat.style.zIndex = '35';
-
-                            cCenter.style.transform = `translate3d(0, -15px, 0) scale(1)`;
-                            cCenter.style.zIndex = '45';
+                            const sub = (p1 - 0.4) / 0.6;
+                            cGaranti.style.transform = `translate3d(${ 15 - sub * 180 }px, ${ 10 - sub * 120 }px, ${ 40 - sub * 100 }px) rotate(${ -4 - sub * 22 }deg) scale(${ 1.04 - sub * 0.25 })`;
+                            cGaranti.style.opacity = `${ 1 - sub * 1.1 }`;
+                            cGaranti.style.zIndex = '5';
                         }
+
+                        // KART 2: Yapı Kredi KMH (180 - 440px arası öne fırlar, sonra sağa/yukarı uçarak kaybolur)
+                        const p2 = clamp((scrolled - 160) / 260, 0, 1);
+                        if (p2 === 0) {
+                            cYK.style.transform = 'translate3d(0, 0, 0) rotate(12deg)';
+                            cYK.style.opacity = '1';
+                            cYK.style.zIndex = '25';
+                        } else if (p2 < 0.45) {
+                            const sub = p2 / 0.45;
+                            cYK.style.transform = `translate3d(${ -sub * 25 }px, ${ -sub * 10 }px, ${ sub * 60 }px) rotate(${ 12 - sub * 12 }deg) scale(${ 1 + sub * 0.06 })`;
+                            cYK.style.opacity = '1';
+                            cYK.style.zIndex = '40';
+                        } else {
+                            const sub = (p2 - 0.45) / 0.55;
+                            cYK.style.transform = `translate3d(${ -25 + sub * 190 }px, ${ -10 - sub * 130 }px, ${ 60 - sub * 110 }px) rotate(${ sub * 24 }deg) scale(${ 1.06 - sub * 0.25 })`;
+                            cYK.style.opacity = `${ 1 - sub * 1.1 }`;
+                            cYK.style.zIndex = '5';
+                        }
+
+                        // KART 3: Akbank Axess (360 - 620px arası alttan öne sahneye çıkar, sonra kaybolur)
+                        const p3 = clamp((scrolled - 340) / 260, 0, 1);
+                        if (p3 === 0) {
+                            cAkbank.style.transform = 'translate3d(0, 0, 0) rotate(-6deg)';
+                            cAkbank.style.opacity = '1';
+                            cAkbank.style.zIndex = '20';
+                        } else if (p3 < 0.5) {
+                            const sub = p3 / 0.5;
+                            cAkbank.style.transform = `translate3d(${ -sub * 30 }px, ${ -sub * 50 }px, ${ sub * 70 }px) rotate(${ -6 + sub * 6 }deg) scale(${ 1 + sub * 0.08 })`;
+                            cAkbank.style.opacity = '1';
+                            cAkbank.style.zIndex = '45';
+                        } else {
+                            const sub = (p3 - 0.5) / 0.5;
+                            cAkbank.style.transform = `translate3d(${ -30 - sub * 150 }px, ${ -50 - sub * 100 }px, ${ 70 - sub * 100 }px) rotate(${ -sub * 18 }deg) scale(${ 1.08 - sub * 0.3 })`;
+                            cAkbank.style.opacity = `${ 1 - sub * 1.1 }`;
+                            cAkbank.style.zIndex = '5';
+                        }
+
+                        // KART 4: Ziraat Kredi (Arka planda hafifçe içeri toplanır)
+                        const pZ = clamp(scrolled / 500, 0, 1);
+                        cZiraat.style.transform = `translate3d(${ pZ * 20 }px, ${ -pZ * 30 }px, 0) rotate(${ 6 - pZ * 4 }deg)`;
+                        cZiraat.style.opacity = `${ 1 - pZ * 0.6 }`;
+
+                        // KART 5: Canlı Dashboard (EN SON EN ÜSTTE VE SABİT MERKEZDE PARILTIYLA KALIR)
+                        const pCenter = clamp((scrolled - 400) / 220, 0, 1);
+                        cCenter.style.transform = `translate3d(0, ${ -pCenter * 15 }px, ${ pCenter * 50 }px) scale(${ 0.98 + pCenter * 0.06 })`;
+                        cCenter.style.opacity = '1';
+                        cCenter.style.zIndex = `${ 10 + Math.round(pCenter * 45) }`;
                     }
                 }
 
