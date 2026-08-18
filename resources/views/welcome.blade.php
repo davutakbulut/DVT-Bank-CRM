@@ -20,34 +20,35 @@
         }
         .font-mono { font-family: 'JetBrains Mono', monospace; }
         
-        /* 3D Perspective Containers */
+        /* 3D Perspective Stage */
         .perspective-container {
             perspective: 1200px;
         }
 
-        /* 3D Card Base with Hardware Acceleration */
+        /* 3D Card Base with Smooth Hardware Transitions */
         .card-3d {
             transform-style: preserve-3d;
-            transition: transform 0.3s cubic-bezier(0.2, 1, 0.3, 1), box-shadow 0.3s ease;
-            will-change: transform;
+            transition: transform 0.4s cubic-bezier(0.2, 1, 0.3, 1), opacity 0.3s ease, z-index 0.2s ease, box-shadow 0.3s ease;
+            will-change: transform, opacity;
+            cursor: pointer;
         }
 
-        /* Ambient Glow & Floating Keyframe Animations */
-        @keyframes float-garanti {
-            0%, 100% { transform: translateY(0px) rotate(var(--base-rot-garanti, -10deg)); }
-            50% { transform: translateY(-8px) rotate(calc(var(--base-rot-garanti, -10deg) + 1.5deg)); }
+        /* Ambient Glow & Floating Animations */
+        @keyframes float-slow-1 {
+            0%, 100% { transform: translate3d(var(--tx, 0px), var(--ty, 0px), var(--tz, 0px)) rotate(var(--rot, -12deg)); }
+            50% { transform: translate3d(var(--tx, 0px), calc(var(--ty, 0px) - 8px), var(--tz, 0px)) rotate(calc(var(--rot, -12deg) + 1.5deg)); }
         }
-        @keyframes float-yk {
-            0%, 100% { transform: translateY(0px) rotate(var(--base-rot-yk, 10deg)); }
-            50% { transform: translateY(-10px) rotate(calc(var(--base-rot-yk, 10deg) - 1.5deg)); }
+        @keyframes float-slow-2 {
+            0%, 100% { transform: translate3d(var(--tx, 0px), var(--ty, 0px), var(--tz, 0px)) rotate(var(--rot, 12deg)); }
+            50% { transform: translate3d(var(--tx, 0px), calc(var(--ty, 0px) - 9px), var(--tz, 0px)) rotate(calc(var(--rot, 12deg) - 1.5deg)); }
         }
-        @keyframes float-ziraat {
-            0%, 100% { transform: translateY(0px) rotate(var(--base-rot-ziraat, 6deg)); }
-            50% { transform: translateY(-6px) rotate(calc(var(--base-rot-ziraat, 6deg) + 1deg)); }
+        @keyframes float-slow-3 {
+            0%, 100% { transform: translate3d(var(--tx, 0px), var(--ty, 0px), var(--tz, 0px)) rotate(var(--rot, 6deg)); }
+            50% { transform: translate3d(var(--tx, 0px), calc(var(--ty, 0px) - 6px), var(--tz, 0px)) rotate(calc(var(--rot, 6deg) + 1deg)); }
         }
-        @keyframes float-akbank {
-            0%, 100% { transform: translateY(0px) rotate(var(--base-rot-akbank, -6deg)); }
-            50% { transform: translateY(-7px) rotate(calc(var(--base-rot-akbank, -6deg) - 1deg)); }
+        @keyframes float-slow-4 {
+            0%, 100% { transform: translate3d(var(--tx, 0px), var(--ty, 0px), var(--tz, 0px)) rotate(var(--rot, -6deg)); }
+            50% { transform: translate3d(var(--tx, 0px), calc(var(--ty, 0px) - 7px), var(--tz, 0px)) rotate(calc(var(--rot, -6deg) - 1deg)); }
         }
 
         @keyframes pulse-glow {
@@ -60,53 +61,24 @@
             100% { transform: translateX(250%) skewX(-20deg); }
         }
 
-        .anim-garanti { animation: float-garanti 7s ease-in-out infinite; }
-        .anim-yk { animation: float-yk 8s ease-in-out 1s infinite; }
-        .anim-ziraat { animation: float-ziraat 6.5s ease-in-out 2s infinite; }
-        .anim-akbank { animation: float-akbank 7.5s ease-in-out 1.5s infinite; }
+        .anim-garanti { animation: float-slow-1 7s ease-in-out infinite; }
+        .anim-yk { animation: float-slow-2 8s ease-in-out 1s infinite; }
+        .anim-ziraat { animation: float-slow-3 6.5s ease-in-out 2s infinite; }
+        .anim-akbank { animation: float-slow-4 7.5s ease-in-out 1.5s infinite; }
         .animate-glow { animation: pulse-glow 5s ease-in-out infinite; }
         .animate-shimmer { animation: shimmer-sweep 3.5s ease-in-out infinite; }
 
-        /* Responsive Base Rotations for Desktop & Mobile */
-        :root {
-            --base-rot-garanti: -12deg;
-            --base-rot-yk: 12deg;
-            --base-rot-ziraat: 6deg;
-            --base-rot-akbank: -6deg;
-        }
-        @media (max-width: 767px) {
-            :root {
-                --base-rot-garanti: -8deg;
-                --base-rot-yk: 8deg;
-                --base-rot-ziraat: 5deg;
-                --base-rot-akbank: -5deg;
-            }
-        }
+        /* Default Initial Rotations for 3D Fan Layout */
+        #card-garanti { --rot: -12deg; --tx: 0px; --ty: 0px; --tz: 0px; }
+        #card-yapi-kredi { --rot: 12deg; --tx: 0px; --ty: 0px; --tz: 0px; }
+        #card-ziraat { --rot: 6deg; --tx: 0px; --ty: 0px; --tz: 0px; }
+        #card-akbank { --rot: -6deg; --tx: 0px; --ty: 0px; --tz: 0px; }
 
-        /* 3D Flip Card System */
-        .flip-card {
-            perspective: 1000px;
-        }
-        .flip-card-inner {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            text-align: left;
-            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-            transform-style: preserve-3d;
-        }
-        .flip-card.flipped .flip-card-inner {
-            transform: rotateY(180deg);
-        }
-        .flip-card-front, .flip-card-back {
-            position: absolute;
-            inset: 0;
-            -webkit-backface-visibility: hidden;
-            backface-visibility: hidden;
-            border-radius: inherit;
-        }
-        .flip-card-back {
-            transform: rotateY(180deg);
+        @media (max-width: 767px) {
+            #card-garanti { --rot: -8deg; }
+            #card-yapi-kredi { --rot: 8deg; }
+            #card-ziraat { --rot: 5deg; }
+            #card-akbank { --rot: -5deg; }
         }
 
         /* Scroll reveal */
@@ -190,12 +162,12 @@
             </div>
 
             <!-- ========================================================================= -->
-            <!-- 🌟 HEM MOBİLDE HEM MASAÜSTÜNDE 3D DAĞINIK DESTE (ASLA BOZULMAYAN FAN)      -->
+            <!-- 🌟 3D DAĞINIK DESTE (MOBİL & MASAÜSTÜ: KAYDIKÇA DİNAMİK DEĞİŞEN KARTLAR)   -->
             <!-- ========================================================================= -->
             <div id="hero-scattered-deck" class="mt-12 sm:mt-20 relative w-full max-w-sm sm:max-w-5xl mx-auto min-h-[380px] sm:min-h-[480px] flex items-center justify-center">
                 
                 <!-- Card 1: Garanti BBVA (Sol Üst - Eğimli Deste) -->
-                <div id="card-garanti" class="card-3d anim-garanti absolute -left-4 sm:left-4 -top-2 sm:top-4 w-56 sm:w-80 p-4 sm:p-6 rounded-xl bg-gradient-to-br from-emerald-950 via-slate-900 to-slate-950 border border-emerald-500/40 shadow-2xl text-left z-20 hover:scale-105 transition-all">
+                <div id="card-garanti" class="card-3d anim-garanti absolute -left-3 sm:left-4 -top-2 sm:top-4 w-56 sm:w-80 p-4 sm:p-6 rounded-xl bg-gradient-to-br from-emerald-950 via-slate-900 to-slate-950 border border-emerald-500/40 shadow-2xl text-left z-20 hover:scale-105">
                     <div class="flex items-center justify-between">
                         <span class="text-[11px] sm:text-xs font-black uppercase tracking-wider text-emerald-400">Garanti BBVA</span>
                         <div class="w-7 h-4.5 sm:w-8 sm:h-5 rounded bg-amber-400/90 border border-amber-300 font-mono text-[8px] sm:text-[9px] font-bold flex items-center justify-center text-amber-950">CHIP</div>
@@ -216,7 +188,7 @@
                 </div>
 
                 <!-- Card 2: Yapı Kredi KMH (Sağ Üst - Eğimli Deste) -->
-                <div id="card-yapi-kredi" class="card-3d anim-yk absolute -right-4 sm:right-4 top-2 sm:top-8 w-56 sm:w-80 p-4 sm:p-6 rounded-xl bg-gradient-to-br from-blue-950 via-slate-900 to-slate-950 border border-blue-500/40 shadow-2xl text-left z-20 hover:scale-105 transition-all">
+                <div id="card-yapi-kredi" class="card-3d anim-yk absolute -right-3 sm:right-4 top-2 sm:top-8 w-56 sm:w-80 p-4 sm:p-6 rounded-xl bg-gradient-to-br from-blue-950 via-slate-900 to-slate-950 border border-blue-500/40 shadow-2xl text-left z-20 hover:scale-105">
                     <div class="flex items-center justify-between">
                         <span class="text-[11px] sm:text-xs font-black uppercase tracking-wider text-blue-400">Yapı Kredi • KMH</span>
                         <span class="px-1.5 py-0.5 rounded-md bg-red-500/20 text-red-300 border border-red-500/30 text-[9px] sm:text-[10px] font-black">FAİZ: %5.00</span>
@@ -232,7 +204,7 @@
                 </div>
 
                 <!-- Card 3: Ana Dashboard Önizleme Paneli (Merkez & Önde) -->
-                <div id="card-center-dashboard" class="card-3d relative w-full max-w-[340px] sm:max-w-xl p-5 sm:p-8 rounded-xl bg-slate-900/95 border-2 border-indigo-500/40 shadow-2xl shadow-indigo-950/80 backdrop-blur-2xl text-left z-30 transform hover:scale-[1.02] transition-all">
+                <div id="card-center-dashboard" class="card-3d relative w-full max-w-[340px] sm:max-w-xl p-5 sm:p-8 rounded-xl bg-slate-900/95 border-2 border-indigo-500/40 shadow-2xl shadow-indigo-950/80 backdrop-blur-2xl text-left z-30 transform hover:scale-[1.02]">
                     <div class="flex items-center justify-between border-b border-slate-800 pb-3 sm:pb-4">
                         <div class="flex items-center gap-2.5 sm:gap-3">
                             <span class="w-2.5 sm:w-3 h-2.5 sm:h-3 rounded-full bg-red-500 animate-ping"></span>
@@ -269,14 +241,14 @@
                 </div>
 
                 <!-- Card 4: Ziraat Bankası Kredi (Sol Alt - Eğimli Deste) -->
-                <div id="card-ziraat" class="card-3d anim-ziraat absolute -left-6 sm:left-12 -bottom-4 sm:-bottom-6 w-52 sm:w-72 p-3.5 sm:p-5 rounded-xl bg-gradient-to-br from-red-950 via-slate-900 to-slate-950 border border-red-500/30 shadow-2xl text-left z-10 hover:scale-105 transition-all">
+                <div id="card-ziraat" class="card-3d anim-ziraat absolute -left-5 sm:left-12 -bottom-4 sm:-bottom-6 w-52 sm:w-72 p-3.5 sm:p-5 rounded-xl bg-gradient-to-br from-red-950 via-slate-900 to-slate-950 border border-red-500/30 shadow-2xl text-left z-10 hover:scale-105">
                     <span class="text-[10px] sm:text-xs font-black uppercase text-red-400 block">Ziraat Bankası • Kredi</span>
                     <span class="text-base sm:text-lg font-black text-white mt-0.5 sm:mt-1 block">Kalan: ₺140.000</span>
                     <span class="text-[10px] sm:text-[11px] text-slate-400">Taksit: ₺7.200 / ay (24 Taksit Kaldı)</span>
                 </div>
 
                 <!-- Card 5: Akbank Kart (Sağ Alt - Eğimli Deste) -->
-                <div id="card-akbank" class="card-3d anim-akbank absolute -right-6 sm:right-12 -bottom-4 sm:-bottom-6 w-52 sm:w-72 p-3.5 sm:p-5 rounded-xl bg-gradient-to-br from-rose-950 via-slate-900 to-slate-950 border border-rose-500/30 shadow-2xl text-left z-10 hover:scale-105 transition-all">
+                <div id="card-akbank" class="card-3d anim-akbank absolute -right-5 sm:right-12 -bottom-4 sm:-bottom-6 w-52 sm:w-72 p-3.5 sm:p-5 rounded-xl bg-gradient-to-br from-rose-950 via-slate-900 to-slate-950 border border-rose-500/30 shadow-2xl text-left z-10 hover:scale-105">
                     <span class="text-[10px] sm:text-xs font-black uppercase text-rose-400 block">Akbank • Wings Kart</span>
                     <span class="text-base sm:text-lg font-black text-white mt-0.5 sm:mt-1 block">Dönem Borcu: ₺52.000</span>
                     <span class="text-[10px] sm:text-[11px] text-amber-400 font-bold">⚠️ Son Ödeme: 4 Gün Kaldı</span>
@@ -537,11 +509,24 @@
     </div>
 
     <!-- ========================================================================= -->
-    <!-- JAVASCRIPT: ASLA BOZULMAYAN 3D DAĞINIK FAN DESTE & İNTERAKTİF SİSTEMLER   -->
+    <!-- JAVASCRIPT: 3D CARD SHUFFLE & SCROLL PHYSICS                              -->
     <!-- ========================================================================= -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // 1. Scroll Reveal for Sections
+            // 1. Interactive Card Click: Pop clicked card to front!
+            const allDeckCards = document.querySelectorAll('#hero-scattered-deck .card-3d');
+            allDeckCards.forEach(card => {
+                card.addEventListener('click', () => {
+                    allDeckCards.forEach(c => {
+                        c.style.zIndex = '10';
+                        c.style.opacity = '0.75';
+                    });
+                    card.style.zIndex = '50';
+                    card.style.opacity = '1';
+                });
+            });
+
+            // 2. Scroll Reveal for Sections
             const revealElements = document.querySelectorAll('.reveal-on-scroll');
             if ('IntersectionObserver' in window) {
                 const revealObserver = new IntersectionObserver((entries, observer) => {
@@ -557,7 +542,7 @@
                 revealElements.forEach(el => el.classList.add('is-revealed'));
             }
 
-            // 2. Interactive 90-Day Legal Timeline Phase Tabs
+            // 3. Interactive 90-Day Legal Timeline Phase Tabs
             const phaseTabs = document.querySelectorAll('.phase-tab');
             const phaseBadge = document.getElementById('phase-badge');
             const phaseTitle = document.getElementById('phase-title');
@@ -617,7 +602,7 @@
                 });
             });
 
-            // 3. Interactive AI Koç Prompt Chips
+            // 4. Interactive AI Koç Prompt Chips
             const promptChips = document.querySelectorAll('.ai-prompt-chip');
             const aiResponseText = document.getElementById('ai-response-text');
 
@@ -641,7 +626,7 @@
                 });
             });
 
-            // 4. Interactive Avalanche Calculator Slider
+            // 5. Interactive Avalanche Calculator Slider
             const slider = document.getElementById('sim-slider');
             const extraLabel = document.getElementById('sim-extra-budget-label');
             const monthsText = document.getElementById('sim-months-text');
@@ -672,19 +657,78 @@
                 });
             }
 
-            // 5. Dynamic 3D Fan Scroll Effect: As you scroll, cards fan out slightly, and ALWAYS preserve their scatter!
-            const heroDeck = document.getElementById('hero-scattered-deck');
+            // 6. Dynamic 3D Card Shuffling Scroll Physics (Mobile & Desktop)
+            const cGaranti = document.getElementById('card-garanti');
+            const cYK = document.getElementById('card-yapi-kredi');
+            const cCenter = document.getElementById('card-center-dashboard');
+            const cZiraat = document.getElementById('card-ziraat');
+            const cAkbank = document.getElementById('card-akbank');
             const mobilePill = document.getElementById('mobile-floating-pill');
 
             window.addEventListener('scroll', () => {
                 const scrolled = window.pageYOffset;
 
-                if (heroDeck && scrolled < 600) {
-                    const rate = scrolled * 0.05;
-                    // Dynamically spread cards outwards in 3D as you scroll
-                    heroDeck.style.transform = `perspective(1000px) rotateX(${scrolled * 0.02}deg)`;
-                } else if (heroDeck) {
-                    heroDeck.style.transform = 'none';
+                if (scrolled < 700) {
+                    const p = Math.min(1, scrolled / 400); // 0 to 1 progress
+
+                    if (cGaranti && cYK && cCenter && cZiraat && cAkbank) {
+                        if (p === 0) {
+                            // En tepedeyken tam ilk dağınık pozisyonlar
+                            cGaranti.style.setProperty('--tx', '0px');
+                            cGaranti.style.setProperty('--ty', '0px');
+                            cGaranti.style.setProperty('--tz', '0px');
+                            cGaranti.style.zIndex = '20';
+                            cGaranti.style.opacity = '1';
+
+                            cYK.style.setProperty('--tx', '0px');
+                            cYK.style.setProperty('--ty', '0px');
+                            cYK.style.setProperty('--tz', '0px');
+                            cYK.style.zIndex = '20';
+                            cYK.style.opacity = '1';
+
+                            cCenter.style.transform = 'translate3d(0, 0, 0) scale(1)';
+                            cCenter.style.zIndex = '30';
+
+                            cAkbank.style.setProperty('--tx', '0px');
+                            cAkbank.style.setProperty('--ty', '0px');
+                            cAkbank.style.zIndex = '10';
+
+                            cZiraat.style.setProperty('--tx', '0px');
+                            cZiraat.style.setProperty('--ty', '0px');
+                            cZiraat.style.zIndex = '10';
+                        } else if (p > 0 && p <= 0.5) {
+                            // Aşama 1: Garanti ve Yapı Kredi açılır, Yapı Kredi öne gelir
+                            const subP = p / 0.5;
+                            cGaranti.style.setProperty('--tx', `${-subP * 35}px`);
+                            cGaranti.style.setProperty('--ty', `${subP * 20}px`);
+                            cGaranti.style.setProperty('--tz', `${-subP * 60}px`);
+                            cGaranti.style.opacity = `${1 - subP * 0.3}`;
+
+                            cYK.style.setProperty('--tx', `${-subP * 15}px`);
+                            cYK.style.setProperty('--ty', `${-subP * 15}px`);
+                            cYK.style.setProperty('--tz', `${subP * 80}px`);
+                            cYK.style.zIndex = '35';
+
+                            cCenter.style.transform = `translate3d(0, ${-subP * 15}px, ${-subP * 40}px) scale(${1 - subP * 0.03})`;
+                        } else {
+                            // Aşama 2: Akbank ve Ziraat alttan sahneye adım atar
+                            const subP = (p - 0.5) / 0.5;
+                            cYK.style.setProperty('--tx', `${35 * (1 - subP)}px`);
+                            cYK.style.setProperty('--tz', `${80 * (1 - subP)}px`);
+                            cYK.style.zIndex = '15';
+
+                            cAkbank.style.setProperty('--tx', `${-subP * 25}px`);
+                            cAkbank.style.setProperty('--ty', `${-subP * 45}px`);
+                            cAkbank.style.zIndex = '40';
+
+                            cZiraat.style.setProperty('--tx', `${subP * 25}px`);
+                            cZiraat.style.setProperty('--ty', `${-subP * 35}px`);
+                            cZiraat.style.zIndex = '35';
+
+                            cCenter.style.transform = `translate3d(0, -15px, 0) scale(1)`;
+                            cCenter.style.zIndex = '45';
+                        }
+                    }
                 }
 
                 // Show mobile floating pill after scrolling 300px
