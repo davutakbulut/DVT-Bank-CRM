@@ -9,6 +9,13 @@ use Livewire\Component;
 
 class Index extends Component
 {
+    // Filtreleme & Arama
+    public string $search = '';
+    public ?int $selected_bank_id = null;
+    public string $activeType = 'all'; // all, checking, kmh, savings
+    public string $viewMode = 'stacked'; // stacked (banka bazlı yığın kartlar), grid (kart ızgarası), table (tablo)
+
+    // Modal & Form
     public bool $showModal = false;
     public ?int $accountId = null;
     public ?int $bank_id = null;
@@ -28,6 +35,11 @@ class Index extends Component
         'kmh_limit' => 'nullable|numeric|min:0',
         'kmh_interest_rate' => 'nullable|numeric|min:0',
     ];
+
+    public function resetFilters(): void
+    {
+        $this->reset(['search', 'selected_bank_id', 'activeType']);
+    }
 
     public function openCreateModal(): void
     {
@@ -85,12 +97,52 @@ class Index extends Component
 
     public function render()
     {
-        $accounts = Account::where('user_id', Auth::id())->with('bank')->get();
+        $userId = Auth::id();
+        $query = Account::where('user_id', $userId)->with('bank');
+
+        // 1. Tür Filtresi
+        if ($this->activeType !== 'all') {
+            $query->where('type', $this->activeType);
+        }
+
+        // 2. Banka Filtresi
+        if (!empty($this->selected_bank_id)) {
+            $query->where('bank_id', $this->selected_bank_id);
+        }
+
+        // 3. Metin Arama
+        if (!empty($this->search)) {
+            $search = '%' . trim($this->search) . '%';
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', $search)
+                  ->orWhere('iban', 'like', $search)
+                  ->orWhereHas('bank', function ($bq) use ($search) {
+                      $bq->where('name', 'like', $search);
+                  });
+            });
+        }
+
+        $accounts = $query->orderBy('balance', 'asc')->get();
         $banks = Bank::all();
+
+        // Bankalara Göre Gruplandırılmış Hesaplar
+        $groupedByBank = $accounts->groupBy('bank_id');
+
+        // Finansal KPI Özetleri
+        $totalPositive = $accounts->where('balance', '>', 0)->sum('balance');
+        $totalKmhDebt = abs($accounts->where('balance', '<', 0)->sum('balance'));
+        $totalKmhLimit = $accounts->sum('kmh_limit');
+        $netLiquidity = $accounts->sum('balance');
 
         return view('livewire.accounts.index', [
             'accounts' => $accounts,
+            'groupedByBank' => $groupedByBank,
             'banks' => $banks,
+            'totalPositive' => $totalPositive,
+            'totalKmhDebt' => $totalKmhDebt,
+            'totalKmhLimit' => $totalKmhLimit,
+            'netLiquidity' => $netLiquidity,
         ])->layout('layouts.app');
     }
 }
+
