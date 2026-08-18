@@ -20,6 +20,16 @@ export default {
                 tighter: '-0.025em',
                 tight: '-0.015em',
             },
+            borderRadius: {
+                'none': '0px',
+                'sm': '4px',
+                'DEFAULT': '6px',
+                'md': '8px',
+                'lg': '10px',
+                'xl': '12px',
+                '2xl': '14px',
+                '3xl': '16px',
+            },
         },
     },
 
