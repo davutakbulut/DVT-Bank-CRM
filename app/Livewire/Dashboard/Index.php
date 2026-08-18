@@ -111,11 +111,20 @@ class Index extends Component
         $totalMonthlyExpense = (float) Expense::where('user_id', $user->id)->sum('amount');
         $availableForDebt = max(0, $totalMonthlyIncome - $totalMonthlyExpense);
 
-        // Ekstra Zengin Finansal Metrikler
+        // Ekstra Zengin Finansal Metrikler (Doğrudan Veritabanı)
         $activeDebtsCount = Debt::where('user_id', $user->id)->where('status', 'active')->count();
         $activeCardsCount = CreditCard::where('user_id', $user->id)->count();
         $activeAccountsCount = Account::where('user_id', $user->id)->count();
         $debtToIncomeRatio = $totalMonthlyIncome > 0 ? round(($riskSummary['total_monthly_commitment'] / $totalMonthlyIncome) * 100, 1) : 0;
+
+        // Kullanıcının aktif işlem gördüğü benzersiz banka adedi (Dinamik DB)
+        $userBankIds = collect()
+            ->merge(Debt::where('user_id', $user->id)->where('status', 'active')->pluck('bank_id'))
+            ->merge(CreditCard::where('user_id', $user->id)->pluck('bank_id'))
+            ->merge(Account::where('user_id', $user->id)->pluck('bank_id'))
+            ->filter()
+            ->unique();
+        $connectedBanksCount = $userBankIds->count();
 
         return view('livewire.dashboard.index', [
             'riskSummary' => $riskSummary,
@@ -129,6 +138,7 @@ class Index extends Component
             'activeCardsCount' => $activeCardsCount,
             'activeAccountsCount' => $activeAccountsCount,
             'debtToIncomeRatio' => $debtToIncomeRatio,
+            'connectedBanksCount' => $connectedBanksCount,
         ])->layout('layouts.app');
     }
 }

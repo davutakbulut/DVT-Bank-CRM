@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-    <title>DVT Bank CRM — 6 Banka, Tüm Borçlar, Matematiksel Kesin Çıkış Planı</title>
+    <title>DVT Bank CRM — Tüm Bankalar, Tüm Borçlar, Matematiksel Kesin Çıkış Planı</title>
     <meta name="description" content="Kredi kartı, KMH eksi bakiyeleri ve kredilerinizi tek merkezden yönetin. 90 gün yasal takip sayacı, Çığ algoritması ve 7/24 AI finans koçu ile borç krizinden güvenle çıkın.">
 
     <!-- Fonts -->
@@ -108,7 +108,7 @@
             </h1>
 
             <p class="mt-6 sm:mt-8 text-base sm:text-2xl text-slate-300 max-w-3xl mx-auto font-normal leading-relaxed px-2">
-                6 bankanın kredi kartları, KMH eksi bakiyeleri ve kredi taksitleri arasında boğulmayın. Sıfır panik, doğrudan veritabanı ve 7/24 AI koç ile borçlarınızı adım adım sıfırlayın.
+                Tüm bankalarınızın kredi kartları, KMH eksi bakiyeleri ve kredi taksitleri arasında boğulmayın. Sıfır panik, doğrudan veritabanı ve 7/24 AI koç ile borçlarınızı adım adım sıfırlayın.
             </p>
 
             <!-- Call to Actions -->
@@ -268,7 +268,7 @@
                             <span class="w-3 h-3 rounded-full bg-red-500 animate-ping"></span>
                             <div>
                                 <h3 class="font-bold text-sm text-white">Canlı Risk Analizi & Sayaç</h3>
-                                <p class="text-[11px] text-slate-400">6 Banka Aktif Takipte</p>
+                                <p class="text-[11px] text-slate-400">Tüm Bankalar Aktif Takipte</p>
                             </div>
                         </div>
                         <span class="px-2.5 py-1 rounded-lg bg-red-500/20 text-red-300 text-xs font-black border border-red-500/30">
@@ -502,7 +502,7 @@
                 <!-- Kullanıcı Sorusu -->
                 <div class="flex items-start gap-3 sm:gap-4 justify-end">
                     <div class="bg-indigo-600 text-white rounded-2xl p-3 sm:p-4 text-xs sm:text-sm max-w-xs sm:max-w-lg">
-                        "Elimde fazladan ₺15.000 var, 6 bankamdan hangisine yatırırsam en çok faizden tasarruf ederim?"
+                        "Elimde fazladan ₺15.000 var, bankalarımdan hangisine yatırırsam en çok faizden tasarruf ederim?"
                     </div>
                     <div class="w-9 sm:w-10 h-9 sm:h-10 rounded-2xl bg-slate-800 text-slate-300 flex items-center justify-center font-bold text-xs sm:text-sm shrink-0">
                         DA

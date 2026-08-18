@@ -32,8 +32,8 @@
                     <div class="w-8 h-8 rounded-full bg-indigo-600 text-white flex items-center justify-center font-bold text-xs shrink-0">
                         AI
                     </div>
-                    <div class="bg-indigo-50 border border-indigo-100 text-gray-800 p-4 rounded-2xl text-xs leading-relaxed max-w-[85%]">
-                        Merhaba! Ben senin yapay zeka finans koçunum. 6 bankadaki borç durumunu, KMH faizlerini ve yaklaşan yasal takip sürelerini biliyorum. Bana borç kapatma stratejileri, yapılandırma taktikleri veya bu ay hangi kartı önce ödemen gerektiği hakkında soru sorabilirsin.
+                    <div class="bg-indigo-50 border border-indigo-100 text-gray-800 p-4 rounded-xl text-xs leading-relaxed max-w-[85%]">
+                        Merhaba! Ben senin yapay zeka finans koçunum. Veritabanındaki tüm kayıtlı bankalarınızın borç durumunu, KMH faiz oranlarını ve yaklaşan 90 günlük yasal takip sürelerini anbean biliyorum. Bana borç kapatma stratejileri, yapılandırma taktikleri veya bu ay hangi borcu öncelikli ödemeniz gerektiği hakkında sorularınızı sorabilirsiniz.
                     </div>
                 </div>
 

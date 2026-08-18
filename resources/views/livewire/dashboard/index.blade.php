@@ -20,7 +20,7 @@
                 </span>
             </div>
             <p class="text-xs text-gray-500 mt-0.5">
-                {{ now()->isoFormat('D MMMM YYYY, dddd') }} • 6 Banka, {{ $activeDebtsCount }} Aktif Borç, {{ $activeCardsCount }} Kart Takipte
+                {{ now()->isoFormat('D MMMM YYYY, dddd') }} • {{ $connectedBanksCount > 0 ? $connectedBanksCount . ' Tanımlı Banka' : 'Banka Tanımlanmadı' }}, {{ $activeDebtsCount }} Aktif Borç, {{ $activeCardsCount }} Kart Takipte
             </p>
         </div>
 
@@ -225,7 +225,7 @@
         <div class="bg-white rounded-2xl p-5 sm:p-6 border border-gray-200 shadow-sm space-y-4">
             <div class="border-b border-gray-100 pb-3">
                 <h3 class="font-bold text-gray-900 text-sm sm:text-base">Banka Borç Dağılımı</h3>
-                <p class="text-xs text-gray-500">6 bankadaki borç ağırlığı</p>
+                <p class="text-xs text-gray-500">{{ count($bankDistribution) > 0 ? count($bankDistribution) . ' bankadaki borç portföy ağırlığı' : 'Aktif banka borcu bulunmuyor' }}</p>
             </div>
 
             <div class="space-y-3">

@@ -20,7 +20,7 @@
         <div class="space-y-8">
             <div class="p-8 bg-slate-900 border border-slate-800 rounded-3xl space-y-3">
                 <span class="text-xs font-bold text-indigo-400 uppercase">Adım 1</span>
-                <h2 class="text-xl font-bold text-white">Onboarding ile 6 Bankanın Envanterini Çıkarın</h2>
+                <h2 class="text-xl font-bold text-white">Onboarding ile Tüm Bankalarınızın Envanterini Çıkarın</h2>
                 <p class="text-sm text-slate-300 leading-relaxed">
                     Sisteme kayıt olduğunuzda 4 adımlı sihirbaz sizi karşılar. Bankalarınızı, kart dönem borçlarınızı, KMH eksi bakiyelerinizi ve kredi taksitlerinizi tanımlarsınız.
                 </p>
