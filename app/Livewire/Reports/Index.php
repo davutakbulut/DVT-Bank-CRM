@@ -114,25 +114,31 @@ class Index extends Component
         switch ($this->period) {
             case 'this_month':
                 $startDate = $now->copy()->startOfMonth();
+                $endDate = $now->copy()->endOfMonth();
                 break;
             case 'last_month':
                 $startDate = $now->copy()->subMonth()->startOfMonth();
                 $endDate = $now->copy()->subMonth()->endOfMonth();
                 break;
             case 'last_30':
-                $startDate = $now->copy()->subDays(30)->startOfDay();
+                $startDate = $now->copy()->subDays(15)->startOfDay();
+                $endDate = $now->copy()->addDays(15)->endOfDay();
                 break;
             case 'last_90':
                 $startDate = $now->copy()->subDays(90)->startOfDay();
+                $endDate = $now->copy()->endOfDay();
                 break;
             case 'this_year':
                 $startDate = $now->copy()->startOfYear();
+                $endDate = $now->copy()->endOfYear();
                 break;
             case 'all':
             default:
                 $startDate = Carbon::create(2020, 1, 1);
+                $endDate = Carbon::create(2035, 12, 31);
                 break;
         }
+
 
         // 1. GİDERLER & GELİRLER
         $expensesQuery = Expense::where('user_id', $userId)->with('category');
