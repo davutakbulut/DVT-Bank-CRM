@@ -66,83 +66,121 @@
                         AI Koç
                     </x-nav-link>
                 </div>
-            </div>
+                      <!-- Right Side: External Site Button + User Profile Dropdown (Desktop) -->
+            <div class="hidden md:flex items-center gap-3 shrink-0">
+                <!-- Ana Sayfa / Tanıtım Sayfası Butonu (Header'da Özel Konum) -->
+                <a href="{{ route('home') }}" 
+                   target="_blank" 
+                   title="DVT Bank Tanıtım & Ana Sayfasına Git"
+                   class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-slate-700 bg-slate-100/80 hover:bg-indigo-50 hover:text-indigo-700 border border-slate-200/90 hover:border-indigo-200 rounded-lg transition-all shadow-2xs group">
+                    <span class="text-sm transition-transform group-hover:scale-110">🌐</span>
+                    <span>Ana Sayfa</span>
+                    <span class="text-[10px] text-slate-400 group-hover:text-indigo-500 font-normal">↗</span>
+                </a>
 
-            <!-- Right Side: User Profile & Role Panels Menu (Desktop) -->
-            <div class="hidden md:flex items-center shrink-0">
-                <x-dropdown align="right" width="56">
+                <!-- User Profile & Role Panels Menu -->
+                <x-dropdown align="right" width="72">
                     <x-slot name="trigger">
-                        <button class="inline-flex items-center gap-2 px-3.5 py-2 border border-gray-200 text-xs sm:text-sm font-bold rounded-lg text-gray-800 bg-gray-50 hover:bg-gray-100 hover:border-gray-300 focus:outline-none transition-all duration-150 shadow-xs">
-                            <div class="w-6 h-6 rounded-md bg-indigo-600 text-white flex items-center justify-center text-xs font-black">
+                        <button class="inline-flex items-center gap-2.5 px-3 py-1.5 border border-gray-200/90 text-xs sm:text-sm font-bold rounded-xl text-gray-800 bg-gray-50/90 hover:bg-gray-100 hover:border-gray-300 focus:outline-none transition-all shadow-2xs">
+                            <div class="w-6 h-6 rounded-lg bg-indigo-600 text-white flex items-center justify-center text-xs font-black shadow-xs">
                                 {{ mb_substr(Auth::user()->name, 0, 1) }}
                             </div>
-                            <div class="max-w-[120px] truncate">{{ Auth::user()->name }}</div>
+                            <div class="max-w-[110px] truncate text-xs font-bold">{{ Auth::user()->name }}</div>
 
-                            <svg class="fill-current h-4 w-4 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                            <svg class="fill-current h-3.5 w-3.5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
                                 <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
                             </svg>
                         </button>
                     </x-slot>
 
                     <x-slot name="content">
-                        <!-- User Info Header -->
-                        <div class="px-4 py-2.5 border-b border-gray-100 bg-gray-50/70">
-                            <p class="text-xs font-bold text-gray-900 truncate">{{ Auth::user()->name }}</p>
-                            <p class="text-[11px] text-gray-500 truncate">{{ Auth::user()->email }}</p>
-                        </div>
-
-                        <!-- Return to Public Home Link -->
-                        <div class="py-1 border-b border-gray-100 bg-indigo-50/20">
-                            <x-dropdown-link :href="route('home')" class="flex items-center gap-2 text-indigo-700 font-bold hover:bg-indigo-50">
-                                <span>🌐</span>
-                                <span>DVT Bank Tanıtım & Ana Sayfa</span>
-                            </x-dropdown-link>
-                        </div>
-
-                        <!-- Management & Admin Roles Section -->
-                        @if (Auth::user()->hasRole('super_admin') || Auth::user()->hasRole('admin'))
-                            <div class="py-1 border-b border-gray-100 bg-indigo-50/40">
-                                <span class="px-4 py-1 text-[10px] font-black uppercase tracking-wider text-indigo-600 block">Yönetim Panelleri</span>
+                        <!-- User Info Card Header -->
+                        <div class="p-3.5 border-b border-gray-100 bg-gradient-to-br from-gray-50 to-indigo-50/30 flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-xl bg-indigo-600 text-white flex items-center justify-center font-black text-sm shadow-md shrink-0">
+                                {{ mb_substr(Auth::user()->name, 0, 1) }}
+                            </div>
+                            <div class="min-w-0 flex-1">
+                                <div class="flex items-center gap-1.5">
+                                    <p class="text-xs font-black text-gray-900 truncate">{{ Auth::user()->name }}</p>
+                                </div>
+                                <p class="text-[11px] text-gray-500 truncate">{{ Auth::user()->email }}</p>
+                                
                                 @if (Auth::user()->hasRole('super_admin'))
-                                    <x-dropdown-link href="/super" target="_blank" class="flex items-center justify-between text-red-600 font-bold hover:bg-red-50">
-                                        <span>⚙️ Süper Admin Paneli</span>
-                                        <span class="text-[9px] px-1.5 py-0.5 rounded bg-red-100 text-red-700 font-black">SUPER</span>
-                                    </x-dropdown-link>
+                                    <span class="inline-block mt-1 px-2 py-0.5 rounded-md bg-red-100 text-red-700 text-[9px] font-black border border-red-200">
+                                        👑 SÜPER ADMİN
+                                    </span>
+                                @elseif (Auth::user()->hasRole('admin'))
+                                    <span class="inline-block mt-1 px-2 py-0.5 rounded-md bg-indigo-100 text-indigo-700 text-[9px] font-black border border-indigo-200">
+                                        🛡️ YÖNETİCİ
+                                    </span>
+                                @else
+                                    <span class="inline-block mt-1 px-2 py-0.5 rounded-md bg-emerald-100 text-emerald-700 text-[9px] font-black border border-emerald-200">
+                                        🟢 BİREYSEL HESAP
+                                    </span>
                                 @endif
+                            </div>
+                        </div>
+
+                        <!-- Management & Admin Roles Section (If Applicable) -->
+                        @if (Auth::user()->hasRole('super_admin') || Auth::user()->hasRole('admin'))
+                            <div class="p-2 border-b border-gray-100 bg-slate-50/50 space-y-1">
+                                <span class="px-2 py-0.5 text-[10px] font-black uppercase tracking-wider text-slate-500 block">Yönetim Panelleri</span>
+                                
+                                @if (Auth::user()->hasRole('super_admin'))
+                                    <a href="/super" target="_blank" class="flex items-center justify-between p-2 rounded-lg bg-red-50/70 border border-red-200 text-red-700 font-bold text-xs hover:bg-red-100 transition-colors">
+                                        <span class="flex items-center gap-2">
+                                            <span>⚙️</span>
+                                            <span>Süper Admin Paneli</span>
+                                        </span>
+                                        <span class="text-[9px] px-1.5 py-0.5 rounded bg-red-200 text-red-800 font-black">SUPER</span>
+                                    </a>
+                                @endif
+
                                 @if (Auth::user()->hasRole('admin'))
-                                    <x-dropdown-link href="/admin" target="_blank" class="flex items-center justify-between text-indigo-600 font-bold hover:bg-indigo-50">
-                                        <span>🛡️ Yönetim Paneli</span>
-                                        <span class="text-[9px] px-1.5 py-0.5 rounded bg-indigo-100 text-indigo-700 font-black">ADMIN</span>
-                                    </x-dropdown-link>
+                                    <a href="/admin" target="_blank" class="flex items-center justify-between p-2 rounded-lg bg-indigo-50/70 border border-indigo-200 text-indigo-700 font-bold text-xs hover:bg-indigo-100 transition-colors">
+                                        <span class="flex items-center gap-2">
+                                            <span>🛡️</span>
+                                            <span>Yönetim Paneli</span>
+                                        </span>
+                                        <span class="text-[9px] px-1.5 py-0.5 rounded bg-indigo-200 text-indigo-800 font-black">ADMIN</span>
+                                    </a>
                                 @endif
                             </div>
                         @endif
 
                         <!-- General App Links -->
-                        <div class="py-1">
-                            <x-dropdown-link :href="route('banks.index')" class="flex items-center gap-2">
-                                <span>🏛️ Bankalarım</span>
+                        <div class="py-1 px-1 text-xs space-y-0.5">
+                            <span class="px-2.5 py-1 text-[10px] font-bold text-gray-400 block uppercase tracking-wider">Hızlı Erişim</span>
+
+                            <x-dropdown-link :href="route('banks.index')" class="flex items-center gap-2.5 px-2.5 py-2 rounded-lg hover:bg-gray-100 text-gray-700 font-bold">
+                                <span>🏛️</span>
+                                <span>Bankalarım & Kartlar</span>
                             </x-dropdown-link>
-                            <x-dropdown-link :href="route('calendar.index')" class="flex items-center gap-2">
-                                <span>📅 Ödeme Takvimi</span>
+
+                            <x-dropdown-link :href="route('calendar.index')" class="flex items-center gap-2.5 px-2.5 py-2 rounded-lg hover:bg-gray-100 text-gray-700 font-bold">
+                                <span>📅</span>
+                                <span>Ödeme Takvimi & Vadeler</span>
                             </x-dropdown-link>
-                            <x-dropdown-link :href="route('reports.index')" class="flex items-center gap-2">
-                                <span>📊 Finansal Raporlar</span>
+
+                            <x-dropdown-link :href="route('reports.index')" class="flex items-center gap-2.5 px-2.5 py-2 rounded-lg hover:bg-gray-100 text-gray-700 font-bold">
+                                <span>📊</span>
+                                <span>Finansal Raporlarım</span>
                             </x-dropdown-link>
-                            <x-dropdown-link :href="route('profile.edit')" class="flex items-center gap-2">
-                                <span>👤 Profil & Güvenlik</span>
+
+                            <x-dropdown-link :href="route('profile.edit')" class="flex items-center gap-2.5 px-2.5 py-2 rounded-lg hover:bg-gray-100 text-gray-700 font-bold">
+                                <span>👤</span>
+                                <span>Profil & Hesap Güvenliği</span>
                             </x-dropdown-link>
                         </div>
 
                         <!-- Logout -->
-                        <div class="pt-1 border-t border-gray-100">
+                        <div class="p-1 border-t border-gray-100 bg-gray-50/50">
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
-                                <x-dropdown-link :href="route('logout')"
-                                        onclick="event.preventDefault();
-                                                    this.closest('form').submit();" class="text-red-600 font-bold flex items-center gap-2 hover:bg-red-50">
-                                    <span>🚪 Güvenli Çıkış Yap</span>
-                                </x-dropdown-link>
+                                <button type="submit" class="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-red-600 font-bold text-xs hover:bg-red-50 transition-colors text-left">
+                                    <span>🚪</span>
+                                    <span>Güvenli Çıkış Yap</span>
+                                </button>
                             </form>
                         </div>
                     </x-slot>
