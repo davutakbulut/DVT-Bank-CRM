@@ -25,11 +25,28 @@
             perspective: 1200px;
         }
 
-        /* 3D Card Base */
+        /* 3D Card Base with Hardware Acceleration */
         .card-3d {
             transform-style: preserve-3d;
-            transition: transform 0.4s cubic-bezier(0.2, 1, 0.3, 1), box-shadow 0.4s ease;
+            transition: transform 0.3s cubic-bezier(0.2, 1, 0.3, 1), box-shadow 0.3s ease;
             will-change: transform;
+        }
+
+        /* Desktop Scattered Fan Cards - Uses CSS Variables so Scroll Never Overwrites Initial Rotation */
+        #card-garanti {
+            transform: translate3d(var(--garanti-x, 0px), var(--garanti-y, 0px), 0) rotate(calc(-12deg + var(--garanti-tilt, 0deg)));
+        }
+        #card-yapi-kredi {
+            transform: translate3d(var(--yk-x, 0px), var(--yk-y, 0px), 0) rotate(calc(12deg + var(--yk-tilt, 0deg)));
+        }
+        #card-ziraat {
+            transform: translate3d(var(--zb-x, 0px), var(--zb-y, 0px), 0) rotate(calc(6deg + var(--zb-tilt, 0deg)));
+        }
+        #card-akbank {
+            transform: translate3d(var(--ak-x, 0px), var(--ak-y, 0px), 0) rotate(calc(-6deg + var(--ak-tilt, 0deg)));
+        }
+        #card-center-dashboard {
+            transform: translate3d(0, var(--center-y, 0px), 0) scale(var(--center-scale, 1));
         }
 
         /* 3D Flip Card System */
@@ -80,6 +97,17 @@
         .animate-glow { animation: pulse-glow 5s ease-in-out infinite; }
         .animate-shimmer { animation: shimmer-sweep 3.5s ease-in-out infinite; }
 
+        /* Mobile Cascading Scroll Cards */
+        .mobile-stream-card {
+            opacity: 0;
+            transform: translateY(40px) scale(0.95) rotateX(10deg);
+            transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .mobile-stream-card.is-visible {
+            opacity: 1;
+            transform: translateY(0) scale(1) rotateX(0deg);
+        }
+
         /* Scroll reveal */
         .reveal-on-scroll {
             opacity: 0;
@@ -90,10 +118,6 @@
             opacity: 1;
             transform: translateY(0);
         }
-
-        /* Mobile Snap Scroll Hide Bar */
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
         /* Range Slider */
         input[type="range"]::-webkit-slider-thumb {
@@ -116,7 +140,7 @@
 
     <main class="flex-1">
         <!-- ========================================================================= -->
-        <!-- 1. APPLE-STYLE HERO SECTION (DİNAMİK 3D DESTE VE SÜZÜLEN KARTLAR)        -->
+        <!-- 1. APPLE-STYLE HERO SECTION                                              -->
         <!-- ========================================================================= -->
         <section class="relative pt-14 sm:pt-20 pb-16 sm:pb-28 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-center perspective-container overflow-hidden">
             <!-- Ambient Lighting Glows -->
@@ -165,207 +189,176 @@
             </div>
 
             <!-- ========================================================================= -->
-            <!-- 📱 MOBİL: YATAY KAYDIRMALI & AKICI 3D KART AKIŞI (MULTIPLE CARDS STREAM)  -->
+            <!-- 📱 MOBİL: SAYFA KAYDIKÇA GELEN 3D DİNAMİK KART AKIŞI (VERTICAL STREAM)    -->
             <!-- ========================================================================= -->
-            <div class="block md:hidden mt-10">
-                <div class="flex items-center justify-between px-2 mb-3">
+            <div class="block md:hidden mt-12 space-y-4 max-w-sm mx-auto text-left">
+                
+                <div class="flex items-center justify-between px-1 mb-2">
                     <span class="text-xs font-bold text-slate-400 flex items-center gap-1.5">
                         <span class="w-2 h-2 rounded-full bg-indigo-500 animate-pulse"></span>
-                        <span>Aktif Kart Akışı</span>
+                        <span>Canlı Borç & Kart Envanteri</span>
                     </span>
-                    <span class="text-[11px] text-slate-500">← Sağa/Sola Kaydırın →</span>
+                    <span class="text-[10px] text-indigo-400 font-bold">Kaydırdıkça İnceleyin ↓</span>
                 </div>
 
-                <!-- Horizontal Snap-Scrollable 3D Card Deck (Akıcı & Kartlar Arası Geçiş) -->
-                <div class="flex gap-4 overflow-x-auto no-scrollbar snap-x snap-mandatory px-2 pb-4 pt-1">
-                    
-                    <!-- Kart 1: Garanti BBVA Bonus -->
-                    <div class="flip-card min-w-[285px] h-[210px] snap-center shrink-0">
-                        <div class="flip-card-inner rounded-xl">
-                            <!-- Ön Yüz -->
-                            <div class="flip-card-front p-5 rounded-xl bg-gradient-to-br from-emerald-950 via-slate-900 to-slate-950 border border-emerald-500/40 shadow-xl flex flex-col justify-between overflow-hidden relative text-left">
-                                <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent animate-shimmer pointer-events-none"></div>
-                                <div class="flex items-center justify-between">
-                                    <div class="flex items-center gap-2">
-                                        <div class="w-6 h-6 rounded bg-emerald-600 text-white font-black text-[10px] flex items-center justify-center">GB</div>
-                                        <span class="text-xs font-black uppercase text-emerald-400">Garanti • Bonus</span>
-                                    </div>
-                                    <div class="w-7 h-4.5 rounded bg-amber-400 border border-amber-300 text-[8px] font-bold flex items-center justify-center text-amber-950">CHIP</div>
+                <!-- Kart 1: Garanti Bonus (Mobil Akış) -->
+                <div class="mobile-stream-card flip-card w-full h-[205px]">
+                    <div class="flip-card-inner rounded-xl">
+                        <div class="flip-card-front p-5 rounded-xl bg-gradient-to-br from-emerald-950 via-slate-900 to-slate-950 border border-emerald-500/40 shadow-xl flex flex-col justify-between overflow-hidden relative">
+                            <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent animate-shimmer pointer-events-none"></div>
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center gap-2">
+                                    <div class="w-6 h-6 rounded bg-emerald-600 text-white font-black text-[10px] flex items-center justify-center">GB</div>
+                                    <span class="text-xs font-black uppercase text-emerald-400">Garanti • Bonus</span>
                                 </div>
-                                <div class="my-1">
-                                    <span class="font-mono text-xs tracking-widest text-slate-300">•••• •••• •••• 8412</span>
-                                    <div class="mt-1 flex items-center gap-1.5 text-[10px] font-bold text-amber-400">
-                                        <span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-ping"></span>
-                                        <span>18 Gündür Gecikmede (72 Gün Kaldı)</span>
-                                    </div>
-                                </div>
-                                <div class="pt-2 border-t border-slate-800 flex justify-between items-end">
-                                    <div>
-                                        <span class="text-[9px] text-slate-400 block font-semibold">DÖNEM BORCU</span>
-                                        <span class="text-base font-black text-red-400">₺78.450</span>
-                                    </div>
-                                    <button type="button" class="btn-flip-card px-2 py-1 rounded bg-slate-800 text-[10px] font-bold text-slate-300 border border-slate-700 hover:text-white">
-                                        🔄 Detay
-                                    </button>
+                                <div class="w-7 h-4.5 rounded bg-amber-400 border border-amber-300 text-[8px] font-bold flex items-center justify-center text-amber-950">CHIP</div>
+                            </div>
+                            <div class="my-1">
+                                <span class="font-mono text-xs tracking-widest text-slate-300">•••• •••• •••• 8412</span>
+                                <div class="mt-1 flex items-center gap-1.5 text-[10px] font-bold text-amber-400">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-ping"></span>
+                                    <span>18 Gündür Gecikmede (72 Gün Kaldı)</span>
                                 </div>
                             </div>
-                            <!-- Arka Yüz -->
-                            <div class="flip-card-back p-5 rounded-xl bg-slate-900 border border-emerald-500/40 shadow-xl flex flex-col justify-between text-xs text-left">
-                                <div class="flex justify-between items-center border-b border-slate-800 pb-1.5">
-                                    <span class="font-bold text-emerald-400 text-xs">Garanti Bonus Detayı</span>
-                                    <button type="button" class="btn-flip-card px-2 py-0.5 rounded bg-slate-800 text-[9px] text-slate-300">↩ Geri</button>
+                            <div class="pt-2 border-t border-slate-800 flex justify-between items-end">
+                                <div>
+                                    <span class="text-[9px] text-slate-400 block font-semibold">DÖNEM BORCU</span>
+                                    <span class="text-base font-black text-red-400">₺78.450</span>
                                 </div>
-                                <div class="space-y-1 my-1 text-[11px]">
-                                    <div class="flex justify-between text-slate-300"><span>Aylık Asgari:</span><strong class="text-white">₺31.380</strong></div>
-                                    <div class="flex justify-between text-slate-300"><span>Gecikme Faizi:</span><strong class="text-red-400">%5.30 / ay</strong></div>
-                                </div>
-                                <div class="p-1.5 rounded bg-slate-950 text-[10px] text-emerald-300 border border-emerald-900/40">
-                                    💡 Çığ Sırası: #1 Öncelikli kapatılacak kart.
-                                </div>
+                                <button type="button" class="btn-flip-card px-2 py-1 rounded bg-slate-800 text-[10px] font-bold text-slate-300 border border-slate-700 hover:text-white">
+                                    🔄 Detay
+                                </button>
                             </div>
                         </div>
-                    </div>
-
-                    <!-- Kart 2: Yapı Kredi KMH -->
-                    <div class="flip-card min-w-[285px] h-[210px] snap-center shrink-0">
-                        <div class="flip-card-inner rounded-xl">
-                            <div class="flip-card-front p-5 rounded-xl bg-gradient-to-br from-blue-950 via-slate-900 to-slate-950 border border-blue-500/40 shadow-xl flex flex-col justify-between overflow-hidden relative text-left">
-                                <div class="flex items-center justify-between">
-                                    <div class="flex items-center gap-2">
-                                        <div class="w-6 h-6 rounded bg-blue-600 text-white font-black text-[10px] flex items-center justify-center">YK</div>
-                                        <span class="text-xs font-black uppercase text-blue-400">Yapı Kredi • KMH</span>
-                                    </div>
-                                    <span class="px-1.5 py-0.5 rounded bg-red-500/20 text-red-300 text-[9px] font-black">FAİZ %5.0</span>
-                                </div>
-                                <div class="my-1">
-                                    <span class="text-[10px] text-slate-400 block font-semibold">EK HESAP EKSİ BAKİYE</span>
-                                    <span class="text-xl font-black text-red-500">-₺65.000</span>
-                                </div>
-                                <div class="pt-2 border-t border-slate-800 flex justify-between items-end">
-                                    <div>
-                                        <span class="text-[9px] text-slate-400 block font-semibold">AYLIK FAİZ YÜKÜ</span>
-                                        <span class="text-xs font-bold text-red-400">₺3.250 / ay</span>
-                                    </div>
-                                    <button type="button" class="btn-flip-card px-2 py-1 rounded bg-slate-800 text-[10px] font-bold text-slate-300 border border-slate-700 hover:text-white">
-                                        🔄 Detay
-                                    </button>
-                                </div>
+                        <div class="flip-card-back p-5 rounded-xl bg-slate-900 border border-emerald-500/40 shadow-xl flex flex-col justify-between text-xs">
+                            <div class="flex justify-between items-center border-b border-slate-800 pb-1.5">
+                                <span class="font-bold text-emerald-400 text-xs">Garanti Bonus Detayı</span>
+                                <button type="button" class="btn-flip-card px-2 py-0.5 rounded bg-slate-800 text-[9px] text-slate-300">↩ Geri</button>
                             </div>
-                            <div class="flip-card-back p-5 rounded-xl bg-slate-900 border border-blue-500/40 shadow-xl flex flex-col justify-between text-xs text-left">
-                                <div class="flex justify-between items-center border-b border-slate-800 pb-1.5">
-                                    <span class="font-bold text-blue-400 text-xs">Yapı Kredi KMH Detayı</span>
-                                    <button type="button" class="btn-flip-card px-2 py-0.5 rounded bg-slate-800 text-[9px] text-slate-300">↩ Geri</button>
-                                </div>
-                                <div class="space-y-1 my-1 text-[11px]">
-                                    <div class="flex justify-between text-slate-300"><span>Günlük Faiz:</span><strong class="text-white">₺108.33 / gün</strong></div>
-                                    <div class="flex justify-between text-slate-300"><span>Durum:</span><strong class="text-emerald-400">Düzenli Ödeniyor</strong></div>
-                                </div>
-                                <div class="p-1.5 rounded bg-slate-950 text-[10px] text-indigo-300 border border-indigo-900/40">
-                                    💡 Günlük faiz işlettiği için hızlıca sıfırlanmalıdır.
-                                </div>
+                            <div class="space-y-1 my-1 text-[11px]">
+                                <div class="flex justify-between text-slate-300"><span>Aylık Asgari:</span><strong class="text-white">₺31.380</strong></div>
+                                <div class="flex justify-between text-slate-300"><span>Gecikme Faizi:</span><strong class="text-red-400">%5.30 / ay</strong></div>
                             </div>
-                        </div>
-                    </div>
-
-                    <!-- Kart 3: Akbank Axess -->
-                    <div class="flip-card min-w-[285px] h-[210px] snap-center shrink-0">
-                        <div class="flip-card-inner rounded-xl">
-                            <div class="flip-card-front p-5 rounded-xl bg-gradient-to-br from-rose-950 via-slate-900 to-slate-950 border border-rose-500/40 shadow-xl flex flex-col justify-between overflow-hidden relative text-left">
-                                <div class="flex items-center justify-between">
-                                    <div class="flex items-center gap-2">
-                                        <div class="w-6 h-6 rounded bg-rose-600 text-white font-black text-[10px] flex items-center justify-center">AK</div>
-                                        <span class="text-xs font-black uppercase text-rose-400">Akbank • Axess</span>
-                                    </div>
-                                    <div class="w-7 h-4.5 rounded bg-amber-400 border border-amber-300 text-[8px] font-bold flex items-center justify-center text-amber-950">CHIP</div>
-                                </div>
-                                <div class="my-1">
-                                    <span class="font-mono text-xs tracking-widest text-slate-300">•••• •••• •••• 1907</span>
-                                    <span class="text-[10px] text-amber-400 font-bold block mt-0.5">⚠️ Son Ödeme: 4 Gün Kaldı</span>
-                                </div>
-                                <div class="pt-2 border-t border-slate-800 flex justify-between items-end">
-                                    <div>
-                                        <span class="text-[9px] text-slate-400 block font-semibold">DÖNEM BORCU</span>
-                                        <span class="text-base font-black text-red-400">₺52.000</span>
-                                    </div>
-                                    <button type="button" class="btn-flip-card px-2 py-1 rounded bg-slate-800 text-[10px] font-bold text-slate-300 border border-slate-700 hover:text-white">
-                                        🔄 Detay
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="flip-card-back p-5 rounded-xl bg-slate-900 border border-rose-500/40 shadow-xl flex flex-col justify-between text-xs text-left">
-                                <div class="flex justify-between items-center border-b border-slate-800 pb-1.5">
-                                    <span class="font-bold text-rose-400 text-xs">Akbank Axess Detayı</span>
-                                    <button type="button" class="btn-flip-card px-2 py-0.5 rounded bg-slate-800 text-[9px] text-slate-300">↩ Geri</button>
-                                </div>
-                                <div class="space-y-1 my-1 text-[11px]">
-                                    <div class="flex justify-between text-slate-300"><span>Asgari Tutar:</span><strong class="text-white">₺20.800</strong></div>
-                                    <div class="flex justify-between text-slate-300"><span>Akdi Faiz:</span><strong class="text-amber-400">%4.25</strong></div>
-                                </div>
-                                <div class="p-1.5 rounded bg-slate-950 text-[10px] text-amber-300 border border-amber-900/40">
-                                    💡 4 gün içinde asgari ödenmezse gecikmeye düşer.
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Kart 4: Ziraat Kredi -->
-                    <div class="flip-card min-w-[285px] h-[210px] snap-center shrink-0">
-                        <div class="flip-card-inner rounded-xl">
-                            <div class="flip-card-front p-5 rounded-xl bg-gradient-to-br from-red-950 via-slate-900 to-slate-950 border border-red-500/40 shadow-xl flex flex-col justify-between overflow-hidden relative text-left">
-                                <div class="flex items-center justify-between">
-                                    <div class="flex items-center gap-2">
-                                        <div class="w-6 h-6 rounded bg-red-600 text-white font-black text-[10px] flex items-center justify-center">ZB</div>
-                                        <span class="text-xs font-black uppercase text-red-400">Ziraat • Kredi</span>
-                                    </div>
-                                    <span class="text-[9px] text-emerald-400 font-bold bg-emerald-950/60 px-1.5 py-0.5 rounded">24 Taksit Kaldı</span>
-                                </div>
-                                <div class="my-1">
-                                    <span class="text-[10px] text-slate-400 block font-semibold">KALAN ANAPARA</span>
-                                    <span class="text-xl font-black text-white">₺140.000</span>
-                                </div>
-                                <div class="pt-2 border-t border-slate-800 flex justify-between items-end">
-                                    <div>
-                                        <span class="text-[9px] text-slate-400 block font-semibold">AYLIK TAKSİT</span>
-                                        <span class="text-xs font-bold text-white">₺7.200 / ay</span>
-                                    </div>
-                                    <button type="button" class="btn-flip-card px-2 py-1 rounded bg-slate-800 text-[10px] font-bold text-slate-300 border border-slate-700 hover:text-white">
-                                        🔄 Detay
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="flip-card-back p-5 rounded-xl bg-slate-900 border border-red-500/40 shadow-xl flex flex-col justify-between text-xs text-left">
-                                <div class="flex justify-between items-center border-b border-slate-800 pb-1.5">
-                                    <span class="font-bold text-red-400 text-xs">Ziraat Kredi Detayı</span>
-                                    <button type="button" class="btn-flip-card px-2 py-0.5 rounded bg-slate-800 text-[9px] text-slate-300">↩ Geri</button>
-                                </div>
-                                <div class="space-y-1 my-1 text-[11px]">
-                                    <div class="flex justify-between text-slate-300"><span>Kalan Ay:</span><strong class="text-white">24 Ay</strong></div>
-                                    <div class="flex justify-between text-slate-300"><span>Faiz Oranı:</span><strong class="text-slate-300">%3.89</strong></div>
-                                </div>
-                                <div class="p-1.5 rounded bg-slate-950 text-[10px] text-slate-300 border border-slate-800">
-                                    💡 Sabit faizli olduğundan öncelik kartlara verilmelidir.
-                                </div>
+                            <div class="p-1.5 rounded bg-slate-950 text-[10px] text-emerald-300 border border-emerald-900/40">
+                                💡 Çığ Sırası: #1 Öncelikli kapatılacak kart.
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Swipe Indicator Dots -->
-                <div class="flex justify-center gap-1.5 mt-2">
-                    <span class="w-2 h-2 rounded-full bg-indigo-600"></span>
-                    <span class="w-2 h-2 rounded-full bg-slate-800"></span>
-                    <span class="w-2 h-2 rounded-full bg-slate-800"></span>
-                    <span class="w-2 h-2 rounded-full bg-slate-800"></span>
+                <!-- Kart 2: Yapı Kredi KMH (Mobil Akış) -->
+                <div class="mobile-stream-card flip-card w-full h-[205px]">
+                    <div class="flip-card-inner rounded-xl">
+                        <div class="flip-card-front p-5 rounded-xl bg-gradient-to-br from-blue-950 via-slate-900 to-slate-950 border border-blue-500/40 shadow-xl flex flex-col justify-between overflow-hidden relative">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center gap-2">
+                                    <div class="w-6 h-6 rounded bg-blue-600 text-white font-black text-[10px] flex items-center justify-center">YK</div>
+                                    <span class="text-xs font-black uppercase text-blue-400">Yapı Kredi • KMH</span>
+                                </div>
+                                <span class="px-1.5 py-0.5 rounded bg-red-500/20 text-red-300 text-[9px] font-black">FAİZ %5.00</span>
+                            </div>
+                            <div class="my-1">
+                                <span class="text-[10px] text-slate-400 block font-semibold">EK HESAP EKSİ BAKİYE</span>
+                                <span class="text-xl font-black text-red-500">-₺65.000</span>
+                            </div>
+                            <div class="pt-2 border-t border-slate-800 flex justify-between items-end">
+                                <div>
+                                    <span class="text-[9px] text-slate-400 block font-semibold">AYLIK FAİZ YÜKÜ</span>
+                                    <span class="text-xs font-bold text-red-400">₺3.250 / ay</span>
+                                </div>
+                                <button type="button" class="btn-flip-card px-2 py-1 rounded bg-slate-800 text-[10px] font-bold text-slate-300 border border-slate-700 hover:text-white">
+                                    🔄 Detay
+                                </button>
+                            </div>
+                        </div>
+                        <div class="flip-card-back p-5 rounded-xl bg-slate-900 border border-blue-500/40 shadow-xl flex flex-col justify-between text-xs">
+                            <div class="flex justify-between items-center border-b border-slate-800 pb-1.5">
+                                <span class="font-bold text-blue-400 text-xs">Yapı Kredi KMH Detayı</span>
+                                <button type="button" class="btn-flip-card px-2 py-0.5 rounded bg-slate-800 text-[9px] text-slate-300">↩ Geri</button>
+                            </div>
+                            <div class="space-y-1 my-1 text-[11px]">
+                                <div class="flex justify-between text-slate-300"><span>Günlük Faiz:</span><strong class="text-white">₺108.33 / gün</strong></div>
+                                <div class="flex justify-between text-slate-300"><span>Durum:</span><strong class="text-emerald-400">Düzenli Ödeniyor</strong></div>
+                            </div>
+                            <div class="p-1.5 rounded bg-slate-950 text-[10px] text-indigo-300 border border-indigo-900/40">
+                                💡 Günlük faiz işlettiği için hızlıca sıfırlanmalıdır.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Kart 3: Ana Dashboard Önizleme Paneli (Mobil Akış) -->
+                <div class="mobile-stream-card p-5 rounded-xl bg-slate-900/95 border border-indigo-500/40 shadow-xl space-y-3">
+                    <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+                        <div class="flex items-center gap-2">
+                            <span class="w-2.5 h-2.5 rounded-full bg-red-500 animate-ping"></span>
+                            <span class="text-xs font-bold text-white">Canlı Risk Analizi</span>
+                        </div>
+                        <span class="px-2 py-0.5 rounded bg-red-500/20 text-red-300 text-[10px] font-black border border-red-500/30">
+                            🚨 Takibe 24 Gün Kaldı
+                        </span>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div class="p-2.5 rounded-lg bg-slate-950 border border-slate-800">
+                            <span class="text-[9px] font-bold text-slate-400 block uppercase">Toplam Borç</span>
+                            <span class="text-lg font-black text-white">₺485.200</span>
+                        </div>
+                        <div class="p-2.5 rounded-lg bg-slate-950 border border-slate-800">
+                            <span class="text-[9px] font-bold text-slate-400 block uppercase">Borçsuzluk</span>
+                            <span class="text-lg font-black text-indigo-400">14 Ay</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Kart 4: Akbank Axess (Mobil Akış) -->
+                <div class="mobile-stream-card flip-card w-full h-[205px]">
+                    <div class="flip-card-inner rounded-xl">
+                        <div class="flip-card-front p-5 rounded-xl bg-gradient-to-br from-rose-950 via-slate-900 to-slate-950 border border-rose-500/40 shadow-xl flex flex-col justify-between overflow-hidden relative">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center gap-2">
+                                    <div class="w-6 h-6 rounded bg-rose-600 text-white font-black text-[10px] flex items-center justify-center">AK</div>
+                                    <span class="text-xs font-black uppercase text-rose-400">Akbank • Axess</span>
+                                </div>
+                                <div class="w-7 h-4.5 rounded bg-amber-400 border border-amber-300 text-[8px] font-bold flex items-center justify-center text-amber-950">CHIP</div>
+                            </div>
+                            <div class="my-1">
+                                <span class="font-mono text-xs tracking-widest text-slate-300">•••• •••• •••• 1907</span>
+                                <span class="text-[10px] text-amber-400 font-bold block mt-0.5">⚠️ Son Ödeme: 4 Gün Kaldı</span>
+                            </div>
+                            <div class="pt-2 border-t border-slate-800 flex justify-between items-end">
+                                <div>
+                                    <span class="text-[9px] text-slate-400 block font-semibold">DÖNEM BORCU</span>
+                                    <span class="text-base font-black text-red-400">₺52.000</span>
+                                </div>
+                                <button type="button" class="btn-flip-card px-2 py-1 rounded bg-slate-800 text-[10px] font-bold text-slate-300 border border-slate-700 hover:text-white">
+                                    🔄 Detay
+                                </button>
+                            </div>
+                        </div>
+                        <div class="flip-card-back p-5 rounded-xl bg-slate-900 border border-rose-500/40 shadow-xl flex flex-col justify-between text-xs">
+                            <div class="flex justify-between items-center border-b border-slate-800 pb-1.5">
+                                <span class="font-bold text-rose-400 text-xs">Akbank Axess Detayı</span>
+                                <button type="button" class="btn-flip-card px-2 py-0.5 rounded bg-slate-800 text-[9px] text-slate-300">↩ Geri</button>
+                            </div>
+                            <div class="space-y-1 my-1 text-[11px]">
+                                <div class="flex justify-between text-slate-300"><span>Asgari Tutar:</span><strong class="text-white">₺20.800</strong></div>
+                                <div class="flex justify-between text-slate-300"><span>Akdi Faiz:</span><strong class="text-amber-400">%4.25</strong></div>
+                            </div>
+                            <div class="p-1.5 rounded bg-slate-950 text-[10px] text-amber-300 border border-amber-900/40">
+                                💡 4 gün içinde asgari ödenmezse gecikmeye düşer.
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
             <!-- ========================================================================= -->
-            <!-- 🖥️ MASAÜSTÜ: 3D FLOATING APPLE-STYLE CARD DECK (EĞİMLİ & DÖNEN KARTLAR)  -->
+            <!-- 🖥️ MASAÜSTÜ: 3D FLOATING APPLE-STYLE CARD DECK (ASLA BOZULMAYAN FAN DÜZENİ)-->
             <!-- ========================================================================= -->
             <div class="hidden md:flex mt-20 relative max-w-5xl mx-auto min-h-[480px] items-center justify-center">
                 
                 <!-- Card 1: Garanti BBVA (Sol Üst - Eğimli) -->
-                <div id="card-garanti" class="card-3d absolute -left-2 sm:left-4 top-4 w-64 sm:w-80 p-5 sm:p-6 rounded-xl bg-gradient-to-br from-emerald-950 via-slate-900 to-slate-950 border border-emerald-500/30 shadow-2xl text-left transform -rotate-12 -translate-y-4 hover:rotate-0 hover:scale-105 transition-all duration-500 z-20 animate-float-1">
+                <div id="card-garanti" class="card-3d absolute -left-2 sm:left-4 top-4 w-64 sm:w-80 p-5 sm:p-6 rounded-xl bg-gradient-to-br from-emerald-950 via-slate-900 to-slate-950 border border-emerald-500/30 shadow-2xl text-left z-20 animate-float-1">
                     <div class="flex items-center justify-between">
                         <span class="text-xs font-black uppercase tracking-wider text-emerald-400">Garanti BBVA</span>
                         <div class="w-8 h-5 rounded bg-amber-400/80 border border-amber-300 font-mono text-[9px] font-bold flex items-center justify-center text-amber-950">CHIP</div>
@@ -386,7 +379,7 @@
                 </div>
 
                 <!-- Card 2: Yapı Kredi KMH (Sağ Üst - Eğimli) -->
-                <div id="card-yapi-kredi" class="card-3d absolute -right-2 sm:right-4 top-8 w-64 sm:w-80 p-5 sm:p-6 rounded-xl bg-gradient-to-br from-blue-950 via-slate-900 to-slate-950 border border-blue-500/30 shadow-2xl text-left transform rotate-12 translate-y-2 hover:rotate-0 hover:scale-105 transition-all duration-500 z-20 animate-float-2">
+                <div id="card-yapi-kredi" class="card-3d absolute -right-2 sm:right-4 top-8 w-64 sm:w-80 p-5 sm:p-6 rounded-xl bg-gradient-to-br from-blue-950 via-slate-900 to-slate-950 border border-blue-500/30 shadow-2xl text-left z-20 animate-float-2">
                     <div class="flex items-center justify-between">
                         <span class="text-xs font-black uppercase tracking-wider text-blue-400">Yapı Kredi • Esnek Hesap</span>
                         <span class="px-2 py-0.5 rounded-md bg-red-500/20 text-red-300 border border-red-500/30 text-[10px] font-black">FAİZ: %5.00</span>
@@ -402,7 +395,7 @@
                 </div>
 
                 <!-- Card 3: Ana Dashboard Önizleme Paneli (Merkez & Geniş) -->
-                <div id="card-center-dashboard" class="card-3d relative w-full max-w-xl p-6 sm:p-8 rounded-xl bg-slate-900/90 border-2 border-indigo-500/40 shadow-2xl shadow-indigo-950/80 backdrop-blur-2xl text-left z-30 transform hover:scale-[1.02] transition-all duration-500">
+                <div id="card-center-dashboard" class="card-3d relative w-full max-w-xl p-6 sm:p-8 rounded-xl bg-slate-900/90 border-2 border-indigo-500/40 shadow-2xl shadow-indigo-950/80 backdrop-blur-2xl text-left z-30">
                     <div class="flex items-center justify-between border-b border-slate-800 pb-4">
                         <div class="flex items-center gap-3">
                             <span class="w-3 h-3 rounded-full bg-red-500 animate-ping"></span>
@@ -439,14 +432,14 @@
                 </div>
 
                 <!-- Card 4: Ziraat Bankası Kredi (Sol Alt - Eğimli) -->
-                <div id="card-ziraat" class="card-3d absolute -left-4 sm:left-12 -bottom-6 w-60 sm:w-72 p-4 sm:p-5 rounded-xl bg-gradient-to-br from-red-950 via-slate-900 to-slate-950 border border-red-500/30 shadow-2xl text-left transform rotate-6 z-10 animate-float-3">
+                <div id="card-ziraat" class="card-3d absolute -left-4 sm:left-12 -bottom-6 w-60 sm:w-72 p-4 sm:p-5 rounded-xl bg-gradient-to-br from-red-950 via-slate-900 to-slate-950 border border-red-500/30 shadow-2xl text-left z-10 animate-float-3">
                     <span class="text-xs font-black uppercase text-red-400 block">Ziraat Bankası • İhtiyaç Kredisi</span>
                     <span class="text-lg font-black text-white mt-1 block">Kalan: ₺140.000</span>
                     <span class="text-[11px] text-slate-400">Taksit: ₺7.200 / ay (24 Taksit Kaldı)</span>
                 </div>
 
                 <!-- Card 5: Akbank Kart (Sağ Alt - Eğimli) -->
-                <div id="card-akbank" class="card-3d absolute -right-4 sm:right-12 -bottom-6 w-60 sm:w-72 p-4 sm:p-5 rounded-xl bg-gradient-to-br from-rose-950 via-slate-900 to-slate-950 border border-rose-500/30 shadow-2xl text-left transform -rotate-6 z-10 animate-float-1">
+                <div id="card-akbank" class="card-3d absolute -right-4 sm:right-12 -bottom-6 w-60 sm:w-72 p-4 sm:p-5 rounded-xl bg-gradient-to-br from-rose-950 via-slate-900 to-slate-950 border border-rose-500/30 shadow-2xl text-left z-10 animate-float-1">
                     <span class="text-xs font-black uppercase text-rose-400 block">Akbank • Wings Kart</span>
                     <span class="text-lg font-black text-white mt-1 block">Dönem Borcu: ₺52.000</span>
                     <span class="text-[11px] text-amber-400 font-bold">⚠️ Son Ödeme: 4 Gün Kaldı</span>
@@ -487,7 +480,7 @@
             </div>
 
             <!-- İnteraktif Faz Bilgi Paneli -->
-            <div id="phase-detail-card" class="max-w-3xl mx-auto mt-6 p-6 sm:p-8 rounded-xl bg-slate-900 border border-slate-800 shadow-2xl transition-all duration-300 text-left space-y-4">
+            <div id="phase-detail-card" class="max-w-3xl mx-auto mt-6 p-6 sm:p-8 rounded-xl bg-slate-900 border border-slate-800 shadow-2xl transition-all duration-300 text-left space-y-4 reveal-on-scroll">
                 <div class="flex items-center justify-between border-b border-slate-800 pb-3">
                     <div class="flex items-center gap-3">
                         <span id="phase-badge" class="w-8 h-8 rounded-lg bg-emerald-600/20 text-emerald-400 font-black text-sm flex items-center justify-center border border-emerald-500/30">1</span>
@@ -610,7 +603,7 @@
             </div>
 
             <!-- Canlı AI Terminal Kutusu -->
-            <div class="max-w-3xl mx-auto mt-6 bg-slate-900 border border-slate-800 rounded-xl p-6 sm:p-8 space-y-6 shadow-2xl text-left">
+            <div class="max-w-3xl mx-auto mt-6 bg-slate-900 border border-slate-800 rounded-xl p-6 sm:p-8 space-y-6 shadow-2xl text-left reveal-on-scroll">
                 <!-- AI Cevap Alanı -->
                 <div class="flex items-start gap-3 sm:gap-4">
                     <div class="w-9 h-9 rounded-lg bg-indigo-600 text-white flex items-center justify-center font-bold text-sm shrink-0 shadow-lg shadow-indigo-600/30">
@@ -651,7 +644,7 @@
             <!-- Banka Kartları - Doğrudan MySQL Veritabanından Dinamik -->
             <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-4 mt-12 sm:mt-16">
                 @foreach ($databaseBanks as $dbBank)
-                    <div class="p-4 sm:p-5 rounded-xl bg-slate-900 border border-slate-800 text-center space-y-2 hover:border-indigo-500 transition-all hover:scale-105">
+                    <div class="p-4 sm:p-5 rounded-xl bg-slate-900 border border-slate-800 text-center space-y-2 hover:border-indigo-500 transition-all hover:scale-105 reveal-on-scroll">
                         <div class="w-10 h-10 rounded-lg text-white font-black flex items-center justify-center mx-auto text-xs shadow-md" style="background-color: {{ $dbBank->color ?? '#6366f1' }};">
                             {{ mb_substr($dbBank->name, 0, 2) }}
                         </div>
@@ -666,7 +659,7 @@
         <!-- 6. BÜYÜK CALL TO ACTION BANNER (APPLE-STYLE)                               -->
         <!-- ========================================================================= -->
         <section class="py-16 sm:py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-            <div class="relative rounded-xl bg-gradient-to-r from-indigo-900 via-indigo-950 to-slate-900 border-2 border-indigo-500/50 p-6 sm:p-16 text-center space-y-6 sm:space-y-8 overflow-hidden shadow-2xl shadow-indigo-950">
+            <div class="relative rounded-xl bg-gradient-to-r from-indigo-900 via-indigo-950 to-slate-900 border-2 border-indigo-500/50 p-6 sm:p-16 text-center space-y-6 sm:space-y-8 overflow-hidden shadow-2xl shadow-indigo-950 reveal-on-scroll">
                 <div class="absolute top-0 right-0 w-72 sm:w-96 h-72 sm:h-96 bg-indigo-500/20 rounded-full blur-3xl pointer-events-none"></div>
 
                 <div class="space-y-3 sm:space-y-4 max-w-2xl mx-auto relative z-10">
@@ -707,11 +700,11 @@
     </div>
 
     <!-- ========================================================================= -->
-    <!-- INTERACTIVE SCRIPTS: 3D FLIP, ACCORDION, SIMULATOR & AI CHIP RESPONSES    -->
+    <!-- JAVASCRIPT: ASLA BOZULMAYAN SCROLL AKIŞI & İNTERAKTİF SİSTEMLER          -->
     <!-- ========================================================================= -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // 1. 3D Card Flip on Click
+            // 1. 3D Card Flip on Click (Mobile & Desktop)
             const flipButtons = document.querySelectorAll('.btn-flip-card');
             flipButtons.forEach(btn => {
                 btn.addEventListener('click', (e) => {
@@ -723,7 +716,38 @@
                 });
             });
 
-            // 2. Interactive 90-Day Legal Timeline Phase Tabs
+            // 2. Mobile Cascading Cards Intersection Observer (As you scroll, cards reveal with 3D entry)
+            const streamCards = document.querySelectorAll('.mobile-stream-card');
+            if ('IntersectionObserver' in window) {
+                const streamObserver = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('is-visible');
+                        }
+                    });
+                }, { threshold: 0.1 });
+                streamCards.forEach(c => streamObserver.observe(c));
+            } else {
+                streamCards.forEach(c => c.classList.add('is-visible'));
+            }
+
+            // 3. Scroll Reveal for Sections
+            const revealElements = document.querySelectorAll('.reveal-on-scroll');
+            if ('IntersectionObserver' in window) {
+                const revealObserver = new IntersectionObserver((entries, observer) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('is-revealed');
+                            observer.unobserve(entry.target);
+                        }
+                    });
+                }, { threshold: 0.12 });
+                revealElements.forEach(el => revealObserver.observe(el));
+            } else {
+                revealElements.forEach(el => el.classList.add('is-revealed'));
+            }
+
+            // 4. Interactive 90-Day Legal Timeline Phase Tabs
             const phaseTabs = document.querySelectorAll('.phase-tab');
             const phaseBadge = document.getElementById('phase-badge');
             const phaseTitle = document.getElementById('phase-title');
@@ -734,37 +758,29 @@
             const phaseData = {
                 1: {
                     badge: '1',
-                    badgeClass: 'bg-emerald-600/20 text-emerald-400 border-emerald-500/30',
                     title: '1 - 30. Gün: İlk Gecikme Evresi',
                     status: 'Kontrol Altında',
-                    statusClass: 'bg-emerald-950 text-emerald-300 border-emerald-800',
                     desc: 'İlk son ödeme tarihi kaçırıldı. Henüz idari veya yasal takip yoktur. Sadece günlük gecikme faizi işlemeye başlar. KKB (Findeks) kredi notunuz hafif etkilenir. Bu evrede yapılacak bir asgari ödeme süreci anında sıfırlar.',
                     action: '💡 <strong>DVT CRM Aksiyonu:</strong> Asgari tutarı yatırmanız için otomatik hatırlatıcı kurulur.'
                 },
                 2: {
                     badge: '2',
-                    badgeClass: 'bg-amber-600/20 text-amber-400 border-amber-500/30',
                     title: '31 - 60. Gün: İdari Takip & Çağrı Evresi',
                     status: 'Uyarı Veriliyor',
-                    statusClass: 'bg-amber-950 text-amber-300 border-amber-800',
                     desc: 'İkinci dönem asgari tutarı da ödenmediğinde bankanın iç tahsilat servisi devreye girer. Telefonla arama ve SMS bilgilendirmeleri başlar. Kartınız geçici olarak nakit avansa kapatılabilir.',
                     action: '💡 <strong>DVT CRM Aksiyonu:</strong> Bankanın çağrı merkeziyle pazarlık yapmanız için AI koç konuşma rehberi hazırlar.'
                 },
                 3: {
                     badge: '3',
-                    badgeClass: 'bg-orange-600/20 text-orange-400 border-orange-500/30',
                     title: '61 - 89. Gün: Noter İhtarnamesi Evresi',
                     status: 'Son Yapılandırma Şansı',
-                    statusClass: 'bg-orange-950 text-orange-300 border-orange-800',
                     desc: 'Noter kanalıyla resmi ihtarname çekilir. Borcun tamamı (tüm taksitler) muaccel hale gelir. Yasal takipten önceki son 7-10 günlük kritik süredir. Bu evrede bankayla yapılandırma protokolü imzalanmalıdır.',
                     action: '🚨 <strong>DVT CRM Aksiyonu:</strong> Sistem kırmızı alarma geçer ve acil borç yapılandırma simülasyonu üretir.'
                 },
                 4: {
                     badge: '4',
-                    badgeClass: 'bg-red-600/20 text-red-400 border-red-500/30',
                     title: '90+ Gün: Resmi Yasal Takip & İcra',
                     status: 'Kritik Yasal Takip',
-                    statusClass: 'bg-red-950 text-red-300 border-red-800',
                     desc: 'Dosya banka avukatına devredilir, icra dairesi üzerinden ödeme emri gönderilir. %20+ vekalet ücreti, harç ve masraflar eklenir. Maaş haczi ve bloke riskleri doğar.',
                     action: '🛡️ <strong>DVT CRM Aksiyonu:</strong> 90 gün sayacı sayesinde kullanıcı bu aşamaya düşmeden önce kurtarılır.'
                 }
@@ -774,7 +790,7 @@
                 tab.addEventListener('click', () => {
                     const phase = tab.getAttribute('data-phase');
                     phaseTabs.forEach(t => {
-                        t.classList.remove('bg-emerald-600', 'bg-amber-600', 'bg-orange-600', 'bg-red-600', 'text-white', 'shadow-md');
+                        t.classList.remove('bg-emerald-600', 'bg-indigo-600', 'text-white', 'shadow-md');
                         t.classList.add('bg-slate-900', 'text-slate-400');
                     });
                     tab.classList.remove('bg-slate-900', 'text-slate-400');
@@ -791,7 +807,7 @@
                 });
             });
 
-            // 3. Interactive AI Koç Prompt Chips
+            // 5. Interactive AI Koç Prompt Chips
             const promptChips = document.querySelectorAll('.ai-prompt-chip');
             const aiResponseText = document.getElementById('ai-response-text');
 
@@ -815,24 +831,7 @@
                 });
             });
 
-            // 4. Scroll Reveal
-            const revealElements = document.querySelectorAll('.reveal-on-scroll');
-            if ('IntersectionObserver' in window) {
-                const revealObserver = new IntersectionObserver((entries, observer) => {
-                    entries.forEach(entry => {
-                        if (entry.isIntersecting) {
-                            entry.target.classList.add('is-revealed');
-                            observer.unobserve(entry.target);
-                        }
-                    });
-                }, { threshold: 0.15 });
-
-                revealElements.forEach(el => revealObserver.observe(el));
-            } else {
-                revealElements.forEach(el => el.classList.add('is-revealed'));
-            }
-
-            // 5. Interactive Avalanche Calculator Slider
+            // 6. Interactive Avalanche Calculator Slider
             const slider = document.getElementById('sim-slider');
             const extraLabel = document.getElementById('sim-extra-budget-label');
             const monthsText = document.getElementById('sim-months-text');
@@ -863,31 +862,44 @@
                 });
             }
 
-            // 6. Desktop Parallax Scroll & Mobile Floating Action Bar
-            const cardGaranti = document.getElementById('card-garanti');
-            const cardYapiKredi = document.getElementById('card-yapi-kredi');
-            const cardCenter = document.getElementById('card-center-dashboard');
-            const cardZiraat = document.getElementById('card-ziraat');
-            const cardAkbank = document.getElementById('card-akbank');
+            // 7. Desktop Parallax via CSS Variables (ASLA BOZULMAZ, EN BAŞA DÖNDÜĞÜNDE 100% SIFIRLANIR)
+            const desktopDeck = document.querySelector('.hidden.md\\:flex');
             const mobilePill = document.getElementById('mobile-floating-pill');
 
             window.addEventListener('scroll', () => {
                 const scrolled = window.pageYOffset;
 
-                // Desktop 3D Cascading Parallax Floating
-                if (window.innerWidth >= 768) {
-                    const rate = scrolled * 0.1;
-                    if (cardGaranti) {
-                        cardGaranti.style.transform = `translate3d(${-rate * 0.7}px, ${rate * 0.3}px, 0) rotate(${-12 - rate * 0.03}deg)`;
-                    }
-                    if (cardYapiKredi) {
-                        cardYapiKredi.style.transform = `translate3d(${rate * 0.7}px, ${rate * 0.3}px, 0) rotate(${12 + rate * 0.03}deg)`;
-                    }
-                    if (cardZiraat) {
-                        cardZiraat.style.transform = `translate3d(${-rate * 0.4}px, ${-rate * 0.15}px, 0) rotate(${6 + rate * 0.02}deg)`;
-                    }
-                    if (cardAkbank) {
-                        cardAkbank.style.transform = `translate3d(${rate * 0.4}px, ${-rate * 0.15}px, 0) rotate(${-6 - rate * 0.02}deg)`;
+                if (window.innerWidth >= 768 && desktopDeck) {
+                    if (scrolled === 0) {
+                        // Tam en baştayken değişkenleri sıfırla (dağınık ilk haline dönsün)
+                        document.documentElement.style.setProperty('--garanti-x', '0px');
+                        document.documentElement.style.setProperty('--garanti-y', '0px');
+                        document.documentElement.style.setProperty('--garanti-tilt', '0deg');
+                        document.documentElement.style.setProperty('--yk-x', '0px');
+                        document.documentElement.style.setProperty('--yk-y', '0px');
+                        document.documentElement.style.setProperty('--yk-tilt', '0deg');
+                        document.documentElement.style.setProperty('--zb-x', '0px');
+                        document.documentElement.style.setProperty('--zb-y', '0px');
+                        document.documentElement.style.setProperty('--ak-x', '0px');
+                        document.documentElement.style.setProperty('--ak-y', '0px');
+                        document.documentElement.style.setProperty('--center-y', '0px');
+                    } else if (scrolled < 800) {
+                        const rate = scrolled * 0.08;
+                        document.documentElement.style.setProperty('--garanti-x', `${-rate * 0.6}px`);
+                        document.documentElement.style.setProperty('--garanti-y', `${rate * 0.3}px`);
+                        document.documentElement.style.setProperty('--garanti-tilt', `${-rate * 0.02}deg`);
+
+                        document.documentElement.style.setProperty('--yk-x', `${rate * 0.6}px`);
+                        document.documentElement.style.setProperty('--yk-y', `${rate * 0.3}px`);
+                        document.documentElement.style.setProperty('--yk-tilt', `${rate * 0.02}deg`);
+
+                        document.documentElement.style.setProperty('--zb-x', `${-rate * 0.4}px`);
+                        document.documentElement.style.setProperty('--zb-y', `${-rate * 0.15}px`);
+
+                        document.documentElement.style.setProperty('--ak-x', `${rate * 0.4}px`);
+                        document.documentElement.style.setProperty('--ak-y', `${-rate * 0.15}px`);
+
+                        document.documentElement.style.setProperty('--center-y', `${-rate * 0.2}px`);
                     }
                 }
 
@@ -903,22 +915,6 @@
                     }
                 }
             }, { passive: true });
-
-            // 7. Desktop Mouse Tilt Interaction on Center Card
-            if (cardCenter && window.innerWidth >= 768) {
-                cardCenter.addEventListener('mousemove', (e) => {
-                    const rect = cardCenter.getBoundingClientRect();
-                    const x = e.clientX - rect.left - rect.width / 2;
-                    const y = e.clientY - rect.top - rect.height / 2;
-                    const rotateX = (-y / 25).toFixed(2);
-                    const rotateY = (x / 25).toFixed(2);
-                    cardCenter.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.02)`;
-                });
-
-                cardCenter.addEventListener('mouseleave', () => {
-                    cardCenter.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1)`;
-                });
-            }
         });
     </script>
 </body>
