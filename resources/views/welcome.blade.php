@@ -2,7 +2,7 @@
 <html lang="tr" class="scroll-smooth">
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <title>DVT Bank CRM — 6 Banka, Tüm Borçlar, Matematiksel Kesin Çıkış Planı</title>
     <meta name="description" content="Kredi kartı, KMH eksi bakiyeleri ve kredilerinizi tek merkezden yönetin. 90 gün yasal takip sayacı, Çığ algoritması ve 7/24 AI finans koçu ile borç krizinden güvenle çıkın.">
 
@@ -14,17 +14,25 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            -webkit-tap-highlight-color: transparent;
+        }
         .font-mono { font-family: 'JetBrains Mono', monospace; }
         
-        /* 3D Perspective Container */
+        /* 3D Perspective Containers */
         .perspective-container {
             perspective: 1200px;
         }
+        .perspective-mobile {
+            perspective: 900px;
+            transform-style: preserve-3d;
+        }
 
-        /* 3D Card Base with Smooth Physics */
+        /* 3D Card Base with Hardware Acceleration */
         .card-3d {
             transform-style: preserve-3d;
+            backface-visibility: hidden;
             transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.4s ease;
             will-change: transform;
         }
@@ -32,7 +40,7 @@
         /* Ambient Glow Animations */
         @keyframes float-slow {
             0%, 100% { transform: translateY(0px) rotate(0deg); }
-            50% { transform: translateY(-12px) rotate(1.5deg); }
+            50% { transform: translateY(-10px) rotate(1.5deg); }
         }
 
         @keyframes pulse-glow {
@@ -40,10 +48,22 @@
             50% { opacity: 0.65; transform: scale(1.08); }
         }
 
+        @keyframes shimmer-sweep {
+            0% { transform: translateX(-100%) rotate(25deg); }
+            100% { transform: translateX(200%) rotate(25deg); }
+        }
+
+        @keyframes radar-pulse {
+            0% { transform: scale(0.95); opacity: 0.8; }
+            50% { transform: scale(1.4); opacity: 0; }
+            100% { transform: scale(0.95); opacity: 0; }
+        }
+
         .animate-float-1 { animation: float-slow 7s ease-in-out infinite; }
         .animate-float-2 { animation: float-slow 9s ease-in-out 1.5s infinite; }
         .animate-float-3 { animation: float-slow 8s ease-in-out 3s infinite; }
         .animate-glow { animation: pulse-glow 6s ease-in-out infinite; }
+        .radar-wave { animation: radar-pulse 2.5s infinite cubic-bezier(0.215, 0.61, 0.355, 1); }
 
         /* Holographic Shimmer Effect */
         .hologram-card {
@@ -52,16 +72,62 @@
             border: 1px solid rgba(255, 255, 255, 0.12);
         }
 
+        .shimmer-element::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                60deg,
+                rgba(255, 255, 255, 0) 20%,
+                rgba(255, 255, 255, 0.15) 50%,
+                rgba(255, 255, 255, 0) 80%
+            );
+            animation: shimmer-sweep 5s infinite linear;
+            pointer-events: none;
+        }
+
         /* Scroll reveal class */
         .reveal-on-scroll {
             opacity: 0;
-            transform: translateY(40px) scale(0.96);
-            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+            transform: translateY(35px) scale(0.96);
+            transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .reveal-on-scroll.is-revealed {
             opacity: 1;
             transform: translateY(0) scale(1);
+        }
+
+        /* Mobile Wallet Deck Transition States */
+        .deck-stacked .card-stack-1 { transform: translateY(0px) scale(1) rotate(0deg); z-index: 40; }
+        .deck-stacked .card-stack-2 { transform: translateY(22px) scale(0.95) rotate(-2deg); z-index: 30; opacity: 0.9; }
+        .deck-stacked .card-stack-3 { transform: translateY(44px) scale(0.90) rotate(2deg); z-index: 20; opacity: 0.8; }
+        .deck-stacked .card-stack-4 { transform: translateY(66px) scale(0.85) rotate(-1deg); z-index: 10; opacity: 0.7; }
+
+        .deck-fanned .card-stack-1 { transform: translateY(-110px) rotate(-6deg) scale(0.96); z-index: 40; }
+        .deck-fanned .card-stack-2 { transform: translateY(-35px) rotate(4deg) scale(0.98); z-index: 30; }
+        .deck-fanned .card-stack-3 { transform: translateY(40px) rotate(-3deg) scale(1); z-index: 20; }
+        .deck-fanned .card-stack-4 { transform: translateY(115px) rotate(5deg) scale(1.02); z-index: 10; }
+
+        /* Custom Slider Thumb Styling */
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: #6366f1;
+            border: 3px solid #ffffff;
+            cursor: pointer;
+            box-shadow: 0 0 15px rgba(99, 102, 241, 0.8);
+            transition: transform 0.15s ease, background 0.15s ease;
+        }
+        input[type="range"]::-webkit-slider-thumb:active {
+            transform: scale(1.2);
+            background: #4f46e5;
         }
     </style>
 </head>
@@ -74,46 +140,137 @@
         <!-- ========================================================================= -->
         <!-- 1. APPLE-STYLE HERO SECTION (3D ORBIT & FLOATING CARDS)                  -->
         <!-- ========================================================================= -->
-        <section class="relative pt-24 pb-32 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-center perspective-container overflow-hidden">
+        <section class="relative pt-20 sm:pt-28 pb-24 sm:pb-36 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-center perspective-container overflow-hidden">
             <!-- Background Glow Orbs -->
-            <div class="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[650px] h-[650px] bg-indigo-600/20 rounded-full blur-[140px] pointer-events-none animate-glow"></div>
-            <div class="absolute top-1/3 left-1/4 w-[450px] h-[450px] bg-purple-600/15 rounded-full blur-[120px] pointer-events-none animate-glow" style="animation-delay: 2s;"></div>
-            <div class="absolute top-1/3 right-1/4 w-[450px] h-[450px] bg-emerald-600/15 rounded-full blur-[120px] pointer-events-none animate-glow" style="animation-delay: 4s;"></div>
+            <div class="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[350px] sm:w-[650px] h-[350px] sm:h-[650px] bg-indigo-600/25 rounded-full blur-[90px] sm:blur-[140px] pointer-events-none animate-glow"></div>
+            <div class="absolute top-1/3 left-1/4 w-[250px] sm:w-[450px] h-[250px] sm:h-[450px] bg-purple-600/20 rounded-full blur-[80px] sm:blur-[120px] pointer-events-none animate-glow" style="animation-delay: 2s;"></div>
+            <div class="absolute top-1/3 right-1/4 w-[250px] sm:w-[450px] h-[250px] sm:h-[450px] bg-emerald-600/20 rounded-full blur-[80px] sm:blur-[120px] pointer-events-none animate-glow" style="animation-delay: 4s;"></div>
 
             <!-- Top Pill Badge -->
-            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-indigo-950/80 border border-indigo-500/30 text-indigo-300 text-xs font-bold mb-8 shadow-xl shadow-indigo-950/50 backdrop-blur-md">
+            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-indigo-950/80 border border-indigo-500/30 text-indigo-300 text-[11px] sm:text-xs font-bold mb-6 sm:mb-8 shadow-xl shadow-indigo-950/50 backdrop-blur-md">
                 <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
                 <span>TÜRKİYE BANKACILIK MEVZUATI & 90 GÜN KURALI MOTORU</span>
             </div>
 
             <!-- Massive Display Header -->
-            <h1 class="text-5xl sm:text-7xl lg:text-8xl font-black tracking-tight text-white max-w-5xl mx-auto leading-[1.05]">
+            <h1 class="text-4xl sm:text-7xl lg:text-8xl font-black tracking-tight text-white max-w-5xl mx-auto leading-[1.08] sm:leading-[1.05]">
                 Finansal Krizden<br>
                 <span class="bg-gradient-to-r from-indigo-400 via-sky-300 to-emerald-300 bg-clip-text text-transparent">Matematiksel Çıkış.</span>
             </h1>
 
-            <p class="mt-8 text-lg sm:text-2xl text-slate-300 max-w-3xl mx-auto font-normal leading-relaxed">
+            <p class="mt-6 sm:mt-8 text-base sm:text-2xl text-slate-300 max-w-3xl mx-auto font-normal leading-relaxed px-2">
                 6 bankanın kredi kartları, KMH eksi bakiyeleri ve kredi taksitleri arasında boğulmayın. Sıfır panik, doğrudan veritabanı ve 7/24 AI koç ile borçlarınızı adım adım sıfırlayın.
             </p>
 
             <!-- Call to Actions -->
-            <div class="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
-                <a href="{{ route('register') }}" class="w-full sm:w-auto px-9 py-4 bg-indigo-600 hover:bg-indigo-500 text-white font-black text-base rounded-2xl shadow-2xl shadow-indigo-600/40 hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-2 group">
+            <div class="mt-8 sm:mt-10 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 px-4">
+                <a href="{{ route('register') }}" class="w-full sm:w-auto px-8 sm:px-9 py-3.5 sm:py-4 bg-indigo-600 hover:bg-indigo-500 text-white font-black text-sm sm:text-base rounded-2xl shadow-2xl shadow-indigo-600/40 hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-2 group">
                     <span>Ücretsiz Borç Analizini Başlat</span>
-                    <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 7l5 5m0 0l-5 5m5-5H6"></path></svg>
+                    <svg class="w-4 sm:w-5 h-4 sm:h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 7l5 5m0 0l-5 5m5-5H6"></path></svg>
                 </a>
-                <a href="#nasil-calisir" class="w-full sm:w-auto px-8 py-4 bg-slate-900/90 hover:bg-slate-800 text-slate-300 hover:text-white font-bold text-base rounded-2xl border border-slate-800 shadow-lg backdrop-blur-md transition-all">
+                <a href="#nasil-calisir" class="w-full sm:w-auto px-6 sm:px-8 py-3.5 sm:py-4 bg-slate-900/90 hover:bg-slate-800 text-slate-300 hover:text-white font-bold text-sm sm:text-base rounded-2xl border border-slate-800 shadow-lg backdrop-blur-md transition-all">
                     Stratejiyi İncele ↓
                 </a>
             </div>
 
             <!-- ========================================================================= -->
-            <!-- 3D FLOATING APPLE-STYLE CARD DECK (ROTATING & TILTING)                   -->
+            <!-- 📱 MOBILE SPECIAL: INTERACTIVE 3D APPLE WALLET CARD DECK                  -->
             <!-- ========================================================================= -->
-            <div class="mt-20 relative max-w-5xl mx-auto min-h-[420px] sm:min-h-[480px] flex items-center justify-center">
+            <div class="block md:hidden mt-12 px-2">
+                <div class="flex items-center justify-between px-3 mb-3">
+                    <span class="text-xs font-black uppercase tracking-wider text-indigo-400">📱 İnteraktif Kart Destesi</span>
+                    <button id="btn-toggle-deck" class="px-3 py-1 bg-indigo-600/30 hover:bg-indigo-600 text-indigo-200 hover:text-white text-xs font-bold rounded-lg border border-indigo-500/40 transition-all active:scale-95 flex items-center gap-1">
+                        <span id="deck-btn-icon">🎴</span>
+                        <span id="deck-btn-text">Desteyi Aç / İncele</span>
+                    </button>
+                </div>
+
+                <!-- 3D Mobile Deck Container -->
+                <div id="mobile-card-deck" class="perspective-mobile deck-stacked relative w-full h-[320px] transition-all duration-500 flex items-center justify-center">
+                    
+                    <!-- Mobile Card 1: Garanti BBVA -->
+                    <div class="card-3d card-stack-1 shimmer-element absolute w-[92%] max-w-[340px] p-5 rounded-2xl bg-gradient-to-br from-emerald-950 via-slate-900 to-slate-950 border border-emerald-500/40 shadow-2xl text-left transition-all duration-500 cursor-pointer">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-black uppercase tracking-wider text-emerald-400">Garanti BBVA • Bonus</span>
+                            <div class="w-7 h-4 rounded bg-amber-400 border border-amber-300 font-mono text-[8px] font-bold flex items-center justify-center text-amber-950">CHIP</div>
+                        </div>
+                        <div class="my-3">
+                            <span class="font-mono text-xs tracking-widest text-slate-300">•••• •••• •••• 8412</span>
+                            <div class="mt-1 flex items-center gap-1 text-[10px] font-bold text-amber-400">
+                                <span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-ping"></span>
+                                <span>18 Gündür Ödeme Yok</span>
+                            </div>
+                        </div>
+                        <div class="pt-2 border-t border-slate-800 flex justify-between items-end">
+                            <div>
+                                <span class="text-[9px] text-slate-400 font-bold block">DÖNEM BORCU</span>
+                                <span class="text-lg font-black text-red-400">₺78.450</span>
+                            </div>
+                            <span class="text-[11px] font-bold text-slate-300">Asgari: ₺31.380</span>
+                        </div>
+                    </div>
+
+                    <!-- Mobile Card 2: Yapı Kredi KMH -->
+                    <div class="card-3d card-stack-2 shimmer-element absolute w-[92%] max-w-[340px] p-5 rounded-2xl bg-gradient-to-br from-blue-950 via-slate-900 to-slate-950 border border-blue-500/40 shadow-2xl text-left transition-all duration-500 cursor-pointer">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-black uppercase tracking-wider text-blue-400">Yapı Kredi • Esnek Hesap</span>
+                            <span class="px-1.5 py-0.5 rounded bg-red-500/20 text-red-300 text-[9px] font-black border border-red-500/30">FAİZ: %5.0</span>
+                        </div>
+                        <div class="my-3">
+                            <span class="text-[10px] text-slate-400 font-semibold block">EK HESAP EKSİ BAKİYE</span>
+                            <span class="text-xl font-black text-red-500">-₺65.000</span>
+                        </div>
+                        <div class="pt-2 border-t border-slate-800 flex justify-between items-center text-[10px]">
+                            <span class="text-slate-400">Aylık Faiz Maliyeti:</span>
+                            <span class="font-bold text-red-400">₺3.250 / ay</span>
+                        </div>
+                    </div>
+
+                    <!-- Mobile Card 3: Akbank Axess -->
+                    <div class="card-3d card-stack-3 shimmer-element absolute w-[92%] max-w-[340px] p-5 rounded-2xl bg-gradient-to-br from-rose-950 via-slate-900 to-slate-950 border border-rose-500/40 shadow-2xl text-left transition-all duration-500 cursor-pointer">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-black uppercase tracking-wider text-rose-400">Akbank • Axess</span>
+                            <div class="w-7 h-4 rounded bg-amber-400 border border-amber-300 font-mono text-[8px] font-bold flex items-center justify-center text-amber-950">CHIP</div>
+                        </div>
+                        <div class="my-3">
+                            <span class="font-mono text-xs tracking-widest text-slate-300">•••• •••• •••• 1907</span>
+                            <span class="text-[10px] text-red-400 font-bold block mt-1">⚠️ Son Ödeme: 4 Gün Kaldı</span>
+                        </div>
+                        <div class="pt-2 border-t border-slate-800 flex justify-between items-end">
+                            <div>
+                                <span class="text-[9px] text-slate-400 font-bold block">DÖNEM BORCU</span>
+                                <span class="text-lg font-black text-red-400">₺52.000</span>
+                            </div>
+                            <span class="text-[11px] font-bold text-slate-300">Asgari: ₺20.800</span>
+                        </div>
+                    </div>
+
+                    <!-- Mobile Card 4: Ziraat Kredi -->
+                    <div class="card-3d card-stack-4 shimmer-element absolute w-[92%] max-w-[340px] p-5 rounded-2xl bg-gradient-to-br from-red-950 via-slate-900 to-slate-950 border border-red-500/40 shadow-2xl text-left transition-all duration-500 cursor-pointer">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-black uppercase tracking-wider text-red-400">Ziraat Bankası • Kredi</span>
+                            <span class="text-[9px] text-emerald-400 font-bold">24 Taksit Kaldı</span>
+                        </div>
+                        <div class="my-3">
+                            <span class="text-[10px] text-slate-400 font-semibold block">KALAN ANAPARA</span>
+                            <span class="text-xl font-black text-white">₺140.000</span>
+                        </div>
+                        <div class="pt-2 border-t border-slate-800 flex justify-between items-center text-[10px]">
+                            <span class="text-slate-400">Aylık Taksit:</span>
+                            <span class="font-bold text-white">₺7.200 / ay</span>
+                        </div>
+                    </div>
+                </div>
+                <p class="text-[11px] text-slate-500 italic mt-2 text-center">💡 Kartlara dokunarak veya telefonu hafifçe eğerek 3D hareketi hissedin.</p>
+            </div>
+
+            <!-- ========================================================================= -->
+            <!-- 🖥️ DESKTOP 3D FLOATING APPLE-STYLE CARD DECK (ROTATING & TILTING)        -->
+            <!-- ========================================================================= -->
+            <div class="hidden md:flex mt-20 relative max-w-5xl mx-auto min-h-[480px] items-center justify-center">
                 
                 <!-- Card 1: Garanti BBVA (Sol Üst - Eğimli) -->
-                <div id="card-garanti" class="card-3d absolute -left-2 sm:left-4 top-4 w-64 sm:w-80 p-5 sm:p-6 rounded-3xl bg-gradient-to-br from-emerald-950 via-slate-900 to-slate-950 border border-emerald-500/30 shadow-2xl text-left transform -rotate-6 sm:-rotate-12 -translate-y-4 hover:rotate-0 hover:scale-105 transition-all duration-500 z-20 animate-float-1">
+                <div id="card-garanti" class="card-3d absolute -left-2 sm:left-4 top-4 w-64 sm:w-80 p-5 sm:p-6 rounded-3xl bg-gradient-to-br from-emerald-950 via-slate-900 to-slate-950 border border-emerald-500/30 shadow-2xl text-left transform -rotate-12 -translate-y-4 hover:rotate-0 hover:scale-105 transition-all duration-500 z-20 animate-float-1">
                     <div class="flex items-center justify-between">
                         <span class="text-xs font-black uppercase tracking-wider text-emerald-400">Garanti BBVA</span>
                         <div class="w-8 h-5 rounded bg-amber-400/80 border border-amber-300 font-mono text-[9px] font-bold flex items-center justify-center text-amber-950">CHIP</div>
@@ -134,7 +291,7 @@
                 </div>
 
                 <!-- Card 2: Yapı Kredi KMH (Sağ Üst - Eğimli) -->
-                <div id="card-yapi-kredi" class="card-3d absolute -right-2 sm:right-4 top-8 w-64 sm:w-80 p-5 sm:p-6 rounded-3xl bg-gradient-to-br from-blue-950 via-slate-900 to-slate-950 border border-blue-500/30 shadow-2xl text-left transform rotate-6 sm:rotate-12 translate-y-2 hover:rotate-0 hover:scale-105 transition-all duration-500 z-20 animate-float-2">
+                <div id="card-yapi-kredi" class="card-3d absolute -right-2 sm:right-4 top-8 w-64 sm:w-80 p-5 sm:p-6 rounded-3xl bg-gradient-to-br from-blue-950 via-slate-900 to-slate-950 border border-blue-500/30 shadow-2xl text-left transform rotate-12 translate-y-2 hover:rotate-0 hover:scale-105 transition-all duration-500 z-20 animate-float-2">
                     <div class="flex items-center justify-between">
                         <span class="text-xs font-black uppercase tracking-wider text-blue-400">Yapı Kredi • Esnek Hesap</span>
                         <span class="px-2 py-0.5 rounded-md bg-red-500/20 text-red-300 border border-red-500/30 text-[10px] font-black">FAİZ: %5.00</span>
@@ -187,14 +344,14 @@
                 </div>
 
                 <!-- Card 4: Ziraat Bankası Kredi (Sol Alt - Eğimli) -->
-                <div id="card-ziraat" class="card-3d absolute -left-4 sm:left-12 -bottom-6 w-60 sm:w-72 p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-red-950 via-slate-900 to-slate-950 border border-red-500/30 shadow-2xl text-left transform rotate-3 sm:rotate-6 z-10 animate-float-3 hidden md:block">
+                <div id="card-ziraat" class="card-3d absolute -left-4 sm:left-12 -bottom-6 w-60 sm:w-72 p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-red-950 via-slate-900 to-slate-950 border border-red-500/30 shadow-2xl text-left transform rotate-6 z-10 animate-float-3">
                     <span class="text-xs font-black uppercase text-red-400 block">Ziraat Bankası • İhtiyaç Kredisi</span>
                     <span class="text-lg font-black text-white mt-1 block">Kalan: ₺140.000</span>
                     <span class="text-[11px] text-slate-400">Taksit: ₺7.200 / ay (24 Taksit Kaldı)</span>
                 </div>
 
                 <!-- Card 5: Akbank Kart (Sağ Alt - Eğimli) -->
-                <div id="card-akbank" class="card-3d absolute -right-4 sm:right-12 -bottom-6 w-60 sm:w-72 p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-rose-950 via-slate-900 to-slate-950 border border-rose-500/30 shadow-2xl text-left transform -rotate-3 sm:-rotate-6 z-10 animate-float-1 hidden md:block">
+                <div id="card-akbank" class="card-3d absolute -right-4 sm:right-12 -bottom-6 w-60 sm:w-72 p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-rose-950 via-slate-900 to-slate-950 border border-rose-500/30 shadow-2xl text-left transform -rotate-6 z-10 animate-float-1">
                     <span class="text-xs font-black uppercase text-rose-400 block">Akbank • Wings Kart</span>
                     <span class="text-lg font-black text-white mt-1 block">Dönem Borcu: ₺52.000</span>
                     <span class="text-[11px] text-amber-400 font-bold">⚠️ Son Ödeme: 4 Gün Kaldı</span>
@@ -205,22 +362,22 @@
         <!-- ========================================================================= -->
         <!-- 2. SCROLLYTELLING: 90 GÜN YASAL TAKİP ERKEN UYARI SİSTEMİ                -->
         <!-- ========================================================================= -->
-        <section id="90-gun-kurali" class="py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-slate-800/80">
-            <div class="text-center space-y-4 max-w-3xl mx-auto reveal-on-scroll">
-                <span class="text-xs font-bold uppercase tracking-wider text-red-400 bg-red-950/60 border border-red-800/50 px-3 py-1 rounded-full">
+        <section id="90-gun-kurali" class="py-16 sm:py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-slate-800/80">
+            <div class="text-center space-y-3 sm:space-y-4 max-w-3xl mx-auto reveal-on-scroll">
+                <span class="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-red-400 bg-red-950/60 border border-red-800/50 px-3 py-1 rounded-full">
                     🚨 BDDK MEVZUATI & YASAL TAKİP BARAJI
                 </span>
-                <h2 class="text-4xl sm:text-5xl font-black text-white tracking-tight">
+                <h2 class="text-3xl sm:text-5xl font-black text-white tracking-tight">
                     90 Günlük Yasal Takip Sayacı:<br>
                     <span class="text-red-400">Gecikmeden Masaya Oturun.</span>
                 </h2>
-                <p class="text-base sm:text-lg text-slate-300 leading-relaxed">
+                <p class="text-sm sm:text-lg text-slate-300 leading-relaxed">
                     Borç 90 gün ödenmediğinde banka alacağı yasal takibe aktarabilir ve avukata devredebilir. Öncesinde ihtarname ve genellikle 7 günlük ek süre vardır. DVT Bank CRM, her borcunuzun süresini anbean hesaplayarak sizi takibe düşmeden uyarır.
                 </p>
             </div>
 
             <!-- 4 Aşamalı Risk Zaman Çizelgesi -->
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mt-16">
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 mt-12 sm:mt-16">
                 <!-- 1. Evre -->
                 <div class="p-6 rounded-3xl bg-slate-900 border border-slate-800 hover:border-slate-700 transition-all reveal-on-scroll space-y-3">
                     <div class="w-10 h-10 rounded-xl bg-slate-800 text-slate-300 font-black text-sm flex items-center justify-center">
@@ -272,50 +429,47 @@
         </section>
 
         <!-- ========================================================================= -->
-        <!-- 3. ALGORİTMİK ÇÖZÜM: ÇIĞ (AVALANCHE) & KARTOPU (SNOWBALL) MOTORU           -->
+        <!-- 3. İNTERAKTİF BORÇ ERİTME SİMÜLATÖRÜ (ÇIĞ VS KARTOPU)                      -->
         <!-- ========================================================================= -->
-        <section id="nasil-calisir" class="py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-slate-800/80">
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-                <div class="space-y-6 reveal-on-scroll">
-                    <span class="text-xs font-bold uppercase tracking-wider text-indigo-400 bg-indigo-950/60 border border-indigo-800/50 px-3 py-1 rounded-full">
+        <section id="nasil-calisir" class="py-16 sm:py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-slate-800/80">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 items-center">
+                <div class="space-y-4 sm:space-y-6 reveal-on-scroll">
+                    <span class="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-indigo-400 bg-indigo-950/60 border border-indigo-800/50 px-3 py-1 rounded-full">
                         🏔️ MATEMATİKSEL KURTARMA STRATEJİSİ
                     </span>
-                    <h2 class="text-4xl sm:text-5xl font-black text-white tracking-tight">
+                    <h2 class="text-3xl sm:text-5xl font-black text-white tracking-tight">
                         Asgari Ödeme Kısır Döngüsünü Kırın.
                     </h2>
-                    <p class="text-base sm:text-lg text-slate-300 leading-relaxed">
+                    <p class="text-sm sm:text-lg text-slate-300 leading-relaxed">
                         Her ay sadece asgari tutarı ödemek borcu bitirmez; sadece faizi besler. DVT Bank CRM, gelirinizi ve sabit giderlerinizi düşerek kalan serbest bütçeyi **Çığ (Avalanche)** algoritmasıyla en yüksek faizli KMH ve kartlara odaklar.
                     </p>
 
-                    <div class="space-y-4 pt-2">
-                        <div class="flex items-start gap-3">
-                            <div class="w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">✓</div>
-                            <div>
-                                <h4 class="font-bold text-white text-sm">Çığ (Avalanche) Yöntemi:</h4>
-                                <p class="text-xs text-slate-400 mt-0.5">Faiz oranı en yüksek (%5.0 KMH veya %4.25 Kart) borcu önce sıfırlayarak toplamda en az faizi ödetir.</p>
-                            </div>
+                    <!-- Canlı İnteraktif Simülatör Slider -->
+                    <div class="p-5 sm:p-6 bg-slate-900 border border-indigo-500/40 rounded-3xl space-y-4 shadow-xl">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-bold text-indigo-300 uppercase tracking-wider">🎛️ Aylık Ekstra Ödeme Bütçeniz</span>
+                            <span id="slider-budget-text" class="font-black text-lg text-emerald-400">₺5.000 / ay</span>
                         </div>
-                        <div class="flex items-start gap-3">
-                            <div class="w-6 h-6 rounded-full bg-indigo-500/20 text-indigo-400 flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">✓</div>
-                            <div>
-                                <h4 class="font-bold text-white text-sm">Kartopu (Snowball) Yöntemi:</h4>
-                                <p class="text-xs text-slate-400 mt-0.5">En küçük bakiyeli borcu ilk kapatıp banka sayısını 6'dan 3'e, 2'ye hızla indirerek psikolojik rahatlama sağlar.</p>
-                            </div>
+                        <input id="interactive-slider" type="range" min="0" max="25000" step="1000" value="5000" class="w-full h-2.5 bg-slate-800 rounded-lg appearance-none cursor-pointer">
+                        <div class="flex justify-between text-[10px] text-slate-500 font-mono">
+                            <span>₺0 (Sadece Asgari)</span>
+                            <span>₺12.500</span>
+                            <span>₺25.000</span>
                         </div>
                     </div>
                 </div>
 
                 <!-- Karşılaştırma Grafiği / Tablosu -->
                 <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-8 space-y-6 shadow-2xl reveal-on-scroll">
-                    <h3 class="text-sm font-bold uppercase tracking-wider text-slate-400 border-b border-slate-800 pb-3">
-                        Simülasyon: ₺400.000 Borç İçin 2 Farklı Senaryo
+                    <h3 class="text-xs sm:text-sm font-bold uppercase tracking-wider text-slate-400 border-b border-slate-800 pb-3">
+                        Canlı Simülasyon: ₺400.000 Borç İçin 2 Farklı Senaryo
                     </h3>
 
                     <!-- Senaryo 1: Rastgele / Asgari -->
                     <div class="p-4 rounded-2xl bg-red-950/30 border border-red-900/40 space-y-2">
-                        <div class="flex justify-between items-center">
-                            <span class="text-xs font-bold text-red-400">Rastgele / Sadece Asgari Ödeme</span>
-                            <span class="text-xs font-bold text-red-400">42 Ay Sürer</span>
+                        <div class="flex justify-between items-center text-xs">
+                            <span class="font-bold text-red-400">Rastgele / Sadece Asgari Ödeme</span>
+                            <span class="font-bold text-red-400">42 Ay Sürer</span>
                         </div>
                         <div class="w-full bg-slate-800 h-3 rounded-full overflow-hidden">
                             <div class="bg-red-500 h-full w-[90%]"></div>
@@ -325,14 +479,17 @@
 
                     <!-- Senaryo 2: DVT Bank CRM Çığ Algoritması -->
                     <div class="p-4 rounded-2xl bg-emerald-950/30 border border-emerald-900/40 space-y-2">
-                        <div class="flex justify-between items-center">
-                            <span class="text-xs font-bold text-emerald-400">DVT Bank CRM Çığ Algoritması</span>
-                            <span class="text-xs font-bold text-emerald-400">16 Ayda Biter</span>
+                        <div class="flex justify-between items-center text-xs">
+                            <span class="font-bold text-emerald-400">DVT Bank CRM Çığ Algoritması</span>
+                            <span id="sim-months-text" class="font-black text-emerald-300">16 Ayda Biter</span>
                         </div>
                         <div class="w-full bg-slate-800 h-3 rounded-full overflow-hidden">
-                            <div class="bg-emerald-500 h-full w-[38%]"></div>
+                            <div id="sim-bar" class="bg-emerald-500 h-full w-[38%] transition-all duration-300"></div>
                         </div>
-                        <p class="text-xs text-slate-300">Toplam Ödenen Faiz: <strong class="text-emerald-400">₺82.000</strong> (₺158.000 Cepte Kalır!)</p>
+                        <p class="text-xs text-slate-300">
+                            Toplam Ödenen Faiz: <strong id="sim-interest-text" class="text-emerald-400">₺82.000</strong> 
+                            (<span id="sim-saved-text" class="text-emerald-300 font-bold">₺158.000 Cepte Kalır!</span>)
+                        </p>
                     </div>
                 </div>
             </div>
@@ -341,31 +498,31 @@
         <!-- ========================================================================= -->
         <!-- 4. 7/24 AI FİNANSAL KRİZ KOÇU                                             -->
         <!-- ========================================================================= -->
-        <section id="ozellikler" class="py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-slate-800/80">
-            <div class="text-center space-y-4 max-w-3xl mx-auto reveal-on-scroll">
-                <span class="text-xs font-bold uppercase tracking-wider text-indigo-400 bg-indigo-950/60 border border-indigo-800/50 px-3 py-1 rounded-full">
+        <section id="ozellikler" class="py-16 sm:py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-slate-800/80">
+            <div class="text-center space-y-3 sm:space-y-4 max-w-3xl mx-auto reveal-on-scroll">
+                <span class="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-indigo-400 bg-indigo-950/60 border border-indigo-800/50 px-3 py-1 rounded-full">
                     🤖 YENİ NESİL ÇOKLU SAĞLAYICILI AI MOTORU
                 </span>
-                <h2 class="text-4xl sm:text-5xl font-black text-white tracking-tight">
+                <h2 class="text-3xl sm:text-5xl font-black text-white tracking-tight">
                     Her Sabah 07:00'de<br>
                     <span class="text-indigo-400">Günün 3 Kritik Hamlesi Cebinizde.</span>
                 </h2>
-                <p class="text-base sm:text-lg text-slate-300 leading-relaxed">
+                <p class="text-sm sm:text-lg text-slate-300 leading-relaxed">
                     Llama 3.3 (Groq), Gemini Flash ve OpenRouter modelleriyle güçlendirilmiş koçunuz, veritabanınızdaki borç ve vadeleri tarar; her gün panik yapmadan atacağınız en doğru finansal adımları listeler.
                 </p>
             </div>
 
             <!-- AI Chat & Günlük Öneri Simülasyon Arayüzü -->
-            <div class="mt-16 max-w-3xl mx-auto bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-8 shadow-2xl space-y-6 reveal-on-scroll">
+            <div class="mt-12 sm:mt-16 max-w-3xl mx-auto bg-slate-900 border border-slate-800 rounded-3xl p-5 sm:p-8 shadow-2xl space-y-4 sm:space-y-6 reveal-on-scroll">
                 <!-- AI Mesajı -->
-                <div class="flex items-start gap-4">
-                    <div class="w-10 h-10 rounded-2xl bg-indigo-600 flex items-center justify-center font-bold text-white text-lg shrink-0 shadow-lg shadow-indigo-600/30">
+                <div class="flex items-start gap-3 sm:gap-4">
+                    <div class="w-9 sm:w-10 h-9 sm:h-10 rounded-2xl bg-indigo-600 flex items-center justify-center font-bold text-white text-base sm:text-lg shrink-0 shadow-lg shadow-indigo-600/30">
                         🤖
                     </div>
-                    <div class="bg-slate-950 border border-slate-800 rounded-2xl p-5 text-sm space-y-3">
+                    <div class="bg-slate-950 border border-slate-800 rounded-2xl p-4 sm:p-5 text-sm space-y-2 sm:space-y-3">
                         <div class="flex items-center justify-between border-b border-slate-800 pb-2">
-                            <span class="font-bold text-indigo-300 text-xs uppercase tracking-wider">Günün 3 Kritik Hamlesi (Sabah Brifingi)</span>
-                            <span class="text-[10px] text-slate-500 font-mono">07:00 • Otomatik Üretildi</span>
+                            <span class="font-bold text-indigo-300 text-xs uppercase tracking-wider">Günün 3 Kritik Hamlesi</span>
+                            <span class="text-[10px] text-slate-500 font-mono">07:00 • Canlı</span>
                         </div>
                         <ul class="space-y-2 text-slate-300 text-xs sm:text-sm">
                             <li class="flex items-start gap-2">
@@ -381,18 +538,18 @@
                                 <span><strong>Garanti Yapılandırma Masası:</strong> 25 gündür gecikmede olan krediniz için şubeyi arayıp 36 ay yapılandırma teklifi isteyin.</span>
                             </li>
                         </ul>
-                        <div class="pt-2 border-t border-slate-900 text-[11px] text-slate-500 italic">
+                        <div class="pt-2 border-t border-slate-900 text-[10px] text-slate-500 italic">
                             ⚖️ Bu bir bilgilendirme ve stratejik takip tavsiyesidir; resmi finansal danışmanlık değildir.
                         </div>
                     </div>
                 </div>
 
                 <!-- Kullanıcı Sorusu -->
-                <div class="flex items-start gap-4 justify-end">
-                    <div class="bg-indigo-600 text-white rounded-2xl p-4 text-xs sm:text-sm max-w-lg">
+                <div class="flex items-start gap-3 sm:gap-4 justify-end">
+                    <div class="bg-indigo-600 text-white rounded-2xl p-3 sm:p-4 text-xs sm:text-sm max-w-xs sm:max-w-lg">
                         "Elimde fazladan ₺15.000 var, 6 bankamdan hangisine yatırırsam en çok faizden tasarruf ederim?"
                     </div>
-                    <div class="w-10 h-10 rounded-2xl bg-slate-800 text-slate-300 flex items-center justify-center font-bold text-sm shrink-0">
+                    <div class="w-9 sm:w-10 h-9 sm:h-10 rounded-2xl bg-slate-800 text-slate-300 flex items-center justify-center font-bold text-xs sm:text-sm shrink-0">
                         DA
                     </div>
                 </div>
@@ -402,53 +559,53 @@
         <!-- ========================================================================= -->
         <!-- 5. 6 BANKA TAM ENTEGRASYON VE DOĞRUDAN VERİTABANI                         -->
         <!-- ========================================================================= -->
-        <section class="py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-slate-800/80">
-            <div class="text-center space-y-4 max-w-3xl mx-auto reveal-on-scroll">
-                <span class="text-xs font-bold uppercase tracking-wider text-emerald-400 bg-emerald-950/60 border border-emerald-800/50 px-3 py-1 rounded-full">
+        <section class="py-16 sm:py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-slate-800/80">
+            <div class="text-center space-y-3 sm:space-y-4 max-w-3xl mx-auto reveal-on-scroll">
+                <span class="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-emerald-400 bg-emerald-950/60 border border-emerald-800/50 px-3 py-1 rounded-full">
                     🛡️ SIFIR SAHTE VERİ & DOĞRUDAN VERİTABANI
                 </span>
-                <h2 class="text-4xl sm:text-5xl font-black text-white tracking-tight">
+                <h2 class="text-3xl sm:text-5xl font-black text-white tracking-tight">
                     Türkiye'deki Tüm Bankalarla Uyumlu.
                 </h2>
-                <p class="text-base sm:text-lg text-slate-300 leading-relaxed">
+                <p class="text-sm sm:text-lg text-slate-300 leading-relaxed">
                     Sistemde hiçbir sahte veya mock veri yer almaz. Eklediğiniz her kart ve borç doğrudan MySQL veritabanına yazılır, matematiksel formüllerle anlık işlenir.
                 </p>
             </div>
 
-            <!-- 6 Banka Kartı Grid -->
-            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 mt-16">
-                <div class="p-5 rounded-2xl bg-slate-900 border border-slate-800 text-center space-y-2 hover:border-emerald-500 transition-all hover:scale-105">
-                    <div class="w-10 h-10 rounded-xl bg-[#008543] text-white font-bold flex items-center justify-center mx-auto text-xs">GB</div>
+            <!-- 6 Banka Kartı - Mobilde Yatay Kaydırmalı Snap Carousel, Masaüstünde 6 Kolon -->
+            <div class="flex sm:grid sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4 mt-12 sm:mt-16 overflow-x-auto sm:overflow-visible pb-4 sm:pb-0 snap-x snap-mandatory">
+                <div class="min-w-[150px] sm:min-w-0 snap-center p-4 sm:p-5 rounded-2xl bg-slate-900 border border-slate-800 text-center space-y-2 hover:border-emerald-500 transition-all hover:scale-105 shrink-0 sm:shrink">
+                    <div class="w-10 h-10 rounded-xl bg-[#008543] text-white font-bold flex items-center justify-center mx-auto text-xs shadow-md">GB</div>
                     <h4 class="font-bold text-white text-xs">Garanti BBVA</h4>
                     <span class="text-[10px] text-slate-400 block">Kart + KMH + Kredi</span>
                 </div>
 
-                <div class="p-5 rounded-2xl bg-slate-900 border border-slate-800 text-center space-y-2 hover:border-blue-500 transition-all hover:scale-105">
-                    <div class="w-10 h-10 rounded-xl bg-[#0a2f6e] text-white font-bold flex items-center justify-center mx-auto text-xs">YK</div>
+                <div class="min-w-[150px] sm:min-w-0 snap-center p-4 sm:p-5 rounded-2xl bg-slate-900 border border-slate-800 text-center space-y-2 hover:border-blue-500 transition-all hover:scale-105 shrink-0 sm:shrink">
+                    <div class="w-10 h-10 rounded-xl bg-[#0a2f6e] text-white font-bold flex items-center justify-center mx-auto text-xs shadow-md">YK</div>
                     <h4 class="font-bold text-white text-xs">Yapı Kredi</h4>
                     <span class="text-[10px] text-slate-400 block">World + Esnek</span>
                 </div>
 
-                <div class="p-5 rounded-2xl bg-slate-900 border border-slate-800 text-center space-y-2 hover:border-red-500 transition-all hover:scale-105">
-                    <div class="w-10 h-10 rounded-xl bg-[#e30613] text-white font-bold flex items-center justify-center mx-auto text-xs">ZB</div>
+                <div class="min-w-[150px] sm:min-w-0 snap-center p-4 sm:p-5 rounded-2xl bg-slate-900 border border-slate-800 text-center space-y-2 hover:border-red-500 transition-all hover:scale-105 shrink-0 sm:shrink">
+                    <div class="w-10 h-10 rounded-xl bg-[#e30613] text-white font-bold flex items-center justify-center mx-auto text-xs shadow-md">ZB</div>
                     <h4 class="font-bold text-white text-xs">Ziraat Bankası</h4>
                     <span class="text-[10px] text-slate-400 block">Bankkart + Avans</span>
                 </div>
 
-                <div class="p-5 rounded-2xl bg-slate-900 border border-slate-800 text-center space-y-2 hover:border-blue-600 transition-all hover:scale-105">
-                    <div class="w-10 h-10 rounded-xl bg-[#002855] text-white font-bold flex items-center justify-center mx-auto text-xs">İŞ</div>
+                <div class="min-w-[150px] sm:min-w-0 snap-center p-4 sm:p-5 rounded-2xl bg-slate-900 border border-slate-800 text-center space-y-2 hover:border-blue-600 transition-all hover:scale-105 shrink-0 sm:shrink">
+                    <div class="w-10 h-10 rounded-xl bg-[#002855] text-white font-bold flex items-center justify-center mx-auto text-xs shadow-md">İŞ</div>
                     <h4 class="font-bold text-white text-xs">İş Bankası</h4>
                     <span class="text-[10px] text-slate-400 block">Maximum + Ek</span>
                 </div>
 
-                <div class="p-5 rounded-2xl bg-slate-900 border border-slate-800 text-center space-y-2 hover:border-red-600 transition-all hover:scale-105">
-                    <div class="w-10 h-10 rounded-xl bg-[#e31e24] text-white font-bold flex items-center justify-center mx-auto text-xs">AK</div>
+                <div class="min-w-[150px] sm:min-w-0 snap-center p-4 sm:p-5 rounded-2xl bg-slate-900 border border-slate-800 text-center space-y-2 hover:border-red-600 transition-all hover:scale-105 shrink-0 sm:shrink">
+                    <div class="w-10 h-10 rounded-xl bg-[#e31e24] text-white font-bold flex items-center justify-center mx-auto text-xs shadow-md">AK</div>
                     <h4 class="font-bold text-white text-xs">Akbank</h4>
                     <span class="text-[10px] text-slate-400 block">Axess + Artı Para</span>
                 </div>
 
-                <div class="p-5 rounded-2xl bg-slate-900 border border-slate-800 text-center space-y-2 hover:border-purple-500 transition-all hover:scale-105">
-                    <div class="w-10 h-10 rounded-xl bg-[#732582] text-white font-bold flex items-center justify-center mx-auto text-xs">EN</div>
+                <div class="min-w-[150px] sm:min-w-0 snap-center p-4 sm:p-5 rounded-2xl bg-slate-900 border border-slate-800 text-center space-y-2 hover:border-purple-500 transition-all hover:scale-105 shrink-0 sm:shrink">
+                    <div class="w-10 h-10 rounded-xl bg-[#732582] text-white font-bold flex items-center justify-center mx-auto text-xs shadow-md">EN</div>
                     <h4 class="font-bold text-white text-xs">Enpara / QNB</h4>
                     <span class="text-[10px] text-slate-400 block">Kredisiz Masrafsız</span>
                 </div>
@@ -458,23 +615,23 @@
         <!-- ========================================================================= -->
         <!-- 6. BÜYÜK CALL TO ACTION BANNER (APPLE-STYLE)                               -->
         <!-- ========================================================================= -->
-        <section class="py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-            <div class="relative rounded-3xl bg-gradient-to-r from-indigo-900 via-indigo-950 to-slate-900 border-2 border-indigo-500/50 p-8 sm:p-16 text-center space-y-8 overflow-hidden shadow-2xl shadow-indigo-950">
-                <div class="absolute top-0 right-0 w-96 h-96 bg-indigo-500/20 rounded-full blur-3xl pointer-events-none"></div>
+        <section class="py-16 sm:py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+            <div class="relative rounded-3xl bg-gradient-to-r from-indigo-900 via-indigo-950 to-slate-900 border-2 border-indigo-500/50 p-6 sm:p-16 text-center space-y-6 sm:space-y-8 overflow-hidden shadow-2xl shadow-indigo-950">
+                <div class="absolute top-0 right-0 w-72 sm:w-96 h-72 sm:h-96 bg-indigo-500/20 rounded-full blur-3xl pointer-events-none"></div>
 
-                <div class="space-y-4 max-w-2xl mx-auto relative z-10">
-                    <span class="text-xs font-black uppercase tracking-widest text-indigo-300">İLK ADIMI ŞİMDİ ATIN</span>
-                    <h2 class="text-4xl sm:text-5xl font-black text-white tracking-tight">
+                <div class="space-y-3 sm:space-y-4 max-w-2xl mx-auto relative z-10">
+                    <span class="text-[10px] sm:text-xs font-black uppercase tracking-widest text-indigo-300">İLK ADIMI ŞİMDİ ATIN</span>
+                    <h2 class="text-3xl sm:text-5xl font-black text-white tracking-tight">
                         Borçlarınız Sizi Değil,<br>
                         Siz Borçlarınızı Yönetin.
                     </h2>
-                    <p class="text-sm sm:text-base text-indigo-200 leading-relaxed">
+                    <p class="text-xs sm:text-base text-indigo-200 leading-relaxed">
                         Hemen ücretsiz kayıt olun, 4 adımlı sihirbazla bankalarınızı tanımlayın ve 90 günlük yasal takip sayacınızla krizden güvenle çıkın.
                     </p>
                 </div>
 
-                <div class="pt-2 relative z-10 flex flex-col sm:flex-row justify-center gap-4">
-                    <a href="{{ route('register') }}" class="px-10 py-4 bg-white hover:bg-slate-100 text-indigo-900 font-black text-base rounded-2xl shadow-xl hover:scale-105 active:scale-95 transition-all">
+                <div class="pt-2 relative z-10 flex flex-col sm:flex-row justify-center gap-3 sm:gap-4">
+                    <a href="{{ route('register') }}" class="px-8 sm:px-10 py-3.5 sm:py-4 bg-white hover:bg-slate-100 text-indigo-900 font-black text-sm sm:text-base rounded-2xl shadow-xl hover:scale-105 active:scale-95 transition-all">
                         Hemen Ücretsiz Başla →
                     </a>
                 </div>
@@ -482,18 +639,34 @@
         </section>
     </main>
 
+    <!-- 📱 MOBILE STICKY FLOATING QUICK ACTION PILL BAR -->
+    <div id="mobile-floating-pill" class="block md:hidden fixed bottom-4 left-4 right-4 z-50 transition-all duration-300 transform translate-y-24 opacity-0 pointer-events-none">
+        <div class="bg-slate-900/90 backdrop-blur-xl border border-indigo-500/40 rounded-2xl p-3 shadow-2xl flex items-center justify-between gap-3">
+            <div class="flex items-center gap-2 pl-2">
+                <span class="w-2 h-2 rounded-full bg-red-500 animate-ping"></span>
+                <div class="text-left">
+                    <span class="text-xs font-black text-white block">90 Gün Sayacı</span>
+                    <span class="text-[10px] text-emerald-400">Ücretsiz Analiz</span>
+                </div>
+            </div>
+            <a href="{{ route('register') }}" class="px-4 py-2 bg-indigo-600 text-white font-black text-xs rounded-xl shadow-lg shadow-indigo-600/40 active:scale-95 transition-transform">
+                Başla →
+            </a>
+        </div>
+    </div>
+
     <!-- UNIFIED PUBLIC FOOTER -->
     <x-public-footer />
 
     <!-- ========================================================================= -->
-    <!-- JAVASCRIPT: 3D PERSPECTIVE SCROLL & TILT ENGINE (VANILLA JS)              -->
+    <!-- JAVASCRIPT: 3D PERSPECTIVE SCROLL, GYROSCOPE & TOUCH DECK ENGINE          -->
     <!-- ========================================================================= -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             // 1. Scroll Reveal Observer
             const observerOptions = {
                 threshold: 0.15,
-                rootMargin: '0px 0px -50px 0px'
+                rootMargin: '0px 0px -40px 0px'
             };
 
             const revealObserver = new IntersectionObserver((entries) => {
@@ -508,27 +681,118 @@
                 revealObserver.observe(el);
             });
 
-            // 2. Parallax Scroll Tilt for Hero 3D Cards
+            // 2. Mobile Interactive 3D Apple Wallet Deck Toggle
+            const deck = document.getElementById('mobile-card-deck');
+            const toggleBtn = document.getElementById('btn-toggle-deck');
+            const btnIcon = document.getElementById('deck-btn-icon');
+            const btnText = document.getElementById('deck-btn-text');
+
+            if (toggleBtn && deck) {
+                let isFanned = false;
+                const toggleDeck = () => {
+                    isFanned = !isFanned;
+                    if (isFanned) {
+                        deck.classList.remove('deck-stacked');
+                        deck.classList.add('deck-fanned');
+                        deck.style.height = '420px';
+                        btnIcon.textContent = '📁';
+                        btnText.textContent = 'Desteyi Topla';
+                    } else {
+                        deck.classList.remove('deck-fanned');
+                        deck.classList.add('deck-stacked');
+                        deck.style.height = '320px';
+                        btnIcon.textContent = '🎴';
+                        btnText.textContent = 'Desteyi Aç';
+                    }
+                };
+
+                toggleBtn.addEventListener('click', toggleDeck);
+                deck.addEventListener('click', toggleDeck);
+            }
+
+            // 3. Interactive Debt Melt Simulator Slider
+            const slider = document.getElementById('interactive-slider');
+            const budgetText = document.getElementById('slider-budget-text');
+            const monthsText = document.getElementById('sim-months-text');
+            const interestText = document.getElementById('sim-interest-text');
+            const savedText = document.getElementById('sim-saved-text');
+            const simBar = document.getElementById('sim-bar');
+
+            if (slider) {
+                slider.addEventListener('input', (e) => {
+                    const extra = parseInt(e.target.value);
+                    budgetText.textContent = `₺${extra.toLocaleString('tr-TR')} / ay`;
+
+                    // Mathematical projection calculation
+                    const baseMonths = 42;
+                    const minMonths = 10;
+                    const calculatedMonths = Math.max(minMonths, Math.round(baseMonths - (extra / 25000) * 32));
+                    
+                    const baseInterest = 240000;
+                    const minInterest = 32000;
+                    const calculatedInterest = Math.max(minInterest, Math.round(baseInterest - (extra / 25000) * 190000));
+                    const saved = baseInterest - calculatedInterest;
+
+                    monthsText.textContent = `${calculatedMonths} Ayda Biter`;
+                    interestText.textContent = `₺${calculatedInterest.toLocaleString('tr-TR')}`;
+                    savedText.textContent = `₺${saved.toLocaleString('tr-TR')} Cepte Kalır!`;
+
+                    const barPercent = Math.max(15, Math.round((calculatedMonths / baseMonths) * 90));
+                    simBar.style.width = `${barPercent}%`;
+                });
+            }
+
+            // 4. Parallax Scroll Tilt & Mobile Floating Action Bar
             const cardGaranti = document.getElementById('card-garanti');
             const cardYapiKredi = document.getElementById('card-yapi-kredi');
             const cardCenter = document.getElementById('card-center-dashboard');
+            const mobilePill = document.getElementById('mobile-floating-pill');
 
             window.addEventListener('scroll', () => {
                 const scrolled = window.pageYOffset;
                 const rate = scrolled * 0.15;
 
                 if (cardGaranti) {
-                    cardGaranti.style.transform = `translate3d(${-rate * 0.8}px, ${rate * 0.4}px, 0) rotate(${-6 - rate * 0.05}deg)`;
+                    cardGaranti.style.transform = `translate3d(${-rate * 0.8}px, ${rate * 0.4}px, 0) rotate(${-12 - rate * 0.05}deg)`;
                 }
                 if (cardYapiKredi) {
-                    cardYapiKredi.style.transform = `translate3d(${rate * 0.8}px, ${rate * 0.4}px, 0) rotate(${6 + rate * 0.05}deg)`;
+                    cardYapiKredi.style.transform = `translate3d(${rate * 0.8}px, ${rate * 0.4}px, 0) rotate(${12 + rate * 0.05}deg)`;
                 }
                 if (cardCenter && scrolled < 600) {
                     cardCenter.style.transform = `translate3d(0, ${-rate * 0.3}px, 0) scale(${1 + scrolled * 0.0002})`;
                 }
+
+                // Show mobile floating pill after scrolling 300px
+                if (mobilePill) {
+                    if (scrolled > 350) {
+                        mobilePill.classList.remove('translate-y-24', 'opacity-0', 'pointer-events-none');
+                        mobilePill.classList.add('translate-y-0', 'opacity-100');
+                        mobilePill.style.pointerEvents = 'auto';
+                    } else {
+                        mobilePill.classList.add('translate-y-24', 'opacity-0', 'pointer-events-none');
+                        mobilePill.classList.remove('translate-y-0', 'opacity-100');
+                    }
+                }
             }, { passive: true });
 
-            // 3. Mouse Tilt Interaction on Center Card
+            // 5. Gyroscope / Device Orientation 3D Tilt for Mobile Devices
+            if (window.DeviceOrientationEvent && 'ontouchstart' in window) {
+                window.addEventListener('deviceorientation', (e) => {
+                    if (e.gamma !== null && e.beta !== null) {
+                        const tiltX = Math.min(15, Math.max(-15, e.gamma / 2)).toFixed(1);
+                        const tiltY = Math.min(15, Math.max(-15, (e.beta - 45) / 3)).toFixed(1);
+
+                        if (deck && !deck.classList.contains('deck-fanned')) {
+                            const topCard = deck.querySelector('.card-stack-1');
+                            if (topCard) {
+                                topCard.style.transform = `perspective(800px) rotateY(${tiltX}deg) rotateX(${-tiltY}deg)`;
+                            }
+                        }
+                    }
+                }, { passive: true });
+            }
+
+            // 6. Desktop Mouse Tilt Interaction on Center Card
             if (cardCenter) {
                 cardCenter.addEventListener('mousemove', (e) => {
                     const rect = cardCenter.getBoundingClientRect();
