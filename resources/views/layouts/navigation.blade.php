@@ -2,12 +2,19 @@
     <!-- Primary Navigation Menu -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
-            <!-- Left Side: Logo & Main App Links (All 9 items preserved with responsive padding) -->
+            <!-- Left Side: Logo (with 'Siteye dön' subline) & Main App Links -->
             <div class="flex items-center gap-4 lg:gap-6 min-w-0">
-                <!-- Logo -->
-                <div class="shrink-0 flex items-center">
+                <!-- Logo & Siteye Dön Link -->
+                <div class="shrink-0 flex flex-col justify-center py-1">
                     <a href="{{ route('dashboard') }}" class="flex items-center gap-2">
-                        <x-application-logo class="h-8 w-auto text-indigo-700" />
+                        <x-application-logo class="h-7 w-auto text-indigo-700" />
+                    </a>
+                    <a href="{{ route('home') }}" 
+                       target="_blank" 
+                       title="Tanıtım ve Ana Sayfaya Git"
+                       class="text-[10px] font-bold text-slate-400 hover:text-indigo-600 flex items-center gap-0.5 transition-colors group mt-0.5 whitespace-nowrap">
+                        <span class="group-hover:-translate-x-0.5 transition-transform text-[9px]">←</span>
+                        <span>Siteye dön</span>
                     </a>
                 </div>
 
@@ -43,18 +50,8 @@
                 </div>
             </div>
 
-            <!-- Right Side: External Site Button + User Profile Dropdown (Desktop) -->
-            <div class="hidden md:flex items-center gap-3 shrink-0">
-                <!-- Ana Sayfa / Tanıtım Sayfası Butonu (Header'da Özel Konum) -->
-                <a href="{{ route('home') }}" 
-                   target="_blank" 
-                   title="DVT Bank Tanıtım & Ana Sayfasına Git"
-                   class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-slate-700 bg-slate-100/80 hover:bg-indigo-50 hover:text-indigo-700 border border-slate-200/90 hover:border-indigo-200 rounded-lg transition-all shadow-2xs group">
-                    <span class="text-sm transition-transform group-hover:scale-110">🌐</span>
-                    <span>Ana Sayfa</span>
-                    <span class="text-[10px] text-slate-400 group-hover:text-indigo-500 font-normal">↗</span>
-                </a>
-
+            <!-- Right Side: User Profile Dropdown (Desktop) -->
+            <div class="hidden md:flex items-center shrink-0">
                 <!-- User Profile & Role Panels Menu -->
                 <x-dropdown align="right" width="72">
                     <x-slot name="trigger">
