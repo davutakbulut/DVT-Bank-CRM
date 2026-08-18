@@ -106,10 +106,14 @@ class Index extends Component
             ->latest()
             ->first();
 
-        // Aylık Gelir & Sabit Gider Özeti
+        // Aylık Gelir & Bu Ayın Gider Özeti
         $totalMonthlyIncome = (float) Income::where('user_id', $user->id)->sum('amount');
-        $totalMonthlyExpense = (float) Expense::where('user_id', $user->id)->sum('amount');
+        $totalMonthlyExpense = (float) Expense::where('user_id', $user->id)
+            ->whereYear('expense_date', now()->year)
+            ->whereMonth('expense_date', now()->month)
+            ->sum('amount');
         $availableForDebt = max(0, $totalMonthlyIncome - $totalMonthlyExpense);
+
 
         // Ekstra Zengin Finansal Metrikler (Doğrudan Veritabanı)
         $activeDebtsCount = Debt::where('user_id', $user->id)->where('status', 'active')->count();
