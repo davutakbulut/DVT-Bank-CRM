@@ -12,7 +12,13 @@ export default {
     theme: {
         extend: {
             fontFamily: {
-                sans: ['Figtree', ...defaultTheme.fontFamily.sans],
+                sans: ['"Plus Jakarta Sans"', ...defaultTheme.fontFamily.sans],
+                mono: ['"JetBrains Mono"', ...defaultTheme.fontFamily.mono],
+            },
+            letterSpacing: {
+                tightest: '-0.035em',
+                tighter: '-0.025em',
+                tight: '-0.015em',
             },
         },
     },
