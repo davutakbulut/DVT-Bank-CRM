@@ -277,9 +277,43 @@ class Index extends Component
 
     public function deleteExpense(int $id): void
     {
-        Expense::where('user_id', Auth::id())->findOrFail($id)->delete();
-        session()->flash('message', 'Gider kaydı silindi.');
+        $userId = Auth::id();
+        $exp = Expense::where('user_id', $userId)->findOrFail($id);
+
+        // 1. Kredi kartı borcunu otomatik geri düşür
+        if ($exp->credit_card_id && $exp->payment_method === 'credit_card') {
+            $card = \App\Models\CreditCard::where('user_id', $userId)->find($exp->credit_card_id);
+            if ($card && $card->current_debt > 0) {
+                $reduction = min((float)$card->current_debt, (float)$exp->amount);
+                $card->decrement('current_debt', $reduction);
+            }
+        }
+        // 2. Banka / KMH hesabı bakiyesini otomatik geri iade et
+        elseif ($exp->account_id && in_array($exp->payment_method, ['account', 'kmh'])) {
+            $acc = \App\Models\Account::where('user_id', $userId)->find($exp->account_id);
+            if ($acc) {
+                $acc->increment('balance', (float)$exp->amount);
+            }
+        }
+
+        // 3. Taksitli bir işlem ise ve Borçlar tablosunda ilişkili kayıt varsa senkronize et
+        if ($exp->total_amount && $exp->installment_count > 1) {
+            $debt = \App\Models\Debt::where('user_id', $userId)
+                ->where('merchant_name', $exp->title)
+                ->orWhere('title', 'like', $exp->title . '%')
+                ->first();
+            if ($debt) {
+                $debt->decrement('remaining', min((float)$debt->remaining, (float)$exp->amount));
+                if ($debt->remaining <= 0) {
+                    $debt->update(['status' => 'paid']);
+                }
+            }
+        }
+
+        $exp->delete();
+        session()->flash('message', 'Gider kaydı silindi ve ilgili kart/hesap bakiyesi otomatik olarak geri güncellendi.');
     }
+
 
     public function exportExcel()
     {
