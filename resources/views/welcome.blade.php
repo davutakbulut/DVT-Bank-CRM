@@ -527,43 +527,21 @@
                 </p>
             </div>
 
-            <!-- 6 Banka Kartı - Mobilde Yatay Kaydırmalı Snap Carousel, Masaüstünde 6 Kolon -->
-            <div class="flex sm:grid sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4 mt-12 sm:mt-16 overflow-x-auto sm:overflow-visible pb-4 sm:pb-0 snap-x snap-mandatory">
-                <div class="min-w-[150px] sm:min-w-0 snap-center p-4 sm:p-5 rounded-2xl bg-slate-900 border border-slate-800 text-center space-y-2 hover:border-emerald-500 transition-all hover:scale-105 shrink-0 sm:shrink">
-                    <div class="w-10 h-10 rounded-xl bg-[#008543] text-white font-bold flex items-center justify-center mx-auto text-xs shadow-md">GB</div>
-                    <h4 class="font-bold text-white text-xs">Garanti BBVA</h4>
-                    <span class="text-[10px] text-slate-400 block">Kart + KMH + Kredi</span>
-                </div>
+            @php
+                $databaseBanks = \App\Models\Bank::where('is_system', true)->get();
+            @endphp
 
-                <div class="min-w-[150px] sm:min-w-0 snap-center p-4 sm:p-5 rounded-2xl bg-slate-900 border border-slate-800 text-center space-y-2 hover:border-blue-500 transition-all hover:scale-105 shrink-0 sm:shrink">
-                    <div class="w-10 h-10 rounded-xl bg-[#0a2f6e] text-white font-bold flex items-center justify-center mx-auto text-xs shadow-md">YK</div>
-                    <h4 class="font-bold text-white text-xs">Yapı Kredi</h4>
-                    <span class="text-[10px] text-slate-400 block">World + Esnek</span>
-                </div>
-
-                <div class="min-w-[150px] sm:min-w-0 snap-center p-4 sm:p-5 rounded-2xl bg-slate-900 border border-slate-800 text-center space-y-2 hover:border-red-500 transition-all hover:scale-105 shrink-0 sm:shrink">
-                    <div class="w-10 h-10 rounded-xl bg-[#e30613] text-white font-bold flex items-center justify-center mx-auto text-xs shadow-md">ZB</div>
-                    <h4 class="font-bold text-white text-xs">Ziraat Bankası</h4>
-                    <span class="text-[10px] text-slate-400 block">Bankkart + Avans</span>
-                </div>
-
-                <div class="min-w-[150px] sm:min-w-0 snap-center p-4 sm:p-5 rounded-2xl bg-slate-900 border border-slate-800 text-center space-y-2 hover:border-blue-600 transition-all hover:scale-105 shrink-0 sm:shrink">
-                    <div class="w-10 h-10 rounded-xl bg-[#002855] text-white font-bold flex items-center justify-center mx-auto text-xs shadow-md">İŞ</div>
-                    <h4 class="font-bold text-white text-xs">İş Bankası</h4>
-                    <span class="text-[10px] text-slate-400 block">Maximum + Ek</span>
-                </div>
-
-                <div class="min-w-[150px] sm:min-w-0 snap-center p-4 sm:p-5 rounded-2xl bg-slate-900 border border-slate-800 text-center space-y-2 hover:border-red-600 transition-all hover:scale-105 shrink-0 sm:shrink">
-                    <div class="w-10 h-10 rounded-xl bg-[#e31e24] text-white font-bold flex items-center justify-center mx-auto text-xs shadow-md">AK</div>
-                    <h4 class="font-bold text-white text-xs">Akbank</h4>
-                    <span class="text-[10px] text-slate-400 block">Axess + Artı Para</span>
-                </div>
-
-                <div class="min-w-[150px] sm:min-w-0 snap-center p-4 sm:p-5 rounded-2xl bg-slate-900 border border-slate-800 text-center space-y-2 hover:border-purple-500 transition-all hover:scale-105 shrink-0 sm:shrink">
-                    <div class="w-10 h-10 rounded-xl bg-[#732582] text-white font-bold flex items-center justify-center mx-auto text-xs shadow-md">EN</div>
-                    <h4 class="font-bold text-white text-xs">Enpara / QNB</h4>
-                    <span class="text-[10px] text-slate-400 block">Kredisiz Masrafsız</span>
-                </div>
+            <!-- Banka Kartları - Doğrudan MySQL Veritabanından Dinamik -->
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-4 mt-12 sm:mt-16">
+                @foreach ($databaseBanks as $dbBank)
+                    <div class="p-4 sm:p-5 rounded-xl bg-slate-900 border border-slate-800 text-center space-y-2 hover:border-indigo-500 transition-all hover:scale-105">
+                        <div class="w-10 h-10 rounded-lg text-white font-black flex items-center justify-center mx-auto text-xs shadow-md" style="background-color: {{ $dbBank->color ?? '#6366f1' }};">
+                            {{ mb_substr($dbBank->name, 0, 2) }}
+                        </div>
+                        <h4 class="font-bold text-white text-xs truncate" title="{{ $dbBank->name }}">{{ $dbBank->name }}</h4>
+                        <span class="text-[10px] text-slate-400 block">Kart + KMH + Kredi</span>
+                    </div>
+                @endforeach
             </div>
         </section>
 
