@@ -87,10 +87,11 @@ class Index extends Component
             ->get();
 
         foreach ($debts as $debt) {
-            // Eğer bu borç zaten yukarıda eklenen bir kredi kartının genel ekstre borcunu temsil ediyorsa mükerrer ekleme
-            if ($debt->type === 'credit_card' && $debt->credit_card_id && in_array($debt->credit_card_id, $trackedCardIds) && empty($debt->merchant_name)) {
+            // Eğer bu borç zaten yukarıda eklenen bir kredi kartının genel dönem ekstre borcunu temsil ediyorsa (taksitli harcama değilse) mükerrer ekleme
+            if ($debt->type === 'credit_card' && $debt->credit_card_id && in_array($debt->credit_card_id, $trackedCardIds) && (empty($debt->total_installments) || $debt->total_installments <= 1)) {
                 continue;
             }
+
 
             $dueCarbon = $debt->next_due_date ? Carbon::parse($debt->next_due_date) : null;
             $day = $dueCarbon ? $dueCarbon->day : 1;
