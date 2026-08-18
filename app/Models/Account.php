@@ -111,5 +111,11 @@ class Account extends Model
     {
         return $this->hasMany(Debt::class);
     }
+
+    public function expenses(): HasMany
+    {
+        return $this->hasMany(Expense::class);
+    }
 }
+
 
