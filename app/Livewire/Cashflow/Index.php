@@ -50,6 +50,90 @@ class Index extends Component
         $this->setDatePreset('this_month');
     }
 
+    public function setDatePreset(string $preset): void
+    {
+        $this->date_preset = $preset;
+
+        if ($preset === 'this_month') {
+            $this->date_from = Carbon::now()->startOfMonth()->format('Y-m-d');
+            $this->date_to = Carbon::now()->endOfMonth()->format('Y-m-d');
+        } elseif ($preset === 'last_30') {
+            $this->date_from = Carbon::now()->subDays(30)->format('Y-m-d');
+            $this->date_to = Carbon::now()->format('Y-m-d');
+        } elseif ($preset === 'last_month') {
+            $this->date_from = Carbon::now()->subMonth()->startOfMonth()->format('Y-m-d');
+            $this->date_to = Carbon::now()->subMonth()->endOfMonth()->format('Y-m-d');
+        } elseif ($preset === 'this_year') {
+            $this->date_from = Carbon::now()->startOfYear()->format('Y-m-d');
+            $this->date_to = Carbon::now()->endOfYear()->format('Y-m-d');
+        } else {
+            $this->date_from = null;
+            $this->date_to = null;
+        }
+    }
+
+    public function resetFilters(): void
+    {
+        $this->reset([
+            'search',
+            'selected_category_id',
+            'activeTab',
+            'date_from',
+            'date_to',
+            'date_preset',
+            'sortBy',
+        ]);
+        $this->sortBy = 'date_desc';
+        $this->setDatePreset('this_month');
+    }
+
+    public function openIncomeModal(): void
+    {
+        $this->reset(['incomeId', 'income_title', 'income_amount']);
+        $this->income_type = 'salary';
+        $this->income_frequency = 'monthly';
+        $this->showIncomeModal = true;
+    }
+
+    public function openEditIncome(int $id): void
+    {
+        $inc = Income::where('user_id', Auth::id())->findOrFail($id);
+        $this->incomeId = $inc->id;
+        $this->income_title = $inc->title;
+        $this->income_amount = (float) $inc->amount;
+        $this->income_type = $inc->type ?? 'salary';
+        $this->income_frequency = $inc->frequency ?? 'monthly';
+        $this->showIncomeModal = true;
+    }
+
+    public function saveIncome(): void
+    {
+        $this->validate([
+            'income_title' => 'required|string|max:100',
+            'income_amount' => 'required|numeric|min:1',
+        ]);
+
+        $data = [
+            'user_id' => Auth::id(),
+            'title' => $this->income_title,
+            'amount' => $this->income_amount,
+            'type' => $this->income_type,
+            'frequency' => $this->income_frequency,
+            'is_recurring' => true,
+        ];
+
+        if ($this->incomeId) {
+            Income::where('user_id', Auth::id())->findOrFail($this->incomeId)->update($data);
+        } else {
+            Income::create($data);
+        }
+
+        $this->showIncomeModal = false;
+        $this->reset(['incomeId', 'income_title', 'income_amount']);
+        session()->flash('message', 'Gelir kaydı başarıyla kaydedildi.');
+    }
+
+
     public function openExpenseModal(): void
     {
         $this->reset(['expenseId', 'expense_title', 'expense_amount', 'expense_category_id', 'expense_credit_card_id', 'expense_account_id', 'is_installment', 'expense_is_recurring']);
