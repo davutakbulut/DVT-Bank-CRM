@@ -8,13 +8,10 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <style> body { font-family: 'Plus Jakarta Sans', sans-serif; } </style>
 </head>
-<body class="bg-slate-950 text-slate-100 antialiased">
-    <header class="h-20 border-b border-slate-800 flex items-center justify-between px-6 max-w-7xl mx-auto">
-        <a href="/" class="font-black text-xl text-white">DVT<span class="text-indigo-400">BANK</span> CRM</a>
-        <a href="{{ route('register') }}" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-sm rounded-xl">Ücretsiz Başla</a>
-    </header>
+<body class="bg-slate-950 text-slate-100 antialiased min-h-screen flex flex-col justify-between">
+    <x-public-header />
 
-    <main class="max-w-4xl mx-auto py-16 px-6 space-y-12">
+    <main class="max-w-4xl mx-auto py-16 px-6 space-y-12 flex-1">
         <div class="text-center space-y-3">
             <h1 class="text-4xl font-black text-white tracking-tight">DVT Bank CRM Nasıl Çalışır?</h1>
             <p class="text-slate-400 text-base">Borçları tek merkezde toplayıp adım adım eritmenin formülü.</p>
@@ -54,5 +51,7 @@
             </div>
         </div>
     </main>
+
+    <x-public-footer />
 </body>
 </html>

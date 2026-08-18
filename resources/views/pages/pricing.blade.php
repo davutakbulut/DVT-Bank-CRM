@@ -8,13 +8,10 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <style> body { font-family: 'Plus Jakarta Sans', sans-serif; } </style>
 </head>
-<body class="bg-slate-950 text-slate-100 antialiased">
-    <header class="h-20 border-b border-slate-800 flex items-center justify-between px-6 max-w-7xl mx-auto">
-        <a href="/" class="font-black text-xl text-white">DVT<span class="text-indigo-400">BANK</span> CRM</a>
-        <a href="{{ route('login') }}" class="text-sm font-bold text-slate-300 hover:text-white">Giriş Yap</a>
-    </header>
+<body class="bg-slate-950 text-slate-100 antialiased min-h-screen flex flex-col justify-between">
+    <x-public-header />
 
-    <main class="max-w-6xl mx-auto py-20 px-6 space-y-12 text-center">
+    <main class="max-w-6xl mx-auto py-20 px-6 space-y-12 text-center flex-1">
         <div class="space-y-4 max-w-2xl mx-auto">
             <h1 class="text-4xl font-black text-white tracking-tight">Şeffaf, Basit ve Erişilebilir Fiyatlar</h1>
             <p class="text-slate-400 text-base">Borçlarınızı sıfırlarken ek maliyet yaratmayan planlar.</p>
@@ -66,5 +63,7 @@
             </div>
         </div>
     </main>
+
+    <x-public-footer />
 </body>
 </html>
