@@ -19,6 +19,8 @@ class Account extends Model
         'name',
         'type',
         'iban',
+        'account_number',
+        'branch_code',
         'balance',
         'kmh_limit',
         'kmh_interest_rate',
@@ -35,6 +37,60 @@ class Account extends Model
         ];
     }
 
+    /**
+     * Güvenli Maskeli IBAN (Örn: TR•• •••• •••• •••• •••• ••34 56)
+     */
+    public function getMaskedIbanAttribute(): string
+    {
+        if (empty($this->iban)) {
+            return '-';
+        }
+
+        $clean = strtoupper(preg_replace('/[^A-Za-z0-9]/', '', (string) $this->iban));
+        if (str_starts_with($clean, 'TR')) {
+            $clean = substr($clean, 2);
+        }
+
+        $length = strlen($clean);
+        if ($length < 4) {
+            return 'TR•••• ' . $clean;
+        }
+
+        $last4 = substr($clean, -4);
+        return 'TR•• •••• •••• •••• •••• ••' . substr($last4, 0, 2) . ' ' . substr($last4, 2, 2);
+    }
+
+    /**
+     * Tam Formatlanmış IBAN (Örn: TR12 3456 7890 1234 5678 9012 34)
+     */
+    public function getFormattedIbanAttribute(): string
+    {
+        if (empty($this->iban)) {
+            return '-';
+        }
+
+        $clean = strtoupper(preg_replace('/[^A-Za-z0-9]/', '', (string) $this->iban));
+        if (!str_starts_with($clean, 'TR')) {
+            $clean = 'TR' . $clean;
+        }
+
+        return trim(chunk_split($clean, 4, ' '));
+    }
+
+    /**
+     * Güvenli Maskeli Hesap No (Örn: •••• 5678)
+     */
+    public function getMaskedAccountNumberAttribute(): string
+    {
+        if (empty($this->account_number)) {
+            return '-';
+        }
+
+        $digits = preg_replace('/\D/', '', (string) $this->account_number);
+        $last4 = substr($digits, -4);
+        return '•••• ' . $last4;
+    }
+
     public function bank(): BelongsTo
     {
         return $this->belongsTo(Bank::class);
@@ -45,3 +101,4 @@ class Account extends Model
         return $this->hasMany(Debt::class);
     }
 }
+

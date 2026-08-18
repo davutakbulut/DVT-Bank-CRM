@@ -22,6 +22,8 @@ class Index extends Component
     public string $name = '';
     public string $type = 'checking';
     public string $iban = '';
+    public string $account_number = '';
+    public string $branch_code = '';
     public float $balance = 0.0;
     public float $kmh_limit = 0.0;
     public float $kmh_interest_rate = 5.0;
@@ -31,6 +33,8 @@ class Index extends Component
         'name' => 'required|string|max:100',
         'type' => 'required|in:checking,savings,kmh',
         'iban' => 'nullable|string|max:34',
+        'account_number' => 'nullable|string|max:30',
+        'branch_code' => 'nullable|string|max:20',
         'balance' => 'required|numeric',
         'kmh_limit' => 'nullable|numeric|min:0',
         'kmh_interest_rate' => 'nullable|numeric|min:0',
@@ -43,7 +47,7 @@ class Index extends Component
 
     public function openCreateModal(): void
     {
-        $this->reset(['accountId', 'bank_id', 'name', 'type', 'iban', 'balance', 'kmh_limit']);
+        $this->reset(['accountId', 'bank_id', 'name', 'type', 'iban', 'account_number', 'branch_code', 'balance', 'kmh_limit']);
         $this->kmh_interest_rate = 5.0;
         $this->type = 'checking';
         $this->showModal = true;
@@ -57,6 +61,8 @@ class Index extends Component
         $this->name = $account->name;
         $this->type = $account->type;
         $this->iban = $account->iban ?? '';
+        $this->account_number = $account->account_number ?? '';
+        $this->branch_code = $account->branch_code ?? '';
         $this->balance = (float) $account->balance;
         $this->kmh_limit = (float) ($account->kmh_limit ?? 0);
         $this->kmh_interest_rate = (float) ($account->kmh_interest_rate ?? 5.0);
@@ -67,12 +73,17 @@ class Index extends Component
     {
         $this->validate();
 
+        // IBAN temizleme ve formatlama
+        $cleanIban = $this->iban ? strtoupper(preg_replace('/[^A-Za-z0-9]/', '', $this->iban)) : null;
+
         $data = [
             'user_id' => Auth::id(),
             'bank_id' => $this->bank_id,
             'name' => $this->name,
             'type' => $this->type,
-            'iban' => $this->iban ?: null,
+            'iban' => $cleanIban,
+            'account_number' => $this->account_number ?: null,
+            'branch_code' => $this->branch_code ?: null,
             'balance' => $this->balance,
             'kmh_limit' => $this->type === 'kmh' ? $this->kmh_limit : null,
             'kmh_interest_rate' => $this->type === 'kmh' ? $this->kmh_interest_rate : null,
@@ -85,9 +96,10 @@ class Index extends Component
         }
 
         $this->showModal = false;
-        $this->reset(['accountId', 'bank_id', 'name', 'type', 'iban', 'balance', 'kmh_limit']);
+        $this->reset(['accountId', 'bank_id', 'name', 'type', 'iban', 'account_number', 'branch_code', 'balance', 'kmh_limit']);
         session()->flash('message', 'Hesap başarıyla kaydedildi.');
     }
+
 
     public function delete(int $id): void
     {

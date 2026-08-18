@@ -132,7 +132,7 @@
             @endphp
 
             <!-- Lüks Fiziksel Banka Kartı Görünümü -->
-            <div class="bg-gradient-to-br {{ $cardGradient }} text-white p-5 sm:p-6 rounded-2xl shadow-xl relative overflow-hidden flex flex-col justify-between min-h-[250px] border {{ $accentBorder }} transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl group">
+            <div x-data="{ revealed: false }" class="bg-gradient-to-br {{ $cardGradient }} text-white p-5 sm:p-6 rounded-2xl shadow-xl relative overflow-hidden flex flex-col justify-between min-h-[250px] border {{ $accentBorder }} transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl group">
                 <!-- Ambient Ambient Glow -->
                 <div class="absolute -top-12 -right-12 w-40 h-40 {{ $glowColor }} rounded-full blur-3xl pointer-events-none"></div>
 
@@ -160,16 +160,31 @@
                     </div>
                 </div>
 
-                <!-- 2. Satır: Kabartmalı Kart Numarası & Vade Günleri -->
+                <!-- 2. Satır: Güvenli Maskeli Kart Numarası & Vade Günleri -->
                 <div class="relative z-10 my-3 space-y-1.5">
                     <div class="flex items-center justify-between">
-                        <span class="font-mono text-base tracking-widest text-slate-200 drop-shadow-sm">•••• •••• •••• {{ $card->last_four ?: '4892' }}</span>
-                        <span class="text-[10px] font-mono text-slate-300/90 tracking-wider">SKT: {{ str_pad($card->due_day ?? 15, 2, '0', STR_PAD_LEFT) }}/{{ date('y', strtotime('+3 years')) }}</span>
+                        <div class="flex items-center gap-2">
+                            <span x-show="!revealed" class="font-mono text-base tracking-widest text-slate-200 drop-shadow-sm font-bold">
+                                {{ $card->masked_card_number }}
+                            </span>
+                            <span x-show="revealed" x-cloak class="font-mono text-base tracking-widest text-amber-300 drop-shadow-sm font-bold">
+                                {{ $card->formatted_card_number }}
+                            </span>
+                            @if (!empty($card->card_number))
+                                <button type="button" @click="revealed = !revealed" class="p-1 rounded-md bg-white/10 hover:bg-white/20 text-slate-300 text-xs transition-colors" title="Numarayı Göster / Gizle">
+                                    <span x-show="!revealed">👁️</span>
+                                    <span x-show="revealed" x-cloak>🔒</span>
+                                </button>
+                            @endif
+                        </div>
+                        <span class="text-[10px] font-mono text-slate-300/90 tracking-wider">
+                            SKT: {{ $card->expiry_date ?: (str_pad($card->due_day ?? 15, 2, '0', STR_PAD_LEFT) . '/' . date('y', strtotime('+3 years'))) }}
+                        </span>
                     </div>
 
                     <div class="flex items-center justify-between text-[10px] text-slate-300">
-                        <span>Kesim: {{ $card->statement_day }}. gün</span>
-                        <span class="font-bold text-amber-300">Son Ödeme: {{ $card->due_day }}. gün</span>
+                        <span class="uppercase tracking-wider font-medium text-slate-300/90">{{ $card->card_holder ?: Auth::user()->name }}</span>
+                        <span class="font-bold text-amber-300">Son Ödeme: Ayın {{ $card->due_day }}. günü</span>
                     </div>
                 </div>
 
@@ -230,8 +245,8 @@
                         Bankalardaki kredi kartlarınızı, limitlerini ve güncel dönem borçlarını ekleyerek banka temalı gerçek kart görselleriyle takip edin.
                     </p>
                 </div>
-                <button wire:click="openCreateModal" class="inline-flex items-center gap-2 px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-black text-sm rounded-xl shadow-md transition-all">
-                    <span>+ İlk Kredi Kartınızı Ekleyin</span>
+                <button wire:click="openCreateModal" class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm rounded-xl shadow-md transition-all">
+                    + İlk Kredi Kartınızı Ekleyin
                 </button>
             </div>
         @endforelse
@@ -242,7 +257,10 @@
         <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4 overflow-y-auto">
             <div class="bg-white rounded-2xl max-w-lg w-full p-5 sm:p-6 shadow-2xl space-y-4 my-8">
                 <div class="flex items-center justify-between border-b border-gray-100 pb-3">
-                    <h3 class="font-bold text-lg text-gray-900">{{ $cardId ? 'Kredi Kartını Düzenle' : 'Yeni Kredi Kartı Tanımla' }}</h3>
+                    <div>
+                        <h3 class="font-bold text-lg text-gray-900">{{ $cardId ? 'Kredi Kartını Düzenle' : 'Yeni Kredi Kartı Tanımla' }}</h3>
+                        <p class="text-xs text-gray-500">Kart numarası güvenli şekilde şifrelenir ve ekranda sadece son 4 hanesi maskeli gösterilir.</p>
+                    </div>
                     <button wire:click="$set('showModal', false)" class="text-gray-400 hover:text-gray-600 font-bold text-lg">✕</button>
                 </div>
 
@@ -266,10 +284,28 @@
                         </div>
                     </div>
 
+                    <!-- 16 Haneli Tam Kart Numarası & Kart Sahibi -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 mb-1">Kart Numarası (Tam veya Son 4 Hane)</label>
+                            <input type="text" 
+                                   wire:model.live="card_number" 
+                                   maxlength="19" 
+                                   class="w-full rounded-xl border-gray-300 text-sm font-mono tracking-wider focus:ring-indigo-500 focus:border-indigo-500" 
+                                   placeholder="5400 1234 5678 9012">
+                            <p class="text-[10px] text-gray-400 mt-0.5">Tam 16 hane veya sadece 4 hane girebilirsiniz.</p>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 mb-1">Kart Üzerindeki İsim</label>
+                            <input type="text" wire:model="card_holder" class="w-full rounded-xl border-gray-300 text-sm focus:ring-indigo-500 focus:border-indigo-500 uppercase" placeholder="AHMET YILMAZ">
+                        </div>
+                    </div>
+
                     <div class="grid grid-cols-2 gap-3">
                         <div>
-                            <label class="block text-xs font-bold text-gray-700 mb-1">Kartın Son 4 Hanesi</label>
-                            <input type="text" maxlength="4" wire:model.live="last_four" class="w-full rounded-xl border-gray-300 text-sm font-mono tracking-wider focus:ring-indigo-500 focus:border-indigo-500" placeholder="4892">
+                            <label class="block text-xs font-bold text-gray-700 mb-1">Son Kullanma Tarihi (AA/YY)</label>
+                            <input type="text" maxlength="5" wire:model="expiry_date" class="w-full rounded-xl border-gray-300 text-sm font-mono focus:ring-indigo-500 focus:border-indigo-500" placeholder="12/28">
                         </div>
 
                         <div>

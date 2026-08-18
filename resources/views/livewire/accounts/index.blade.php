@@ -256,7 +256,7 @@
                             @endphp
 
                             <!-- Banka Temalı Hesap Kartı -->
-                            <div class="relative rounded-2xl bg-gradient-to-br {{ $bankGradient }} border {{ $accentBorder }} shadow-xl p-5 text-white flex flex-col justify-between min-h-[220px] overflow-hidden group hover:scale-[1.02] hover:-translate-y-1 transition-all duration-300">
+                            <div x-data="{ showFullIban: false, copied: false }" class="relative rounded-2xl bg-gradient-to-br {{ $bankGradient }} border {{ $accentBorder }} shadow-xl p-5 text-white flex flex-col justify-between min-h-[220px] overflow-hidden group hover:scale-[1.02] hover:-translate-y-1 transition-all duration-300">
                                 <!-- Lüks Işık Parıltısı -->
                                 <div class="absolute -right-12 -bottom-12 w-36 h-36 {{ $glowColor }} rounded-full blur-2xl pointer-events-none"></div>
 
@@ -276,13 +276,30 @@
                                         </div>
                                     </div>
 
-                                    <!-- IBAN Gösterimi -->
-                                    <div class="mt-2.5">
-                                        <span class="font-mono text-xs tracking-wider text-slate-300/90">
-                                            {{ $acc->iban ? chunk_split(str_replace(' ', '', $acc->iban), 4, ' ') : 'TR•• •••• •••• •••• •••• •••• ••' }}
+                                    <!-- Güvenli Maskeli IBAN Gösterimi -->
+                                    <div class="mt-2.5 flex items-center justify-between gap-1.5 bg-black/20 px-2.5 py-1.5 rounded-xl border border-white/10">
+                                        <span x-show="!showFullIban" class="font-mono text-[11px] tracking-wider text-slate-200 truncate">
+                                            {{ $acc->masked_iban }}
                                         </span>
+                                        <span x-show="showFullIban" x-cloak class="font-mono text-[11px] tracking-wider text-amber-300 truncate">
+                                            {{ $acc->formatted_iban }}
+                                        </span>
+
+                                        @if (!empty($acc->iban))
+                                            <div class="flex items-center gap-1 shrink-0">
+                                                <button type="button" @click="showFullIban = !showFullIban" class="p-1 rounded bg-white/10 hover:bg-white/20 text-slate-300 text-xs transition-colors" title="IBAN Göster / Gizle">
+                                                    <span x-show="!showFullIban">👁️</span>
+                                                    <span x-show="showFullIban" x-cloak>🔒</span>
+                                                </button>
+                                                <button type="button" @click="navigator.clipboard.writeText('{{ $acc->formatted_iban }}'); copied = true; setTimeout(() => copied = false, 2000)" class="p-1 rounded bg-white/10 hover:bg-white/20 text-slate-300 text-xs transition-colors" title="IBAN Kopyala">
+                                                    <span x-show="!copied">📋</span>
+                                                    <span x-show="copied" x-cloak class="text-emerald-300 text-[10px]">✓</span>
+                                                </button>
+                                            </div>
+                                        @endif
                                     </div>
                                 </div>
+
 
                                 <!-- Alt Kısım: Bakiye + KMH Limiti + Aksiyonlar -->
                                 <div class="mt-4 pt-3 border-t border-white/10 space-y-2.5">
@@ -401,11 +418,12 @@
                         </div>
 
                         <div class="mt-2.5">
-                            <span class="font-mono text-xs tracking-wider text-slate-300/90">
-                                {{ $acc->iban ? chunk_split(str_replace(' ', '', $acc->iban), 4, ' ') : 'TR•• •••• •••• •••• •••• •••• ••' }}
+                            <span class="font-mono text-xs tracking-wider text-slate-200">
+                                {{ $acc->masked_iban }}
                             </span>
                         </div>
                     </div>
+
 
                     <div class="mt-4 pt-3 border-t border-white/10 space-y-2">
                         <div class="flex items-baseline justify-between">
@@ -467,8 +485,15 @@
                                         </span>
                                         <div>
                                             <span class="font-bold text-gray-900 block">{{ $acc->name }}</span>
-                                            <span class="text-xs text-gray-500">{{ $acc->bank?->name }}</span>
+                                            <div class="flex items-center gap-2 text-xs text-gray-500">
+                                                <span>{{ $acc->bank?->name }}</span>
+                                                @if (!empty($acc->iban))
+                                                    <span class="text-gray-300">•</span>
+                                                    <span class="font-mono text-[11px] text-gray-600">{{ $acc->masked_iban }}</span>
+                                                @endif
+                                            </div>
                                         </div>
+
                                     </div>
                                 </td>
                                 <td class="px-6 py-4">
@@ -508,7 +533,10 @@
         <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4 overflow-y-auto">
             <div class="bg-white rounded-2xl max-w-lg w-full p-5 sm:p-6 shadow-2xl space-y-4 my-8 max-h-[90vh] overflow-y-auto">
                 <div class="flex items-center justify-between border-b border-gray-100 pb-3">
-                    <h3 class="font-bold text-lg text-gray-900">{{ $accountId ? 'Hesabı Düzenle' : 'Yeni Banka Hesabı Tanımla' }}</h3>
+                    <div>
+                        <h3 class="font-bold text-lg text-gray-900">{{ $accountId ? 'Hesabı Düzenle' : 'Yeni Banka Hesabı Tanımla' }}</h3>
+                        <p class="text-xs text-gray-500">IBAN ve hesap bilgileri şifrelenir, kartlarda ve tablolarda güvenli maskeli gösterilir.</p>
+                    </div>
                     <button wire:click="$set('showModal', false)" class="text-gray-400 hover:text-gray-600 font-bold text-lg">✕</button>
                 </div>
 
@@ -542,8 +570,20 @@
                     </div>
 
                     <div>
-                        <label class="block text-xs font-bold text-gray-700 mb-1">IBAN Numarası (İsteğe Bağlı)</label>
-                        <input type="text" wire:model="iban" class="w-full rounded-xl border-gray-300 text-sm font-mono focus:ring-indigo-500 focus:border-indigo-500" placeholder="TR00 0000 0000 0000 0000 0000 00">
+                        <label class="block text-xs font-bold text-gray-700 mb-1">IBAN Numarası (26 Karakter TR...)</label>
+                        <input type="text" wire:model="iban" maxlength="32" class="w-full rounded-xl border-gray-300 text-sm font-mono focus:ring-indigo-500 focus:border-indigo-500 uppercase tracking-wide" placeholder="TR00 0000 0000 0000 0000 0000 00">
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 mb-1">Hesap No (İsteğe Bağlı)</label>
+                            <input type="text" wire:model="account_number" class="w-full rounded-xl border-gray-300 text-sm font-mono focus:ring-indigo-500 focus:border-indigo-500" placeholder="12345678">
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 mb-1">Şube Kodu</label>
+                            <input type="text" wire:model="branch_code" class="w-full rounded-xl border-gray-300 text-sm font-mono focus:ring-indigo-500 focus:border-indigo-500" placeholder="0123">
+                        </div>
                     </div>
 
                     <div>
@@ -565,6 +605,7 @@
                         </div>
                     @endif
                 </div>
+
 
                 <div class="flex justify-end gap-3 pt-3 border-t border-gray-100">
                     <button wire:click="$set('showModal', false)" class="px-4 py-2 text-sm font-bold text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-xl transition-colors">

@@ -14,6 +14,9 @@ class Index extends Component
     public ?int $cardId = null;
     public ?int $bank_id = null;
     public string $name = '';
+    public string $card_number = '';
+    public string $card_holder = '';
+    public string $expiry_date = '';
     public string $last_four = '';
     public float $credit_limit = 0.0;
     public float $current_debt = 0.0;
@@ -27,7 +30,10 @@ class Index extends Component
     protected $rules = [
         'bank_id' => 'required|exists:banks,id',
         'name' => 'required|string|max:100',
-        'last_four' => 'nullable|string|size:4',
+        'card_number' => 'nullable|string|max:30',
+        'card_holder' => 'nullable|string|max:100',
+        'expiry_date' => 'nullable|string|max:7',
+        'last_four' => 'nullable|string|max:4',
         'credit_limit' => 'required|numeric|min:0',
         'current_debt' => 'required|numeric|min:0',
         'minimum_payment' => 'required|numeric|min:0',
@@ -38,7 +44,7 @@ class Index extends Component
 
     public function openCreateModal(): void
     {
-        $this->reset(['cardId', 'bank_id', 'name', 'last_four', 'credit_limit', 'current_debt', 'minimum_payment', 'last_payment_date']);
+        $this->reset(['cardId', 'bank_id', 'name', 'card_number', 'card_holder', 'expiry_date', 'last_four', 'credit_limit', 'current_debt', 'minimum_payment', 'last_payment_date']);
         $this->interest_rate = 4.25;
         $this->statement_day = 1;
         $this->due_day = 10;
@@ -52,6 +58,9 @@ class Index extends Component
         $this->cardId = $card->id;
         $this->bank_id = $card->bank_id;
         $this->name = $card->name;
+        $this->card_number = $card->card_number ?? '';
+        $this->card_holder = $card->card_holder ?? '';
+        $this->expiry_date = $card->expiry_date ?? '';
         $this->last_four = $card->last_four ?? '';
         $this->credit_limit = (float) $card->credit_limit;
         $this->current_debt = (float) $card->current_debt;
@@ -68,11 +77,18 @@ class Index extends Component
     {
         $this->validate();
 
+        // Kart no'dan son 4 haneyi otomatik çıkarma
+        $cleanNumber = preg_replace('/\D/', '', $this->card_number);
+        $computedLastFour = $cleanNumber ? substr($cleanNumber, -4) : ($this->last_four ?: null);
+
         $data = [
             'user_id' => Auth::id(),
             'bank_id' => $this->bank_id,
             'name' => $this->name,
-            'last_four' => $this->last_four ?: null,
+            'card_number' => $this->card_number ?: null,
+            'card_holder' => $this->card_holder ?: null,
+            'expiry_date' => $this->expiry_date ?: null,
+            'last_four' => $computedLastFour,
             'credit_limit' => $this->credit_limit,
             'current_debt' => $this->current_debt,
             'minimum_payment' => $this->minimum_payment ?: ($this->current_debt * 0.40),
@@ -90,9 +106,10 @@ class Index extends Component
         }
 
         $this->showModal = false;
-        $this->reset(['cardId', 'bank_id', 'name', 'last_four', 'credit_limit', 'current_debt', 'minimum_payment']);
+        $this->reset(['cardId', 'bank_id', 'name', 'card_number', 'card_holder', 'expiry_date', 'last_four', 'credit_limit', 'current_debt', 'minimum_payment']);
         session()->flash('message', 'Kredi kartı başarıyla kaydedildi.');
     }
+
 
     public function delete(int $id): void
     {

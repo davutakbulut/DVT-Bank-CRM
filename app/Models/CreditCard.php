@@ -17,6 +17,9 @@ class CreditCard extends Model
         'user_id',
         'bank_id',
         'name',
+        'card_number',
+        'card_holder',
+        'expiry_date',
         'last_four',
         'credit_limit',
         'current_debt',
@@ -33,6 +36,7 @@ class CreditCard extends Model
     protected function casts(): array
     {
         return [
+            'card_number' => 'encrypted',
             'credit_limit' => 'decimal:2',
             'current_debt' => 'decimal:2',
             'minimum_payment' => 'decimal:2',
@@ -45,6 +49,45 @@ class CreditCard extends Model
         ];
     }
 
+    protected static function booted(): void
+    {
+        static::saving(function (CreditCard $card) {
+            if (!empty($card->card_number)) {
+                $digits = preg_replace('/\D/', '', (string) $card->card_number);
+                if (strlen($digits) >= 4) {
+                    $card->last_four = substr($digits, -4);
+                }
+            }
+        });
+    }
+
+    /**
+     * Güvenli Maskeli Kart Numarası (Örn: •••• •••• •••• 4589)
+     */
+    public function getMaskedCardNumberAttribute(): string
+    {
+        $last4 = $this->last_four;
+        if (empty($last4) && !empty($this->card_number)) {
+            $digits = preg_replace('/\D/', '', (string) $this->card_number);
+            $last4 = substr($digits, -4);
+        }
+
+        return $last4 ? '•••• •••• •••• ' . $last4 : '•••• •••• •••• ••••';
+    }
+
+    /**
+     * Formatlanmış 16 Haneli Kart Numarası (Örn: 5400 1234 5678 9012)
+     */
+    public function getFormattedCardNumberAttribute(): string
+    {
+        if (empty($this->card_number)) {
+            return $this->masked_card_number;
+        }
+
+        $digits = preg_replace('/\D/', '', (string) $this->card_number);
+        return trim(chunk_split($digits, 4, ' '));
+    }
+
     public function bank(): BelongsTo
     {
         return $this->belongsTo(Bank::class);
@@ -55,3 +98,4 @@ class CreditCard extends Model
         return $this->hasMany(Debt::class);
     }
 }
+
