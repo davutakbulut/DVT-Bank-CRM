@@ -33,6 +33,82 @@
             cursor: pointer;
         }
 
+        /* ========================================================================= */
+        /* 🌟 ATTENTION-GRABBING 2026 MICRO-ANIMATIONS & SHIMMER EFFECTS             */
+        /* ========================================================================= */
+
+        /* 1. Continuous Magnetic Button Shimmer (Göz Alıcı Işık Yansıması) */
+        .btn-shimmer {
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-shimmer::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -60%;
+            width: 40%;
+            height: 200%;
+            background: linear-gradient(
+                60deg,
+                rgba(255, 255, 255, 0) 0%,
+                rgba(255, 255, 255, 0.4) 50%,
+                rgba(255, 255, 255, 0) 100%
+            );
+            transform: rotate(25deg);
+            animation: btn-shine-sweep 3.8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+            pointer-events: none;
+        }
+        @keyframes btn-shine-sweep {
+            0% { left: -70%; opacity: 0; }
+            15% { left: 140%; opacity: 1; }
+            100% { left: 140%; opacity: 0; }
+        }
+
+        /* 2. Flowing Multi-Tone Gradient Text (Akıcı Başlık Gradyanı) */
+        .text-gradient-flow {
+            background-size: 200% auto;
+            animation: text-flow-anim 4.5s ease-in-out infinite alternate;
+        }
+        @keyframes text-flow-anim {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 100% 50%; }
+        }
+
+        /* 3. Floating Metric Badges (Hafif Yüzen Güven Rozetleri) */
+        @keyframes float-badge {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-4px); }
+        }
+        .anim-badge-1 { animation: float-badge 3.5s ease-in-out infinite; }
+        .anim-badge-2 { animation: float-badge 4s ease-in-out 0.8s infinite; }
+        .anim-badge-3 { animation: float-badge 3.8s ease-in-out 1.6s infinite; }
+
+        /* 4. Pulsing Radar Ring Danger & Success (Tehlike & Canlılık Halesi) */
+        @keyframes radar-ring-danger {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+        }
+        .pulse-radar-danger { animation: radar-ring-danger 2.2s infinite; }
+
+        @keyframes radar-ring-emerald {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 8px rgba(16, 185, 129, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+        }
+        .pulse-radar-emerald { animation: radar-ring-emerald 2.5s infinite; }
+
+        /* 5. F-Pattern Left Stem Anchor (F Kuralı Sol Çizgi Vurgusu) */
+        .f-spine-card {
+            border-left: 3px solid transparent;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .f-spine-card:hover {
+            border-left-color: #6366f1;
+            transform: translateX(4px);
+        }
+
         /* Ambient Glow & Floating Animations */
         @keyframes float-slow-1 {
             0%, 100% { transform: translate3d(0, 0, 0) rotate(-12deg); }
@@ -56,17 +132,11 @@
             50% { opacity: 0.6; transform: scale(1.06); }
         }
 
-        @keyframes shimmer-sweep {
-            0% { transform: translateX(-150%) skewX(-20deg); }
-            100% { transform: translateX(250%) skewX(-20deg); }
-        }
-
         .anim-float-1 { animation: float-slow-1 7s ease-in-out infinite; }
         .anim-float-2 { animation: float-slow-2 8s ease-in-out 1s infinite; }
         .anim-float-3 { animation: float-slow-3 6.5s ease-in-out 2s infinite; }
         .anim-float-4 { animation: float-slow-4 7.5s ease-in-out 1.5s infinite; }
         .animate-glow { animation: pulse-glow 5s ease-in-out infinite; }
-        .animate-shimmer { animation: shimmer-sweep 3.5s ease-in-out infinite; }
 
         /* Scroll reveal */
         .reveal-on-scroll {
@@ -100,50 +170,50 @@
 
     <main class="flex-1">
         <!-- ========================================================================= -->
-        <!-- 1. APPLE-STYLE HERO SECTION (DİNAMİK 3D DAĞINIK FAN & GEÇİŞ DÖNGÜSÜ)     -->
+        <!-- 1. APPLE-STYLE HERO SECTION (F KURALI: ÜST YATAY & GÖZ ALICI CTA)         -->
         <!-- ========================================================================= -->
-        <section class="relative pt-14 sm:pt-20 pb-16 sm:pb-28 px-3 sm:px-6 lg:px-8 max-w-7xl mx-auto text-center perspective-container overflow-hidden">
+        <section class="relative pt-12 sm:pt-20 pb-16 sm:pb-28 px-3 sm:px-6 lg:px-8 max-w-7xl mx-auto text-center perspective-container overflow-hidden">
             <!-- Ambient Lighting Glows -->
             <div class="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] sm:w-[600px] h-[300px] sm:h-[600px] bg-indigo-600/20 rounded-full blur-[80px] sm:blur-[130px] pointer-events-none animate-glow"></div>
             <div class="absolute top-1/3 left-1/4 w-[200px] sm:w-[400px] h-[200px] sm:h-[400px] bg-purple-600/15 rounded-full blur-[70px] sm:blur-[110px] pointer-events-none animate-glow" style="animation-delay: 2s;"></div>
             <div class="absolute top-1/3 right-1/4 w-[200px] sm:w-[400px] h-[200px] sm:h-[400px] bg-emerald-600/15 rounded-full blur-[70px] sm:blur-[110px] pointer-events-none animate-glow" style="animation-delay: 4s;"></div>
 
-            <!-- Top Pill Badge -->
-            <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-indigo-950/80 border border-indigo-500/30 text-indigo-300 text-[11px] sm:text-xs font-bold mb-6 shadow-xl backdrop-blur-md">
-                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            <!-- Top Pill Badge (F Pattern Top Anchor) -->
+            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-indigo-950/80 border border-indigo-500/40 text-indigo-300 text-[11px] sm:text-xs font-bold mb-6 shadow-xl backdrop-blur-md hover:border-indigo-400 transition-all">
+                <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 pulse-radar-emerald"></span>
                 <span>TÜRKİYE BANKACILIK MEVZUATI & 90 GÜN KURALI MOTORU</span>
             </div>
 
-            <!-- Display Header -->
-            <h1 class="text-3xl sm:text-6xl lg:text-7xl font-black tracking-tight text-white max-w-5xl mx-auto leading-[1.1] sm:leading-[1.05]">
+            <!-- Display Header with Gradient Flow Animation -->
+            <h1 class="text-3.5xl sm:text-6xl lg:text-7xl font-black tracking-tight text-white max-w-5xl mx-auto leading-[1.1] sm:leading-[1.05]">
                 Finansal Krizden<br>
-                <span class="bg-gradient-to-r from-indigo-400 via-sky-300 to-emerald-300 bg-clip-text text-transparent">Matematiksel Çıkış.</span>
+                <span class="bg-gradient-to-r from-indigo-400 via-sky-300 to-emerald-300 bg-clip-text text-transparent text-gradient-flow">Matematiksel Çıkış.</span>
             </h1>
 
             <p class="mt-5 sm:mt-7 text-sm sm:text-xl text-slate-300 max-w-3xl mx-auto font-normal leading-relaxed px-2">
                 Tüm bankalarınızın kredi kartları, KMH eksi bakiyeleri ve kredi taksitleri arasında boğulmayın. Sıfır panik, doğrudan veritabanı ve 7/24 AI koç ile borçlarınızı adım adım sıfırlayın.
             </p>
 
-            <!-- Trust Badges -->
-            <div class="mt-5 flex flex-wrap items-center justify-center gap-2 text-xs font-bold text-slate-300">
-                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-slate-900/90 border border-slate-800">
-                    <span class="text-indigo-400">⚡</span> Çığ & Kartopu Algoritması
+            <!-- Trust Badges with Floating Micro-Animations -->
+            <div class="mt-6 flex flex-wrap items-center justify-center gap-2.5 text-xs font-bold text-slate-300">
+                <span class="anim-badge-1 inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-slate-900/90 border border-slate-800 shadow-md hover:border-indigo-500/40 transition-all">
+                    <span class="text-indigo-400 text-sm">⚡</span> Çığ & Kartopu Algoritması
                 </span>
-                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-slate-900/90 border border-slate-800">
-                    <span class="text-red-400">🚨</span> 90 Gün Yasal Takip Sayacı
+                <span class="anim-badge-2 inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-slate-900/90 border border-slate-800 shadow-md hover:border-red-500/40 transition-all">
+                    <span class="text-red-400 text-sm">🚨</span> 90 Gün Yasal Takip Sayacı
                 </span>
-                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-slate-900/90 border border-slate-800">
-                    <span class="text-emerald-400">🤖</span> 7/24 AI Finans Koçu
+                <span class="anim-badge-3 inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-slate-900/90 border border-slate-800 shadow-md hover:border-emerald-500/40 transition-all">
+                    <span class="text-emerald-400 text-sm">🤖</span> 7/24 AI Finans Koçu
                 </span>
             </div>
 
-            <!-- Call to Actions -->
-            <div class="mt-7 sm:mt-9 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 px-4">
-                <a href="{{ route('register') }}" class="w-full sm:w-auto px-7 sm:px-8 py-3.5 sm:py-4 bg-indigo-600 hover:bg-indigo-500 text-white font-black text-sm sm:text-base rounded-xl shadow-xl shadow-indigo-600/30 hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-2 group">
+            <!-- Call to Actions with Shimmer Light Sweep -->
+            <div class="mt-8 sm:mt-10 flex flex-col sm:flex-row items-center justify-center gap-3.5 sm:gap-4 px-4">
+                <a href="{{ route('register') }}" class="btn-shimmer w-full sm:w-auto px-8 sm:px-9 py-4 bg-indigo-600 hover:bg-indigo-500 text-white font-black text-sm sm:text-base rounded-xl shadow-2xl shadow-indigo-600/40 hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-2 group">
                     <span>Ücretsiz Borç Analizini Başlat</span>
-                    <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 7l5 5m0 0l-5 5m5-5H6"></path></svg>
+                    <svg class="w-4 h-4 group-hover:translate-x-1.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 7l5 5m0 0l-5 5m5-5H6"></path></svg>
                 </a>
-                <a href="#nasil-calisir" class="w-full sm:w-auto px-6 sm:px-7 py-3.5 sm:py-4 bg-slate-900/90 hover:bg-slate-800 text-slate-300 hover:text-white font-bold text-sm sm:text-base rounded-xl border border-slate-800 shadow-md backdrop-blur-md transition-all">
+                <a href="#nasil-calisir" class="w-full sm:w-auto px-7 sm:px-8 py-4 bg-slate-900/90 hover:bg-slate-800 text-slate-300 hover:text-white font-bold text-sm sm:text-base rounded-xl border border-slate-800 hover:border-slate-700 shadow-md backdrop-blur-md transition-all active:scale-95">
                     Stratejiyi İncele ↓
                 </a>
             </div>
@@ -244,12 +314,13 @@
         </section>
 
         <!-- ========================================================================= -->
-        <!-- 2. İNTERAKTİF 90 GÜN YASAL TAKİP TİMELINE SİSTEMİ                         -->
+        <!-- 2. İNTERAKTİF 90 GÜN YASAL TAKİP TİMELINE SİSTEMİ (F KURALI: GÖVDE)       -->
         <!-- ========================================================================= -->
         <section id="90-gun-kurali" class="py-16 sm:py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-slate-800/80">
             <div class="text-center space-y-3 sm:space-y-4 max-w-3xl mx-auto reveal-on-scroll">
-                <span class="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-red-400 bg-red-950/60 border border-red-800/50 px-3 py-1 rounded-full">
-                    🚨 KRİTİK YASAL SÜREÇ YÖNETİMİ
+                <span class="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-red-400 bg-red-950/60 border border-red-800/50 px-3.5 py-1.5 rounded-full inline-flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-red-500 pulse-radar-danger"></span>
+                    <span>🚨 KRİTİK YASAL SÜREÇ YÖNETİMİ</span>
                 </span>
                 <h2 class="text-3xl sm:text-5xl font-black text-white tracking-tight">
                     90 Günlük Yasal Takip Sayacı ile İcrayı Önleyin.
@@ -260,62 +331,64 @@
             </div>
 
             <!-- İnteraktif Faz Seçici Butonlar -->
-            <div class="flex justify-center gap-2 mt-8 max-w-2xl mx-auto overflow-x-auto pb-2">
-                <button type="button" class="phase-tab px-3.5 py-2 rounded-lg text-xs font-bold transition-all bg-indigo-600 text-white shadow-md" data-phase="1">
+            <div class="flex justify-center gap-2.5 mt-8 max-w-2xl mx-auto overflow-x-auto pb-2">
+                <button type="button" class="phase-tab px-4 py-2.5 rounded-xl text-xs font-black transition-all bg-indigo-600 text-white shadow-lg shadow-indigo-600/30 active:scale-95" data-phase="1">
                     1-30. Gün (Gecikme)
                 </button>
-                <button type="button" class="phase-tab px-3.5 py-2 rounded-lg text-xs font-bold transition-all bg-slate-900 border border-slate-800 text-slate-400 hover:text-white" data-phase="2">
+                <button type="button" class="phase-tab px-4 py-2.5 rounded-xl text-xs font-bold transition-all bg-slate-900 border border-slate-800 text-slate-400 hover:text-white hover:border-slate-700 active:scale-95" data-phase="2">
                     31-60. Gün (İdari Takip)
                 </button>
-                <button type="button" class="phase-tab px-3.5 py-2 rounded-lg text-xs font-bold transition-all bg-slate-900 border border-slate-800 text-slate-400 hover:text-white" data-phase="3">
+                <button type="button" class="phase-tab px-4 py-2.5 rounded-xl text-xs font-bold transition-all bg-slate-900 border border-slate-800 text-slate-400 hover:text-white hover:border-slate-700 active:scale-95" data-phase="3">
                     61-89. Gün (İhtarname)
                 </button>
-                <button type="button" class="phase-tab px-3.5 py-2 rounded-lg text-xs font-bold transition-all bg-slate-900 border border-slate-800 text-slate-400 hover:text-white" data-phase="4">
+                <button type="button" class="phase-tab px-4 py-2.5 rounded-xl text-xs font-bold transition-all bg-slate-900 border border-slate-800 text-slate-400 hover:text-white hover:border-slate-700 active:scale-95" data-phase="4">
                     90+ Gün (Yasal Takip)
                 </button>
             </div>
 
-            <!-- İnteraktif Faz Bilgi Paneli -->
-            <div id="phase-detail-card" class="max-w-3xl mx-auto mt-6 p-6 sm:p-8 rounded-xl bg-slate-900 border border-slate-800 shadow-2xl transition-all duration-300 text-left space-y-4 reveal-on-scroll">
-                <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+            <!-- İnteraktif Faz Bilgi Paneli (F-Spine Anchor) -->
+            <div id="phase-detail-card" class="f-spine-card max-w-3xl mx-auto mt-6 p-6 sm:p-8 rounded-2xl bg-slate-900 border border-slate-800 shadow-2xl transition-all duration-300 text-left space-y-4 reveal-on-scroll">
+                <div class="flex items-center justify-between border-b border-slate-800 pb-3.5">
                     <div class="flex items-center gap-3">
-                        <span id="phase-badge" class="w-8 h-8 rounded-lg bg-emerald-600/20 text-emerald-400 font-black text-sm flex items-center justify-center border border-emerald-500/30">1</span>
-                        <h3 id="phase-title" class="text-lg font-bold text-white">1 - 30. Gün: İlk Gecikme Evresi</h3>
+                        <span id="phase-badge" class="w-9 h-9 rounded-xl bg-emerald-600/20 text-emerald-400 font-black text-base flex items-center justify-center border border-emerald-500/30 shadow-md">1</span>
+                        <h3 id="phase-title" class="text-base sm:text-lg font-black text-white">1 - 30. Gün: İlk Gecikme Evresi</h3>
                     </div>
-                    <span id="phase-status" class="px-2.5 py-1 rounded-md bg-emerald-950 text-emerald-300 text-xs font-bold border border-emerald-800">Kontrol Altında</span>
+                    <span id="phase-status" class="px-3 py-1 rounded-lg bg-emerald-950 text-emerald-300 text-xs font-black border border-emerald-800">Kontrol Altında</span>
                 </div>
                 <p id="phase-desc" class="text-xs sm:text-sm text-slate-300 leading-relaxed">
                     İlk son ödeme tarihi kaçırıldı. Henüz idari veya yasal takip yoktur. Sadece günlük gecikme faizi işlemeye başlar. KKB (Findeks) kredi notunuz hafif etkilenir. Bu evrede yapılacak bir asgari ödeme süreci anında sıfırlar.
                 </p>
-                <div id="phase-action" class="p-3.5 rounded-lg bg-slate-950 border border-slate-800 text-xs text-indigo-300 flex items-center gap-2">
+                <div id="phase-action" class="p-4 rounded-xl bg-slate-950 border border-slate-800 text-xs sm:text-sm text-indigo-300 flex items-center gap-2.5 shadow-inner">
                     <span>💡 <strong>DVT CRM Aksiyonu:</strong> Asgari tutarı yatırmanız için otomatik hatırlatıcı kurulur.</span>
                 </div>
             </div>
         </section>
 
         <!-- ========================================================================= -->
-        <!-- 3. MATEMATİKSEL KURTARMA ALGORİTMALARI: ÇIĞ (AVALANCHE) & KARTOPU        -->
+        <!-- 3. MATEMATİKSEL KURTARMA ALGORİTMALARI: ÇIĞ & KARTOPU (F KURALI: 2. YATAY)-->
         <!-- ========================================================================= -->
         <section id="nasil-calisir" class="py-16 sm:py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-slate-800/80">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <!-- Sol Kolon: F Kuralı Okuma Başlangıcı -->
                 <div class="space-y-4 sm:space-y-6 reveal-on-scroll text-left">
-                    <span class="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-indigo-400 bg-indigo-950/60 border border-indigo-800/50 px-3 py-1 rounded-full">
-                        🎯 STRATEJİK BORÇ ERİTME SİMÜLATÖRÜ
+                    <span class="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-indigo-400 bg-indigo-950/60 border border-indigo-800/50 px-3.5 py-1.5 rounded-full inline-flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-indigo-400 animate-ping"></span>
+                        <span>🎯 STRATEJİK BORÇ ERİTME SİMÜLATÖRÜ</span>
                     </span>
                     <h2 class="text-3xl sm:text-5xl font-black text-white tracking-tight">
                         Çığ vs Kartopu:<br>
-                        Hangi Yöntem Size Uygun?
+                        <span class="bg-gradient-to-r from-indigo-400 via-sky-300 to-emerald-300 bg-clip-text text-transparent text-gradient-flow">Hangi Yöntem Size Uygun?</span>
                     </h2>
                     <p class="text-sm sm:text-base text-slate-300 leading-relaxed">
                         Rastgele borç ödemek faiz batağını büyütür. DVT CRM, iki kanıtlanmış matematiksel algoritmayı karşılaştırır ve size en az faiz ödetecek kesin ödeme sırasını üretir.
                     </p>
 
-                    <div class="p-5 sm:p-6 bg-slate-900 border border-indigo-500/40 rounded-xl space-y-3 shadow-xl">
-                        <div class="flex items-start gap-3">
-                            <span class="text-2xl">⚡</span>
+                    <div class="f-spine-card p-5 sm:p-6 bg-slate-900 border border-indigo-500/40 rounded-2xl space-y-3 shadow-xl">
+                        <div class="flex items-start gap-3.5">
+                            <span class="text-3xl">⚡</span>
                             <div>
-                                <h4 class="font-bold text-sm text-white">Çığ (Avalanche) — En Yüksek Faizden Başla</h4>
-                                <p class="text-xs text-slate-400 mt-1">
+                                <h4 class="font-black text-sm sm:text-base text-white">Çığ (Avalanche) — En Yüksek Faizden Başla</h4>
+                                <p class="text-xs sm:text-sm text-slate-300 mt-1 leading-relaxed">
                                     En yüksek faizli KMH ve kredi kartına ekstra ödeme yaparak toplam faiz yükünü minimuma indirir. Matematiksel olarak en karlı yöntemdir.
                                 </p>
                             </div>
@@ -323,20 +396,25 @@
                     </div>
                 </div>
 
-                <!-- İnteraktif Simülatör Kartı -->
-                <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 sm:p-8 space-y-6 shadow-2xl reveal-on-scroll text-left">
+                <!-- İnteraktif Simülatör Kartı (F-Pattern Crossbar) -->
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 space-y-6 shadow-2xl reveal-on-scroll text-left relative overflow-hidden">
+                    <div class="absolute -top-12 -right-12 w-40 h-40 bg-indigo-600/15 rounded-full blur-3xl pointer-events-none"></div>
+
                     <div class="flex items-center justify-between border-b border-slate-800 pb-4">
-                        <h3 class="font-bold text-base text-white">Canlı Çığ Tasarruf Simülatörü</h3>
-                        <span class="text-xs font-black text-emerald-400 bg-emerald-950/60 px-2.5 py-1 rounded-md border border-emerald-800/50">CANLI HESAPLAMA</span>
+                        <h3 class="font-black text-base sm:text-lg text-white">Canlı Çığ Tasarruf Simülatörü</h3>
+                        <span class="text-xs font-black text-emerald-400 bg-emerald-950/80 px-3 py-1 rounded-lg border border-emerald-800/50 flex items-center gap-1.5">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                            <span>CANLI HESAPLAMA</span>
+                        </span>
                     </div>
 
                     <div class="space-y-3">
-                        <div class="flex justify-between text-xs font-bold">
-                            <span class="text-slate-400">Aylık Borca Ayrılan Ekstra Bütçe:</span>
-                            <span id="sim-extra-budget-label" class="text-indigo-400 text-sm font-black">₺10.000</span>
+                        <div class="flex justify-between text-xs sm:text-sm font-bold">
+                            <span class="text-slate-300">Aylık Borca Ayrılan Ekstra Bütçe:</span>
+                            <span id="sim-extra-budget-label" class="text-indigo-400 text-base font-black">₺10.000</span>
                         </div>
-                        <input id="sim-slider" type="range" min="2000" max="30000" step="1000" value="10000" class="w-full h-2.5 bg-slate-950 rounded-lg appearance-none cursor-pointer">
-                        <div class="flex justify-between text-[10px] text-slate-500">
+                        <input id="sim-slider" type="range" min="2000" max="30000" step="1000" value="10000" class="w-full h-3 bg-slate-950 rounded-lg appearance-none cursor-pointer">
+                        <div class="flex justify-between text-[11px] text-slate-500 font-bold">
                             <span>₺2.000</span>
                             <span>₺15.000</span>
                             <span>₺30.000</span>
@@ -344,25 +422,25 @@
                     </div>
 
                     <div class="grid grid-cols-2 gap-4 pt-2">
-                        <div class="p-4 rounded-lg bg-slate-950 border border-slate-800">
-                            <span class="text-[10px] font-bold text-slate-400 uppercase block">Kapanış Süresi</span>
-                            <span id="sim-months-text" class="text-xl font-black text-emerald-400 mt-1 block">16 Ayda Biter</span>
+                        <div class="p-4 rounded-xl bg-slate-950 border border-slate-800 shadow-inner">
+                            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Kapanış Süresi</span>
+                            <span id="sim-months-text" class="text-xl sm:text-2xl font-black text-emerald-400 mt-1 block">16 Ayda Biter</span>
                             <span class="text-[10px] text-slate-500">Asgari ödemeyle 48 ay sürer</span>
                         </div>
-                        <div class="p-4 rounded-lg bg-slate-950 border border-slate-800">
-                            <span class="text-[10px] font-bold text-slate-400 uppercase block">Toplam Faiz Tasarrufu</span>
-                            <span id="sim-saved-text" class="text-xl font-black text-indigo-300 mt-1 block">₺74.200 Cepte!</span>
+                        <div class="p-4 rounded-xl bg-slate-950 border border-slate-800 shadow-inner">
+                            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Toplam Faiz Tasarrufu</span>
+                            <span id="sim-saved-text" class="text-xl sm:text-2xl font-black text-indigo-300 mt-1 block text-gradient-flow bg-gradient-to-r from-indigo-300 via-sky-200 to-emerald-300 bg-clip-text text-transparent">₺74.200 Cepte!</span>
                             <span class="text-[10px] text-slate-500">Bankaya ödenmekten kurtarıldı</span>
                         </div>
                     </div>
 
                     <div class="pt-2">
-                        <div class="h-2 w-full bg-slate-950 rounded-full overflow-hidden">
+                        <div class="h-2.5 w-full bg-slate-950 rounded-full overflow-hidden border border-slate-800">
                             <div id="sim-progress-bar" class="h-full bg-gradient-to-r from-emerald-500 to-indigo-500 rounded-full transition-all duration-300" style="width: 65%;"></div>
                         </div>
-                        <div class="flex justify-between text-[11px] text-slate-400 mt-2">
+                        <div class="flex justify-between text-xs text-slate-400 mt-2 font-bold">
                             <span>Toplam Borç: ₺485.200</span>
-                            <span id="sim-interest-text" class="font-bold text-white">Faiz: ₺88.000</span>
+                            <span id="sim-interest-text" class="text-white">Faiz: ₺88.000</span>
                         </div>
                     </div>
                 </div>
@@ -374,8 +452,9 @@
         <!-- ========================================================================= -->
         <section id="ozellikler" class="py-16 sm:py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-slate-800/80">
             <div class="text-center space-y-3 sm:space-y-4 max-w-3xl mx-auto reveal-on-scroll">
-                <span class="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-indigo-400 bg-indigo-950/60 border border-indigo-800/50 px-3 py-1 rounded-full">
-                    🤖 GROQ & GEMINI HİBRİT AI MOTORU
+                <span class="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-indigo-400 bg-indigo-950/60 border border-indigo-800/50 px-3.5 py-1.5 rounded-full inline-flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-indigo-400 animate-pulse"></span>
+                    <span>🤖 GROQ & GEMINI HİBRİT AI MOTORU</span>
                 </span>
                 <h2 class="text-3xl sm:text-5xl font-black text-white tracking-tight">
                     7/24 AI Finansal Kriz Koçu Yanınızda.
@@ -386,31 +465,31 @@
             </div>
 
             <!-- Hızlı Soru Hapları -->
-            <div class="flex flex-wrap justify-center gap-2 mt-8 max-w-3xl mx-auto">
-                <button type="button" class="ai-prompt-chip px-3 py-1.5 rounded-lg bg-indigo-950/80 hover:bg-indigo-900 border border-indigo-500/40 text-xs font-bold text-indigo-200 transition-all" data-answer="Yapı Kredi KMH faizi %5.00 ile en yüksek maliyetli borcunuzdur. Elinizdeki ₺15.000'i buraya yatırırsanız aylık ₺750, yıllık ₺9.000 doğrudan faiz tasarrufu sağlarsınız.">
+            <div class="flex flex-wrap justify-center gap-2.5 mt-8 max-w-3xl mx-auto">
+                <button type="button" class="ai-prompt-chip px-4 py-2 rounded-xl bg-indigo-950/80 hover:bg-indigo-900 border border-indigo-500/40 text-xs font-bold text-indigo-200 transition-all active:scale-95 shadow-md" data-answer="Yapı Kredi KMH faizi %5.00 ile en yüksek maliyetli borcunuzdur. Elinizdeki ₺15.000'i buraya yatırırsanız aylık ₺750, yıllık ₺9.000 doğrudan faiz tasarrufu sağlarsınız.">
                     💬 "Elimdeki ₺15.000'i hangi borca yatırayım?"
                 </button>
-                <button type="button" class="ai-prompt-chip px-3 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-800 text-xs font-bold text-slate-300 transition-all" data-answer="Garanti Bonus kartınız 18 gündür gecikmede. Yasal takibe 72 gününüz var. 60. güne kadar asgari tutarı yatırmanız durumunda dosyanız avukata devredilmez.">
+                <button type="button" class="ai-prompt-chip px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-xs font-bold text-slate-300 transition-all active:scale-95 shadow-md" data-answer="Garanti Bonus kartınız 18 gündür gecikmede. Yasal takibe 72 gününüz var. 60. güne kadar asgari tutarı yatırmanız durumunda dosyanız avukata devredilmez.">
                     💬 "Garanti kartım gecikmede, icra ne zaman gelir?"
                 </button>
-                <button type="button" class="ai-prompt-chip px-3 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-800 text-xs font-bold text-slate-300 transition-all" data-answer="Sadece asgari tutarı ödemek borcun anaparasını eritmez ve kalan bakiyeye her ay bileşik faiz biner. Çığ stratejisiyle asgari üstü ₺3.000 ek ödeme yaparak borcunuzu 3 yıl erken bitirebilirsiniz.">
+                <button type="button" class="ai-prompt-chip px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-xs font-bold text-slate-300 transition-all active:scale-95 shadow-md" data-answer="Sadece asgari tutarı ödemek borcun anaparasını eritmez ve kalan bakiyeye her ay bileşik faiz biner. Çığ stratejisiyle asgari üstü ₺3.000 ek ödeme yaparak borcunuzu 3 yıl erken bitirebilirsiniz.">
                     💬 "Sadece asgariyi ödersem ne olur?"
                 </button>
             </div>
 
             <!-- Canlı AI Terminal Kutusu -->
-            <div class="max-w-3xl mx-auto mt-6 bg-slate-900 border border-slate-800 rounded-xl p-6 sm:p-8 space-y-6 shadow-2xl text-left reveal-on-scroll">
-                <!-- AI Cevap Alanı -->
-                <div class="flex items-start gap-3 sm:gap-4">
-                    <div class="w-9 h-9 rounded-lg bg-indigo-600 text-white flex items-center justify-center font-bold text-sm shrink-0 shadow-lg shadow-indigo-600/30">
+            <div class="f-spine-card max-w-3xl mx-auto mt-6 bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 space-y-6 shadow-2xl text-left reveal-on-scroll relative overflow-hidden">
+                <div class="flex items-start gap-3.5 sm:gap-4">
+                    <div class="w-10 h-10 rounded-xl bg-indigo-600 text-white flex items-center justify-center font-black text-sm shrink-0 shadow-lg shadow-indigo-600/30">
                         AI
                     </div>
-                    <div class="bg-slate-950 border border-slate-800 text-slate-200 rounded-xl p-4 text-xs sm:text-sm leading-relaxed space-y-2 flex-1">
-                        <p id="ai-response-text">
+                    <div class="bg-slate-950 border border-slate-800 text-slate-200 rounded-2xl p-4 sm:p-5 text-xs sm:text-sm leading-relaxed space-y-2.5 flex-1 shadow-inner">
+                        <p id="ai-response-text" class="transition-opacity duration-200">
                             "Veritabanınızı taradım. <strong>Yapı Kredi KMH</strong> hesabınız %5.00 faiz işletiyor. Elinizdeki fazladan ₺15.000 bütçeyi buraya aktarmanız durumunda yıllık <strong>₺9.000 faiz tasarrufu</strong> elde edeceksiniz."
                         </p>
-                        <p class="text-emerald-400 font-semibold text-xs">
-                            → Strateji: Çığ Algoritması #1 Öncelik Onaylandı.
+                        <p class="text-emerald-400 font-bold text-xs flex items-center gap-1.5">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 pulse-radar-emerald"></span>
+                            <span>→ Strateji: Çığ Algoritması #1 Öncelik Onaylandı.</span>
                         </p>
                     </div>
                 </div>
@@ -418,17 +497,17 @@
         </section>
 
         <!-- ========================================================================= -->
-        <!-- 5. 2026 TÜRKİYE BANKALARI İNTERAKTİF FİNANSAL RADAR & DESTEK MERKEZİ      -->
+        <!-- 5. 2026 TÜRKİYE BANKALARI İNTERAKTİF FİNANSAL RADAR (F KURALI ENTEGRASYON)-->
         <!-- ========================================================================= -->
         <section class="py-16 sm:py-28 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-slate-800/80">
             <div class="text-center space-y-3 sm:space-y-4 max-w-3xl mx-auto reveal-on-scroll">
                 <span class="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-emerald-400 bg-emerald-950/60 border border-emerald-800/50 px-3.5 py-1.5 rounded-full inline-flex items-center gap-2">
-                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 pulse-radar-emerald"></span>
                     <span>🛡️ SIFIR SAHTE VERİ • DOĞRUDAN MYSQL VERİTABANI</span>
                 </span>
                 <h2 class="text-3xl sm:text-5xl font-black text-white tracking-tight">
                     Türkiye'deki Tüm Bankalar.<br>
-                    <span class="bg-gradient-to-r from-emerald-400 via-sky-300 to-indigo-400 bg-clip-text text-transparent">Tek Bir Akıllı Radarda.</span>
+                    <span class="bg-gradient-to-r from-emerald-400 via-sky-300 to-indigo-400 bg-clip-text text-transparent text-gradient-flow">Tek Bir Akıllı Radarda.</span>
                 </h2>
                 <p class="text-sm sm:text-lg text-slate-300 leading-relaxed">
                     Türkiye'deki tüm mevduat, katılım ve kamu bankalarıyla %100 uyumludur. İstediğiniz bankaya tıklayarak DVT Bank CRM'in o banka için çalıştırdığı koruma ve analiz motorunu inceleyin:
@@ -488,17 +567,17 @@
                 </div>
 
                 <!-- Sağ Kolon: Canlı Banka Terminali & Yetenek Taraması (5 Kolon) -->
-                <div class="md:col-span-5 bg-slate-900 border border-indigo-500/40 rounded-xl p-6 sm:p-7 shadow-2xl space-y-5 relative overflow-hidden">
+                <div class="md:col-span-5 bg-slate-900 border border-indigo-500/40 rounded-2xl p-6 sm:p-7 shadow-2xl space-y-5 relative overflow-hidden">
                     <div class="absolute top-0 right-0 w-48 h-48 bg-indigo-600/10 rounded-full blur-3xl pointer-events-none"></div>
 
-                    <!-- Header (Başlangıçta İlk Bankayla %100 Senkronize) -->
+                    <!-- Header -->
                     <div class="flex items-center justify-between border-b border-slate-800 pb-4">
                         <div class="flex items-center gap-3">
                             <div class="terminal-bank-logo-el w-10 h-10 rounded-xl text-white font-black flex items-center justify-center text-sm shadow-md" style="background-color: {{ $firstBankColor }};">
                                 {{ mb_substr($firstBankName, 0, 2) }}
                             </div>
                             <div>
-                                <h3 class="terminal-bank-name-el font-bold text-base text-white">{{ $firstBankName }}</h3>
+                                <h3 class="terminal-bank-name-el font-black text-base text-white">{{ $firstBankName }}</h3>
                                 <p class="text-[11px] text-slate-400">DVT CRM Tam Entegrasyon</p>
                             </div>
                         </div>
@@ -509,7 +588,7 @@
 
                     <!-- Desteklenen Borç Ürünleri Listesi -->
                     <div class="space-y-3">
-                        <div class="p-3 rounded-lg bg-slate-950 border border-slate-800 flex items-start gap-3">
+                        <div class="p-3 rounded-xl bg-slate-950 border border-slate-800 flex items-start gap-3">
                             <span class="text-base mt-0.5">💳</span>
                             <div class="flex-1">
                                 <div class="flex items-center justify-between">
@@ -520,7 +599,7 @@
                             </div>
                         </div>
 
-                        <div class="p-3 rounded-lg bg-slate-950 border border-slate-800 flex items-start gap-3">
+                        <div class="p-3 rounded-xl bg-slate-950 border border-slate-800 flex items-start gap-3">
                             <span class="text-base mt-0.5">⚡</span>
                             <div class="flex-1">
                                 <div class="flex items-center justify-between">
@@ -531,7 +610,7 @@
                             </div>
                         </div>
 
-                        <div class="p-3 rounded-lg bg-slate-950 border border-slate-800 flex items-start gap-3">
+                        <div class="p-3 rounded-xl bg-slate-950 border border-slate-800 flex items-start gap-3">
                             <span class="text-base mt-0.5">🏦</span>
                             <div class="flex-1">
                                 <div class="flex items-center justify-between">
@@ -542,7 +621,7 @@
                             </div>
                         </div>
 
-                        <div class="p-3 rounded-lg bg-slate-950 border border-slate-800 flex items-start gap-3">
+                        <div class="p-3 rounded-xl bg-slate-950 border border-slate-800 flex items-start gap-3">
                             <span class="text-base mt-0.5">🚨</span>
                             <div class="flex-1">
                                 <div class="flex items-center justify-between">
@@ -554,15 +633,15 @@
                         </div>
                     </div>
 
-                    <!-- Terminal Alt Footer: Dinamik Hemen Tanımla Butonu -->
+                    <!-- Terminal Alt Footer: Dinamik Shimmer Buton -->
                     <div class="pt-3 border-t border-slate-800 flex items-center justify-between">
                         <span class="text-[11px] text-slate-400 flex items-center gap-1.5">
-                            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+                            <span class="w-2 h-2 rounded-full bg-emerald-400 pulse-radar-emerald"></span>
                             <span>Doğrudan Veritabanı</span>
                         </span>
-                        <a href="{{ route('register') }}" class="btn-desktop-bank-cta px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs rounded-lg shadow-md transition-all flex items-center gap-1.5">
+                        <a href="{{ route('register') }}" class="btn-shimmer btn-desktop-bank-cta px-4.5 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white font-black text-xs rounded-xl shadow-lg shadow-indigo-600/30 transition-all flex items-center gap-1.5 active:scale-95 group">
                             <span class="btn-desktop-bank-text">{{ $firstBankName }}'yı Tanımla</span>
-                            <span>→</span>
+                            <span class="group-hover:translate-x-1 transition-transform">→</span>
                         </a>
                     </div>
                 </div>
@@ -577,16 +656,16 @@
                 <div class="space-y-2">
                     <div class="flex items-center justify-between px-1">
                         <span class="text-[11px] font-bold text-slate-400 flex items-center gap-1.5">
-                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 pulse-radar-emerald"></span>
                             <span>3D Banka Deste Çarkı ({{ $databaseBanks->count() }} Banka)</span>
                         </span>
                         
                         <!-- Mini Önceki / Sonraki Butonları -->
-                        <div class="flex items-center gap-1">
-                            <button type="button" id="btn-bank-deck-prev" class="w-7 h-7 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 hover:text-white hover:border-indigo-500 active:scale-95 flex items-center justify-center text-xs transition-all shadow">
+                        <div class="flex items-center gap-1.5">
+                            <button type="button" id="btn-bank-deck-prev" class="w-7 h-7 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 hover:text-white hover:border-indigo-500 active:scale-90 flex items-center justify-center text-xs transition-all shadow">
                                 ‹
                             </button>
-                            <button type="button" id="btn-bank-deck-next" class="w-7 h-7 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 hover:text-white hover:border-indigo-500 active:scale-95 flex items-center justify-center text-xs transition-all shadow">
+                            <button type="button" id="btn-bank-deck-next" class="w-7 h-7 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 hover:text-white hover:border-indigo-500 active:scale-90 flex items-center justify-center text-xs transition-all shadow">
                                 ›
                             </button>
                         </div>
@@ -634,8 +713,8 @@
                     </div>
                 </div>
 
-                <!-- Alt Alan: Seçilen Bankanın Altında Açılan Canlı "Hemen Tanımla →" Tam Yetenek Kartı (Masaüstü ile 1-e-1 Aynı) -->
-                <div class="bg-slate-900/95 border border-indigo-500/40 rounded-xl p-4 sm:p-5 shadow-2xl space-y-3.5 relative overflow-hidden backdrop-blur-xl">
+                <!-- Alt Alan: Canlı İnceleme Kartı -->
+                <div class="bg-slate-900/95 border border-indigo-500/40 rounded-2xl p-4 sm:p-5 shadow-2xl space-y-3.5 relative overflow-hidden backdrop-blur-xl">
                     <!-- Header -->
                     <div class="flex items-center justify-between border-b border-slate-800 pb-3">
                         <div class="flex items-center gap-2.5">
@@ -643,7 +722,7 @@
                                 {{ mb_substr($firstBankName, 0, 2) }}
                             </div>
                             <div>
-                                <h3 class="terminal-bank-name-el font-bold text-sm text-white">{{ $firstBankName }}</h3>
+                                <h3 class="terminal-bank-name-el font-black text-sm text-white">{{ $firstBankName }}</h3>
                                 <p class="text-[10px] text-slate-400">DVT CRM Tam Entegrasyon</p>
                             </div>
                         </div>
@@ -655,7 +734,7 @@
                     <!-- 4 Desteklenen Borç Ürünü (Eksiksiz) -->
                     <div class="space-y-2">
                         <!-- 1. Kredi Kartı -->
-                        <div class="p-2.5 rounded-lg bg-slate-950 border border-slate-800 flex items-start gap-2.5">
+                        <div class="p-2.5 rounded-xl bg-slate-950 border border-slate-800 flex items-start gap-2.5">
                             <span class="text-sm mt-0.5">💳</span>
                             <div class="flex-1">
                                 <div class="flex items-center justify-between">
@@ -667,7 +746,7 @@
                         </div>
 
                         <!-- 2. KMH (Eksi Bakiye) -->
-                        <div class="p-2.5 rounded-lg bg-slate-950 border border-slate-800 flex items-start gap-2.5">
+                        <div class="p-2.5 rounded-xl bg-slate-950 border border-slate-800 flex items-start gap-2.5">
                             <span class="text-sm mt-0.5">⚡</span>
                             <div class="flex-1">
                                 <div class="flex items-center justify-between">
@@ -679,7 +758,7 @@
                         </div>
 
                         <!-- 3. Kredi Taksitleri -->
-                        <div class="p-2.5 rounded-lg bg-slate-950 border border-slate-800 flex items-start gap-2.5">
+                        <div class="p-2.5 rounded-xl bg-slate-950 border border-slate-800 flex items-start gap-2.5">
                             <span class="text-sm mt-0.5">🏦</span>
                             <div class="flex-1">
                                 <div class="flex items-center justify-between">
@@ -691,7 +770,7 @@
                         </div>
 
                         <!-- 4. 90 Gün Yasal Takip Kalkanı -->
-                        <div class="p-2.5 rounded-lg bg-slate-950 border border-slate-800 flex items-start gap-2.5">
+                        <div class="p-2.5 rounded-xl bg-slate-950 border border-slate-800 flex items-start gap-2.5">
                             <span class="text-sm mt-0.5">🚨</span>
                             <div class="flex-1">
                                 <div class="flex items-center justify-between">
@@ -703,15 +782,15 @@
                         </div>
                     </div>
 
-                    <!-- Alt Footer: Doğrudan Veritabanı & Dinamik Hemen Tanımla Butonu -->
+                    <!-- Alt Footer: Doğrudan Veritabanı & Shimmer Butonu -->
                     <div class="pt-2.5 border-t border-slate-800 flex items-center justify-between gap-2">
                         <span class="text-[10px] text-slate-400 flex items-center gap-1.5 shrink-0">
-                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 pulse-radar-emerald"></span>
                             <span>Doğrudan Veritabanı</span>
                         </span>
-                        <a href="{{ route('register') }}" class="px-4 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs rounded-xl shadow-lg shadow-indigo-600/30 active:scale-95 transition-all flex items-center gap-1.5">
+                        <a href="{{ route('register') }}" class="btn-shimmer px-4 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white font-black text-xs rounded-xl shadow-lg shadow-indigo-600/30 active:scale-95 transition-all flex items-center gap-1.5 group">
                             <span class="btn-mobile-bank-text">{{ $firstBankName }}'yı Tanımla</span>
-                            <span>→</span>
+                            <span class="group-hover:translate-x-1 transition-transform">→</span>
                         </a>
                     </div>
                 </div>
@@ -719,28 +798,29 @@
         </section>
 
         <!-- ========================================================================= -->
-        <!-- 6. BÜYÜK CALL TO ACTION BANNER (APPLE-STYLE)                               -->
+        <!-- 6. BÜYÜK CALL TO ACTION BANNER (F KURALI DİP KANCA)                       -->
         <!-- ========================================================================= -->
         <section class="py-16 sm:py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-            <div class="relative rounded-xl bg-gradient-to-r from-indigo-900 via-indigo-950 to-slate-900 border-2 border-indigo-500/50 p-6 sm:p-16 text-center space-y-6 sm:space-y-8 overflow-hidden shadow-2xl shadow-indigo-950 reveal-on-scroll">
+            <div class="relative rounded-2xl bg-gradient-to-r from-indigo-900 via-indigo-950 to-slate-900 border-2 border-indigo-500/50 p-6 sm:p-16 text-center space-y-6 sm:space-y-8 overflow-hidden shadow-2xl shadow-indigo-950 reveal-on-scroll">
                 <div class="absolute top-0 right-0 w-72 sm:w-96 h-72 sm:h-96 bg-indigo-500/20 rounded-full blur-3xl pointer-events-none"></div>
 
                 <div class="space-y-3 sm:space-y-4 max-w-2xl mx-auto relative z-10">
                     <span class="text-[10px] sm:text-xs font-black uppercase tracking-widest text-indigo-300">İLK ADIMI ŞİMDİ ATIN</span>
                     <h2 class="text-3xl sm:text-5xl font-black text-white tracking-tight">
                         Borçlarınız Sizi Değil,<br>
-                        Siz Borçlarınızı Yönetin.
+                        <span class="bg-gradient-to-r from-indigo-300 via-sky-200 to-emerald-300 bg-clip-text text-transparent text-gradient-flow">Siz Borçlarınızı Yönetin.</span>
                     </h2>
                     <p class="text-xs sm:text-base text-indigo-200 leading-relaxed">
                         Hemen ücretsiz kayıt olun, 4 adımlı sihirbazla bankalarınızı tanımlayın ve 90 günlük yasal takip sayacınızla krizden güvenle çıkın.
                     </p>
                 </div>
 
-                <div class="relative z-10 flex flex-col sm:flex-row items-center justify-center gap-3">
-                    <a href="{{ route('register') }}" class="w-full sm:w-auto px-8 sm:px-10 py-4 bg-white text-indigo-950 font-black text-sm sm:text-base rounded-xl hover:bg-slate-100 shadow-xl hover:scale-105 active:scale-95 transition-all">
-                        🚀 Ücretsiz Kayıt Ol & Başla
+                <div class="relative z-10 flex flex-col sm:flex-row items-center justify-center gap-3.5">
+                    <a href="{{ route('register') }}" class="btn-shimmer w-full sm:w-auto px-8 sm:px-10 py-4 bg-white text-indigo-950 font-black text-sm sm:text-base rounded-xl hover:bg-slate-100 shadow-2xl hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-2 group">
+                        <span>🚀 Ücretsiz Kayıt Ol & Başla</span>
+                        <span class="group-hover:translate-x-1 transition-transform">→</span>
                     </a>
-                    <a href="{{ route('login') }}" class="w-full sm:w-auto px-6 py-4 bg-indigo-950/80 hover:bg-indigo-900 text-white font-bold text-sm sm:text-base rounded-xl border border-indigo-400/30 transition-all">
+                    <a href="{{ route('login') }}" class="w-full sm:w-auto px-7 py-4 bg-indigo-950/80 hover:bg-indigo-900 text-white font-bold text-sm sm:text-base rounded-xl border border-indigo-400/30 transition-all active:scale-95">
                         Giriş Yap →
                     </a>
                 </div>
@@ -753,12 +833,15 @@
 
     <!-- MOBİL İÇİN YÜZEN HIZLI AKSİYON ÇUBUĞU (FLOATING ACTION PILL) -->
     <div id="mobile-floating-pill" class="fixed bottom-4 left-4 right-4 z-40 md:hidden transform transition-all duration-300 translate-y-24 opacity-0 pointer-events-none">
-        <a href="{{ route('register') }}" class="w-full py-3.5 px-5 rounded-xl bg-indigo-600 text-white font-black text-sm flex items-center justify-between shadow-2xl shadow-indigo-600/60 border border-indigo-400/40">
+        <a href="{{ route('register') }}" class="btn-shimmer w-full py-3.5 px-5 rounded-2xl bg-indigo-600 text-white font-black text-sm flex items-center justify-between shadow-2xl shadow-indigo-600/70 border border-indigo-400/50 active:scale-95 transition-all">
             <span class="flex items-center gap-2">
-                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+                <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 pulse-radar-emerald"></span>
                 <span>Borç Analizini Başlat</span>
             </span>
-            <span>Ücretsiz →</span>
+            <span class="flex items-center gap-1 font-black">
+                <span>Ücretsiz</span>
+                <span>→</span>
+            </span>
         </a>
     </div>
 
