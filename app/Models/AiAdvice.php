@@ -10,6 +10,8 @@ class AiAdvice extends Model
 {
     use HasFactory, BelongsToUser;
 
+    protected $table = 'ai_advices';
+
     protected $fillable = [
         'user_id',
         'type',
