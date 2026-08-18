@@ -7,12 +7,12 @@ Her fazın sonundaki **"Faz Çıkış Kriteri"** sağlanmadan sonraki faza geçi
 
 ## FAZ 0 — İskelet ve DevOps (Hedef: 1-2 gün)
 
-- [ ] **[G0.01]** Laravel 12 kurulumu (PHP 8.3), Git repo bağlantısı, ilk commit
-- [ ] **[G0.02]** `.env.example` hazırla (DB, MAIL, AI key placeholder'ları) + `.gitignore` doğrula
-- [ ] **[G0.03]** Tailwind + Vite kurulumu, temel layout (guest + app shell)
-- [ ] **[G0.04]** Plesk'te domain, PHP 8.3, DB, SSL kur (kurucu yapar — docs/07)
-- [ ] **[G0.05]** Plesk Git bağla, deployment action'ları yaz, ilk otomatik deploy testi
-- [ ] **[G0.06]** Cron: schedule:run + queue:work ekle (docs/07 tablosu)
+- [x] **[G0.01]** Laravel 12 kurulumu (PHP 8.3), Git repo bağlantısı, ilk commit
+- [x] **[G0.02]** `.env.example` hazırla (DB, MAIL, AI key placeholder'ları) + `.gitignore` doğrula
+- [x] **[G0.03]** Tailwind + Vite kurulumu, temel layout (guest + app shell)
+- [x] **[G0.04]** Plesk'te domain, PHP 8.3, DB, SSL kur (kurucu yapar — docs/07)
+- [x] **[G0.05]** Plesk Git bağla, deployment action'ları yaz, ilk otomatik deploy testi
+- [x] **[G0.06]** Cron: schedule:run + queue:work ekle (docs/07 tablosu)
 
 **Çıkış kriteri:** dvt.portegu.com'da boş Laravel anasayfası HTTPS ile açılıyor; git push → otomatik deploy çalışıyor.
 
