@@ -1,4 +1,13 @@
 <div class="max-w-4xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+    <!-- Top Action: Skip -->
+    <div class="flex items-center justify-between mb-4">
+        <span class="text-xs font-semibold text-gray-500">İlk Kurulum Sihirbazı</span>
+        <button type="button" wire:click="skipOnboarding" class="text-xs font-bold text-indigo-600 hover:text-indigo-800 bg-indigo-50 hover:bg-indigo-100 px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1">
+            <span>Sihirbazı Atla & Doğrudan Panele Geç</span>
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5l7 7-7 7M5 5l7 7-7 7"></path></svg>
+        </button>
+    </div>
+
     <!-- Progress Indicator -->
     <div class="mb-8">
         <div class="flex items-center justify-between text-xs sm:text-sm font-medium text-gray-500">
@@ -32,7 +41,10 @@
                     @error('monthly_income') <span class="text-red-500 text-xs mt-1">{{ $message }}</span> @enderror
                 </div>
 
-                <div class="pt-4 flex justify-end">
+                <div class="pt-4 flex items-center justify-between">
+                    <button type="button" wire:click="skipOnboarding" class="text-sm font-semibold text-gray-500 hover:text-gray-700">
+                        Şimdilik Doldurmadan Geç
+                    </button>
                     <button wire:click="nextStep" class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-xl shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors">
                         Devam Et: Bankalarımı Seç
                     </button>

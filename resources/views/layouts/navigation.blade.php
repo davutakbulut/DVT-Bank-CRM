@@ -28,7 +28,13 @@
                         Gelir/Gider
                     </x-nav-link>
                     <x-nav-link :href="route('planner.index')" :active="request()->routeIs('planner.*')">
-                        🎯 Ödeme Planı
+                        🎯 Plan
+                    </x-nav-link>
+                    <x-nav-link :href="route('calendar.index')" :active="request()->routeIs('calendar.*')">
+                        📅 Takvim
+                    </x-nav-link>
+                    <x-nav-link :href="route('reports.index')" :active="request()->routeIs('reports.*')">
+                        📊 Raporlar
                     </x-nav-link>
                     <x-nav-link :href="route('ai.coach')" :active="request()->routeIs('ai.*')" class="text-indigo-600 font-bold">
                         🤖 AI Koç

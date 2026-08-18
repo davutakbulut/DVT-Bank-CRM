@@ -184,6 +184,15 @@ class Wizard extends Component
         redirect()->route('dashboard');
     }
 
+    public function skipOnboarding(): void
+    {
+        $user = Auth::user();
+        $user->update(['onboarding_completed' => true]);
+
+        session()->flash('info', 'Sihirbaz atlandı. Dilediğiniz zaman Borçlarım ve Hesaplarım sayfalarından verilerinizi ekleyebilirsiniz.');
+        redirect()->route('dashboard');
+    }
+
     public function render()
     {
         $systemBanks = Bank::where('is_system', true)->get();
