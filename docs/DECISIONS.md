@@ -18,3 +18,7 @@ Ajan yeni karar eklediğinde bu dosyanın SONUNA ekler, eskileri değiştirmez.
 **Karar:** Plesk'te Node yoksa `npm run build` çıktısı (public/build) Git'e dahil edilir.
 **Gerekçe:** Sunucuda Node çalıştırma zorunluluğunu kaldırır.
 **Not:** Plesk Node.js uzantısı kurulursa deployment action'a `npm ci && npm run build` eklenip build artefact'ları repodan çıkarılır.
+
+## #004 — Sıfır Demo Verisi, Doğrudan Veritabanı & Tam API Katmanı (2026-08-19)
+**Karar:** Projede hiçbir sahte/demo veri bulunamaz, hiçbir finansal veri veya durum cache katmanına emanet edilmez. Her veri doğrudan `dvt_bank` veritabanına yazılır ve doğrudan oradan okunur. Tüm hizmetler (Auth, Bankalar, Hesaplar, Kartlar, Borçlar, Gelir/Gider, Ödeme Planı, AI Koç, Risk Hesaplayıcı, Raporlar) için `/api/v1/*` RESTful API endpoint'leri ve akışları sağlanır.
+**Gerekçe:** Kullanıcının gerçek finansal verilerini güvenle işlemesi, üçüncü parti / mobil entegrasyonların eksiksiz çalışabilmesi ve veri tutarlılığının %100 garanti altına alınması.

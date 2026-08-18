@@ -6,6 +6,10 @@ use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
+    /**
+     * Sadece zorunlu sistem şablon ve yapılandırma verilerini yükler.
+     * KESİN KURAL: Hiçbir sahte veya demo kullanıcı/borç verisi eklenmez.
+     */
     public function run(): void
     {
         $this->call([
@@ -15,7 +19,6 @@ class DatabaseSeeder extends Seeder
             CategorySeeder::class,
             SettingsSeeder::class,
             SuperAdminSeeder::class,
-            DemoUserSeeder::class,
         ]);
     }
 }
