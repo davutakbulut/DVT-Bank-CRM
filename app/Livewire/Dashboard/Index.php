@@ -106,6 +106,11 @@ class Index extends Component
             ->latest()
             ->first();
 
+        // Aylık Gelir & Sabit Gider Özeti
+        $totalMonthlyIncome = (float) Income::where('user_id', $user->id)->sum('amount');
+        $totalMonthlyExpense = (float) Expense::where('user_id', $user->id)->sum('amount');
+        $availableForDebt = max(0, $totalMonthlyIncome - $totalMonthlyExpense);
+
         // Ekstra Zengin Finansal Metrikler
         $activeDebtsCount = Debt::where('user_id', $user->id)->where('status', 'active')->count();
         $activeCardsCount = CreditCard::where('user_id', $user->id)->count();
