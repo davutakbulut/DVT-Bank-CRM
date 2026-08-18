@@ -11,8 +11,8 @@
                     </a>
                 </div>
 
-                <!-- Core Navigation Links (Single-Line, No Wrap, No Jitter) -->
-                <div class="hidden xl:flex items-center space-x-1 sm:space-x-2 text-sm font-bold whitespace-nowrap">
+                <!-- Core Navigation Links (Desktop: Single-Line, No Wrap) -->
+                <div class="hidden xl:flex items-center space-x-1 text-sm font-bold whitespace-nowrap">
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" class="px-3 py-2 text-xs xl:text-sm">
                         Kontrol Paneli
                     </x-nav-link>
@@ -42,7 +42,7 @@
                     </x-nav-link>
                 </div>
 
-                <!-- Mid-Screen View Links (Tablet / Medium Screens) -->
+                <!-- Mid-Screen View Links (Tablet) -->
                 <div class="hidden md:flex xl:hidden items-center space-x-1 text-xs font-bold whitespace-nowrap">
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" class="px-2 py-2">
                         Panel
@@ -68,7 +68,7 @@
                 </div>
             </div>
 
-            <!-- Right Side: User Profile & Dedicated Role Panels Menu -->
+            <!-- Right Side: User Profile & Dedicated Role Panels Menu (Desktop) -->
             <div class="hidden md:flex items-center gap-3 shrink-0">
                 <x-dropdown align="right" width="56">
                     <x-slot name="trigger">
@@ -98,13 +98,13 @@
                                 @if (Auth::user()->hasRole('super_admin'))
                                     <x-dropdown-link href="/super" target="_blank" class="flex items-center justify-between text-red-600 font-bold hover:bg-red-50">
                                         <span>⚙️ Süper Admin Paneli</span>
-                                        <span class="text-[9px] px-1.5 py-0.5 rounded bg-red-100 text-red-700">SUPER</span>
+                                        <span class="text-[9px] px-1.5 py-0.5 rounded bg-red-100 text-red-700 font-black">SUPER</span>
                                     </x-dropdown-link>
                                 @endif
                                 @if (Auth::user()->hasRole('admin'))
                                     <x-dropdown-link href="/admin" target="_blank" class="flex items-center justify-between text-purple-600 font-bold hover:bg-purple-50">
                                         <span>🛡️ Yönetim Paneli</span>
-                                        <span class="text-[9px] px-1.5 py-0.5 rounded bg-purple-100 text-purple-700">ADMIN</span>
+                                        <span class="text-[9px] px-1.5 py-0.5 rounded bg-purple-100 text-purple-700 font-black">ADMIN</span>
                                     </x-dropdown-link>
                                 @endif
                             </div>
@@ -143,86 +143,172 @@
 
             <!-- Mobile Hamburger Button -->
             <div class="flex items-center md:hidden">
-                <button @click="open = ! open" class="inline-flex items-center justify-center p-2 rounded-xl text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:outline-none transition duration-150">
+                <button @click="open = true" class="inline-flex items-center justify-center p-2 rounded-xl text-gray-700 bg-gray-50 hover:bg-gray-100 border border-gray-200 focus:outline-none transition-colors shadow-sm" aria-label="Menüyü Aç">
                     <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
-                        <path :class="{'hidden': open, 'inline-flex': ! open }" class="inline-flex" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                        <path :class="{'hidden': ! open, 'inline-flex': open }" class="hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
                     </svg>
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- Responsive Mobile Menu -->
-    <div :class="{'block': open, 'hidden': ! open}" class="hidden md:hidden border-t border-gray-100 bg-white">
-        <div class="pt-2 pb-3 space-y-1">
-            <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                Kontrol Paneli
-            </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('debts.index')" :active="request()->routeIs('debts.*')">
-                Borçlarım
-            </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('cards.index')" :active="request()->routeIs('cards.*')">
-                Kartlarım
-            </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('accounts.index')" :active="request()->routeIs('accounts.*')">
-                Hesaplarım & KMH
-            </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('cashflow.index')" :active="request()->routeIs('cashflow.*')">
-                Gelir/Gider
-            </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('planner.index')" :active="request()->routeIs('planner.*')">
-                🎯 Ödeme Planı
-            </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('calendar.index')" :active="request()->routeIs('calendar.*')">
-                📅 Takvim & Vadeler
-            </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('reports.index')" :active="request()->routeIs('reports.*')">
-                📊 Finansal Raporlar
-            </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('ai.coach')" :active="request()->routeIs('ai.*')" class="text-indigo-600 font-bold">
-                🤖 AI Finans Koçu
-            </x-responsive-nav-link>
+    <!-- ========================================================================= -->
+    <!-- 📱 MOBILE SLIDE-OVER DRAWER (SAĞDAN AÇILAN MODERN ÇEKMECE MENÜ)             -->
+    <!-- ========================================================================= -->
+    <div x-show="open" 
+         x-cloak
+         @keydown.escape.window="open = false" 
+         class="fixed inset-0 z-50 md:hidden" 
+         style="display: none;">
+        
+        <!-- Dimmed Backdrop Overlay (Sayfayı etkilemez, üstünde kalır) -->
+        <div x-show="open"
+             x-transition:enter="transition-opacity ease-linear duration-300"
+             x-transition:enter-start="opacity-0"
+             x-transition:enter-end="opacity-100"
+             x-transition:leave="transition-opacity ease-linear duration-300"
+             x-transition:leave-start="opacity-100"
+             x-transition:leave-end="opacity-0"
+             @click="open = false"
+             class="fixed inset-0 bg-slate-950/70 backdrop-blur-sm transition-opacity">
         </div>
 
-        <!-- Mobile Admin Panels & User Profile -->
-        <div class="pt-4 pb-3 border-t border-gray-100 bg-gray-50/50">
-            <div class="px-4 mb-3">
-                <div class="font-bold text-sm text-gray-800">{{ Auth::user()->name }}</div>
-                <div class="font-medium text-xs text-gray-500">{{ Auth::user()->email }}</div>
+        <!-- Right Slide-Over Panel -->
+        <div x-show="open"
+             x-transition:enter="transition ease-out duration-300 transform"
+             x-transition:enter-start="translate-x-full"
+             x-transition:enter-end="translate-x-0"
+             x-transition:leave="transition ease-in duration-200 transform"
+             x-transition:leave-start="translate-x-0"
+             x-transition:leave-end="translate-x-full"
+             class="fixed inset-y-0 right-0 w-full max-w-xs bg-slate-900 border-l border-slate-800 shadow-2xl flex flex-col justify-between overflow-hidden z-50 text-slate-100">
+            
+            <!-- Drawer Header & Navigation (Scrollable) -->
+            <div class="flex-1 overflow-y-auto px-5 py-6 space-y-6">
+                <!-- Top Brand & Close Button Bar -->
+                <div class="flex items-center justify-between border-b border-slate-800 pb-4">
+                    <div class="flex items-center gap-2">
+                        <x-application-logo class="h-7 w-auto text-indigo-400" />
+                        <span class="font-black text-sm text-white tracking-tight">DVT CRM</span>
+                    </div>
+                    <button @click="open = false" class="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white transition-colors">
+                        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- User Profile Card -->
+                <div class="p-3.5 rounded-2xl bg-slate-950 border border-slate-800 flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-indigo-600 text-white flex items-center justify-center font-black text-sm shadow-md">
+                        {{ mb_substr(Auth::user()->name, 0, 1) }}
+                    </div>
+                    <div class="min-w-0 flex-1">
+                        <p class="font-bold text-sm text-white truncate">{{ Auth::user()->name }}</p>
+                        <p class="text-[11px] text-slate-400 truncate">{{ Auth::user()->email }}</p>
+                    </div>
+                </div>
+
+                <!-- Management Panels (If Super Admin / Admin) -->
+                @if (Auth::user()->hasRole('super_admin') || Auth::user()->hasRole('admin'))
+                    <div class="space-y-2">
+                        <span class="text-[10px] font-black uppercase tracking-wider text-indigo-400 px-1 block">Yetkili Panelleri</span>
+                        <div class="grid grid-cols-1 gap-2">
+                            @if (Auth::user()->hasRole('super_admin'))
+                                <a href="/super" target="_blank" class="flex items-center justify-between p-3 rounded-xl bg-red-950/40 border border-red-800/50 text-red-300 font-bold text-xs hover:bg-red-900/50 transition-colors">
+                                    <span class="flex items-center gap-2">
+                                        <span>⚙️</span>
+                                        <span>Süper Admin Paneli</span>
+                                    </span>
+                                    <span class="text-[9px] px-1.5 py-0.5 rounded bg-red-500/20 text-red-400 font-black">SUPER</span>
+                                </a>
+                            @endif
+                            @if (Auth::user()->hasRole('admin'))
+                                <a href="/admin" target="_blank" class="flex items-center justify-between p-3 rounded-xl bg-purple-950/40 border border-purple-800/50 text-purple-300 font-bold text-xs hover:bg-purple-900/50 transition-colors">
+                                    <span class="flex items-center gap-2">
+                                        <span>🛡️</span>
+                                        <span>Yönetim Paneli</span>
+                                    </span>
+                                    <span class="text-[9px] px-1.5 py-0.5 rounded bg-purple-500/20 text-purple-400 font-black">ADMIN</span>
+                                </a>
+                            @endif
+                        </div>
+                    </div>
+                @endif
+
+                <!-- Core Navigation Links -->
+                <div class="space-y-1.5">
+                    <span class="text-[10px] font-black uppercase tracking-wider text-slate-500 px-1 block">Finansal Menü</span>
+                    
+                    <a href="{{ route('dashboard') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-bold transition-all {{ request()->routeIs('dashboard') ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/30' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
+                        <span>📊</span>
+                        <span>Kontrol Paneli</span>
+                    </a>
+
+                    <a href="{{ route('debts.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-bold transition-all {{ request()->routeIs('debts.*') ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/30' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
+                        <span>💳</span>
+                        <span>Borçlarım</span>
+                    </a>
+
+                    <a href="{{ route('cards.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-bold transition-all {{ request()->routeIs('cards.*') ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/30' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
+                        <span>💳</span>
+                        <span>Kartlarım</span>
+                    </a>
+
+                    <a href="{{ route('accounts.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-bold transition-all {{ request()->routeIs('accounts.*') ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/30' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
+                        <span>🏦</span>
+                        <span>Hesaplarım & KMH</span>
+                    </a>
+
+                    <a href="{{ route('cashflow.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-bold transition-all {{ request()->routeIs('cashflow.*') ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/30' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
+                        <span>📈</span>
+                        <span>Gelir / Gider</span>
+                    </a>
+
+                    <a href="{{ route('planner.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-bold transition-all {{ request()->routeIs('planner.*') ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/30' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
+                        <span>🎯</span>
+                        <span>Ödeme Planı (Çığ / Kartopu)</span>
+                    </a>
+
+                    <a href="{{ route('calendar.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-bold transition-all {{ request()->routeIs('calendar.*') ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/30' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
+                        <span>📅</span>
+                        <span>Ödeme Takvimi & Vadeler</span>
+                    </a>
+
+                    <a href="{{ route('reports.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-bold transition-all {{ request()->routeIs('reports.*') ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/30' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
+                        <span>📑</span>
+                        <span>Finansal Raporlar</span>
+                    </a>
+
+                    <!-- AI Coach Highlight Link -->
+                    <a href="{{ route('ai.coach') }}" class="flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-black transition-all bg-indigo-950/80 border border-indigo-500/40 text-indigo-300 hover:bg-indigo-900 shadow-md">
+                        <span class="flex items-center gap-2">
+                            <span>🤖</span>
+                            <span>AI Finans Koçu</span>
+                        </span>
+                        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+                    </a>
+
+                    <a href="{{ route('banks.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-bold transition-all {{ request()->routeIs('banks.*') ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/30' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
+                        <span>🏛️</span>
+                        <span>Bankalarım</span>
+                    </a>
+                </div>
             </div>
 
-            @if (Auth::user()->hasRole('super_admin') || Auth::user()->hasRole('admin'))
-                <div class="px-4 py-2 mb-2 bg-indigo-50/50 border-y border-indigo-100/50 space-y-1">
-                    <span class="text-[10px] font-black uppercase text-indigo-500 block">Yetkili Yönetim Panelleri</span>
-                    @if (Auth::user()->hasRole('super_admin'))
-                        <a href="/super" target="_blank" class="block text-xs font-bold text-red-600 py-1">
-                            ⚙️ Süper Admin Paneli →
-                        </a>
-                    @endif
-                    @if (Auth::user()->hasRole('admin'))
-                        <a href="/admin" target="_blank" class="block text-xs font-bold text-purple-600 py-1">
-                            🛡️ Yönetim Paneli →
-                        </a>
-                    @endif
-                </div>
-            @endif
+            <!-- Drawer Bottom Actions (Pinned) -->
+            <div class="p-5 border-t border-slate-800 bg-slate-950 space-y-2">
+                <a href="{{ route('profile.edit') }}" class="flex items-center gap-3 w-full px-3 py-2 rounded-xl text-xs font-bold text-slate-300 hover:bg-slate-800 hover:text-white transition-colors">
+                    <span>👤</span>
+                    <span>Profil & Güvenlik Ayarları</span>
+                </a>
 
-            <div class="space-y-1">
-                <x-responsive-nav-link :href="route('banks.index')">
-                    🏛️ Bankalarım
-                </x-responsive-nav-link>
-                <x-responsive-nav-link :href="route('profile.edit')">
-                    👤 Profil & Güvenlik
-                </x-responsive-nav-link>
-
-                <form method="POST" action="{{ route('logout') }}">
+                <form method="POST" action="{{ route('logout') }}" class="w-full">
                     @csrf
-                    <x-responsive-nav-link :href="route('logout')"
-                            onclick="event.preventDefault();
-                                        this.closest('form').submit();" class="text-red-600 font-bold">
-                        🚪 Çıkış Yap
-                    </x-responsive-nav-link>
+                    <button type="submit" class="flex items-center gap-3 w-full px-3 py-2 rounded-xl text-xs font-bold text-red-400 hover:bg-red-950/40 hover:text-red-300 transition-colors text-left">
+                        <span>🚪</span>
+                        <span>Güvenli Çıkış Yap</span>
+                    </button>
                 </form>
             </div>
         </div>
