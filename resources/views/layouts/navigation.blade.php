@@ -2,8 +2,8 @@
     <!-- Primary Navigation Menu -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
-            <!-- Left Side: Logo & Main App Links -->
-            <div class="flex items-center gap-6 xl:gap-8 min-w-0">
+            <!-- Left Side: Logo & Main App Links (All 9 items preserved with responsive padding) -->
+            <div class="flex items-center gap-4 lg:gap-6 min-w-0">
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
                     <a href="{{ route('dashboard') }}" class="flex items-center gap-2">
@@ -11,62 +11,39 @@
                     </a>
                 </div>
 
-                <!-- Core Navigation Links (Desktop: Single-Line, No Wrap) -->
-                <div class="hidden xl:flex items-center space-x-1 text-sm font-bold whitespace-nowrap">
-                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" class="px-3 py-2 text-xs xl:text-sm">
+                <!-- Complete Core Navigation Links (All 9 items: Single-Line, Responsive) -->
+                <div class="hidden md:flex items-center space-x-0.5 lg:space-x-1 font-bold whitespace-nowrap overflow-x-auto no-scrollbar py-1">
+                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" class="px-2 lg:px-2.5 xl:px-3 py-2 text-xs lg:text-sm">
                         Kontrol Paneli
                     </x-nav-link>
-                    <x-nav-link :href="route('debts.index')" :active="request()->routeIs('debts.*')" class="px-3 py-2 text-xs xl:text-sm">
+                    <x-nav-link :href="route('debts.index')" :active="request()->routeIs('debts.*')" class="px-2 lg:px-2.5 xl:px-3 py-2 text-xs lg:text-sm">
                         Borçlarım
                     </x-nav-link>
-                    <x-nav-link :href="route('cards.index')" :active="request()->routeIs('cards.*')" class="px-3 py-2 text-xs xl:text-sm">
+                    <x-nav-link :href="route('cards.index')" :active="request()->routeIs('cards.*')" class="px-2 lg:px-2.5 xl:px-3 py-2 text-xs lg:text-sm">
                         Kartlarım
                     </x-nav-link>
-                    <x-nav-link :href="route('accounts.index')" :active="request()->routeIs('accounts.*')" class="px-3 py-2 text-xs xl:text-sm">
+                    <x-nav-link :href="route('accounts.index')" :active="request()->routeIs('accounts.*')" class="px-2 lg:px-2.5 xl:px-3 py-2 text-xs lg:text-sm">
                         Hesaplarım
                     </x-nav-link>
-                    <x-nav-link :href="route('cashflow.index')" :active="request()->routeIs('cashflow.*')" class="px-3 py-2 text-xs xl:text-sm">
+                    <x-nav-link :href="route('cashflow.index')" :active="request()->routeIs('cashflow.*')" class="px-2 lg:px-2.5 xl:px-3 py-2 text-xs lg:text-sm">
                         Gelir/Gider
                     </x-nav-link>
-                    <x-nav-link :href="route('planner.index')" :active="request()->routeIs('planner.*')" class="px-3 py-2 text-xs xl:text-sm">
+                    <x-nav-link :href="route('planner.index')" :active="request()->routeIs('planner.*')" class="px-2 lg:px-2.5 xl:px-3 py-2 text-xs lg:text-sm">
                         Plan
                     </x-nav-link>
-                    <x-nav-link :href="route('calendar.index')" :active="request()->routeIs('calendar.*')" class="px-3 py-2 text-xs xl:text-sm">
+                    <x-nav-link :href="route('calendar.index')" :active="request()->routeIs('calendar.*')" class="px-2 lg:px-2.5 xl:px-3 py-2 text-xs lg:text-sm">
                         Takvim
                     </x-nav-link>
-                    <x-nav-link :href="route('reports.index')" :active="request()->routeIs('reports.*')" class="px-3 py-2 text-xs xl:text-sm">
+                    <x-nav-link :href="route('reports.index')" :active="request()->routeIs('reports.*')" class="px-2 lg:px-2.5 xl:px-3 py-2 text-xs lg:text-sm">
                         Raporlar
                     </x-nav-link>
-                    <x-nav-link :href="route('ai.coach')" :active="request()->routeIs('ai.*')" class="px-3 py-2 text-xs xl:text-sm text-indigo-600 font-extrabold flex items-center gap-1">
+                    <x-nav-link :href="route('ai.coach')" :active="request()->routeIs('ai.*')" class="px-2 lg:px-2.5 xl:px-3 py-2 text-xs lg:text-sm text-indigo-600 font-extrabold flex items-center gap-1">
                         <span>🤖 AI Koç</span>
                     </x-nav-link>
                 </div>
+            </div>
 
-                <!-- Mid-Screen View Links (Tablet) -->
-                <div class="hidden md:flex xl:hidden items-center space-x-1 text-xs font-bold whitespace-nowrap">
-                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" class="px-2 py-2">
-                        Panel
-                    </x-nav-link>
-                    <x-nav-link :href="route('debts.index')" :active="request()->routeIs('debts.*')" class="px-2 py-2">
-                        Borçlar
-                    </x-nav-link>
-                    <x-nav-link :href="route('cards.index')" :active="request()->routeIs('cards.*')" class="px-2 py-2">
-                        Kartlar
-                    </x-nav-link>
-                    <x-nav-link :href="route('accounts.index')" :active="request()->routeIs('accounts.*')" class="px-2 py-2">
-                        Hesaplar
-                    </x-nav-link>
-                    <x-nav-link :href="route('cashflow.index')" :active="request()->routeIs('cashflow.*')" class="px-2 py-2">
-                        Nakit
-                    </x-nav-link>
-                    <x-nav-link :href="route('planner.index')" :active="request()->routeIs('planner.*')" class="px-2 py-2">
-                        Plan
-                    </x-nav-link>
-                    <x-nav-link :href="route('ai.coach')" :active="request()->routeIs('ai.*')" class="px-2 py-2 text-indigo-600 font-extrabold">
-                        AI Koç
-                    </x-nav-link>
-                </div>
-                      <!-- Right Side: External Site Button + User Profile Dropdown (Desktop) -->
+            <!-- Right Side: External Site Button + User Profile Dropdown (Desktop) -->
             <div class="hidden md:flex items-center gap-3 shrink-0">
                 <!-- Ana Sayfa / Tanıtım Sayfası Butonu (Header'da Özel Konum) -->
                 <a href="{{ route('home') }}" 
