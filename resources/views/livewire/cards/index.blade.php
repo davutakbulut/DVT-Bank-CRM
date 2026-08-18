@@ -1,23 +1,100 @@
-<div class="py-1 sm:py-6 px-3 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-6">
+<div class="py-2 sm:py-6 px-3 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-6">
+    <!-- Header -->
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-            <h1 class="text-2xl font-black text-gray-900 tracking-tight">Kredi Kartlarım</h1>
-            <p class="text-sm text-gray-600">Kart limitleri, dönem borçları, asgari ödemeler ve gecikme sayaçları</p>
+            <h1 class="text-2xl font-black text-gray-900 tracking-tight flex items-center gap-2">
+                <span>💳</span>
+                <span>Kredi Kartlarım</span>
+            </h1>
+            <p class="text-sm text-gray-600">Bankalarınıza özel gerçek kart temaları, dönem borçları, limit doluluk oranları ve 90 gün yasal takip kalkanı</p>
         </div>
-        <button wire:click="openCreateModal" class="inline-flex items-center px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm rounded-xl shadow-sm transition-colors">
-            + Yeni Kart Ekle
+        <button wire:click="openCreateModal" class="inline-flex items-center gap-2 px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white font-black text-sm rounded-xl shadow-md transition-all">
+            <span>+ Yeni Kart Ekle</span>
         </button>
     </div>
 
     @if (session()->has('message'))
-        <div class="p-4 bg-green-50 border border-green-200 text-green-800 rounded-xl text-sm font-medium">
-            ✓ {{ session('message') }}
+        <div class="p-4 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-xl text-sm font-bold flex items-center gap-2 shadow-xs">
+            <span>✓</span>
+            <span>{{ session('message') }}</span>
         </div>
     @endif
 
+    <!-- Kartlar Grid -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         @forelse ($cards as $card)
             @php
+                $bankName = mb_strtolower($card->bank?->name ?? '');
+                $baseColor = $card->bank?->color ?? '#6366f1';
+                
+                // Bankaya Özel Lüks Gradyan & Kart Teması
+                if (str_contains($bankName, 'garanti')) {
+                    $cardGradient = 'from-[#005a2b] via-[#023d1d] to-[#011c0d]';
+                    $accentBorder = 'border-emerald-500/40';
+                    $glowColor = 'bg-emerald-500/20';
+                    $cardType = 'Bonus & Miles&Smiles';
+                } elseif (str_contains($bankName, 'akbank')) {
+                    $cardGradient = 'from-[#a80000] via-[#700000] to-[#380000]';
+                    $accentBorder = 'border-red-500/40';
+                    $glowColor = 'bg-red-500/20';
+                    $cardType = 'Axess & Wings';
+                } elseif (str_contains($bankName, 'iş') || str_contains($bankName, 'is bankasi')) {
+                    $cardGradient = 'from-[#003875] via-[#00224b] to-[#001026]';
+                    $accentBorder = 'border-blue-500/40';
+                    $glowColor = 'bg-blue-500/20';
+                    $cardType = 'Maximum Kart';
+                } elseif (str_contains($bankName, 'yapı') || str_contains($bankName, 'yapi')) {
+                    $cardGradient = 'from-[#00529b] via-[#003366] to-[#001833]';
+                    $accentBorder = 'border-sky-500/40';
+                    $glowColor = 'bg-sky-500/20';
+                    $cardType = 'Worldcard';
+                } elseif (str_contains($bankName, 'ziraat')) {
+                    $cardGradient = 'from-[#990012] via-[#66000c] to-[#330006]';
+                    $accentBorder = 'border-rose-500/40';
+                    $glowColor = 'bg-rose-500/20';
+                    $cardType = 'Bankkart';
+                } elseif (str_contains($bankName, 'vakıf') || str_contains($bankName, 'vakif')) {
+                    $cardGradient = 'from-[#b87d00] via-[#7a5300] to-[#3d2900]';
+                    $accentBorder = 'border-amber-500/40';
+                    $glowColor = 'bg-amber-500/20';
+                    $cardType = 'VakıfBank Platinum';
+                } elseif (str_contains($bankName, 'halk')) {
+                    $cardGradient = 'from-[#00609c] via-[#003b61] to-[#001d30]';
+                    $accentBorder = 'border-cyan-500/40';
+                    $glowColor = 'bg-cyan-500/20';
+                    $cardType = 'Paraf Kart';
+                } elseif (str_contains($bankName, 'qnb') || str_contains($bankName, 'finans')) {
+                    $cardGradient = 'from-[#521350] via-[#330932] to-[#170317]';
+                    $accentBorder = 'border-purple-500/40';
+                    $glowColor = 'bg-purple-500/20';
+                    $cardType = 'CardFinans';
+                } elseif (str_contains($bankName, 'enpara')) {
+                    $cardGradient = 'from-[#4a1f68] via-[#2d1140] to-[#14061f]';
+                    $accentBorder = 'border-violet-500/40';
+                    $glowColor = 'bg-violet-500/20';
+                    $cardType = 'Enpara.com Kredi Kartı';
+                } elseif (str_contains($bankName, 'deniz')) {
+                    $cardGradient = 'from-[#00638a] via-[#003d57] to-[#001c29]';
+                    $accentBorder = 'border-teal-500/40';
+                    $glowColor = 'bg-teal-500/20';
+                    $cardType = 'Bonus Deniz';
+                } elseif (str_contains($bankName, 'teb')) {
+                    $cardGradient = 'from-[#005f30] via-[#003d1f] to-[#001a0d]';
+                    $accentBorder = 'border-emerald-500/40';
+                    $glowColor = 'bg-emerald-500/20';
+                    $cardType = 'TEB Bonus';
+                } else {
+                    $cardGradient = 'from-slate-800 via-slate-900 to-slate-950';
+                    $accentBorder = 'border-slate-700';
+                    $glowColor = 'bg-indigo-500/10';
+                    $cardType = 'Kredi Kartı';
+                }
+
+                $limit = (float) $card->credit_limit;
+                $debt = (float) $card->current_debt;
+                $usagePercent = $limit > 0 ? min(100, round(($debt / $limit) * 100)) : 0;
+                $availableLimit = max(0, $limit - $debt);
+
                 $daysOverdue = 0;
                 if ($card->last_payment_date) {
                     $daysOverdue = (int) \Carbon\Carbon::parse($card->last_payment_date)->diffInDays(now());
@@ -25,143 +102,195 @@
                 $daysToLegal = max(0, 90 - $daysOverdue);
                 $isNearLegal = $daysToLegal <= 25;
             @endphp
-            <div class="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-950 text-white p-6 rounded-3xl shadow-xl relative overflow-hidden flex flex-col justify-between min-h-[220px]">
-                <!-- Üst: Banka & Çip -->
-                <div class="flex items-start justify-between">
-                    <div>
-                        <span class="text-xs font-black uppercase tracking-widest text-slate-400 block">{{ $card->bank?->name }}</span>
-                        <h3 class="text-lg font-bold text-white mt-0.5">{{ $card->name }}</h3>
+
+            <!-- Lüks Fiziksel Banka Kartı Görünümü -->
+            <div class="bg-gradient-to-br {{ $cardGradient }} text-white p-5 sm:p-6 rounded-2xl shadow-xl relative overflow-hidden flex flex-col justify-between min-h-[250px] border {{ $accentBorder }} transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl group">
+                <!-- Ambient Ambient Glow -->
+                <div class="absolute -top-12 -right-12 w-40 h-40 {{ $glowColor }} rounded-full blur-3xl pointer-events-none"></div>
+
+                <!-- 1. Satır: Banka Logosu, Kart Başlığı & Çip -->
+                <div class="relative z-10 flex items-start justify-between gap-2">
+                    <div class="flex items-center gap-2.5">
+                        <div class="w-8 h-8 rounded-lg text-white font-black flex items-center justify-center text-xs shadow-md border border-white/20" style="background-color: {{ $baseColor }};">
+                            {{ mb_substr($card->bank?->name ?? 'BK', 0, 2) }}
+                        </div>
+                        <div>
+                            <span class="text-[11px] font-black uppercase tracking-wider text-slate-300 block leading-tight">{{ $card->bank?->name }}</span>
+                            <h3 class="text-sm font-bold text-white leading-tight mt-0.5">{{ $card->name }}</h3>
+                        </div>
                     </div>
-                    <div class="w-10 h-7 rounded-md bg-amber-400/80 border border-amber-300 flex items-center justify-center text-[10px] font-mono text-amber-950 font-bold shadow-inner">
-                        CHIP
+
+                    <!-- EMV Çip & Temassız NFC Simgesi -->
+                    <div class="flex items-center gap-2 shrink-0">
+                        <!-- NFC Waves -->
+                        <span class="text-slate-300 text-xs font-mono tracking-tighter opacity-80 rotate-90">))))</span>
+                        <!-- Gold Metallic EMV Chip -->
+                        <div class="w-9 h-6.5 rounded-md bg-gradient-to-br from-amber-300 via-amber-400 to-amber-500 border border-amber-200/80 shadow-md flex items-center justify-center relative overflow-hidden">
+                            <div class="absolute inset-0 border border-amber-600/40 rounded-sm m-0.5"></div>
+                            <div class="w-4 h-full border-x border-amber-600/30"></div>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Orta: Kart Numarası & Risk Rozeti -->
-                <div class="my-4 space-y-2">
+                <!-- 2. Satır: Kabartmalı Kart Numarası & Vade Günleri -->
+                <div class="relative z-10 my-3 space-y-1.5">
                     <div class="flex items-center justify-between">
-                        <span class="font-mono text-base tracking-widest text-slate-300">•••• •••• •••• {{ $card->last_four ?: '0000' }}</span>
-                        @if ($daysOverdue > 0)
-                            <span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold {{ $isNearLegal ? 'bg-red-500/90 text-white animate-pulse' : 'bg-amber-500/80 text-black' }}">
-                                {{ $daysOverdue }} Gündür Ödeme Yok ({{ $daysToLegal }} Gün Kaldı)
-                            </span>
-                        @endif
+                        <span class="font-mono text-base tracking-widest text-slate-200 drop-shadow-sm">•••• •••• •••• {{ $card->last_four ?: '4892' }}</span>
+                        <span class="text-[10px] font-mono text-slate-300/90 tracking-wider">SKT: {{ str_pad($card->due_day ?? 15, 2, '0', STR_PAD_LEFT) }}/{{ date('y', strtotime('+3 years')) }}</span>
+                    </div>
+
+                    <div class="flex items-center justify-between text-[10px] text-slate-300">
+                        <span>Kesim: {{ $card->statement_day }}. gün</span>
+                        <span class="font-bold text-amber-300">Son Ödeme: {{ $card->due_day }}. gün</span>
                     </div>
                 </div>
 
-                <!-- Alt: Borç ve Limit Bilgileri -->
-                <div class="pt-3 border-t border-slate-700/60 flex items-end justify-between">
+                <!-- 3. Satır: Limit Doluluk Oranı Barı -->
+                <div class="relative z-10 my-1 space-y-1">
+                    <div class="flex items-center justify-between text-[10px] font-bold">
+                        <span class="text-slate-300">Limit Kullanımı</span>
+                        <span class="{{ $usagePercent > 85 ? 'text-red-400 font-black' : ($usagePercent > 50 ? 'text-amber-300' : 'text-emerald-400') }}">
+                            %{{ $usagePercent }} (Kalan: ₺{{ number_format($availableLimit, 0, ',', '.') }})
+                        </span>
+                    </div>
+                    <div class="w-full h-1.5 bg-black/40 rounded-full overflow-hidden border border-white/10">
+                        <div class="h-full rounded-full transition-all duration-500 {{ $usagePercent > 85 ? 'bg-red-500' : ($usagePercent > 50 ? 'bg-amber-400' : 'bg-emerald-400') }}" style="width: {{ $usagePercent }}%;"></div>
+                    </div>
+                </div>
+
+                <!-- 4. Satır: Dönem Borcu / Asgari / Aksiyonlar -->
+                <div class="relative z-10 pt-2.5 border-t border-white/15 flex items-end justify-between">
                     <div>
-                        <span class="text-[10px] font-bold text-slate-400 block">DÖNEM BORCU / ASGARİ</span>
-                        <div class="flex items-baseline gap-2">
-                            <span class="text-xl font-black text-red-400">₺{{ number_format($card->current_debt, 2, ',', '.') }}</span>
+                        <span class="text-[9px] font-black tracking-wider text-slate-300/80 block uppercase">DÖNEM BORCU / ASGARİ</span>
+                        <div class="flex items-baseline gap-1.5">
+                            <span class="text-lg font-black text-white drop-shadow">₺{{ number_format($card->current_debt, 2, ',', '.') }}</span>
                             <span class="text-xs font-semibold text-slate-300">/ ₺{{ number_format($card->minimum_payment, 2, ',', '.') }}</span>
                         </div>
                     </div>
 
-                    <div class="flex items-center gap-1">
-                        <button wire:click="openEditModal({{ $card->id }})" class="p-1.5 bg-slate-700/60 hover:bg-slate-700 text-slate-300 hover:text-white rounded-lg text-xs font-bold">✎</button>
-                        <button wire:click="delete({{ $card->id }})" wire:confirm="Bu kartı silmek istediğinize emin misiniz?" class="p-1.5 bg-red-900/40 hover:bg-red-800 text-red-300 rounded-lg text-xs font-bold">🗑</button>
+                    <!-- Hologram Mastercard/Visa & Butonlar -->
+                    <div class="flex items-center gap-2">
+                        <!-- Hologram Çift Daire -->
+                        <div class="flex -space-x-2 opacity-85">
+                            <div class="w-4.5 h-4.5 rounded-full bg-red-500/80 shadow-xs"></div>
+                            <div class="w-4.5 h-4.5 rounded-full bg-amber-400/80 shadow-xs"></div>
+                        </div>
+
+                        <!-- Düzenle / Sil -->
+                        <div class="flex items-center gap-1">
+                            <button wire:click="openEditModal({{ $card->id }})" title="Düzenle" class="p-1.5 bg-white/10 hover:bg-white/20 active:scale-90 text-white rounded-lg text-xs font-bold backdrop-blur-xs transition-all">✎</button>
+                            <button wire:click="delete({{ $card->id }})" wire:confirm="Bu kartı silmek istediğinize emin misiniz?" title="Sil" class="p-1.5 bg-red-600/30 hover:bg-red-600 text-red-200 hover:text-white rounded-lg text-xs font-bold backdrop-blur-xs transition-all">🗑</button>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Banka Vurgu Çizgisi -->
-                <div class="absolute top-0 right-0 left-0 h-1" style="background-color: {{ $card->bank?->color ?? '#6366f1' }}"></div>
+                <!-- Risk Sayacı Uyarısı (Eğer Gecikme Varsa) -->
+                @if ($daysOverdue > 0)
+                    <div class="mt-2.5 -mx-5 sm:-mx-6 -mb-5 sm:-mb-6 p-2 text-center text-[10px] font-black tracking-wide {{ $isNearLegal ? 'bg-red-600 text-white animate-pulse' : 'bg-amber-500 text-slate-950' }}">
+                        🚨 {{ $daysOverdue }} Gündür Ödeme Yok • Yasal Takibe {{ $daysToLegal }} Gün Kaldı!
+                    </div>
+                @endif
             </div>
         @empty
-            <div class="col-span-full bg-white rounded-3xl p-12 text-center border-2 border-dashed border-gray-200 space-y-4">
-                <div class="w-16 h-16 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center mx-auto text-3xl">
+            <div class="col-span-full bg-white rounded-3xl p-12 text-center border-2 border-dashed border-gray-200 space-y-4 shadow-sm">
+                <div class="w-16 h-16 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center mx-auto text-3xl shadow-xs">
                     💳
                 </div>
                 <div>
                     <h3 class="text-lg font-bold text-gray-900">Henüz Kayıtlı Kredi Kartınız Yok</h3>
                     <p class="text-sm text-gray-500 max-w-md mx-auto mt-1">
-                        Bankalardaki kredi kartlarınızı, güncel dönem borçlarını ve asgari tutarlarını ekleyerek faiz ve yasal takip sayaçlarınızı başlatın.
+                        Bankalardaki kredi kartlarınızı, limitlerini ve güncel dönem borçlarını ekleyerek banka temalı gerçek kart görselleriyle takip edin.
                     </p>
                 </div>
-                <button wire:click="openCreateModal" class="inline-flex items-center gap-2 px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm rounded-xl shadow-md transition-colors">
+                <button wire:click="openCreateModal" class="inline-flex items-center gap-2 px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-black text-sm rounded-xl shadow-md transition-all">
                     <span>+ İlk Kredi Kartınızı Ekleyin</span>
                 </button>
             </div>
         @endforelse
     </div>
 
-    <!-- MODAL -->
+    <!-- KART EKLEME / DÜZENLEME MODALI (CANLI KART ÖNİZLEMELİ) -->
     @if ($showModal)
-        <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-            <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl space-y-4">
+        <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4 overflow-y-auto">
+            <div class="bg-white rounded-2xl max-w-lg w-full p-5 sm:p-6 shadow-2xl space-y-4 my-8">
                 <div class="flex items-center justify-between border-b border-gray-100 pb-3">
-                    <h3 class="font-bold text-lg text-gray-900">{{ $cardId ? 'Kartı Düzenle' : 'Yeni Kredi Kartı Ekle' }}</h3>
-                    <button wire:click="$set('showModal', false)" class="text-gray-400 hover:text-gray-600 font-bold">✕</button>
+                    <h3 class="font-bold text-lg text-gray-900">{{ $cardId ? 'Kredi Kartını Düzenle' : 'Yeni Kredi Kartı Tanımla' }}</h3>
+                    <button wire:click="$set('showModal', false)" class="text-gray-400 hover:text-gray-600 font-bold text-lg">✕</button>
                 </div>
 
-                <div class="space-y-3">
-                    <div class="grid grid-cols-2 gap-3">
+                <div class="space-y-3.5">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         <div>
-                            <label class="block text-xs font-semibold text-gray-700 mb-1">Banka</label>
-                            <select wire:model="bank_id" class="w-full rounded-xl border-gray-300 text-sm font-medium">
+                            <label class="block text-xs font-bold text-gray-700 mb-1">Banka Seçin</label>
+                            <select wire:model.live="bank_id" class="w-full rounded-xl border-gray-300 text-sm font-medium focus:ring-indigo-500 focus:border-indigo-500">
                                 <option value="">Banka Seçin</option>
                                 @foreach ($banks as $b)
                                     <option value="{{ $b->id }}">{{ $b->name }}</option>
                                 @endforeach
                             </select>
-                            @error('bank_id') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
+                            @error('bank_id') <span class="text-red-500 text-xs font-bold">{{ $message }}</span> @enderror
                         </div>
 
                         <div>
-                            <label class="block text-xs font-semibold text-gray-700 mb-1">Kart Adı</label>
-                            <input type="text" wire:model="name" class="w-full rounded-xl border-gray-300 text-sm" placeholder="Örn: Maximum Kart">
-                            @error('name') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
-                        </div>
-                    </div>
-
-                    <div class="grid grid-cols-2 gap-3">
-                        <div>
-                            <label class="block text-xs font-semibold text-gray-700 mb-1">Toplam Limit (TL)</label>
-                            <input type="number" step="0.01" wire:model="credit_limit" class="w-full rounded-xl border-gray-300 text-sm" placeholder="60000">
-                        </div>
-
-                        <div>
-                            <label class="block text-xs font-semibold text-gray-700 mb-1">Güncel Dönem Borcu (TL)</label>
-                            <input type="number" step="0.01" wire:model="current_debt" class="w-full rounded-xl border-gray-300 text-sm font-bold text-red-600" placeholder="45000">
+                            <label class="block text-xs font-bold text-gray-700 mb-1">Kart Adı / Markası</label>
+                            <input type="text" wire:model.live="name" class="w-full rounded-xl border-gray-300 text-sm focus:ring-indigo-500 focus:border-indigo-500" placeholder="Örn: Maximum Kart, Bonus">
+                            @error('name') <span class="text-red-500 text-xs font-bold">{{ $message }}</span> @enderror
                         </div>
                     </div>
 
                     <div class="grid grid-cols-2 gap-3">
                         <div>
-                            <label class="block text-xs font-semibold text-gray-700 mb-1">Asgari Ödeme Tutarı (TL)</label>
-                            <input type="number" step="0.01" wire:model="minimum_payment" class="w-full rounded-xl border-gray-300 text-sm" placeholder="18000">
+                            <label class="block text-xs font-bold text-gray-700 mb-1">Kartın Son 4 Hanesi</label>
+                            <input type="text" maxlength="4" wire:model.live="last_four" class="w-full rounded-xl border-gray-300 text-sm font-mono tracking-wider focus:ring-indigo-500 focus:border-indigo-500" placeholder="4892">
                         </div>
 
                         <div>
-                            <label class="block text-xs font-semibold text-gray-700 mb-1">Son Ödeme Yapılan Tarih</label>
-                            <input type="date" wire:model="last_payment_date" class="w-full rounded-xl border-gray-300 text-sm">
+                            <label class="block text-xs font-bold text-gray-700 mb-1">Toplam Kart Limiti (TL)</label>
+                            <input type="number" step="0.01" wire:model.live="credit_limit" class="w-full rounded-xl border-gray-300 text-sm font-bold focus:ring-indigo-500 focus:border-indigo-500" placeholder="60000">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 mb-1">Güncel Dönem Borcu (TL)</label>
+                            <input type="number" step="0.01" wire:model.live="current_debt" class="w-full rounded-xl border-gray-300 text-sm font-bold text-red-600 focus:ring-indigo-500 focus:border-indigo-500" placeholder="45000">
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 mb-1">Asgari Ödeme Tutarı (TL)</label>
+                            <input type="number" step="0.01" wire:model="minimum_payment" class="w-full rounded-xl border-gray-300 text-sm font-bold text-amber-600 focus:ring-indigo-500 focus:border-indigo-500" placeholder="18000">
                         </div>
                     </div>
 
                     <div class="grid grid-cols-3 gap-3">
                         <div>
-                            <label class="block text-xs font-semibold text-gray-700 mb-1">Hesap Kesim Günü</label>
-                            <input type="number" min="1" max="31" wire:model="statement_day" class="w-full rounded-xl border-gray-300 text-sm">
+                            <label class="block text-xs font-bold text-gray-700 mb-1">Hesap Kesim</label>
+                            <input type="number" min="1" max="31" wire:model="statement_day" class="w-full rounded-xl border-gray-300 text-sm" placeholder="1">
                         </div>
 
                         <div>
-                            <label class="block text-xs font-semibold text-gray-700 mb-1">Son Ödeme Günü</label>
-                            <input type="number" min="1" max="31" wire:model="due_day" class="w-full rounded-xl border-gray-300 text-sm">
+                            <label class="block text-xs font-bold text-gray-700 mb-1">Son Ödeme Günü</label>
+                            <input type="number" min="1" max="31" wire:model="due_day" class="w-full rounded-xl border-gray-300 text-sm" placeholder="10">
                         </div>
 
                         <div>
-                            <label class="block text-xs font-semibold text-gray-700 mb-1">Aylık Faiz %</label>
-                            <input type="number" step="0.01" wire:model="interest_rate" class="w-full rounded-xl border-gray-300 text-sm">
+                            <label class="block text-xs font-bold text-gray-700 mb-1">Aylık Akdi Faiz %</label>
+                            <input type="number" step="0.01" wire:model="interest_rate" class="w-full rounded-xl border-gray-300 text-sm" placeholder="4.25">
                         </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-gray-700 mb-1">En Son Ödeme Yapılan Tarih</label>
+                        <input type="date" wire:model="last_payment_date" class="w-full rounded-xl border-gray-300 text-sm">
+                        <p class="text-[10px] text-gray-500 mt-0.5">90 Günlük Yasal Takip kalkanı bu tarihe göre geriye sayım yapar.</p>
                     </div>
                 </div>
 
-                <div class="flex justify-end gap-3 pt-3">
-                    <button wire:click="$set('showModal', false)" class="px-4 py-2 text-sm font-medium text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-xl">
+                <div class="flex justify-end gap-3 pt-3 border-t border-gray-100">
+                    <button wire:click="$set('showModal', false)" class="px-4 py-2 text-sm font-bold text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-xl transition-colors">
                         İptal
                     </button>
-                    <button wire:click="save" class="px-5 py-2 text-sm font-bold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl shadow-sm">
+                    <button wire:click="save" class="px-6 py-2 text-sm font-black text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl shadow-md transition-all active:scale-95">
                         Kaydet
                     </button>
                 </div>
