@@ -1,38 +1,40 @@
 <section>
     <header>
-        <h2 class="text-lg font-medium text-gray-900">
-            {{ __('Update Password') }}
+        <h2 class="text-lg font-bold text-gray-900">
+            Şifre Değiştir
         </h2>
 
         <p class="mt-1 text-sm text-gray-600">
-            {{ __('Ensure your account is using a long, random password to stay secure.') }}
+            Hesabınızın güvenliğini korumak için uzun ve karmaşık bir şifre kullanın.
         </p>
     </header>
 
-    <form method="post" action="{{ route('password.update') }}" class="mt-6 space-y-6">
+    <form method="post" action="{{ route('password.update') }}" class="mt-6 space-y-4">
         @csrf
         @method('put')
 
         <div>
-            <x-input-label for="update_password_current_password" :value="__('Current Password')" />
-            <x-text-input id="update_password_current_password" name="current_password" type="password" class="mt-1 block w-full" autocomplete="current-password" />
-            <x-input-error :messages="$errors->updatePassword->get('current_password')" class="mt-2" />
+            <label for="update_password_current_password" class="block text-xs font-semibold text-gray-700 mb-1">Mevcut Şifreniz</label>
+            <input id="update_password_current_password" name="current_password" type="password" class="mt-1 block w-full rounded-xl border-gray-300 text-sm font-medium focus:border-indigo-500 focus:ring-indigo-500" autocomplete="current-password" />
+            <x-input-error :messages="$errors->updatePassword->get('current_password')" class="mt-1" />
         </div>
 
         <div>
-            <x-input-label for="update_password_password" :value="__('New Password')" />
-            <x-text-input id="update_password_password" name="password" type="password" class="mt-1 block w-full" autocomplete="new-password" />
-            <x-input-error :messages="$errors->updatePassword->get('password')" class="mt-2" />
+            <label for="update_password_password" class="block text-xs font-semibold text-gray-700 mb-1">Yeni Şifreniz</label>
+            <input id="update_password_password" name="password" type="password" class="mt-1 block w-full rounded-xl border-gray-300 text-sm font-medium focus:border-indigo-500 focus:ring-indigo-500" autocomplete="new-password" placeholder="En az 8 karakter" />
+            <x-input-error :messages="$errors->updatePassword->get('password')" class="mt-1" />
         </div>
 
         <div>
-            <x-input-label for="update_password_password_confirmation" :value="__('Confirm Password')" />
-            <x-text-input id="update_password_password_confirmation" name="password_confirmation" type="password" class="mt-1 block w-full" autocomplete="new-password" />
-            <x-input-error :messages="$errors->updatePassword->get('password_confirmation')" class="mt-2" />
+            <label for="update_password_password_confirmation" class="block text-xs font-semibold text-gray-700 mb-1">Yeni Şifre Tekrarı</label>
+            <input id="update_password_password_confirmation" name="password_confirmation" type="password" class="mt-1 block w-full rounded-xl border-gray-300 text-sm font-medium focus:border-indigo-500 focus:ring-indigo-500" autocomplete="new-password" placeholder="Yeni şifrenizi tekrar yazın" />
+            <x-input-error :messages="$errors->updatePassword->get('password_confirmation')" class="mt-1" />
         </div>
 
-        <div class="flex items-center gap-4">
-            <x-primary-button>{{ __('Save') }}</x-primary-button>
+        <div class="flex items-center gap-4 pt-2">
+            <button type="submit" class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm rounded-xl shadow-sm transition-colors">
+                Şifreyi Güncelle
+            </button>
 
             @if (session('status') === 'password-updated')
                 <p
@@ -40,8 +42,8 @@
                     x-show="show"
                     x-transition
                     x-init="setTimeout(() => show = false, 2000)"
-                    class="text-sm text-gray-600"
-                >{{ __('Saved.') }}</p>
+                    class="text-xs font-bold text-emerald-600"
+                >✓ Şifreniz Başarıyla Güncellendi.</p>
             @endif
         </div>
     </form>
