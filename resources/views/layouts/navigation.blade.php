@@ -68,12 +68,18 @@
                 </div>
             </div>
 
-            <!-- Right Side: User Profile & Role Panels Menu (Desktop) -->
-            <div class="hidden md:flex items-center gap-3 shrink-0">
+            <!-- Right Side: Return to Home + User Profile & Role Panels Menu (Desktop) -->
+            <div class="hidden md:flex items-center gap-2.5 shrink-0">
+                <!-- Direct Return to Public Homepage Button -->
+                <a href="{{ route('home') }}" class="inline-flex items-center gap-1.5 px-3 py-1.5 border border-gray-200 text-xs font-bold rounded-lg text-gray-700 bg-gray-50 hover:bg-gray-100 hover:text-indigo-600 transition-colors shadow-xs" title="Tanıtım ve Ana Sayfaya Dön">
+                    <span>🌐</span>
+                    <span>Ana Sayfa</span>
+                </a>
+
                 <x-dropdown align="right" width="56">
                     <x-slot name="trigger">
-                        <button class="inline-flex items-center gap-2 px-3.5 py-2 border border-gray-200 text-xs sm:text-sm font-bold rounded-xl text-gray-800 bg-gray-50 hover:bg-gray-100 hover:border-gray-300 focus:outline-none transition-all duration-150 shadow-sm">
-                            <div class="w-6 h-6 rounded-full bg-indigo-600 text-white flex items-center justify-center text-xs font-black">
+                        <button class="inline-flex items-center gap-2 px-3.5 py-2 border border-gray-200 text-xs sm:text-sm font-bold rounded-lg text-gray-800 bg-gray-50 hover:bg-gray-100 hover:border-gray-300 focus:outline-none transition-all duration-150 shadow-xs">
+                            <div class="w-6 h-6 rounded-md bg-indigo-600 text-white flex items-center justify-center text-xs font-black">
                                 {{ mb_substr(Auth::user()->name, 0, 1) }}
                             </div>
                             <div class="max-w-[120px] truncate">{{ Auth::user()->name }}</div>
@@ -89,6 +95,14 @@
                         <div class="px-4 py-2.5 border-b border-gray-100 bg-gray-50/70">
                             <p class="text-xs font-bold text-gray-900 truncate">{{ Auth::user()->name }}</p>
                             <p class="text-[11px] text-gray-500 truncate">{{ Auth::user()->email }}</p>
+                        </div>
+
+                        <!-- Return to Public Home Link -->
+                        <div class="py-1 border-b border-gray-100 bg-indigo-50/20">
+                            <x-dropdown-link :href="route('home')" class="flex items-center gap-2 text-indigo-700 font-bold hover:bg-indigo-50">
+                                <span>🌐</span>
+                                <span>DVT Bank Tanıtım & Ana Sayfa</span>
+                            </x-dropdown-link>
                         </div>
 
                         <!-- Management & Admin Roles Section -->
@@ -143,7 +157,7 @@
 
             <!-- Mobile Hamburger Button -->
             <div class="flex items-center md:hidden">
-                <button @click="open = true" class="inline-flex items-center justify-center p-2 rounded-xl text-gray-700 bg-gray-50 hover:bg-gray-100 border border-gray-200 focus:outline-none transition-colors shadow-sm" aria-label="Menüyü Aç">
+                <button @click="open = true" class="inline-flex items-center justify-center p-2 rounded-lg text-gray-700 bg-gray-50 hover:bg-gray-100 border border-gray-200 focus:outline-none transition-colors shadow-xs" aria-label="Menüyü Aç">
                     <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
                     </svg>
@@ -184,38 +198,47 @@
              class="fixed inset-y-0 right-0 w-full max-w-xs bg-white border-l border-gray-200 shadow-2xl flex flex-col justify-between overflow-hidden z-50 text-gray-900">
             
             <!-- Drawer Header & Navigation (Scrollable) -->
-            <div class="flex-1 overflow-y-auto px-5 py-6 space-y-6">
+            <div class="flex-1 overflow-y-auto px-5 py-6 space-y-5">
                 <!-- Top Brand & Close Button Bar -->
                 <div class="flex items-center justify-between border-b border-gray-100 pb-4">
                     <div class="flex items-center gap-2">
                         <x-application-logo class="h-7 w-auto text-indigo-700" />
                         <span class="font-black text-sm text-gray-900 tracking-tight">DVT CRM</span>
                     </div>
-                    <button @click="open = false" class="p-2 rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-600 hover:text-gray-900 transition-colors">
+                    <button @click="open = false" class="p-2 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-600 hover:text-gray-900 transition-colors">
                         <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12" />
                         </svg>
                     </button>
                 </div>
 
+                <!-- Return to Public Home Action (Mobile) -->
+                <a href="{{ route('home') }}" class="flex items-center justify-between px-3.5 py-2.5 rounded-lg text-xs font-bold text-indigo-700 bg-indigo-50 border border-indigo-200 hover:bg-indigo-100 transition-colors">
+                    <span class="flex items-center gap-2">
+                        <span>🌐</span>
+                        <span>DVT Bank Ana Sayfası</span>
+                    </span>
+                    <span>→</span>
+                </a>
+
                 <!-- User Profile Card (Light Gray Card) -->
-                <div class="p-3.5 rounded-2xl bg-gray-50 border border-gray-200 flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-xl bg-indigo-600 text-white flex items-center justify-center font-black text-sm shadow-sm">
+                <div class="p-3 rounded-lg bg-gray-50 border border-gray-200 flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-md bg-indigo-600 text-white flex items-center justify-center font-black text-xs shadow-xs">
                         {{ mb_substr(Auth::user()->name, 0, 1) }}
                     </div>
                     <div class="min-w-0 flex-1">
-                        <p class="font-bold text-sm text-gray-900 truncate">{{ Auth::user()->name }}</p>
-                        <p class="text-[11px] text-gray-500 truncate">{{ Auth::user()->email }}</p>
+                        <p class="font-bold text-xs text-gray-900 truncate">{{ Auth::user()->name }}</p>
+                        <p class="text-[10px] text-gray-500 truncate">{{ Auth::user()->email }}</p>
                     </div>
                 </div>
 
                 <!-- Management Panels (If Super Admin / Admin) -->
                 @if (Auth::user()->hasRole('super_admin') || Auth::user()->hasRole('admin'))
-                    <div class="space-y-2">
+                    <div class="space-y-1.5">
                         <span class="text-[10px] font-black uppercase tracking-wider text-indigo-600 px-1 block">Yetkili Panelleri</span>
-                        <div class="grid grid-cols-1 gap-2">
+                        <div class="grid grid-cols-1 gap-1.5">
                             @if (Auth::user()->hasRole('super_admin'))
-                                <a href="/super" target="_blank" class="flex items-center justify-between p-3 rounded-xl bg-red-50 border border-red-200 text-red-700 font-bold text-xs hover:bg-red-100 transition-colors">
+                                <a href="/super" target="_blank" class="flex items-center justify-between p-2.5 rounded-lg bg-red-50 border border-red-200 text-red-700 font-bold text-xs hover:bg-red-100 transition-colors">
                                     <span class="flex items-center gap-2">
                                         <span>⚙️</span>
                                         <span>Süper Admin Paneli</span>
@@ -224,7 +247,7 @@
                                 </a>
                             @endif
                             @if (Auth::user()->hasRole('admin'))
-                                <a href="/admin" target="_blank" class="flex items-center justify-between p-3 rounded-xl bg-indigo-50 border border-indigo-200 text-indigo-700 font-bold text-xs hover:bg-indigo-100 transition-colors">
+                                <a href="/admin" target="_blank" class="flex items-center justify-between p-2.5 rounded-lg bg-indigo-50 border border-indigo-200 text-indigo-700 font-bold text-xs hover:bg-indigo-100 transition-colors">
                                     <span class="flex items-center gap-2">
                                         <span>🛡️</span>
                                         <span>Yönetim Paneli</span>
@@ -238,50 +261,50 @@
 
                 <!-- Core Navigation Links (Clean Light Theme) -->
                 <div class="space-y-1">
-                    <span class="text-[10px] font-black uppercase tracking-wider text-gray-400 px-1 block mb-2">Finansal Menü</span>
+                    <span class="text-[10px] font-black uppercase tracking-wider text-gray-400 px-1 block mb-1.5">Finansal Menü</span>
                     
-                    <a href="{{ route('dashboard') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-bold transition-all {{ request()->routeIs('dashboard') ? 'bg-indigo-50 text-indigo-700 border-l-4 border-indigo-600' : 'text-gray-700 hover:bg-gray-50 hover:text-indigo-600' }}">
+                    <a href="{{ route('dashboard') }}" class="flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-bold transition-all {{ request()->routeIs('dashboard') ? 'bg-indigo-50 text-indigo-700 border-l-4 border-indigo-600' : 'text-gray-700 hover:bg-gray-50 hover:text-indigo-600' }}">
                         <span>📊</span>
                         <span>Kontrol Paneli</span>
                     </a>
 
-                    <a href="{{ route('debts.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-bold transition-all {{ request()->routeIs('debts.*') ? 'bg-indigo-50 text-indigo-700 border-l-4 border-indigo-600' : 'text-gray-700 hover:bg-gray-50 hover:text-indigo-600' }}">
+                    <a href="{{ route('debts.index') }}" class="flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-bold transition-all {{ request()->routeIs('debts.*') ? 'bg-indigo-50 text-indigo-700 border-l-4 border-indigo-600' : 'text-gray-700 hover:bg-gray-50 hover:text-indigo-600' }}">
                         <span>💳</span>
                         <span>Borçlarım</span>
                     </a>
 
-                    <a href="{{ route('cards.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-bold transition-all {{ request()->routeIs('cards.*') ? 'bg-indigo-50 text-indigo-700 border-l-4 border-indigo-600' : 'text-gray-700 hover:bg-gray-50 hover:text-indigo-600' }}">
+                    <a href="{{ route('cards.index') }}" class="flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-bold transition-all {{ request()->routeIs('cards.*') ? 'bg-indigo-50 text-indigo-700 border-l-4 border-indigo-600' : 'text-gray-700 hover:bg-gray-50 hover:text-indigo-600' }}">
                         <span>💳</span>
                         <span>Kartlarım</span>
                     </a>
 
-                    <a href="{{ route('accounts.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-bold transition-all {{ request()->routeIs('accounts.*') ? 'bg-indigo-50 text-indigo-700 border-l-4 border-indigo-600' : 'text-gray-700 hover:bg-gray-50 hover:text-indigo-600' }}">
+                    <a href="{{ route('accounts.index') }}" class="flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-bold transition-all {{ request()->routeIs('accounts.*') ? 'bg-indigo-50 text-indigo-700 border-l-4 border-indigo-600' : 'text-gray-700 hover:bg-gray-50 hover:text-indigo-600' }}">
                         <span>🏦</span>
                         <span>Hesaplarım & KMH</span>
                     </a>
 
-                    <a href="{{ route('cashflow.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-bold transition-all {{ request()->routeIs('cashflow.*') ? 'bg-indigo-50 text-indigo-700 border-l-4 border-indigo-600' : 'text-gray-700 hover:bg-gray-50 hover:text-indigo-600' }}">
+                    <a href="{{ route('cashflow.index') }}" class="flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-bold transition-all {{ request()->routeIs('cashflow.*') ? 'bg-indigo-50 text-indigo-700 border-l-4 border-indigo-600' : 'text-gray-700 hover:bg-gray-50 hover:text-indigo-600' }}">
                         <span>📈</span>
                         <span>Gelir / Gider</span>
                     </a>
 
-                    <a href="{{ route('planner.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-bold transition-all {{ request()->routeIs('planner.*') ? 'bg-indigo-50 text-indigo-700 border-l-4 border-indigo-600' : 'text-gray-700 hover:bg-gray-50 hover:text-indigo-600' }}">
+                    <a href="{{ route('planner.index') }}" class="flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-bold transition-all {{ request()->routeIs('planner.*') ? 'bg-indigo-50 text-indigo-700 border-l-4 border-indigo-600' : 'text-gray-700 hover:bg-gray-50 hover:text-indigo-600' }}">
                         <span>🎯</span>
                         <span>Ödeme Planı (Çığ / Kartopu)</span>
                     </a>
 
-                    <a href="{{ route('calendar.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-bold transition-all {{ request()->routeIs('calendar.*') ? 'bg-indigo-50 text-indigo-700 border-l-4 border-indigo-600' : 'text-gray-700 hover:bg-gray-50 hover:text-indigo-600' }}">
+                    <a href="{{ route('calendar.index') }}" class="flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-bold transition-all {{ request()->routeIs('calendar.*') ? 'bg-indigo-50 text-indigo-700 border-l-4 border-indigo-600' : 'text-gray-700 hover:bg-gray-50 hover:text-indigo-600' }}">
                         <span>📅</span>
                         <span>Ödeme Takvimi & Vadeler</span>
                     </a>
 
-                    <a href="{{ route('reports.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-bold transition-all {{ request()->routeIs('reports.*') ? 'bg-indigo-50 text-indigo-700 border-l-4 border-indigo-600' : 'text-gray-700 hover:bg-gray-50 hover:text-indigo-600' }}">
+                    <a href="{{ route('reports.index') }}" class="flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-bold transition-all {{ request()->routeIs('reports.*') ? 'bg-indigo-50 text-indigo-700 border-l-4 border-indigo-600' : 'text-gray-700 hover:bg-gray-50 hover:text-indigo-600' }}">
                         <span>📑</span>
                         <span>Finansal Raporlar</span>
                     </a>
 
                     <!-- AI Coach Highlight Link -->
-                    <a href="{{ route('ai.coach') }}" class="flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-bold transition-all {{ request()->routeIs('ai.*') ? 'bg-indigo-100 text-indigo-800 border-l-4 border-indigo-600' : 'bg-indigo-50/80 border border-indigo-100 text-indigo-700 hover:bg-indigo-100' }}">
+                    <a href="{{ route('ai.coach') }}" class="flex items-center justify-between px-3 py-2 rounded-lg text-xs font-bold transition-all {{ request()->routeIs('ai.*') ? 'bg-indigo-100 text-indigo-800 border-l-4 border-indigo-600' : 'bg-indigo-50/80 border border-indigo-100 text-indigo-700 hover:bg-indigo-100' }}">
                         <span class="flex items-center gap-2">
                             <span>🤖</span>
                             <span>AI Finans Koçu</span>
@@ -289,7 +312,7 @@
                         <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
                     </a>
 
-                    <a href="{{ route('banks.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-bold transition-all {{ request()->routeIs('banks.*') ? 'bg-indigo-50 text-indigo-700 border-l-4 border-indigo-600' : 'text-gray-700 hover:bg-gray-50 hover:text-indigo-600' }}">
+                    <a href="{{ route('banks.index') }}" class="flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-bold transition-all {{ request()->routeIs('banks.*') ? 'bg-indigo-50 text-indigo-700 border-l-4 border-indigo-600' : 'text-gray-700 hover:bg-gray-50 hover:text-indigo-600' }}">
                         <span>🏛️</span>
                         <span>Bankalarım</span>
                     </a>
@@ -297,15 +320,15 @@
             </div>
 
             <!-- Drawer Bottom Actions (Pinned Light Theme) -->
-            <div class="p-5 border-t border-gray-100 bg-gray-50/80 space-y-2">
-                <a href="{{ route('profile.edit') }}" class="flex items-center gap-3 w-full px-3 py-2 rounded-xl text-xs font-bold text-gray-700 hover:bg-white hover:text-indigo-600 border border-transparent hover:border-gray-200 transition-all">
+            <div class="p-4 border-t border-gray-100 bg-gray-50/80 space-y-1.5">
+                <a href="{{ route('profile.edit') }}" class="flex items-center gap-3 w-full px-3 py-2 rounded-lg text-xs font-bold text-gray-700 hover:bg-white hover:text-indigo-600 border border-transparent hover:border-gray-200 transition-all">
                     <span>👤</span>
                     <span>Profil & Güvenlik Ayarları</span>
                 </a>
 
                 <form method="POST" action="{{ route('logout') }}" class="w-full">
                     @csrf
-                    <button type="submit" class="flex items-center gap-3 w-full px-3 py-2 rounded-xl text-xs font-bold text-red-600 hover:bg-red-50 transition-colors text-left">
+                    <button type="submit" class="flex items-center gap-3 w-full px-3 py-2 rounded-lg text-xs font-bold text-red-600 hover:bg-red-50 transition-colors text-left">
                         <span>🚪</span>
                         <span>Güvenli Çıkış Yap</span>
                     </button>
