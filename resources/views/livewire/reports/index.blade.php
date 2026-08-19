@@ -135,7 +135,7 @@
             <span>Bankalar & Faiz Yükü</span>
         </button>
         <button wire:click="setTab('limits')" class="px-4 py-2 rounded-xl text-xs sm:text-sm font-black transition-all whitespace-nowrap flex items-center gap-2 {{ $activeTab === 'limits' ? 'bg-indigo-600 text-white shadow-md' : 'text-gray-600 hover:bg-gray-100' }}">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5ptm-16.5 3h6m-6 3h6m-6 3h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5z"/></svg>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 3h6m-6 3h6m-6 3h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5z"/></svg>
             <span>Kart & Limit Risk Matrisi</span>
         </button>
     </div>
@@ -418,7 +418,7 @@
             <div class="bg-white rounded-3xl p-6 border border-gray-200/90 shadow-sm space-y-4">
                 <div class="flex items-center justify-between border-b border-gray-100 pb-3">
                     <h4 class="font-black text-gray-900 text-sm flex items-center gap-2">
-                        <svg class="w-4 h-4 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5ptm-16.5 3h6m-6 3h6m-6 3h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5z"/></svg>
+                        <svg class="w-4 h-4 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 3h6m-6 3h6m-6 3h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5z"/></svg>
                         <span>Kredi Kartı Limitleri</span>
                     </h4>
                     <span class="px-2.5 py-0.5 rounded-full text-xs font-black {{ $limitAnalysis['card_utilization'] > 80 ? 'bg-red-100 text-red-800' : 'bg-indigo-100 text-indigo-800' }}">

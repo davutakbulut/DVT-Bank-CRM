@@ -65,7 +65,7 @@
                         </button>
                         <button wire:click="$set('activeTab', 'debt')" 
                                 class="py-2 sm:py-2.5 px-1 sm:px-3 rounded-lg sm:rounded-xl transition-all flex items-center justify-center gap-1 sm:gap-1.5 text-center cursor-pointer {{ $activeTab === 'debt' ? 'bg-white text-indigo-700 shadow-sm font-black' : 'text-slate-600 hover:text-slate-900' }}">
-                            <svg class="w-4 h-4 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5ptm-16.5 3h6m-6 3h6m-6 3h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5z"/></svg>
+                            <svg class="w-4 h-4 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 3h6m-6 3h6m-6 3h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5z"/></svg>
                             <span class="text-[11px] sm:text-xs truncate">Borç/Kart</span>
                         </button>
                         <button wire:click="$set('activeTab', 'bulk')" 
