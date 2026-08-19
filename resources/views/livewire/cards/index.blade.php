@@ -117,8 +117,9 @@
         </div>
     </div>
 
-    <!-- Kartlar Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <!-- Kartlar Görünümü (Grid vs Tablo) -->
+    @if ($viewMode === 'grid')
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         @forelse ($cards as $card)
             @php
                 $bankName = mb_strtolower($card->bank?->name ?? '');
