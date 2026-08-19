@@ -217,6 +217,10 @@ class Index extends Component
             return 0;
         });
 
+        // Toplam harcanabilir / çekilebilir hazır likidite (Vadesiz Pozitif Nakit + Kalan Kullanılabilir KMH Limitleri)
+        $totalAvailableLiquidity = $totalPositive + $totalAvailableKmh;
+        $netLiquidity = (float) $accounts->sum('balance');
+
         // Chart Data (Hesap Bakiyeleri & KMH Kullanımı)
         $accountBalancesChartData = $accounts->map(fn($acc) => [
             'name' => mb_strimwidth(($acc->bank?->name ? $acc->bank->name . ' - ' : '') . $acc->name, 0, 20, '...'),
