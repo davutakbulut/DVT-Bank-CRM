@@ -612,14 +612,4 @@
             </div>
         </div>
     @endif
-</div>600 bg-gray-100 hover:bg-gray-200 rounded-xl transition-colors">
-                        İptal
-                    </button>
-                    <button wire:click="save" class="px-6 py-2 text-sm font-black text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl shadow-md transition-all active:scale-95">
-                        Kaydet
-                    </button>
-                </div>
-            </div>
-        </div>
-    @endif
 </div>
