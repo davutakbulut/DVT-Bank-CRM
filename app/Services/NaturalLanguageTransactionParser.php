@@ -49,6 +49,11 @@ class NaturalLanguageTransactionParser
     {
         $cleanText = trim($text);
         $lower = mb_strtolower($cleanText, 'UTF-8');
+        $ascii = str_replace(
+            ['ı', 'ş', 'ğ', 'ü', 'ö', 'ç', 'İ', 'Ş', 'Ğ', 'Ü', 'Ö', 'Ç'],
+            ['i', 's', 'g', 'u', 'o', 'c', 'i', 's', 'g', 'u', 'o', 'c'],
+            $lower
+        );
 
         $result = [
             'type' => 'expense', // expense, income, debt, card, payment
@@ -118,34 +123,34 @@ class NaturalLanguageTransactionParser
         }
 
         // 2. İŞLEM TÜRÜNÜ TESPİT ET (Income / Expense / Debt / Card / Payment)
-        if (preg_match('/(maaş|avans|prim|hakediş|kira geliri|tahsilat|yattı|hesabıma geldi|hesabıma geçti|gelir|kazanç|burs|harçlık)/u', $lower)) {
+        if (preg_match('/(maaş|maas|avans|prim|hakediş|hakedis|kira geliri|tahsilat|yattı|yatti|hesabıma geldi|hesabima geldi|hesabıma geçti|hesabima gecti|gelir|kazanç|kazanc|burs|harçlık|harclik)/u', $lower . ' ' . $ascii)) {
             $result['type'] = 'income';
-            if (str_contains($lower, 'maaş')) {
+            if (str_contains($ascii, 'maas')) {
                 $result['income_type'] = 'salary';
                 $result['is_recurring'] = true;
                 $result['frequency'] = 'monthly';
-            } elseif (str_contains($lower, 'prim') || str_contains($lower, 'hakediş')) {
+            } elseif (str_contains($ascii, 'prim') || str_contains($ascii, 'hakedis')) {
                 $result['income_type'] = 'freelance';
-            } elseif (str_contains($lower, 'kira')) {
+            } elseif (str_contains($ascii, 'kira')) {
                 $result['income_type'] = 'rental';
                 $result['is_recurring'] = true;
                 $result['frequency'] = 'monthly';
             }
-        } elseif (preg_match('/(kredi çektim|borç aldım|kredi ekle|ihtiyaç kredisi|konut kredisi|taşıt kredisi|kmh açtım)/u', $lower)) {
+        } elseif (preg_match('/(kredi çektim|kredi cektim|borç aldım|borc aldim|kredi ekle|ihtiyaç kredisi|ihtiyac kredisi|konut kredisi|taşıt kredisi|tasit kredisi|kmh açtım|kmh actim)/u', $lower . ' ' . $ascii)) {
             $result['type'] = 'debt';
-        } elseif (preg_match('/(kredi kartı ekle|kart ekle|yeni kart|worldcard|bonus|maximum|axess|cardfinans|paraf|kartvizit)/u', $lower) && !str_contains($lower, 'kartıyla') && !str_contains($lower, 'kartımdan') && !str_contains($lower, 'ile aldım')) {
+        } elseif (preg_match('/(kredi kartı ekle|kredi karti ekle|kart ekle|yeni kart|worldcard|bonus|maximum|axess|cardfinans|paraf|kartvizit)/u', $lower . ' ' . $ascii) && !str_contains($lower, 'kartıyla') && !str_contains($lower, 'kartımdan') && !str_contains($lower, 'ile aldım')) {
             $result['type'] = 'card';
-        } elseif (preg_match('/(ödendi|borç ödedim|kart borcu ödedim|taksit ödedim|kredi ödedim|kapatıldı)/u', $lower)) {
+        } elseif (preg_match('/(ödendi|odendi|borç ödedim|borc odedim|kart borcu ödedim|kart borcu odedim|taksit ödedim|taksit odedim|kredi ödedim|kredi odedim|kapatıldı|kapatildi)/u', $lower . ' ' . $ascii)) {
             $result['type'] = 'payment';
         } else {
             $result['type'] = 'expense';
         }
 
-        // 3. BANKAYI BUL (Spesifik Banka Anahtar Kelimeleri)
+        // 3. BANKAYI BUL (Doğrudan + Akıllı Typo / Yazım Hatası Toleranslı Eşleme)
         $bankKeywords = [
-            'enpara' => 'Enpara.com',
             'garanti' => 'Garanti BBVA',
             'bbva' => 'Garanti BBVA',
+            'enpara' => 'Enpara.com',
             'ziraat' => 'Ziraat Bankası',
             'akbank' => 'Akbank',
             'türkiye finans' => 'Türkiye Finans',
@@ -165,6 +170,7 @@ class NaturalLanguageTransactionParser
             'papara' => 'Papara',
         ];
 
+        // A) Doğrudan substring eşleme
         foreach ($bankKeywords as $kw => $canonicalName) {
             if (str_contains($lower, $kw)) {
                 $b = Bank::where('name', 'like', '%' . $canonicalName . '%')
@@ -174,6 +180,38 @@ class NaturalLanguageTransactionParser
                     $result['bank_id'] = $b->id;
                     $result['bank_name'] = $b->name;
                     break;
+                }
+            }
+        }
+
+        // B) Typo / Yazım Hatası Eşleme (Örn: ganranti, enpra, akbak, zirat vb.)
+        if (!$result['bank_id']) {
+            $words = preg_split('/[\s,\.\/\-_]+/u', $lower);
+            $targetBanks = [
+                'garanti' => 'Garanti BBVA',
+                'enpara' => 'Enpara.com',
+                'ziraat' => 'Ziraat Bankası',
+                'akbank' => 'Akbank',
+                'finans' => 'Türkiye Finans',
+                'qnb' => 'QNB Bank',
+                'yapikredi' => 'Yapı Kredi',
+                'isbankasi' => 'Türkiye İş Bankası',
+                'vakifbank' => 'VakıfBank',
+            ];
+
+            foreach ($words as $w) {
+                if (mb_strlen($w) < 4) continue;
+                foreach ($targetBanks as $canonWord => $bankName) {
+                    $dist = levenshtein($w, $canonWord);
+                    similar_text($w, $canonWord, $percent);
+                    if ($dist <= 2 || $percent >= 75) {
+                        $b = Bank::where('name', 'like', '%' . $bankName . '%')->first();
+                        if ($b) {
+                            $result['bank_id'] = $b->id;
+                            $result['bank_name'] = $b->name;
+                            break 2;
+                        }
+                    }
                 }
             }
         }
