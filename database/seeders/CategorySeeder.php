@@ -10,20 +10,20 @@ class CategorySeeder extends Seeder
     public function run(): void
     {
         $categories = [
-            ['name' => 'Kira & Barınma', 'type' => 'expense', 'icon' => 'home'],
-            ['name' => 'Faturalar (Elektrik, Su, Doğalgaz)', 'type' => 'expense', 'icon' => 'bolt'],
-            ['name' => 'Market & Gıda', 'type' => 'expense', 'icon' => 'shopping-cart'],
-            ['name' => 'Ulaşım & Yakıt', 'type' => 'expense', 'icon' => 'truck'],
-            ['name' => 'Sağlık & İlaç', 'type' => 'expense', 'icon' => 'heart'],
-            ['name' => 'Eğitim & Çocuk', 'type' => 'expense', 'icon' => 'academic-cap'],
-            ['name' => 'Abonelikler & Dijital', 'type' => 'expense', 'icon' => 'globe'],
-            ['name' => 'Eğlence & Sosyal', 'type' => 'expense', 'icon' => 'sparkles'],
-            ['name' => 'Diğer Giderler', 'type' => 'expense', 'icon' => 'tag'],
+            ['name' => 'Kira & Barınma', 'type' => 'expense', 'icon' => '🏠'],
+            ['name' => 'Faturalar (Elektrik, Su, Doğalgaz)', 'type' => 'expense', 'icon' => '💡'],
+            ['name' => 'Market & Gıda', 'type' => 'expense', 'icon' => '🛒'],
+            ['name' => 'Ulaşım & Yakıt', 'type' => 'expense', 'icon' => '🚗'],
+            ['name' => 'Sağlık & İlaç', 'type' => 'expense', 'icon' => '💊'],
+            ['name' => 'Eğitim & Çocuk', 'type' => 'expense', 'icon' => '🎓'],
+            ['name' => 'Abonelikler & Dijital', 'type' => 'expense', 'icon' => '🌐'],
+            ['name' => 'Eğlence & Sosyal', 'type' => 'expense', 'icon' => '✨'],
+            ['name' => 'Diğer Giderler', 'type' => 'expense', 'icon' => '🏷️'],
 
-            ['name' => 'Aylık Maaş', 'type' => 'income', 'icon' => 'banknotes'],
-            ['name' => 'Freelance / Ek Gelir', 'type' => 'income', 'icon' => 'briefcase'],
-            ['name' => 'Kira Geliri', 'type' => 'income', 'icon' => 'building-office'],
-            ['name' => 'Diğer Gelirler', 'type' => 'income', 'icon' => 'currency-dollar'],
+            ['name' => 'Aylık Maaş', 'type' => 'income', 'icon' => '💰'],
+            ['name' => 'Freelance / Ek Gelir', 'type' => 'income', 'icon' => '💼'],
+            ['name' => 'Kira Geliri', 'type' => 'income', 'icon' => '🏢'],
+            ['name' => 'Diğer Gelirler', 'type' => 'income', 'icon' => '💵'],
         ];
 
         foreach ($categories as $cat) {
