@@ -36,12 +36,12 @@ class TurkiyeFinansLiveSeeder extends Seeder
             [
                 'user_id' => $user->id,
                 'bank_id' => $bank->id,
-                'iban' => 'TR79 0020 6002 8005 0060 8400 01',
+                'account_number' => '5006084-1',
             ],
             [
                 'name' => 'Türkiye Finans Cari Hesap (HESAP-1)',
                 'type' => 'checking',
-                'account_number' => '5006084-1',
+                'iban' => 'TR79 0020 6002 8005 0060 8400 01',
                 'branch_code' => '280',
                 'branch_name' => 'Başakşehir Şubesi',
                 'balance' => 0.00,
@@ -53,12 +53,12 @@ class TurkiyeFinansLiveSeeder extends Seeder
             [
                 'user_id' => $user->id,
                 'bank_id' => $bank->id,
-                'iban' => 'TR52 0020 6002 8005 0060 8400 02',
+                'account_number' => '5006084-2',
             ],
             [
                 'name' => 'Türkiye Finans Cari Hesap (HESAP-2)',
                 'type' => 'checking',
-                'account_number' => '5006084-2',
+                'iban' => 'TR52 0020 6002 8005 0060 8400 02',
                 'branch_code' => '280',
                 'branch_name' => 'Başakşehir Şubesi',
                 'balance' => 0.00,
@@ -70,12 +70,12 @@ class TurkiyeFinansLiveSeeder extends Seeder
             [
                 'user_id' => $user->id,
                 'bank_id' => $bank->id,
-                'iban' => 'TR75 0020 6002 8005 0060 8421 10',
+                'account_number' => '5006084-2110',
             ],
             [
                 'name' => 'Türkiye Finans Teminat Hesabı',
                 'type' => 'checking',
-                'account_number' => '5006084-2110',
+                'iban' => 'TR75 0020 6002 8005 0060 8421 10',
                 'branch_code' => '280',
                 'branch_name' => 'Başakşehir Şubesi',
                 'balance' => 0.00,

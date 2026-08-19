@@ -33,12 +33,12 @@ class AkbankLiveSeeder extends Seeder
             [
                 'user_id' => $user->id,
                 'bank_id' => $bank->id,
-                'iban' => 'TR24 0004 6004 4788 8000 2960 03',
+                'account_number' => '0296003',
             ],
             [
                 'name' => 'Akbank Vadesiz TL (Artı Para)',
                 'type' => 'checking',
-                'account_number' => '0296003',
+                'iban' => 'TR24 0004 6004 4788 8000 2960 03',
                 'branch_code' => '0447',
                 'branch_name' => 'ESENLER/İSTANBUL',
                 'balance' => -59380.90,
