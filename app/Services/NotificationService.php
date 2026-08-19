@@ -37,15 +37,15 @@ class NotificationService
         $context = $contextBuilder->build($user);
 
         $prompt = "Kullanıcının güncel finansal veri tablosu:\n" . json_encode($context, JSON_UNESCAPED_UNICODE) . "\n\n";
-        $prompt .= "Kullanıcıya bildirim olarak gönderilmek üzere tek bir kritik günlük tavsiye üret.\n";
+        $prompt .= "Kullanıcıya bildirim merkezinde gösterilmek üzere samimi bir dost tavsiyesi, kritik bir gecikme uyarısı veya nokta atışı bir borç kapatma stratejisi üret.\n";
         $prompt .= "SADECE aşağıdaki formatta yanıt ver:\n";
-        $prompt .= "BAŞLIK: [En fazla 5 kelimelik çarpıcı Türkçe başlık]\n";
-        $prompt .= "MESAJ: [En fazla 2 cümlelik, net tutar ve banka içeren aksiyon tavsiyesi]\n";
+        $prompt .= "BAŞLIK: [En fazla 5-6 kelimelik çarpıcı, emojili Türkçe başlık]\n";
+        $prompt .= "MESAJ: [En fazla 2-3 cümlelik, kullanıcının gerçek banka ve rakamlarını kullanan, samimi, yol gösterici dostane tavsiye veya acil uyarı]\n";
         $prompt .= "SEVERITY: [info veya warning veya danger veya success]";
 
-        $systemPrompt = "Sen bir finans ve borç kriz yönetim uzmanısın. Kısa, net, banka isimleri ve rakamlarla konuşan bildirim metinleri yazarsın.";
+        $systemPrompt = "Sen kullanıcının kişisel yapay zeka finans koçu ve sadık bir dostusun. Kullanıcının canını yakacak faizleri durdurmak, onu 90 günlük yasal takipten korumak ve ona moral verip somut taktikler göstermek için konuşursun. Sayıları standart Türkçe (Örn: 49.000 TL) yaz, yabancı karakter kullanma.";
 
-        $title = "💡 Günlük AI Finans Tavsiyesi";
+        $title = "💡 Günlük Finans Koçu Tavsiyesi";
         $message = "En yüksek faizli borçlarınıza odaklanarak bu ayki faiz yükünüzü hafifletebilirsiniz.";
         $severity = "info";
 
@@ -69,15 +69,15 @@ class NotificationService
         }
 
         if ($aiContent) {
-            // Regex veya satır parçalama ile başlık/mesaj ayrıştır
-            if (preg_match('/BAŞLIK:\s*(.+)/i', $aiContent, $m)) {
-                $title = trim($m[1]);
+            $cleanedAi = \App\Helpers\AiFormatter::cleanUnicodeAndGlitches($aiContent);
+            if (preg_match('/(?:\*\*|\#\#)?\s*BAŞLIK\s*:\s*(?:\*\*)?\s*(.+)/iu', $cleanedAi, $m)) {
+                $title = trim(str_replace(['*', '#'], '', $m[1]));
             }
-            if (preg_match('/MESAJ:\s*(.+?)(?=\nSEVERITY|\Z)/is', $aiContent, $m)) {
+            if (preg_match('/(?:\*\*|\#\#)?\s*MESAJ\s*:\s*(?:\*\*)?\s*(.+?)(?=(?:\*\*|\#\#)?\s*SEVERITY|\Z)/isu', $cleanedAi, $m)) {
                 $message = trim($m[1]);
             }
-            if (preg_match('/SEVERITY:\s*(info|warning|danger|success)/i', $aiContent, $m)) {
-                $severity = strtolower(trim($m[1]));
+            if (preg_match('/SEVERITY\s*:\s*(?:\*\*)?\s*(info|warning|danger|success)/iu', $cleanedAi, $m)) {
+                $severity = strtolower(trim(str_replace('*', '', $m[1])));
             }
         } else {
             // Offline akıllı kural
