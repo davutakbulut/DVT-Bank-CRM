@@ -286,6 +286,7 @@ class Index extends Component
         ];
 
         // 8. SON ÖDEME GEÇMİŞİ
+        $paymentLogs = PaymentLog::where('user_id', $userId)->latest('paid_at')->take(10)->get();
         $estimatedPayoffMonths = ($netSavings > 0 && $totalDebt > 0) ? ceil($totalDebt / $netSavings) : 0;
 
         // Chart Datasets for Reports
