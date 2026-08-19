@@ -92,6 +92,7 @@ Route::middleware(['auth', 'active'])->prefix('app')->group(function () {
         Route::get('/koc', AiCoach::class)->name('ai.coach');
         Route::get('/takvim', CalendarIndex::class)->name('calendar.index');
         Route::get('/raporlar', ReportsIndex::class)->name('reports.index');
+        Route::get('/bildirimler', \App\Livewire\Notifications\Index::class)->name('notifications.index');
 
         // Profil & Hesap Ayarları
         Route::get('/profil', [ProfileController::class, 'edit']);

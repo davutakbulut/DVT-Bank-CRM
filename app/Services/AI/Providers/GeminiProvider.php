@@ -16,7 +16,7 @@ class GeminiProvider implements AiProviderInterface
     public function __construct()
     {
         $this->apiKey = Setting::get('ai.gemini_api_key') ?: env('GEMINI_API_KEY');
-        $this->model = Setting::get('ai.gemini_model') ?: env('GEMINI_MODEL', 'gemini-1.5-flash');
+        $this->model = Setting::get('ai.gemini_model') ?: env('GEMINI_MODEL', 'gemini-3.7-flash');
     }
 
     public function isAvailable(): bool

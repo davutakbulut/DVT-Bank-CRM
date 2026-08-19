@@ -50,8 +50,11 @@
                 </div>
             </div>
 
-            <!-- Right Side: User Profile Dropdown (Desktop) -->
+            <!-- Right Side: User Profile Dropdown & Notifications (Desktop) -->
             <div class="hidden md:flex items-center gap-2.5 shrink-0">
+                <!-- Bildirim Zili Dropdown -->
+                @livewire('notifications.dropdown')
+
                 <!-- User Profile & Role Panels Menu -->
                 <x-dropdown align="right" width="72">
                     <x-slot name="trigger">
@@ -161,9 +164,11 @@
                 </x-dropdown>
             </div>
 
-            <!-- Mobile Hamburger Button -->
-            <div class="flex items-center md:hidden">
-                <button @click="open = true" class="inline-flex items-center justify-center p-2 rounded-lg text-gray-700 bg-gray-50 hover:bg-gray-100 border border-gray-200 focus:outline-none transition-colors shadow-xs" aria-label="Menüyü Aç">
+            <!-- Mobile Hamburger Button & Notifications -->
+            <div class="flex items-center gap-1.5 md:hidden">
+                @livewire('notifications.dropdown')
+
+                <button @click="open = true" class="inline-flex items-center justify-center p-2 rounded-lg text-gray-700 bg-gray-50 hover:bg-gray-100 border border-gray-200 focus:outline-none transition-colors shadow-xs cursor-pointer" aria-label="Menüyü Aç">
                     <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
                     </svg>
@@ -259,6 +264,21 @@
                     <a href="{{ route('reports.index') }}" class="flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-bold transition-all {{ request()->routeIs('reports.*') ? 'bg-indigo-50 text-indigo-700 border-l-4 border-indigo-600' : 'text-gray-700 hover:bg-gray-50 hover:text-indigo-600' }}">
                         <span>📑</span>
                         <span>Finansal Raporlar</span>
+                    </a>
+
+                    <a href="{{ route('notifications.index') }}" class="flex items-center justify-between px-3 py-2 rounded-lg text-xs font-bold transition-all {{ request()->routeIs('notifications.*') ? 'bg-indigo-50 text-indigo-700 border-l-4 border-indigo-600' : 'text-gray-700 hover:bg-gray-50 hover:text-indigo-600' }}">
+                        <span class="flex items-center gap-3">
+                            <span>🔔</span>
+                            <span>Bildirimler</span>
+                        </span>
+                        @php
+                            $unreadNotifs = \App\Models\FinancialNotification::where('user_id', Auth::id())->unread()->count();
+                        @endphp
+                        @if ($unreadNotifs > 0)
+                            <span class="px-2 py-0.5 text-[10px] font-black rounded-full bg-rose-50 text-rose-600 border border-rose-200">
+                                {{ $unreadNotifs }}
+                            </span>
+                        @endif
                     </a>
 
                     <!-- AI Coach Highlight Link -->

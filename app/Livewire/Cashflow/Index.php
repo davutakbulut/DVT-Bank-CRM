@@ -144,6 +144,8 @@ class Index extends Component
             Income::where('user_id', Auth::id())->findOrFail($this->incomeId)->update($data);
         } else {
             Income::create($data);
+            app(\App\Services\NotificationService::class)->triggerCashflowAlert(Auth::user(), 'income', (float) $this->income_amount, $this->income_title);
+            $this->dispatch('refreshNotifications');
         }
 
         $this->showIncomeModal = false;
@@ -369,6 +371,9 @@ class Index extends Component
                         $acc->decrement('balance', $this->expense_amount);
                     }
                 }
+
+                app(\App\Services\NotificationService::class)->triggerCashflowAlert(Auth::user(), 'expense', (float) $this->expense_amount, $this->expense_title);
+                $this->dispatch('refreshNotifications');
             }
         }
 
