@@ -120,15 +120,24 @@ class PaymentPlanner
                     if ($sd['remaining'] > 0) {
                         $extra = min($sd['remaining'], $availableBudget);
                         if ($extra > 0) {
-                            // Var olan ayı güncelle veya ek kalem
-                            PaymentPlanItem::create([
-                                'payment_plan_id' => $plan->id,
-                                'debt_id' => $sd['id'],
-                                'priority' => 99, // Ekstra kartopu/çığ payı
-                                'allocated_amount' => round($extra, 2),
-                                'month' => $currentMonth->format('Y-m-d'),
-                                'status' => 'pending',
-                            ]);
+                            $existingItem = PaymentPlanItem::where('payment_plan_id', $plan->id)
+                                ->where('debt_id', $sd['id'])
+                                ->where('month', $currentMonth->format('Y-m-d'))
+                                ->first();
+
+                            if ($existingItem) {
+                                $existingItem->allocated_amount += round($extra, 2);
+                                $existingItem->save();
+                            } else {
+                                PaymentPlanItem::create([
+                                    'payment_plan_id' => $plan->id,
+                                    'debt_id' => $sd['id'],
+                                    'priority' => 99,
+                                    'allocated_amount' => round($extra, 2),
+                                    'month' => $currentMonth->format('Y-m-d'),
+                                    'status' => 'pending',
+                                ]);
+                            }
 
                             $sd['remaining'] -= $extra;
                             $availableBudget -= $extra;
