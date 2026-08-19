@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Ai;
 
+use App\Livewire\Concerns\HandlesNotifications;
 use App\Models\AiAdvice;
 use App\Models\AiChatMessage;
 use App\Services\AI\AiManager;
@@ -10,6 +11,8 @@ use Livewire\Component;
 
 class Coach extends Component
 {
+    use HandlesNotifications;
+
     public string $message = '';
     public bool $isGeneratingAnalysis = false;
 

@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Livewire\Concerns\HandlesNotifications;
 use App\Models\Bank;
 use App\Models\Category;
 use App\Models\CreditCard;
@@ -15,6 +16,8 @@ use Livewire\Component;
 
 class QuickActionModal extends Component
 {
+    use HandlesNotifications;
+
     public bool $isOpen = false;
     public string $activeTab = 'ai'; // ai, expense, debt, bulk
 

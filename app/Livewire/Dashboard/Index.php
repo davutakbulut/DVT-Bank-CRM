@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Dashboard;
 
+use App\Livewire\Concerns\HandlesNotifications;
 use App\Models\Account;
 use App\Models\AiAdvice;
 use App\Models\CreditCard;
@@ -17,6 +18,8 @@ use Livewire\Component;
 
 class Index extends Component
 {
+    use HandlesNotifications;
+
     public bool $showPaymentModal = false;
     public ?int $selectedDebtId = null;
     public float $paymentAmount = 0.0;

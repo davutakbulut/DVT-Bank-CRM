@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Debts;
 
+use App\Livewire\Concerns\HandlesNotifications;
 use App\Models\Bank;
 use App\Models\Debt;
 use Carbon\Carbon;
@@ -11,6 +12,9 @@ use Livewire\WithPagination;
 
 class Index extends Component
 {
+    use WithPagination;
+    use HandlesNotifications;
+
     // Filtreleme & Arama Özellikleri
     public string $activeTab = 'all'; // all, loan, kmh, credit_card, personal, other
     public string $search = '';

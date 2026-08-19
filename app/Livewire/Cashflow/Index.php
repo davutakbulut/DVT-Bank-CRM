@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Cashflow;
 
+use App\Livewire\Concerns\HandlesNotifications;
 use App\Models\Category;
 use App\Models\Expense;
 use App\Models\Income;
@@ -11,6 +12,7 @@ use Livewire\Component;
 
 class Index extends Component
 {
+    use HandlesNotifications;
     // Filtreleme & Arama Özellikleri
     public string $activeTab = 'all'; // all, income, expense, expected, recurring
     public string $search = '';
