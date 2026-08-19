@@ -66,14 +66,15 @@
 
     <!-- 2. Finansal KPI Özet Kartları (Mobilde Kesilmeyen Font ve Padding) -->
     <div class="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4">
-        <!-- Pozitif Varlıklar -->
+        <!-- Kullanılabilir Toplam Likidite (Vadesiz + Kalan KMH) -->
         <div class="bg-white p-3 sm:p-4 rounded-2xl border border-gray-200/80 shadow-2xs flex items-center gap-2.5 sm:gap-3">
             <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-base sm:text-lg font-black shrink-0">
-                ₺
+                💰
             </div>
             <div class="min-w-0 flex-1">
-                <span class="text-[10px] sm:text-[11px] font-bold text-gray-500 block uppercase tracking-wider truncate">Kullanılabilir Bakiye</span>
-                <span class="text-[13px] sm:text-lg lg:text-xl font-black font-mono text-emerald-600 tracking-tight block">₺{{ number_format($totalPositive, 2, ',', '.') }}</span>
+                <span class="text-[10px] sm:text-[11px] font-bold text-gray-500 block uppercase tracking-wider truncate">Kullanılabilir Likidite</span>
+                <span class="text-[13px] sm:text-lg lg:text-xl font-black font-mono text-emerald-600 tracking-tight block">₺{{ number_format($totalAvailableLiquidity, 2, ',', '.') }}</span>
+                <span class="text-[9px] text-gray-400 block truncate font-medium">Kalan Ek Hesap + Nakit</span>
             </div>
         </div>
 
@@ -85,6 +86,7 @@
             <div class="min-w-0 flex-1">
                 <span class="text-[10px] sm:text-[11px] font-bold text-gray-500 block uppercase tracking-wider truncate">Kullanılan KMH</span>
                 <span class="text-[13px] sm:text-lg lg:text-xl font-black font-mono text-red-600 tracking-tight block">₺{{ number_format($totalKmhDebt, 2, ',', '.') }}</span>
+                <span class="text-[9px] text-gray-400 block truncate font-medium">Toplam Eksi Bakiye</span>
             </div>
         </div>
 
@@ -96,6 +98,7 @@
             <div class="min-w-0 flex-1">
                 <span class="text-[10px] sm:text-[11px] font-bold text-gray-500 block uppercase tracking-wider truncate">Tanımlı KMH Limiti</span>
                 <span class="text-[13px] sm:text-lg lg:text-xl font-black font-mono text-indigo-700 tracking-tight block">₺{{ number_format($totalKmhLimit, 2, ',', '.') }}</span>
+                <span class="text-[9px] text-gray-400 block truncate font-medium">Toplam Banka Limitleri</span>
             </div>
         </div>
 
@@ -109,6 +112,7 @@
                 <span class="text-[13px] sm:text-lg lg:text-xl font-black font-mono {{ $netLiquidity < 0 ? 'text-red-600' : 'text-gray-900' }} tracking-tight block truncate">
                     ₺{{ number_format($netLiquidity, 2, ',', '.') }}
                 </span>
+                <span class="text-[9px] text-gray-400 block truncate font-medium">Nakit eksi KMH Borcu</span>
             </div>
         </div>
     </div>
@@ -211,7 +215,7 @@
                         $bankGradient = 'from-[#4a154b] via-[#2d0d2e] to-[#120512]';
                         $accentBorder = 'border-purple-500/40';
                         $glowColor = 'bg-purple-500/20';
-                        $themeLabel = 'QNB / Enpara • Vadesiz';
+                        $themeLabel = 'QNB / Enpara • Vadesiz & Ekpara';
                     } else {
                         $bankGradient = 'from-slate-900 via-indigo-950 to-slate-950';
                         $accentBorder = 'border-indigo-500/30';
@@ -251,12 +255,14 @@
                         @foreach ($bankAccounts as $index => $acc)
                             @php
                                 $isNegative = $acc->balance < 0;
+                                $hasKmh = (float)($acc->kmh_limit ?? 0) > 0;
                                 $kmhUsed = $isNegative ? abs($acc->balance) : 0;
-                                $kmhPercent = (float)$acc->kmh_limit > 0 ? min(100, round(($kmhUsed / (float)$acc->kmh_limit) * 100)) : 0;
+                                $availableLimit = $hasKmh ? max(0, (float)$acc->kmh_limit + (float)$acc->balance) : max(0, (float)$acc->balance);
+                                $kmhPercent = $hasKmh ? min(100, round(($kmhUsed / (float)$acc->kmh_limit) * 100)) : 0;
                             @endphp
 
                             <!-- Banka Temalı Hesap Kartı -->
-                            <div x-data="{ showFullIban: false, copied: false }" class="relative rounded-2xl bg-gradient-to-br {{ $bankGradient }} border {{ $accentBorder }} shadow-xl p-5 text-white flex flex-col justify-between min-h-[220px] overflow-hidden group hover:scale-[1.02] hover:-translate-y-1 transition-all duration-300">
+                            <div x-data="{ showFullIban: false, copied: false }" class="relative rounded-2xl bg-gradient-to-br {{ $bankGradient }} border {{ $accentBorder }} shadow-xl p-5 text-white flex flex-col justify-between min-h-[230px] overflow-hidden group hover:scale-[1.02] hover:-translate-y-1 transition-all duration-300">
                                 <!-- Lüks Işık Parıltısı -->
                                 <div class="absolute -right-12 -bottom-12 w-36 h-36 {{ $glowColor }} rounded-full blur-2xl pointer-events-none"></div>
 
@@ -324,20 +330,23 @@
                                             </span>
                                         </div>
 
-                                        @if ($acc->type === 'kmh' && $acc->kmh_limit)
+                                        @if ($hasKmh)
                                             <div class="text-right">
-                                                <span class="text-[10px] font-bold text-slate-400 block uppercase tracking-wider">KMH LİMİTİ</span>
-                                                <span class="text-xs font-bold text-slate-200">₺{{ number_format($acc->kmh_limit, 2, ',', '.') }}</span>
+                                                <span class="text-[10px] font-bold text-slate-400 block uppercase tracking-wider">KULLANILABİLİR LİMİT</span>
+                                                <span class="text-sm font-black font-mono {{ $availableLimit > 0 ? 'text-emerald-300' : 'text-slate-400' }}">
+                                                    +₺{{ number_format($availableLimit, 2, ',', '.') }}
+                                                </span>
+                                                <span class="text-[9px] text-slate-400 block">Limit: ₺{{ number_format($acc->kmh_limit, 2, ',', '.') }}</span>
                                             </div>
                                         @endif
                                     </div>
 
                                     <!-- KMH Doluluk Çubuğu -->
-                                    @if ($acc->type === 'kmh' && $acc->kmh_limit > 0)
+                                    @if ($hasKmh)
                                         <div class="space-y-1">
                                             <div class="flex justify-between text-[10px] font-bold text-slate-300">
-                                                <span>KMH Kullanımı (%{{ $kmhPercent }})</span>
-                                                <span>Faiz: %{{ number_format($acc->kmh_interest_rate, 2) }}</span>
+                                                <span>Ek Hesap / KMH (%{{ $kmhPercent }} Dolu)</span>
+                                                <span>Faiz: %{{ number_format($acc->kmh_interest_rate ?: 5.0, 2) }}</span>
                                             </div>
                                             <div class="w-full h-1.5 bg-black/40 rounded-full overflow-hidden">
                                                 <div class="h-full {{ $kmhPercent > 80 ? 'bg-red-500' : ($kmhPercent > 40 ? 'bg-amber-400' : 'bg-emerald-400') }}" style="width: {{ $kmhPercent }}%;"></div>
@@ -349,10 +358,10 @@
                                     <div class="flex items-center justify-between pt-1">
                                         <span class="text-[9px] text-slate-400 font-mono">#{{ $acc->id }}</span>
                                         <div class="flex items-center gap-2">
-                                            <button wire:click="openEditModal({{ $acc->id }})" class="px-2.5 py-1 bg-white/10 hover:bg-white/20 text-white rounded-lg text-xs font-bold transition-colors">
+                                            <button wire:click="openEditModal({{ $acc->id }})" class="px-2.5 py-1 bg-white/10 hover:bg-white/20 text-white rounded-lg text-xs font-bold transition-colors cursor-pointer">
                                                 Düzenle
                                             </button>
-                                            <button wire:click="delete({{ $acc->id }})" wire:confirm="Bu hesabı silmek istediğinize emin misiniz?" class="px-2.5 py-1 bg-red-500/20 hover:bg-red-500/30 text-red-300 rounded-lg text-xs font-bold transition-colors">
+                                            <button wire:click="delete({{ $acc->id }})" wire:confirm="Bu hesabı silmek istediğinize emin misiniz?" class="px-2.5 py-1 bg-red-500/20 hover:bg-red-500/30 text-red-300 rounded-lg text-xs font-bold transition-colors cursor-pointer">
                                                 Sil
                                             </button>
                                         </div>
@@ -382,8 +391,10 @@
                     $bankNameLower = mb_strtolower($bankName);
                     $bankColor = $acc->bank?->color ?? '#6366f1';
                     $isNegative = $acc->balance < 0;
+                    $hasKmh = (float)($acc->kmh_limit ?? 0) > 0;
                     $kmhUsed = $isNegative ? abs($acc->balance) : 0;
-                    $kmhPercent = (float)$acc->kmh_limit > 0 ? min(100, round(($kmhUsed / (float)$acc->kmh_limit) * 100)) : 0;
+                    $availableLimit = $hasKmh ? max(0, (float)$acc->kmh_limit + (float)$acc->balance) : max(0, (float)$acc->balance);
+                    $kmhPercent = $hasKmh ? min(100, round(($kmhUsed / (float)$acc->kmh_limit) * 100)) : 0;
 
                     if (str_contains($bankNameLower, 'garanti')) {
                         $bankGradient = 'from-[#004d25] via-[#023318] to-[#011409]';
@@ -416,7 +427,7 @@
                     }
                 @endphp
 
-                <div class="relative rounded-2xl bg-gradient-to-br {{ $bankGradient }} border {{ $accentBorder }} shadow-xl p-5 text-white flex flex-col justify-between min-h-[220px] overflow-hidden group hover:scale-[1.02] transition-all">
+                <div class="relative rounded-2xl bg-gradient-to-br {{ $bankGradient }} border {{ $accentBorder }} shadow-xl p-5 text-white flex flex-col justify-between min-h-[230px] overflow-hidden group hover:scale-[1.02] transition-all">
                     <div class="absolute -right-12 -bottom-12 w-36 h-36 {{ $glowColor }} rounded-full blur-2xl pointer-events-none"></div>
 
                     <div>
@@ -446,21 +457,37 @@
                                     ₺{{ number_format($acc->balance, 2, ',', '.') }}
                                 </span>
                             </div>
-                            @if ($acc->type === 'kmh' && $acc->kmh_limit)
+                            @if ($hasKmh)
                                 <div class="text-right">
-                                    <span class="text-[10px] font-bold text-slate-400 block uppercase">LİMİT</span>
-                                    <span class="text-xs font-bold text-slate-200">₺{{ number_format($acc->kmh_limit, 2, ',', '.') }}</span>
+                                    <span class="text-[10px] font-bold text-slate-400 block uppercase">KULLANILABİLİR</span>
+                                    <span class="text-xs font-bold {{ $availableLimit > 0 ? 'text-emerald-300' : 'text-slate-400' }}">
+                                        +₺{{ number_format($availableLimit, 2, ',', '.') }}
+                                    </span>
+                                    <span class="text-[9px] text-slate-400 block">Limit: ₺{{ number_format($acc->kmh_limit, 2, ',', '.') }}</span>
                                 </div>
                             @endif
                         </div>
 
+                        <!-- KMH Doluluk Çubuğu -->
+                        @if ($hasKmh)
+                            <div class="space-y-1 pt-1">
+                                <div class="flex justify-between text-[10px] font-bold text-slate-300">
+                                    <span>Ek Hesap (%{{ $kmhPercent }} Dolu)</span>
+                                    <span>Faiz: %{{ number_format($acc->kmh_interest_rate ?: 5.0, 2) }}</span>
+                                </div>
+                                <div class="w-full h-1.5 bg-black/40 rounded-full overflow-hidden">
+                                    <div class="h-full {{ $kmhPercent > 80 ? 'bg-red-500' : ($kmhPercent > 40 ? 'bg-amber-400' : 'bg-emerald-400') }}" style="width: {{ $kmhPercent }}%;"></div>
+                                </div>
+                            </div>
+                        @endif
+
                         <div class="flex items-center justify-between pt-1">
                             <span class="text-[9px] text-slate-400 font-mono">#{{ $acc->id }}</span>
                             <div class="flex items-center gap-2">
-                                <button wire:click="openEditModal({{ $acc->id }})" class="px-2.5 py-1 bg-white/10 hover:bg-white/20 text-white rounded-lg text-xs font-bold transition-colors">
+                                <button wire:click="openEditModal({{ $acc->id }})" class="px-2.5 py-1 bg-white/10 hover:bg-white/20 text-white rounded-lg text-xs font-bold transition-colors cursor-pointer">
                                     Düzenle
                                 </button>
-                                <button wire:click="delete({{ $acc->id }})" wire:confirm="Bu hesabı silmek istediğinize emin misiniz?" class="px-2.5 py-1 bg-red-500/20 hover:bg-red-500/30 text-red-300 rounded-lg text-xs font-bold transition-colors">
+                                <button wire:click="delete({{ $acc->id }})" wire:confirm="Bu hesabı silmek istediğinize emin misiniz?" class="px-2.5 py-1 bg-red-500/20 hover:bg-red-500/30 text-red-300 rounded-lg text-xs font-bold transition-colors cursor-pointer">
                                     Sil
                                 </button>
                             </div>
@@ -482,14 +509,19 @@
                         <tr>
                             <th class="px-6 py-3.5">Banka & Hesap Adı</th>
                             <th class="px-6 py-3.5">Hesap Türü</th>
-                            <th class="px-6 py-3.5">Bakiye</th>
-                            <th class="px-6 py-3.5">KMH Limiti</th>
-                            <th class="px-6 py-3.5">KMH Faizi</th>
+                            <th class="px-6 py-3.5">Güncel Bakiye</th>
+                            <th class="px-6 py-3.5">Kullanılabilir Ek Limit</th>
+                            <th class="px-6 py-3.5">Tanımlı Limit</th>
+                            <th class="px-6 py-3.5">Faiz Oranı</th>
                             <th class="px-6 py-3.5 text-right">İşlemler</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-100 bg-white">
                         @forelse ($accounts as $acc)
+                            @php
+                                $hasKmh = (float)($acc->kmh_limit ?? 0) > 0;
+                                $availableLimit = $hasKmh ? max(0, (float)$acc->kmh_limit + (float)$acc->balance) : max(0, (float)$acc->balance);
+                            @endphp
                             <tr class="hover:bg-gray-50/70 transition-colors">
                                 <td class="px-6 py-4">
                                     <div class="flex items-center gap-3">
@@ -517,20 +549,23 @@
                                 <td class="px-6 py-4 font-black {{ $acc->balance < 0 ? 'text-red-600' : 'text-emerald-600' }}">
                                     ₺{{ number_format($acc->balance, 2, ',', '.') }}
                                 </td>
-                                <td class="px-6 py-4 text-gray-700 font-bold">
+                                <td class="px-6 py-4 font-bold {{ $availableLimit > 0 ? 'text-emerald-600' : 'text-gray-400' }}">
+                                    {{ $hasKmh ? '+₺' . number_format($availableLimit, 2, ',', '.') : '-' }}
+                                </td>
+                                <td class="px-6 py-4 text-gray-700 font-medium">
                                     {{ $acc->kmh_limit ? '₺' . number_format($acc->kmh_limit, 2, ',', '.') : '-' }}
                                 </td>
                                 <td class="px-6 py-4 text-gray-700 font-semibold">
                                     {{ $acc->kmh_interest_rate ? '%' . number_format($acc->kmh_interest_rate, 2) : '-' }}
                                 </td>
                                 <td class="px-6 py-4 text-right space-x-2">
-                                    <button wire:click="openEditModal({{ $acc->id }})" class="text-indigo-600 hover:text-indigo-900 font-bold text-xs">Düzenle</button>
-                                    <button wire:click="delete({{ $acc->id }})" wire:confirm="Bu hesabı silmek istediğinize emin misiniz?" class="text-red-600 hover:text-red-900 font-bold text-xs">Sil</button>
+                                    <button wire:click="openEditModal({{ $acc->id }})" class="text-indigo-600 hover:text-indigo-900 font-bold text-xs cursor-pointer">Düzenle</button>
+                                    <button wire:click="delete({{ $acc->id }})" wire:confirm="Bu hesabı silmek istediğinize emin misiniz?" class="text-red-600 hover:text-red-900 font-bold text-xs cursor-pointer">Sil</button>
                                 </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="6" class="px-6 py-8 text-center text-gray-500">
+                                <td colspan="7" class="px-6 py-8 text-center text-gray-500">
                                     Kayıtlı hesap bulunmamaktadır.
                                 </td>
                             </tr>

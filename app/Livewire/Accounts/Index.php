@@ -204,10 +204,22 @@ class Index extends Component
         $groupedByBank = $accounts->groupBy('bank_id');
 
         // Finansal KPI Özetleri
-        $totalPositive = $accounts->where('balance', '>', 0)->sum('balance');
-        $totalKmhDebt = abs($accounts->where('balance', '<', 0)->sum('balance'));
-        $totalKmhLimit = $accounts->sum('kmh_limit');
-        $netLiquidity = $accounts->sum('balance');
+        $totalPositive = (float) $accounts->where('balance', '>', 0)->sum('balance');
+        $totalKmhDebt = (float) abs($accounts->where('balance', '<', 0)->sum('balance'));
+        $totalKmhLimit = (float) $accounts->sum('kmh_limit');
+
+        // Her bir hesaptaki kullanılabilir kalan ek hesap (KMH / Artı Para) limiti
+        $totalAvailableKmh = (float) $accounts->sum(function ($acc) {
+            $limit = (float) ($acc->kmh_limit ?? 0);
+            if ($limit > 0) {
+                return max(0, $limit + (float) $acc->balance);
+            }
+            return 0;
+        });
+
+        // Toplam harcanabilir / çekilebilir hazır likidite (Vadesiz Pozitif Nakit + Kalan Kullanılabilir KMH Limitleri)
+        $totalAvailableLiquidity = $totalPositive + $totalAvailableKmh;
+        $netLiquidity = (float) $accounts->sum('balance');
 
         return view('livewire.accounts.index', [
             'accounts' => $accounts,
@@ -216,6 +228,8 @@ class Index extends Component
             'totalPositive' => $totalPositive,
             'totalKmhDebt' => $totalKmhDebt,
             'totalKmhLimit' => $totalKmhLimit,
+            'totalAvailableKmh' => $totalAvailableKmh,
+            'totalAvailableLiquidity' => $totalAvailableLiquidity,
             'netLiquidity' => $netLiquidity,
         ])->layout('layouts.app');
     }
