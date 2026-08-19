@@ -19,13 +19,13 @@
 
         <div>
             <label for="name" class="block text-xs font-semibold text-gray-700 mb-1">Adınız Soyadınız</label>
-            <input id="name" name="name" type="text" class="mt-1 block w-full rounded-xl border-gray-300 text-sm font-medium focus:border-indigo-500 focus:ring-indigo-500" :value="old('name', $user->name)" required autofocus autocomplete="name" />
+            <input id="name" name="name" type="text" class="mt-1 block w-full rounded-xl border-gray-300 text-sm font-medium focus:border-indigo-500 focus:ring-indigo-500" value="{{ old('name', $user->name) }}" required autofocus autocomplete="name" />
             <x-input-error class="mt-1" :messages="$errors->get('name')" />
         </div>
 
         <div>
             <label for="email" class="block text-xs font-semibold text-gray-700 mb-1">E-posta Adresiniz</label>
-            <input id="email" name="email" type="email" class="mt-1 block w-full rounded-xl border-gray-300 text-sm font-medium focus:border-indigo-500 focus:ring-indigo-500" :value="old('email', $user->email)" required autocomplete="username" />
+            <input id="email" name="email" type="email" class="mt-1 block w-full rounded-xl border-gray-300 text-sm font-medium focus:border-indigo-500 focus:ring-indigo-500" value="{{ old('email', $user->email) }}" required autocomplete="username" />
             <x-input-error class="mt-1" :messages="$errors->get('email')" />
 
             @if ($user instanceof \Illuminate\Contracts\Auth\MustVerifyEmail && ! $user->hasVerifiedEmail())
