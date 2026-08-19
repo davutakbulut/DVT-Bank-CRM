@@ -201,11 +201,12 @@
                 <!-- Aksiyon Butonları -->
                 <div class="flex items-center gap-2 self-end sm:self-center shrink-0 pt-2 sm:pt-0 border-t sm:border-t-0 border-slate-100 w-full sm:w-auto justify-end">
                     @if ($n->action_url)
-                        <button wire:click="markAsRead({{ $n->id }})" 
-                                class="px-3 py-1.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-bold text-xs rounded-lg border border-indigo-200 transition-all flex items-center gap-1 cursor-pointer">
+                        <a href="{{ $n->action_url }}" 
+                           wire:click="markAsRead({{ $n->id }})" 
+                           class="px-3 py-1.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-bold text-xs rounded-lg border border-indigo-200 transition-all flex items-center gap-1 cursor-pointer">
                             <span>İncele</span>
                             <span>→</span>
-                        </button>
+                        </a>
                     @endif
 
                     <!-- Okundu / Okunmadı Durumu Değiştirici -->

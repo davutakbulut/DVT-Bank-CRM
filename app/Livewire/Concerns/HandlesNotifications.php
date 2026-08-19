@@ -44,7 +44,7 @@ trait HandlesNotifications
         }
     }
 
-    public function markAsRead(int $id)
+    public function markAsRead(int $id): void
     {
         $user = Auth::user();
         if (!$user) return;
@@ -53,9 +53,6 @@ trait HandlesNotifications
         if ($notif) {
             $notif->markAsRead();
             $this->dispatch('refreshNotifications');
-            if ($notif->action_url) {
-                return redirect()->to($notif->action_url);
-            }
         }
     }
 

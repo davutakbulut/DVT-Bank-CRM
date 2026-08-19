@@ -52,8 +52,9 @@
         <!-- Bildirim Listesi -->
         <div class="max-h-80 overflow-y-auto divide-y divide-slate-100">
             @forelse ($notifications as $n)
-                <div wire:click="markAsRead({{ $n->id }})" 
-                     class="p-3.5 hover:bg-slate-50 transition-colors cursor-pointer flex items-start gap-3 {{ is_null($n->read_at) ? 'bg-indigo-50/30' : '' }}">
+                <a href="{{ $n->action_url ?: route('notifications.index') }}" 
+                   wire:click="markAsRead({{ $n->id }})" 
+                   class="p-3.5 hover:bg-slate-50 transition-colors cursor-pointer flex items-start gap-3 {{ is_null($n->read_at) ? 'bg-indigo-50/30' : '' }}">
                     
                     <!-- İkon -->
                     <div class="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 text-sm font-bold
