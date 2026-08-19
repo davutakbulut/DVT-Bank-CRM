@@ -13,7 +13,7 @@ class MailTemplateSeeder extends Seeder
             [
                 'code' => 'password_reset',
                 'name' => 'Şifre Sıfırlama E-postası',
-                'subject' => 'DVT Bank CRM — Şifre Sıfırlama Talebi',
+                'subject' => 'DVT Bank CRM - Sifre Sifirlama Talebi',
                 'body' => '<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8fafc; border-radius: 12px;">
                     <div style="text-align: center; margin-bottom: 20px;">
                         <h2 style="color: #4f46e5; margin: 0;">DVT Bank CRM</h2>
@@ -35,7 +35,7 @@ class MailTemplateSeeder extends Seeder
             [
                 'code' => 'welcome_email',
                 'name' => 'Hoş Geldin E-postası',
-                'subject' => 'DVT Bank CRM’e Hoş Geldiniz!',
+                'subject' => 'DVT Bank CRM - Hos Geldiniz!',
                 'body' => '<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8fafc; border-radius: 12px;">
                     <div style="text-align: center; margin-bottom: 20px;">
                         <h2 style="color: #4f46e5; margin: 0;">DVT Bank CRM</h2>
@@ -53,7 +53,7 @@ class MailTemplateSeeder extends Seeder
             [
                 'code' => 'test_mail',
                 'name' => 'Sistem Test E-postası',
-                'subject' => 'DVT Bank CRM — Sistem Test E-postası',
+                'subject' => 'DVT Bank CRM - Sistem Test E-postasi',
                 'body' => '<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8fafc; border-radius: 12px;">
                     <div style="text-align: center; margin-bottom: 20px;">
                         <h2 style="color: #4f46e5; margin: 0;">DVT Bank CRM</h2>
