@@ -56,13 +56,13 @@ Route::post('/iletisim', function (Request $request) {
     $validated = $request->validate([
         'name' => 'required|string|max:100',
         'email' => 'required|email|max:150',
-        'subject' => 'required|string|max:150',
+        'subject' => 'nullable|string|max:150',
         'message' => 'required|string|max:2000',
     ]);
 
     ContactMessage::create($validated);
     return back()->with('success', 'Mesajınız başarıyla iletildi. En kısa sürede dönüş yapacağız.');
-})->name('contact.send');
+})->name('contact.submit');
 
 // Zorunlu Yasal Sayfalar (docs/06 ve docs/09)
 Route::get('/kvkk', fn() => view('pages.legal', ['title' => 'KVKK Aydınlatma Metni', 'type' => 'kvkk']))->name('legal.kvkk');
