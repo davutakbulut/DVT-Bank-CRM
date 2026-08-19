@@ -18,10 +18,13 @@
                     </a>
                 </div>
 
-                <!-- Complete Core Navigation Links (All 9 items: Single-Line, Responsive) -->
+                <!-- Complete Core Navigation Links (All items: Single-Line, Responsive) -->
                 <div class="hidden md:flex items-center space-x-0.5 lg:space-x-1 font-bold whitespace-nowrap overflow-x-auto no-scrollbar py-1">
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" class="px-2 lg:px-2.5 xl:px-3 py-2 text-xs lg:text-sm">
                         Kontrol Paneli
+                    </x-nav-link>
+                    <x-nav-link :href="route('banks.index')" :active="request()->routeIs('banks.*')" class="px-2 lg:px-2.5 xl:px-3 py-2 text-xs lg:text-sm">
+                        Bankalarım
                     </x-nav-link>
                     <x-nav-link :href="route('debts.index')" :active="request()->routeIs('debts.*')" class="px-2 lg:px-2.5 xl:px-3 py-2 text-xs lg:text-sm">
                         Borçlarım
