@@ -42,5 +42,22 @@ class AppServiceProvider extends ServiceProvider
         Gate::define('create-debt', fn (User $user) => $user->canCreateDebt());
         Gate::define('generate-ai-advice', fn (User $user) => $user->canGenerateAiAdvice());
         Gate::define('access-feature', fn (User $user, string $feature) => $user->hasFeature($feature));
+
+        // Türkçe Şifre Sıfırlama E-postası Şablonu
+        \Illuminate\Auth\Notifications\ResetPassword::toMailUsing(function (object $notifiable, string $token) {
+            $url = url(route('password.reset', [
+                'token' => $token,
+                'email' => $notifiable->getEmailForPasswordReset(),
+            ], false));
+
+            return (new \Illuminate\Notifications\Messages\MailMessage)
+                ->subject('DVT Bank CRM — Şifre Sıfırlama Talebi')
+                ->greeting('Merhaba ' . ($notifiable->name ?? 'Kullanıcımız') . ',')
+                ->line('DVT Bank CRM hesabınız için şifre sıfırlama talebi aldık.')
+                ->action('Şifrenizi Sıfırlayın', $url)
+                ->line('Bu şifre sıfırlama bağlantısının geçerlilik süresi 60 dakikadır.')
+                ->line('Eğer bu talebi siz yapmadıysanız, herhangi bir işlem yapmanıza gerek yoktur. Hesabınız güvendedir.')
+                ->salutation('Saygılarımızla, DVT Bank CRM Ekibi');
+        });
     }
 }
