@@ -83,6 +83,33 @@ class Dropdown extends Component
         }
     }
 
+    public function markAllAsUnread(NotificationService $service): void
+    {
+        $user = Auth::user();
+        if ($user) {
+            $service->markAllAsUnread($user);
+            $this->dispatch('refreshNotifications');
+        }
+    }
+
+    public function deleteAll(NotificationService $service): void
+    {
+        $user = Auth::user();
+        if ($user) {
+            $service->deleteAll($user);
+            $this->dispatch('refreshNotifications');
+        }
+    }
+
+    public function generateAiAdvice(NotificationService $service): void
+    {
+        $user = Auth::user();
+        if ($user) {
+            $service->generateDailyAiNotification($user, true);
+            $this->dispatch('refreshNotifications');
+        }
+    }
+
     public function render(NotificationService $service)
     {
         $user = Auth::user();
