@@ -19,8 +19,17 @@ class ReportController extends Controller
         $logs = PaymentLog::where('user_id', $userId)->latest('paid_at')->take(10)->get();
 
         $totalRemaining = $debts->sum('remaining');
-        $totalMonthlyIncome = Income::where('user_id', $userId)->sum('amount');
-        $totalMonthlyExpense = Expense::where('user_id', $userId)->sum('amount');
+        $totalMonthlyIncome = (float) Income::where('user_id', $userId)
+            ->whereYear('income_date', now()->year)
+            ->whereMonth('income_date', now()->month)
+            ->sum('amount');
+        if ($totalMonthlyIncome <= 0) {
+            $totalMonthlyIncome = (float) \App\Models\ExpectedIncome::where('user_id', $userId)->where('is_active', true)->sum('amount');
+        }
+        $totalMonthlyExpense = (float) Expense::where('user_id', $userId)
+            ->whereYear('expense_date', now()->year)
+            ->whereMonth('expense_date', now()->month)
+            ->sum('amount');
         $netSavings = max(0, $totalMonthlyIncome - $totalMonthlyExpense);
 
         $monthsToPayoff = $netSavings > 0 ? ceil($totalRemaining / $netSavings) : null;

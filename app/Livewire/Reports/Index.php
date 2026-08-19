@@ -146,6 +146,12 @@ class Index extends Component
 
         if ($this->period !== 'all') {
             $expensesQuery->whereBetween('expense_date', [$startDate->format('Y-m-d'), $endDate->format('Y-m-d')]);
+            $incomesQuery->where(function ($q) use ($startDate, $endDate) {
+                $q->whereBetween('income_date', [$startDate->format('Y-m-d'), $endDate->format('Y-m-d')])
+                  ->orWhere(function ($sq) use ($startDate, $endDate) {
+                      $sq->whereNull('income_date')->whereBetween('created_at', [$startDate, $endDate]);
+                  });
+            });
         }
 
         $expenses = $expensesQuery->get();

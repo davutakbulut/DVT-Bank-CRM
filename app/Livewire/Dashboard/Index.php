@@ -141,7 +141,21 @@ class Index extends Component
             ->first();
 
         // Aylık Gelir & Bu Ayın Gider Özeti
-        $totalMonthlyIncome = (float) Income::where('user_id', $user->id)->sum('amount');
+        $thisMonthRealizedIncome = (float) Income::where('user_id', $user->id)
+            ->whereYear('income_date', now()->year)
+            ->whereMonth('income_date', now()->month)
+            ->sum('amount');
+
+        $expectedMonthlyIncome = (float) \App\Models\ExpectedIncome::where('user_id', $user->id)
+            ->where('is_active', true)
+            ->where('frequency', 'monthly')
+            ->sum('amount');
+
+        // Aylık aktif bütçe hesabı: Bu ay gerçekleşen gelir + kalan beklenen düzenli gelir
+        $totalMonthlyIncome = $thisMonthRealizedIncome > 0 
+            ? ($thisMonthRealizedIncome + $expectedMonthlyIncome) 
+            : ($expectedMonthlyIncome ?: (float) $user->monthly_income);
+
         $totalMonthlyExpense = (float) Expense::where('user_id', $user->id)
             ->whereYear('expense_date', now()->year)
             ->whereMonth('expense_date', now()->month)
