@@ -218,4 +218,9 @@ class User extends Authenticatable implements FilamentUser
         $features = $plan->features ?? [];
         return !empty($features[$featureKey]);
     }
+
+    public function sendPasswordResetNotification($token): void
+    {
+        $this->notify(new \App\Notifications\CustomResetPasswordNotification($token));
+    }
 }
