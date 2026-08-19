@@ -1,64 +1,81 @@
 <div class="py-2 sm:py-6 px-3 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-6">
     <!-- 1. Header & Aksiyonlar -->
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-            <h1 class="text-2xl font-black text-gray-900 tracking-tight flex items-center gap-2">
-                <span>⚡</span>
-                <span>Gelir & Gider Yönetimi (Nakit Akışı)</span>
-            </h1>
-            <p class="text-sm text-gray-600">Aylık net nakit akışınız, tekrarlayan sabit giderleriniz ve borç ödemelerine ayrılabilir bütçeniz</p>
-        </div>
-        <div class="flex items-center gap-2 sm:gap-3 flex-wrap">
-            <!-- Excel / CSV İndirme Butonu (Tooltip Popup ile) -->
-            <div class="relative group/tooltip" x-data="{ show: false }">
-                <button wire:click="exportExcel" 
-                        @mouseenter="show = true" 
-                        @mouseleave="show = false"
-                        class="inline-flex items-center gap-1.5 px-3.5 py-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300 font-black text-xs sm:text-sm rounded-xl shadow-2xs transition-all active:scale-95">
-                    <span>📥</span>
-                    <span>Excel'e Aktar</span>
-                </button>
+    <div class="bg-white p-4 sm:p-5 rounded-2xl border border-gray-200/90 shadow-sm space-y-4">
+        <!-- Üst Satır: Başlık + Görünüm Seçici & Excel -->
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-gray-100 pb-3.5">
+            <div>
+                <h1 class="text-xl sm:text-2xl font-black text-gray-900 tracking-tight flex items-center gap-2">
+                    <span>⚡</span>
+                    <span>Gelir & Gider Yönetimi (Nakit Akışı)</span>
+                </h1>
+                <p class="text-xs sm:text-sm text-gray-500 mt-0.5">Aylık net nakit akışınız, tekrarlayan sabit giderleriniz ve borç ödemelerine ayrılabilir bütçeniz</p>
+            </div>
 
-                <!-- Açıklayıcı Bilgi Popup (Tooltip) -->
-                <div x-show="show" 
-                     x-cloak
-                     class="absolute right-0 top-full mt-2 w-72 p-3 bg-slate-900 text-white rounded-2xl shadow-2xl border border-slate-700 text-xs z-50 pointer-events-none transition-all">
-                    <div class="flex items-center gap-1.5 font-bold text-emerald-300 border-b border-slate-800 pb-1.5 mb-1.5">
-                        <span>📈</span>
-                        <span>Nakit Akışı Excel Raporu</span>
+            <div class="flex items-center gap-2 sm:gap-3 self-start md:self-auto">
+                <!-- Excel / CSV İndirme Butonu (Tooltip Popup ile) -->
+                <div class="relative group/tooltip" x-data="{ show: false }">
+                    <button wire:click="exportExcel" 
+                            @mouseenter="show = true" 
+                            @mouseleave="show = false"
+                            class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300 font-bold text-xs rounded-xl shadow-2xs transition-all active:scale-95 cursor-pointer">
+                        <span>📥</span>
+                        <span>Excel'e Aktar</span>
+                    </button>
+
+                    <!-- Açıklayıcı Bilgi Popup (Tooltip) -->
+                    <div x-show="show" 
+                         x-cloak
+                         class="absolute right-0 top-full mt-2 w-72 p-3 bg-slate-900 text-white rounded-2xl shadow-2xl border border-slate-700 text-xs z-50 pointer-events-none transition-all">
+                        <div class="flex items-center gap-1.5 font-bold text-emerald-300 border-b border-slate-800 pb-1 mb-1">
+                            <span>📈</span>
+                            <span>Nakit Akışı Excel Raporu</span>
+                        </div>
+                        <p class="text-[11px] text-slate-300 leading-relaxed">
+                            Tüm gelir ve gider kalemlerinizi, kategorileri ve tarihleri içeren <strong>Excel tablosunu</strong> indirir.
+                        </p>
+                        <span class="block mt-1.5 text-[10px] font-bold text-emerald-400">✓ Excel & Google Sheets Uyumlu</span>
                     </div>
-                    <p class="text-[11px] text-slate-300 leading-relaxed">
-                        Tüm gelir kalemlerinizi, harcamalarınızı, harcama kategorilerini, işlem tarihlerini ve tekrarlayan sabit faturalarınızı içeren <strong>Excel tablosunu</strong> indirir.
-                    </p>
-                    <span class="block mt-2 text-[10px] font-bold text-emerald-400">✓ Excel & Google Sheets Uyumlu</span>
+                </div>
+
+                <!-- Görünüm Seçici -->
+                <div class="inline-flex rounded-xl bg-gray-100 p-1 border border-gray-200">
+                    <button wire:click="$set('viewMode', 'feed')" class="px-2.5 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer {{ $viewMode === 'feed' ? 'bg-white text-indigo-700 shadow-xs' : 'text-gray-600 hover:text-gray-900' }}">
+                        <span>⚡</span>
+                        <span class="hidden sm:inline">Zaman Akışı</span>
+                    </button>
+                    <button wire:click="$set('viewMode', 'columns')" class="px-2.5 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer {{ $viewMode === 'columns' ? 'bg-white text-indigo-700 shadow-xs' : 'text-gray-600 hover:text-gray-900' }}">
+                        <span>📑</span>
+                        <span class="hidden sm:inline">Çift Kolon</span>
+                    </button>
+                    <button wire:click="$set('viewMode', 'table')" class="px-2.5 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer {{ $viewMode === 'table' ? 'bg-white text-indigo-700 shadow-xs' : 'text-gray-600 hover:text-gray-900' }}">
+                        <span>📊</span>
+                        <span class="hidden sm:inline">Tablo</span>
+                    </button>
                 </div>
             </div>
+        </div>
 
-            <!-- Görünüm Seçici -->
-            <div class="inline-flex rounded-xl bg-gray-100 p-1 border border-gray-200 shadow-2xs">
-                <button wire:click="$set('viewMode', 'feed')" class="px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 {{ $viewMode === 'feed' ? 'bg-white text-indigo-700 shadow-xs' : 'text-gray-600 hover:text-gray-900' }}">
-                    <span>⚡</span>
-                    <span class="hidden sm:inline">Zaman Akışı</span>
+        <!-- Alt Satır: Tek Satırda Ekleme Butonları -->
+        <div class="flex items-center justify-between gap-3 flex-wrap sm:flex-nowrap pt-0.5">
+            <span class="text-xs font-bold text-gray-500 hidden sm:inline-flex items-center gap-1.5">
+                <span>➕</span>
+                <span>Hızlı Nakit Hareketi Ekle:</span>
+            </span>
+
+            <div class="flex items-center gap-2 w-full sm:w-auto justify-end">
+                <button wire:click="openExpectedIncomeModal" class="flex-1 sm:flex-none px-4 py-2 bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white font-bold text-xs sm:text-sm rounded-xl shadow-xs transition-all flex items-center justify-center gap-1.5 cursor-pointer">
+                    <span>🗓️</span>
+                    <span>+ Beklenen Gelir</span>
                 </button>
-                <button wire:click="$set('viewMode', 'columns')" class="px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 {{ $viewMode === 'columns' ? 'bg-white text-indigo-700 shadow-xs' : 'text-gray-600 hover:text-gray-900' }}">
-                    <span>📑</span>
-                    <span class="hidden sm:inline">Çift Kolon</span>
+                <button wire:click="openIncomeModal" class="flex-1 sm:flex-none px-4 py-2 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-bold text-xs sm:text-sm rounded-xl shadow-xs transition-all flex items-center justify-center gap-1.5 cursor-pointer">
+                    <span>+</span>
+                    <span>Gelir Ekle</span>
                 </button>
-                <button wire:click="$set('viewMode', 'table')" class="px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 {{ $viewMode === 'table' ? 'bg-white text-indigo-700 shadow-xs' : 'text-gray-600 hover:text-gray-900' }}">
-                    <span>📊</span>
-                    <span class="hidden sm:inline">Tablo</span>
+                <button wire:click="openExpenseModal" class="flex-1 sm:flex-none px-4 py-2 bg-rose-600 hover:bg-rose-700 active:scale-95 text-white font-bold text-xs sm:text-sm rounded-xl shadow-xs transition-all flex items-center justify-center gap-1.5 cursor-pointer">
+                    <span>+</span>
+                    <span>Gider Ekle</span>
                 </button>
             </div>
-
-            <button wire:click="openExpectedIncomeModal" class="px-3.5 sm:px-4 py-2 bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white font-black text-xs sm:text-sm rounded-xl shadow-md transition-all flex items-center gap-1.5 cursor-pointer">
-                <span>🗓️ + Beklenen Gelir</span>
-            </button>
-            <button wire:click="openIncomeModal" class="px-3.5 sm:px-4 py-2 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-black text-xs sm:text-sm rounded-xl shadow-md transition-all flex items-center gap-1.5 cursor-pointer">
-                <span>+ Gelir Ekle</span>
-            </button>
-            <button wire:click="openExpenseModal" class="px-3.5 sm:px-4 py-2 bg-rose-600 hover:bg-rose-700 active:scale-95 text-white font-black text-xs sm:text-sm rounded-xl shadow-md transition-all flex items-center gap-1.5 cursor-pointer">
-                <span>+ Gider Ekle</span>
-            </button>
         </div>
     </div>
 
