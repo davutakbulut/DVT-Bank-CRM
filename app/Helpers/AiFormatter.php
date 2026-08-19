@@ -31,6 +31,15 @@ class AiFormatter
             'allow_unsafe_links' => false,
         ]);
 
+        // 4. Tabloları mobil / dar ekran kaymalarını önleyen duyarlı (responsive) yatay kaydırma kapsayıcısı ile sarmala
+        if (str_contains($html, '<table')) {
+            $html = preg_replace(
+                '/<table(?:\s+[^>]*+)?>(.*?)<\/table>/is',
+                '<div class="overflow-x-auto my-3.5 rounded-xl border border-slate-200/90 shadow-2xs bg-white"><table class="w-full text-xs text-left border-collapse">$1</table></div>',
+                $html
+            );
+        }
+
         return trim($html);
     }
 

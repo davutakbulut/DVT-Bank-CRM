@@ -7,8 +7,9 @@
     </div>
 
     @if (session('status') == 'verification-link-sent')
-        <div class="mb-4 font-semibold text-xs text-emerald-400 bg-emerald-950/60 border border-emerald-800 p-3 rounded-xl">
-            ✓ Kayıt sırasında belirttiğiniz e-posta adresine yeni bir doğrulama bağlantısı gönderildi.
+        <div class="mb-4 font-semibold text-xs text-emerald-400 bg-emerald-950/60 border border-emerald-800 p-3 rounded-xl flex items-center gap-2">
+            <svg class="w-4 h-4 text-emerald-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+            <span>Kayıt sırasında belirttiğiniz e-posta adresine yeni bir doğrulama bağlantısı gönderildi.</span>
         </div>
     @endif
 

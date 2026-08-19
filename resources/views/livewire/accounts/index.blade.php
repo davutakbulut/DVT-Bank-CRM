@@ -3,7 +3,7 @@
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
         <div>
             <h1 class="text-xl sm:text-2xl font-black text-gray-900 tracking-tight flex items-center gap-2">
-                <span>🏦</span>
+                <svg class="w-7 h-7 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.5M4.5 21V10.5"/></svg>
                 <span>Banka Hesaplarım & KMH</span>
             </h1>
             <p class="text-xs sm:text-sm text-gray-600 mt-0.5">Vadesiz, vadeli ve ek hesap (KMH) bakiyelerinizin anlık net durumu</p>
@@ -15,7 +15,7 @@
                         @mouseenter="show = true" 
                         @mouseleave="show = false"
                         class="inline-flex items-center gap-1 px-3 py-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300 font-bold text-xs rounded-lg shadow-2xs transition-all active:scale-95 cursor-pointer">
-                    <span>📥</span>
+                    <svg class="w-4 h-4 text-emerald-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"/></svg>
                     <span>Excel</span>
                 </button>
 
@@ -24,20 +24,23 @@
                      x-cloak
                      class="absolute left-0 sm:left-auto sm:right-0 top-full mt-2 w-72 p-3 bg-slate-900 text-white rounded-xl shadow-2xl border border-slate-700 text-xs z-50 pointer-events-none transition-all">
                     <div class="flex items-center gap-1.5 font-bold text-emerald-300 border-b border-slate-800 pb-1.5 mb-1.5">
-                        <span>🏦</span>
+                        <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.5M4.5 21V10.5"/></svg>
                         <span>Banka Hesapları Excel Raporu</span>
                     </div>
                     <p class="text-[11px] text-slate-300 leading-relaxed">
                         Tüm vadesiz ve vadeli mevduat hesaplarınızın güncel bakiyelerini, IBAN numaralarını, tanımlı KMH (ek para) limitlerini ve kullanılan eksi bakiyeleri içeren <strong>Excel tablosunu</strong> indirir.
                     </p>
-                    <span class="block mt-2 text-[10px] font-bold text-emerald-400">✓ Excel & Google Sheets Uyumlu</span>
+                    <span class="block mt-2 text-[10px] font-bold text-emerald-400 flex items-center gap-1">
+                        <svg class="w-3.5 h-3.5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+                        <span>Excel & Google Sheets Uyumlu</span>
+                    </span>
                 </div>
             </div>
 
             <!-- Görünüm Seçici -->
             <div class="inline-flex rounded-lg bg-slate-100 p-1 border border-slate-200/80 shadow-2xs">
                 <button wire:click="$set('viewMode', 'stacked')" class="px-2.5 py-1 rounded-md text-xs font-bold transition-all flex items-center gap-1 cursor-pointer {{ $viewMode === 'stacked' ? 'bg-white text-indigo-700 shadow-2xs border border-slate-200/60' : 'text-slate-600 hover:text-slate-900' }}">
-                    <span>🗂️</span>
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6.429 9.75L2.25 12l4.179 2.25m0-4.5l4.179 2.25m-4.179-2.25l4.179-2.25m4.179 6.75l4.179-2.25m-4.179 2.25l-4.179-2.25m4.179 2.25L21.75 12l-4.179-2.25m0 0l-4.179 2.25m4.179-2.25l-4.179-2.25"/></svg>
                     <span class="hidden sm:inline">Banka Yığını</span>
                 </button>
                 <button wire:click="$set('viewMode', 'grid')" class="px-2.5 py-1 rounded-md text-xs font-bold transition-all flex items-center gap-1 cursor-pointer {{ $viewMode === 'grid' ? 'bg-white text-indigo-700 shadow-2xs border border-slate-200/60' : 'text-slate-600 hover:text-slate-900' }}">
@@ -59,7 +62,7 @@
 
     @if (session()->has('message'))
         <div class="p-3.5 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-lg text-sm font-bold flex items-center gap-2 shadow-xs">
-            <span>✓</span>
+            <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
             <span>{{ session('message') }}</span>
         </div>
     @endif
@@ -69,7 +72,7 @@
         <!-- Kullanılabilir Toplam Likidite (Vadesiz + Kalan KMH) -->
         <div class="bg-white p-3.5 sm:p-4 rounded-xl border border-slate-200/80 shadow-2xs flex items-center gap-2.5 sm:gap-3">
             <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center text-base sm:text-lg font-black shrink-0">
-                💰
+                <svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-6h6"/></svg>
             </div>
             <div class="min-w-0 flex-1">
                 <span class="text-[10px] sm:text-[11px] font-bold text-gray-500 block uppercase tracking-wider truncate">Kullanılabilir Likidite</span>
@@ -81,7 +84,7 @@
         <!-- Kullanılan KMH Borcu -->
         <div class="bg-white p-3.5 sm:p-4 rounded-xl border border-slate-200/80 shadow-2xs flex items-center gap-2.5 sm:gap-3">
             <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-red-50 text-red-600 flex items-center justify-center text-base sm:text-lg font-black shrink-0">
-                ⚡
+                <svg class="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"/></svg>
             </div>
             <div class="min-w-0 flex-1">
                 <span class="text-[10px] sm:text-[11px] font-bold text-gray-500 block uppercase tracking-wider truncate">Kullanılan KMH</span>
@@ -93,7 +96,7 @@
         <!-- Toplam KMH Limiti -->
         <div class="bg-white p-3.5 sm:p-4 rounded-xl border border-slate-200/80 shadow-2xs flex items-center gap-2.5 sm:gap-3">
             <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center text-base sm:text-lg font-black shrink-0">
-                🛡️
+                <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/></svg>
             </div>
             <div class="min-w-0 flex-1">
                 <span class="text-[10px] sm:text-[11px] font-bold text-gray-500 block uppercase tracking-wider truncate">Tanımlı KMH Limiti</span>
@@ -105,7 +108,7 @@
         <!-- Net Likidite -->
         <div class="bg-white p-3.5 sm:p-4 rounded-xl border border-slate-200/80 shadow-2xs flex items-center gap-2.5 sm:gap-3">
             <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-lg {{ $netLiquidity < 0 ? 'bg-red-50 text-red-600' : 'bg-blue-50 text-blue-600' }} flex items-center justify-center text-base sm:text-lg font-black shrink-0">
-                📊
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z"/></svg>
             </div>
             <div class="min-w-0 flex-1">
                 <span class="text-[10px] sm:text-[11px] font-bold text-gray-500 block uppercase tracking-wider truncate">Net Nakit Durumu</span>
@@ -126,13 +129,13 @@
                     Tümü <span class="ml-1 text-[10px] font-mono px-1.5 py-0.5 rounded bg-slate-200/70 text-slate-700">({{ $accounts->count() }})</span>
                 </button>
                 <button wire:click="$set('activeType', 'checking')" class="px-3 py-1.5 text-xs font-bold rounded-md transition-all whitespace-nowrap shrink-0 {{ $activeType === 'checking' ? 'bg-white text-slate-900 shadow-2xs border border-slate-200/60' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/40' }}">
-                    💳 Vadesiz
+                    Vadesiz
                 </button>
                 <button wire:click="$set('activeType', 'kmh')" class="px-3 py-1.5 text-xs font-bold rounded-md transition-all whitespace-nowrap shrink-0 {{ $activeType === 'kmh' ? 'bg-white text-slate-900 shadow-2xs border border-slate-200/60' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/40' }}">
-                    ⚡ KMH / Eksi
+                    KMH / Eksi
                 </button>
                 <button wire:click="$set('activeType', 'savings')" class="px-3 py-1.5 text-xs font-bold rounded-md transition-all whitespace-nowrap shrink-0 {{ $activeType === 'savings' ? 'bg-white text-slate-900 shadow-2xs border border-slate-200/60' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/40' }}">
-                    📈 Vadeli Mevduat
+                    Vadeli Mevduat
                 </button>
             </div>
 
@@ -151,7 +154,7 @@
                            placeholder="Hesap veya IBAN ara..." 
                            class="w-full pl-8 pr-7 py-1.5 bg-slate-50 border border-slate-300 rounded-lg text-xs font-medium focus:bg-white focus:ring-1 focus:ring-indigo-600 focus:border-indigo-600">
                     <span class="absolute inset-y-0 left-0 pl-2.5 flex items-center pointer-events-none text-slate-400 text-xs">
-                        🔍
+                        <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/></svg>
                     </span>
                     @if ($search)
                         <button wire:click="$set('search', '')" class="absolute inset-y-0 right-0 pr-2 flex items-center text-slate-400 hover:text-slate-600 text-xs font-bold cursor-pointer">
@@ -271,7 +274,7 @@
                                     <div class="flex items-start justify-between">
                                         <div>
                                             <span class="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider {{ $acc->type === 'kmh' ? 'bg-red-500/20 text-red-300 border border-red-500/40' : ($acc->type === 'savings' ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40' : 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40') }}">
-                                                {{ $acc->type === 'kmh' ? '⚡ KMH / Ek Hesap' : ($acc->type === 'savings' ? '📈 Vadeli Mevduat' : '💳 Vadesiz TL') }}
+                                                {{ $acc->type === 'kmh' ? 'KMH / Ek Hesap' : ($acc->type === 'savings' ? 'Vadeli Mevduat' : 'Vadesiz TL') }}
                                             </span>
                                             <h3 class="text-base font-black text-white mt-1.5 truncate">{{ $acc->name }}</h3>
                                         </div>
@@ -294,12 +297,10 @@
                                         @if (!empty($acc->iban))
                                             <div class="flex items-center gap-1 shrink-0">
                                                 <button type="button" @click="showFullIban = !showFullIban" class="p-1 rounded bg-white/10 hover:bg-white/20 text-slate-300 text-xs transition-colors" title="IBAN Göster / Gizle">
-                                                    <span x-show="!showFullIban">👁️</span>
-                                                    <span x-show="showFullIban" x-cloak>🔒</span>
+                                                    <svg class="w-3.5 h-3.5 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                                                 </button>
                                                 <button type="button" @click="navigator.clipboard.writeText('{{ $acc->formatted_iban }}'); copied = true; setTimeout(() => copied = false, 2000)" class="p-1 rounded bg-white/10 hover:bg-white/20 text-slate-300 text-xs transition-colors" title="IBAN Kopyala">
-                                                    <span x-show="!copied">📋</span>
-                                                    <span x-show="copied" x-cloak class="text-emerald-300 text-[10px]">✓</span>
+                                                    <svg class="w-3.5 h-3.5 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15.666 3.888A2.25 2.25 0 0013.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 01-.75.75H9a.75.75 0 01-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.646.049 1.288.11 1.927.184 1.1.128 1.907 1.077 1.907 2.185V19.5a2.25 2.25 0 01-2.25 2.25H6.75A2.25 2.25 0 014.5 19.5V6.757c0-1.108.806-2.057 1.907-2.185a48.208 48.208 0 011.927-.184"/></svg>
                                                 </button>
                                             </div>
                                         @endif
@@ -308,8 +309,9 @@
                                     <!-- Şube & Hesap No Bilgisi -->
                                     @if ($acc->branch_name || $acc->account_number)
                                         <div class="mt-1.5 flex items-center justify-between text-[10px] text-slate-300 px-0.5">
-                                            <span class="truncate max-w-[200px]" title="{{ $acc->branch_name }}">
-                                                🏛️ {{ $acc->branch_name ?: 'Şube Kodu: ' . $acc->branch_code }}
+                                            <span class="truncate max-w-[200px] flex items-center gap-1" title="{{ $acc->branch_name }}">
+                                                <svg class="w-3.5 h-3.5 text-slate-300 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.5M4.5 21V10.5"/></svg>
+                                                <span>{{ $acc->branch_name ?: 'Şube Kodu: ' . $acc->branch_code }}</span>
                                             </span>
                                             @if ($acc->account_number)
                                                 <span class="font-mono text-slate-400">No: {{ $acc->account_number }}</span>
@@ -373,7 +375,7 @@
                 </div>
             @empty
                 <div class="bg-white rounded-3xl p-12 text-center border-2 border-dashed border-gray-200 space-y-3">
-                    <div class="text-3xl">🏦</div>
+                    <svg class="w-12 h-12 mx-auto text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.5M4.5 21V10.5"/></svg>
                     <h3 class="font-bold text-gray-900 text-base">Kayıtlı hesap bulunamadı</h3>
                     <p class="text-xs text-gray-500">Banka hesaplarınızı ve KMH eksi bakiyelerinizi ekleyerek başlayabilirsiniz.</p>
                     <button wire:click="openCreateModal" class="px-4 py-2 bg-indigo-600 text-white rounded-xl text-xs font-bold hover:bg-indigo-700 transition-colors">

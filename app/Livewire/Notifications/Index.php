@@ -55,11 +55,7 @@ class Index extends Component
         $notif->markAsRead();
         $this->dispatch('refreshNotifications');
 
-        // Varsa ilgili sayfaya yönlendir
-        if (!empty($notif->action_url)) {
-            return $this->redirect($notif->action_url, navigate: true);
-        }
-
+        // Bildirim detay modalını aç
         $this->selectedNotificationId = $notif->id;
         $this->showDetailModal = true;
     }

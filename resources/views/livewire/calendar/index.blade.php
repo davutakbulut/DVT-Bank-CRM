@@ -3,7 +3,7 @@
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
             <h1 class="text-2xl font-black text-gray-900 tracking-tight flex items-center gap-2">
-                <span>🗓️</span>
+                <svg class="w-7 h-7 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5"/></svg>
                 <span>Ödeme & Vade Takvimi</span>
             </h1>
             <p class="text-sm text-gray-600">Aylık kredi kartı ekstreleri, KMH kesintileri, kredi taksitleri ve aynı güne denk gelen banka ödeme çakışmaları</p>
@@ -13,15 +13,15 @@
             <!-- Görünüm Seçici -->
             <div class="inline-flex rounded-xl bg-gray-100 p-1 border border-gray-200 shadow-2xs">
                 <button wire:click="$set('viewMode', 'grid')" class="px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 {{ $viewMode === 'grid' ? 'bg-white text-indigo-700 shadow-xs' : 'text-gray-600 hover:text-gray-900' }}">
-                    <span>📅</span>
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z"/></svg>
                     <span class="hidden sm:inline">Aylık Izgara</span>
                 </button>
                 <button wire:click="$set('viewMode', 'feed')" class="px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 {{ $viewMode === 'feed' ? 'bg-white text-indigo-700 shadow-xs' : 'text-gray-600 hover:text-gray-900' }}">
-                    <span>🚨</span>
+                    <svg class="w-3.5 h-3.5 text-rose-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"/></svg>
                     <span class="hidden sm:inline">Çakışma & Akış</span>
                 </button>
                 <button wire:click="$set('viewMode', 'table')" class="px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 {{ $viewMode === 'table' ? 'bg-white text-indigo-700 shadow-xs' : 'text-gray-600 hover:text-gray-900' }}">
-                    <span>📊</span>
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 12h16.5m-16.5 3.75h16.5M3.75 19.5h16.5M3.75 4.5h16.5M3.75 8.25h16.5"/></svg>
                     <span class="hidden sm:inline">Tablo</span>
                 </button>
             </div>
@@ -45,8 +45,8 @@
     @if (count($collisionDays) > 0)
         <div class="bg-gradient-to-r from-red-950 via-slate-900 to-rose-950 border border-red-500/40 rounded-3xl p-5 sm:p-6 text-white shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-4 relative overflow-hidden">
             <div class="flex items-start gap-3.5 z-10">
-                <div class="w-11 h-11 rounded-2xl bg-red-600/30 border border-red-500 text-red-300 text-2xl flex items-center justify-center shrink-0 animate-pulse">
-                    🚨
+                <div class="w-11 h-11 rounded-2xl bg-red-600/30 border border-red-500 text-red-300 flex items-center justify-center shrink-0 animate-pulse">
+                    <svg class="w-6 h-6 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"/></svg>
                 </div>
                 <div class="space-y-1">
                     <h3 class="font-black text-base text-red-200">
@@ -64,7 +64,7 @@
                     <span class="text-lg sm:text-xl font-black text-red-400 block">₺{{ number_format($totalCollisionAmount, 2, ',', '.') }}</span>
                 </div>
                 <button wire:click="$toggle('collision_only')" class="px-4 py-2.5 rounded-xl font-black text-xs transition-all {{ $collision_only ? 'bg-red-600 text-white shadow-lg ring-2 ring-white/50' : 'bg-white/15 hover:bg-white/25 text-white' }}">
-                    {{ $collision_only ? '✓ Sadece Çakışmalar Gösteriliyor' : 'Çakışan Günleri Filtrele' }}
+                    {{ $collision_only ? 'Sadece Çakışmalar Gösteriliyor' : 'Çakışan Günleri Filtrele' }}
                 </button>
             </div>
         </div>
@@ -79,27 +79,27 @@
                     Tümü ({{ $events->count() }})
                 </button>
                 <button wire:click="$set('payment_type', 'credit_card')" class="px-3.5 py-1.5 text-xs font-bold rounded-xl transition-all whitespace-nowrap {{ $payment_type === 'credit_card' ? 'bg-amber-600 text-white shadow-xs' : 'text-gray-600 hover:bg-gray-100' }}">
-                    💳 Kredi Kartı Ekstreleri
+                    Kredi Kartı Ekstreleri
                 </button>
                 <button wire:click="$set('payment_type', 'loan')" class="px-3.5 py-1.5 text-xs font-bold rounded-xl transition-all whitespace-nowrap {{ $payment_type === 'loan' ? 'bg-blue-600 text-white shadow-xs' : 'text-gray-600 hover:bg-gray-100' }}">
-                    🏦 Kredi Taksitleri
+                    Kredi Taksitleri
                 </button>
                 <button wire:click="$set('payment_type', 'kmh')" class="px-3.5 py-1.5 text-xs font-bold rounded-xl transition-all whitespace-nowrap {{ $payment_type === 'kmh' ? 'bg-red-600 text-white shadow-xs' : 'text-gray-600 hover:bg-gray-100' }}">
-                    ⚡ KMH Kesintileri
+                    KMH Kesintileri
                 </button>
                 <button wire:click="$set('payment_type', 'plan')" class="px-3.5 py-1.5 text-xs font-bold rounded-xl transition-all whitespace-nowrap {{ $payment_type === 'plan' ? 'bg-indigo-600 text-white shadow-xs' : 'text-gray-600 hover:bg-gray-100' }}">
-                    🎯 Ödeme Planı
+                    Ödeme Planı
                 </button>
             </div>
 
             <!-- Canlı Arama Inputu -->
             <div class="relative w-full lg:w-72">
                 <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400 text-xs">
-                    🔍
+                    <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/></svg>
                 </span>
                 <input type="text" 
                        wire:model.live.debounce.300ms="search" 
-                       placeholder="Ödeme veya banka ara..." 
+                       placeholder="Banka veya başlık ara..." 
                        class="w-full pl-9 pr-8 py-1.5 bg-gray-50 border border-gray-200 rounded-xl text-xs sm:text-sm font-medium focus:bg-white focus:ring-indigo-500 focus:border-indigo-500 transition-all">
                 @if ($search)
                     <button wire:click="$set('search', '')" class="absolute inset-y-0 right-0 pr-2.5 flex items-center text-gray-400 hover:text-gray-600 text-xs font-bold">
@@ -111,9 +111,8 @@
 
         <!-- Alt Satır: Banka & Gün Seçici -->
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 items-center text-xs">
-            <!-- 1. Banka Filtresi -->
             <div>
-                <label class="block font-bold text-gray-600 mb-1 text-[11px]">🏛️ Banka Seçimi</label>
+                <label class="block font-bold text-gray-600 mb-1 text-[11px]">Banka Seçimi</label>
                 <select wire:model.live="selected_bank_id" class="w-full rounded-xl border-gray-200 bg-gray-50/80 py-1.5 text-xs font-medium focus:bg-white focus:ring-indigo-500 focus:border-indigo-500">
                     <option value="">Tüm Bankalar</option>
                     @foreach ($banks as $b)
@@ -122,9 +121,8 @@
                 </select>
             </div>
 
-            <!-- 2. Gün Filtresi -->
             <div>
-                <label class="block font-bold text-gray-600 mb-1 text-[11px]">📆 Gün Seçimi (Ayın Günü)</label>
+                <label class="block font-bold text-gray-600 mb-1 text-[11px]">Gün Seçimi (Ayın Günü)</label>
                 <select wire:model.live="selectedDay" class="w-full rounded-xl border-gray-200 bg-gray-50/80 py-1.5 text-xs font-medium focus:bg-white focus:ring-indigo-500 focus:border-indigo-500">
                     <option value="all">Tüm Ay (1 - {{ $daysInMonth }})</option>
                     @for ($i = 1; $i <= $daysInMonth; $i++)
@@ -133,7 +131,6 @@
                 </select>
             </div>
 
-            <!-- 3. Toplam Bütçe Göstergesi -->
             <div class="p-2.5 bg-gray-50 rounded-xl border border-gray-200/80 flex items-center justify-between">
                 <div>
                     <span class="text-[10px] font-bold text-gray-500 block uppercase">BU AYIN TOPLAM YÜKÜ</span>
@@ -187,7 +184,7 @@
 
                             @if ($hasCollision)
                                 <span class="px-1.5 py-0.5 rounded text-[9px] font-black bg-red-600 text-white animate-pulse">
-                                    🚨 Çakışma ({{ $dayEvents->count() }})
+                                    Çakışma ({{ $dayEvents->count() }})
                                 </span>
                             @elseif ($dayEvents->count() > 0)
                                 <span class="text-[9px] font-bold text-gray-400">
@@ -201,7 +198,6 @@
                             @foreach ($dayEvents as $ev)
                                 <div class="p-1 sm:p-1.5 rounded-lg text-[10px] text-white font-bold flex items-center justify-between gap-1 shadow-2xs group/badge hover:scale-[1.02] transition-transform" style="background-color: {{ $ev->bank_color }};">
                                     <div class="flex items-center gap-1 min-w-0">
-                                        <span class="text-[9px]">{{ $ev->type_icon }}</span>
                                         <span class="truncate leading-none">{{ $ev->title }}</span>
                                     </div>
                                     <span class="font-black text-[9px] shrink-0">₺{{ number_format($ev->amount, 0, ',', '.') }}</span>
@@ -251,9 +247,9 @@
                                     <span class="text-xs {{ $hasCollision ? 'text-red-600 font-bold' : 'text-gray-500' }}">
                                         @if ($hasCollision)
                                             @if ($uniqueBanks->count() > 1)
-                                                🚨 Farklı bankaların {{ $dayEvs->count() }} ödemesi aynı gün çakışıyor!
+                                                Farklı bankaların {{ $dayEvs->count() }} ödemesi aynı gün çakışıyor!
                                             @else
-                                                ⚠️ {{ $uniqueBanks->first() }} bankasına ait {{ $dayEvs->count() }} ödeme aynı gün toplanıyor!
+                                                {{ $uniqueBanks->first() }} bankasına ait {{ $dayEvs->count() }} ödeme aynı gün toplanıyor!
                                             @endif
                                         @else
                                             {{ $dayEvs->count() }} ödeme planlandı
@@ -281,7 +277,7 @@
                                             <h4 class="font-bold text-sm text-white mt-0.5">{{ $ev->title }}</h4>
                                         </div>
                                         <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-white/20 text-white shrink-0">
-                                            {{ $ev->type_icon }} {{ $ev->type_label }}
+                                            {{ $ev->type_label }}
                                         </span>
                                     </div>
 
@@ -296,7 +292,7 @@
                 @endif
             @empty
                 <div class="bg-white rounded-3xl p-12 text-center border-2 border-dashed border-gray-200 space-y-3">
-                    <div class="text-3xl">📅</div>
+                    <svg class="w-10 h-10 text-gray-400 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5"/></svg>
                     <h3 class="font-bold text-gray-900 text-base">Bu ay için ödeme kaydı bulunamadı</h3>
                     <p class="text-xs text-gray-500">Farklı bir ay seçebilir veya filtreleri temizleyebilirsiniz.</p>
                 </div>
@@ -339,7 +335,7 @@
                                 </td>
                                 <td class="px-6 py-4">
                                     <span class="px-2.5 py-0.5 rounded-full text-xs font-bold {{ $ev->badge_style }}">
-                                        {{ $ev->type_icon }} {{ $ev->type_label }}
+                                        {{ $ev->type_label }}
                                     </span>
                                 </td>
                                 <td class="px-6 py-4 font-semibold text-gray-600">
@@ -351,7 +347,7 @@
                                 <td class="px-6 py-4 text-center">
                                     @if ($hasCollision)
                                         <span class="px-2 py-0.5 rounded-md text-xs font-black bg-red-600 text-white animate-pulse">
-                                            🚨 Çakışma Var
+                                            Çakışma Var
                                         </span>
                                     @else
                                         <span class="text-xs text-emerald-600 font-bold">Tek Ödeme</span>

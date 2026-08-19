@@ -137,11 +137,19 @@ class Index extends Component
                 'color' => $group->first()->bank?->color ?? '#6366f1',
             ]);
 
-        // Günlük AI Önerisi
+        // Günlük AI Önerisi (Öncelikle Groq modeli tarafından üretilen kriz raporu)
         $latestAdvice = AiAdvice::where('user_id', $user->id)
             ->where('type', 'daily')
+            ->where('provider', 'groq')
             ->latest()
             ->first();
+
+        if (!$latestAdvice) {
+            $latestAdvice = AiAdvice::where('user_id', $user->id)
+                ->where('type', 'daily')
+                ->latest()
+                ->first();
+        }
 
         // Aylık Gelir & Bu Ayın Gider Özeti
         $thisMonthRealizedIncome = (float) Income::where('user_id', $user->id)

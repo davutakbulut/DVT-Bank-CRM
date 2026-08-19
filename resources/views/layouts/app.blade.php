@@ -60,11 +60,11 @@
                         <div>
                             <h4 class="text-xs font-bold uppercase tracking-wider text-gray-900 mb-3">Yönetim Modülleri</h4>
                             <ul class="space-y-2 text-xs font-medium">
-                                <li><a href="{{ route('dashboard') }}" class="hover:text-indigo-600 transition-colors">📊 Kontrol Paneli</a></li>
-                                <li><a href="{{ route('debts.index') }}" class="hover:text-indigo-600 transition-colors">💳 Borçlarım & Krediler</a></li>
-                                <li><a href="{{ route('cards.index') }}" class="hover:text-indigo-600 transition-colors">💳 Kredi Kartlarım</a></li>
-                                <li><a href="{{ route('accounts.index') }}" class="hover:text-indigo-600 transition-colors">🏦 Hesap & KMH / Eksi Bakiye</a></li>
-                                <li><a href="{{ route('cashflow.index') }}" class="hover:text-indigo-600 transition-colors">📈 Gelir & Gider Akışı</a></li>
+                                <li><a href="{{ route('dashboard') }}" class="hover:text-indigo-600 transition-colors">Kontrol Paneli</a></li>
+                                <li><a href="{{ route('debts.index') }}" class="hover:text-indigo-600 transition-colors">Borçlarım & Krediler</a></li>
+                                <li><a href="{{ route('cards.index') }}" class="hover:text-indigo-600 transition-colors">Kredi Kartlarım</a></li>
+                                <li><a href="{{ route('accounts.index') }}" class="hover:text-indigo-600 transition-colors">Hesap & KMH / Eksi Bakiye</a></li>
+                                <li><a href="{{ route('cashflow.index') }}" class="hover:text-indigo-600 transition-colors">Gelir & Gider Akışı</a></li>
                             </ul>
                         </div>
 
@@ -72,11 +72,11 @@
                         <div>
                             <h4 class="text-xs font-bold uppercase tracking-wider text-gray-900 mb-3">Kurtarma & Zeka</h4>
                             <ul class="space-y-2 text-xs font-medium">
-                                <li><a href="{{ route('planner.index') }}" class="hover:text-indigo-600 transition-colors">🎯 Çığ vs Kartopu Planlayıcı</a></li>
-                                <li><a href="{{ route('ai.coach') }}" class="hover:text-indigo-600 transition-colors font-bold text-indigo-600">🤖 7/24 AI Finans Koçu</a></li>
-                                <li><a href="{{ route('calendar.index') }}" class="hover:text-indigo-600 transition-colors">📅 Ödeme & Vade Takvimi</a></li>
-                                <li><a href="{{ route('reports.index') }}" class="hover:text-indigo-600 transition-colors">📑 Banka Maliyet Raporları</a></li>
-                                <li><a href="{{ route('banks.index') }}" class="hover:text-indigo-600 transition-colors">🏛️ Banka Listem</a></li>
+                                <li><a href="{{ route('planner.index') }}" class="hover:text-indigo-600 transition-colors">Çığ vs Kartopu Planlayıcı</a></li>
+                                <li><a href="{{ route('ai.coach') }}" class="hover:text-indigo-600 transition-colors font-bold text-indigo-600">7/24 AI Finans Koçu</a></li>
+                                <li><a href="{{ route('calendar.index') }}" class="hover:text-indigo-600 transition-colors">Ödeme & Vade Takvimi</a></li>
+                                <li><a href="{{ route('reports.index') }}" class="hover:text-indigo-600 transition-colors">Banka Maliyet Raporları</a></li>
+                                <li><a href="{{ route('banks.index') }}" class="hover:text-indigo-600 transition-colors">Banka Listem</a></li>
                             </ul>
                         </div>
 
@@ -84,10 +84,10 @@
                         <div>
                             <h4 class="text-xs font-bold uppercase tracking-wider text-gray-900 mb-3">Güvenlik & Yasal</h4>
                             <ul class="space-y-2 text-xs font-medium">
-                                <li><a href="{{ route('profile.edit') }}" class="hover:text-indigo-600 transition-colors">🔒 Profil & Güvenlik</a></li>
-                                <li><a href="{{ route('legal.kvkk') }}" class="hover:text-indigo-600 transition-colors">📜 KVKK Aydınlatma</a></li>
-                                <li><a href="{{ route('legal.privacy') }}" class="hover:text-indigo-600 transition-colors">🛡️ Gizlilik Politikası</a></li>
-                                <li><a href="{{ route('legal.disclaimer') }}" class="hover:text-indigo-600 transition-colors">⚖️ Yasal Sorumluluk Reddi</a></li>
+                                <li><a href="{{ route('profile.edit') }}" class="hover:text-indigo-600 transition-colors">Profil & Güvenlik</a></li>
+                                <li><a href="{{ route('legal.kvkk') }}" class="hover:text-indigo-600 transition-colors">KVKK Aydınlatma</a></li>
+                                <li><a href="{{ route('legal.privacy') }}" class="hover:text-indigo-600 transition-colors">Gizlilik Politikası</a></li>
+                                <li><a href="{{ route('legal.disclaimer') }}" class="hover:text-indigo-600 transition-colors">Yasal Sorumluluk Reddi</a></li>
                             </ul>
                         </div>
                     </div>

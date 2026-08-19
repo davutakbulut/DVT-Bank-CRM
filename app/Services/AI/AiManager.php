@@ -60,13 +60,15 @@ EOT;
         $systemPrompt = PromptMatrix::baseSystemPrompt();
 
         $defaultProviderKey = Setting::get('ai.default_provider') ?: env('AI_DEFAULT_PROVIDER', 'groq');
-        $providerOrder = array_unique([$defaultProviderKey, 'groq', 'gemini', 'openrouter']);
+        $providerOrder = ($type === 'daily') 
+            ? ['groq', 'gemini', 'openrouter'] 
+            : array_unique([$defaultProviderKey, 'groq', 'gemini', 'openrouter']);
 
         $aiResponse = null;
 
         foreach ($providerOrder as $pKey) {
             if (isset($this->providers[$pKey]) && $this->providers[$pKey]->isAvailable()) {
-                $response = $this->providers[$pKey]->complete($systemPrompt, $userPrompt);
+                $response = $this->providers[$pKey]->complete($systemPrompt, $userPrompt, 2000);
                 if ($response->status === 'success' && !empty(trim($response->content))) {
                     $aiResponse = $response;
                     break;
@@ -115,6 +117,15 @@ EOT;
         $context = $contextBuilder->build($user);
 
         $prompt = PromptMatrix::chatPrompt($context, $userMessage);
+
+        if (!empty($chatHistory)) {
+            $prompt .= "\n\nÖNCEKİ SOHBET AKIŞI GEÇMİŞİ:\n";
+            foreach ($chatHistory as $msg) {
+                $roleName = ($msg['role'] ?? '') === 'user' ? 'Kullanıcı' : 'AI Koç';
+                $prompt .= "{$roleName}: " . ($msg['content'] ?? '') . "\n";
+            }
+        }
+
         $systemPrompt = PromptMatrix::baseSystemPrompt();
 
         $defaultProviderKey = Setting::get('ai.default_provider') ?: env('AI_DEFAULT_PROVIDER', 'groq');

@@ -81,7 +81,8 @@ class NotificationTest extends TestCase
         \Livewire\Livewire::actingAs($user)
             ->test(\App\Livewire\Notifications\Index::class)
             ->call('viewNotification', (string) $notifToView->id)
-            ->assertRedirect('/app/borclar');
+            ->assertSet('showDetailModal', true)
+            ->assertSet('selectedNotificationId', $notifToView->id);
 
         $this->assertNotNull($notifToView->fresh()->read_at);
 

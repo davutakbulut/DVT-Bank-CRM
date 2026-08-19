@@ -3,7 +3,7 @@
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
             <h1 class="text-2xl font-black text-gray-900 tracking-tight flex items-center gap-2">
-                <span>💳</span>
+                <svg class="w-7 h-7 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5ptm-16.5 3h6m-6 3h6m-6 3h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5z"/></svg>
                 <span>Kredi Kartlarım</span>
             </h1>
             <p class="text-sm text-gray-600">Bankalarınıza özel gerçek kart temaları, dönem borçları, limit doluluk oranları ve 90 gün yasal takip kalkanı</p>
@@ -15,7 +15,7 @@
                         @mouseenter="show = true" 
                         @mouseleave="show = false"
                         class="inline-flex items-center gap-1.5 px-3.5 py-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300 font-black text-xs sm:text-sm rounded-xl shadow-2xs transition-all active:scale-95">
-                    <span>📥</span>
+                    <svg class="w-4 h-4 text-emerald-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"/></svg>
                     <span>Excel'e Aktar</span>
                 </button>
 
@@ -24,13 +24,16 @@
                      x-cloak
                      class="absolute right-0 top-full mt-2 w-72 p-3 bg-slate-900 text-white rounded-2xl shadow-2xl border border-slate-700 text-xs z-50 pointer-events-none transition-all">
                     <div class="flex items-center gap-1.5 font-bold text-emerald-300 border-b border-slate-800 pb-1.5 mb-1.5">
-                        <span>💳</span>
+                        <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5ptm-16.5 3h6m-6 3h6m-6 3h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5z"/></svg>
                         <span>Kredi Kartları Excel Raporu</span>
                     </div>
                     <p class="text-[11px] text-slate-300 leading-relaxed">
                         Tüm banka kredi kartlarınızın toplam limitlerini, güncel ekstre borçlarını, kullanılabilir limitlerini, asgari ödeme tutarlarını ve hesap kesim günlerini içeren <strong>Excel tablosunu</strong> indirir.
                     </p>
-                    <span class="block mt-2 text-[10px] font-bold text-emerald-400">✓ Excel & Google Sheets Uyumlu</span>
+                    <span class="block mt-2 text-[10px] font-bold text-emerald-400 flex items-center gap-1">
+                        <svg class="w-3.5 h-3.5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+                        <span>Excel & Google Sheets Uyumlu</span>
+                    </span>
                 </div>
             </div>
 
@@ -43,7 +46,7 @@
 
     @if (session()->has('message'))
         <div class="p-4 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-xl text-sm font-bold flex items-center gap-2 shadow-xs">
-            <span>✓</span>
+            <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
             <span>{{ session('message') }}</span>
         </div>
     @endif
@@ -172,8 +175,7 @@
                             </span>
                             @if (!empty($card->card_number))
                                 <button type="button" @click="revealed = !revealed" class="p-1 rounded-md bg-white/10 hover:bg-white/20 text-slate-300 text-xs transition-colors" title="Numarayı Göster / Gizle">
-                                    <span x-show="!revealed">👁️</span>
-                                    <span x-show="revealed" x-cloak>🔒</span>
+                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
                                 </button>
                             @endif
                         </div>
@@ -205,7 +207,7 @@
                 <div class="relative z-10 my-1 flex items-center justify-between text-[10px] gap-2 pt-1">
                     @if ((float)$card->reward_balance > 0)
                         <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-amber-400/20 border border-amber-300/40 text-amber-200 font-bold text-[10px]">
-                            <span>🪙</span>
+                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                             <span>₺{{ number_format($card->reward_balance, 2, ',', '.') }} Puan/Jest Lira</span>
                         </span>
                     @else
@@ -214,7 +216,7 @@
 
                     @if ($card->cash_advance_limit)
                         <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md {{ $card->is_cash_advance_blocked ? 'bg-red-500/25 border border-red-400/40 text-red-200' : 'bg-sky-500/20 border border-sky-400/40 text-sky-200' }} font-bold text-[10px]">
-                            <span>🏧</span>
+                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
                             <span>Avans: ₺{{ number_format($card->cash_advance_limit, 0, ',', '.') }} {{ $card->is_cash_advance_blocked ? '(Kapalı 🚫)' : '' }}</span>
                         </span>
                     @endif
@@ -241,8 +243,12 @@
 
                         <!-- Düzenle / Sil -->
                         <div class="flex items-center gap-1">
-                            <button wire:click="openEditModal({{ $card->id }})" title="Düzenle" class="p-1.5 bg-white/10 hover:bg-white/20 active:scale-90 text-white rounded-lg text-xs font-bold backdrop-blur-xs transition-all">✎</button>
-                            <button wire:click="delete({{ $card->id }})" wire:confirm="Bu kartı silmek istediğinize emin misiniz?" title="Sil" class="p-1.5 bg-red-600/30 hover:bg-red-600 text-red-200 hover:text-white rounded-lg text-xs font-bold backdrop-blur-xs transition-all">🗑</button>
+                            <button wire:click="openEditModal({{ $card->id }})" title="Düzenle" class="p-1.5 bg-white/10 hover:bg-white/20 active:scale-90 text-white rounded-lg text-xs font-bold backdrop-blur-xs transition-all">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+                            </button>
+                            <button wire:click="delete({{ $card->id }})" wire:confirm="Bu kartı silmek istediğinize emin misiniz?" title="Sil" class="p-1.5 bg-red-600/30 hover:bg-red-600 text-red-200 hover:text-white rounded-lg text-xs font-bold backdrop-blur-xs transition-all">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -250,14 +256,14 @@
                 <!-- Risk Sayacı Uyarısı (Eğer Gecikme Varsa) -->
                 @if ($daysOverdue > 0)
                     <div class="mt-2.5 -mx-5 sm:-mx-6 -mb-5 sm:-mb-6 p-2 text-center text-[10px] font-black tracking-wide {{ $isNearLegal ? 'bg-red-600 text-white animate-pulse' : 'bg-amber-500 text-slate-950' }}">
-                        🚨 {{ $daysOverdue }} Gündür Ödeme Yok • Yasal Takibe {{ $daysToLegal }} Gün Kaldı!
+                        {{ $daysOverdue }} Gündür Ödeme Yok • Yasal Takibe {{ $daysToLegal }} Gün Kaldı!
                     </div>
                 @endif
             </div>
         @empty
             <div class="col-span-full bg-white rounded-3xl p-12 text-center border-2 border-dashed border-gray-200 space-y-4 shadow-sm">
                 <div class="w-16 h-16 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center mx-auto text-3xl shadow-xs">
-                    💳
+                    <svg class="w-8 h-8 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5ptm-16.5 3h6m-6 3h6m-6 3h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5z"/></svg>
                 </div>
                 <div>
                     <h3 class="text-lg font-bold text-gray-900">Henüz Kayıtlı Kredi Kartınız Yok</h3>

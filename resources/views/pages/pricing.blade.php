@@ -28,10 +28,22 @@
                         <span class="text-slate-400 text-sm">/ sonsuza dek</span>
                     </div>
                     <ul class="mt-6 space-y-3 text-sm text-slate-300">
-                        <li>✓ 2 Banka Entegrasyonu</li>
-                        <li>✓ 5 Borç & Kart Kalemi</li>
-                        <li>✓ 90 Gün Yasal Takip Sayacı</li>
-                        <li>✓ Haftalık AI Finansal Tavsiye</li>
+                        <li class="flex items-center gap-2">
+                            <svg class="w-4 h-4 text-emerald-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+                            <span>2 Banka Entegrasyonu</span>
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <svg class="w-4 h-4 text-emerald-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+                            <span>5 Borç & Kart Kalemi</span>
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <svg class="w-4 h-4 text-emerald-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+                            <span>90 Gün Yasal Takip Sayacı</span>
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <svg class="w-4 h-4 text-emerald-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+                            <span>Haftalık AI Finansal Tavsiye</span>
+                        </li>
                     </ul>
                 </div>
                 <a href="{{ route('register') }}" class="w-full py-3 text-center bg-slate-800 hover:bg-slate-700 text-white font-bold rounded-xl text-sm transition-colors">
@@ -50,11 +62,26 @@
                         <span class="text-slate-400 text-sm">/ ay</span>
                     </div>
                     <ul class="mt-6 space-y-3 text-sm text-slate-200">
-                        <li>✓ <strong>Sınırsız</strong> Banka ve Borç Girişi</li>
-                        <li>✓ <strong>Çığ ve Kartopu</strong> Ödeme Planı Sihirbazı</li>
-                        <li>✓ <strong>Günlük AI Koçluk</strong> ve 7/24 Chat Desteği</li>
-                        <li>✓ Detaylı Faiz Maliyeti & Projeksiyon Raporları</li>
-                        <li>✓ Özel Vade Hatırlatıcı Bildirimler</li>
+                        <li class="flex items-center gap-2">
+                            <svg class="w-4 h-4 text-emerald-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+                            <span><strong>Sınırsız</strong> Banka ve Borç Girişi</span>
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <svg class="w-4 h-4 text-emerald-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+                            <span><strong>Çığ ve Kartopu</strong> Ödeme Planı Sihirbazı</span>
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <svg class="w-4 h-4 text-emerald-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+                            <span><strong>Günlük AI Koçluk</strong> ve 7/24 Chat Desteği</span>
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <svg class="w-4 h-4 text-emerald-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+                            <span>Detaylı Faiz Maliyeti & Projeksiyon Raporları</span>
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <svg class="w-4 h-4 text-emerald-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+                            <span>Özel Vade Hatırlatıcı Bildirimler</span>
+                        </li>
                     </ul>
                 </div>
                 <a href="{{ route('register') }}" class="w-full py-3.5 text-center bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl text-sm shadow-lg shadow-indigo-600/30 transition-all">

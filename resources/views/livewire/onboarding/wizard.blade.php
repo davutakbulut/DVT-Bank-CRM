@@ -69,7 +69,10 @@
                             </span>
                             <span class="text-xs font-semibold text-gray-800 text-center leading-snug">{{ $bank->name }}</span>
                             @if ($isSelected)
-                                <span class="mt-1 inline-flex items-center text-[10px] font-bold text-indigo-700">Seçildi ✓</span>
+                                <span class="mt-1 inline-flex items-center gap-0.5 text-[10px] font-bold text-indigo-700">
+                                    <span>Seçildi</span>
+                                    <svg class="w-3 h-3 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+                                </span>
                             @endif
                         </button>
                     @endforeach
@@ -216,7 +219,9 @@
 
                 @if ($riskSummary['most_critical_item'])
                     <div class="p-4 bg-red-100/70 border border-red-300 rounded-xl flex items-start gap-3">
-                        <div class="p-2 bg-red-200 text-red-800 rounded-lg font-bold text-lg">⚠️</div>
+                        <div class="p-2 bg-red-200 text-red-800 rounded-lg shrink-0">
+                            <svg class="w-5 h-5 text-red-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"/></svg>
+                        </div>
                         <div>
                             <h4 class="font-bold text-red-900 text-sm">En Acil Müdahale Edilmesi Gereken Borcunuz: {{ $riskSummary['most_critical_item']['bank'] }} - {{ $riskSummary['most_critical_item']['title'] }}</h4>
                             <p class="text-xs text-red-800 mt-1">Bu borç {{ $riskSummary['most_critical_item']['days_overdue'] }} gündür gecikmede. 90 günlük yasal takip süresine yalnızca <strong>{{ $riskSummary['most_critical_item']['days_left'] }} gün</strong> kaldı. Bankayla görüşülüp derhal yapılandırma masasına oturulmalıdır.</p>
@@ -224,8 +229,9 @@
                     </div>
                 @endif
 
-                <div class="bg-gray-50 border border-gray-200 rounded-xl p-4 text-xs text-gray-500 leading-relaxed">
-                    ⚖️ <strong>Yasal Bilgilendirme:</strong> Bu platform bir bilgilendirme ve borç yönetim takip aracıdır; 6362 sayılı Kanun kapsamında yatırım veya finansal danışmanlık hizmeti sunmaz.
+                <div class="bg-gray-50 border border-gray-200 rounded-xl p-4 text-xs text-gray-500 leading-relaxed flex items-start gap-2">
+                    <svg class="w-4 h-4 text-slate-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v17.25m0 0c-1.472 0-2.882.265-4.185.75M12 20.25c1.472 0 2.882.265 4.185.75M18.75 4.5H5.25A2.25 2.25 0 003 6.75v10.5a2.25 2.25 0 002.25 2.25h13.5A2.25 2.25 0 0021 17.25V6.75A2.25 2.25 0 0018.75 4.5z"/></svg>
+                    <span><strong>Yasal Bilgilendirme:</strong> Bu platform bir bilgilendirme ve borç yönetim takip aracıdır; 6362 sayılı Kanun kapsamında yatırım veya finansal danışmanlık hizmeti sunmaz.</span>
                 </div>
 
                 <div class="pt-4 flex justify-end">

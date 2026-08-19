@@ -42,8 +42,11 @@
                     x-show="show"
                     x-transition
                     x-init="setTimeout(() => show = false, 2000)"
-                    class="text-xs font-bold text-emerald-600"
-                >✓ Şifreniz Başarıyla Güncellendi.</p>
+                    class="text-xs font-bold text-emerald-600 flex items-center gap-1"
+                >
+                    <svg class="w-3.5 h-3.5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+                    <span>Şifreniz Başarıyla Güncellendi.</span>
+                </p>
             @endif
         </div>
     </form>

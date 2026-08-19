@@ -21,18 +21,6 @@ class NotificationService
     {
         $today = Carbon::today();
 
-        // Bugün zaten AI tavsiyesi oluşturulmuş mu?
-        if (!$force) {
-            $exists = FinancialNotification::where('user_id', $user->id)
-                ->where('type', 'ai_advice')
-                ->whereDate('created_at', $today)
-                ->exists();
-
-            if ($exists) {
-                return null;
-            }
-        }
-
         $contextBuilder = new UserContextBuilder();
         $context = $contextBuilder->build($user);
 
@@ -45,63 +33,104 @@ class NotificationService
 
         $systemPrompt = "Sen kullanıcının kişisel yapay zeka finans koçu ve sadık bir dostusun. Kullanıcının canını yakacak faizleri durdurmak, onu 90 günlük yasal takipten korumak ve ona moral verip somut taktikler göstermek için konuşursun. Sayıları standart Türkçe (Örn: 49.000 TL) yaz, yabancı karakter kullanma.";
 
-        $title = "💡 Günlük Finans Koçu Tavsiyesi";
-        $message = "En yüksek faizli borçlarınıza odaklanarak bu ayki faiz yükünüzü hafifletebilirsiniz.";
-        $severity = "info";
-
-        // Önce Gemini, sonra Groq dene
-        $gemini = new GeminiProvider();
-        $groq = new GroqProvider();
-        $aiContent = null;
-
-        if ($gemini->isAvailable()) {
-            $resp = $gemini->complete($systemPrompt, $prompt, 300);
-            if ($resp->status === 'success' && !empty(trim($resp->content))) {
-                $aiContent = $resp->content;
-            }
-        }
-
-        if (!$aiContent && $groq->isAvailable()) {
-            $resp = $groq->complete($systemPrompt, $prompt, 300);
-            if ($resp->status === 'success' && !empty(trim($resp->content))) {
-                $aiContent = $resp->content;
-            }
-        }
-
-        if ($aiContent) {
-            $cleanedAi = \App\Helpers\AiFormatter::cleanUnicodeAndGlitches($aiContent);
-            if (preg_match('/(?:\*\*|\#\#)?\s*BAŞLIK\s*:\s*(?:\*\*)?\s*(.+)/iu', $cleanedAi, $m)) {
-                $title = trim(str_replace(['*', '#'], '', $m[1]));
-            }
-            if (preg_match('/(?:\*\*|\#\#)?\s*MESAJ\s*:\s*(?:\*\*)?\s*(.+?)(?=(?:\*\*|\#\#)?\s*SEVERITY|\Z)/isu', $cleanedAi, $m)) {
-                $message = trim($m[1]);
-            }
-            if (preg_match('/SEVERITY\s*:\s*(?:\*\*)?\s*(info|warning|danger|success)/iu', $cleanedAi, $m)) {
-                $severity = strtolower(trim(str_replace('*', '', $m[1])));
-            }
-        } else {
-            // Offline akıllı kural
-            $maxInterest = $context['en_yuksek_faizli'] ?? 'yüksek faizli borcunuz';
-            $title = "⚡ Faiz Tasarrufu Hamlesi";
-            $message = "Bugün {$maxInterest} kaleminize asgarinin üzerinde ek ödeme yaparak faiz kartopunu yavaşlatın.";
-            $severity = "warning";
-        }
-
-        return FinancialNotification::create([
-            'user_id' => $user->id,
-            'type' => 'ai_advice',
-            'title' => $title,
-            'message' => $message,
-            'action_url' => route('ai.coach', [], false),
-            'severity' => $severity,
-            'data' => [
-                'provider' => $aiContent ? ($gemini->isAvailable() ? 'gemini' : 'groq') : 'offline_rule',
-                'context_snapshot' => [
-                    'toplam_borc' => $context['toplam_borc'] ?? 0,
-                    'aylik_yukumluluk' => $context['bu_ay_yukumluluk'] ?? 0,
-                ],
+        $providersToRun = [
+            'gemini' => [
+                'provider' => new GeminiProvider(),
+                'label' => 'Google Gemini',
+                'badge' => '🤖 Google Gemini AI',
             ],
-        ]);
+            'groq' => [
+                'provider' => new GroqProvider(),
+                'label' => 'Groq Llama',
+                'badge' => '⚡ Groq Llama AI',
+            ],
+        ];
+
+        $lastNotification = null;
+
+        foreach ($providersToRun as $pKey => $pInfo) {
+            /** @var \App\Services\AI\AiProviderInterface $p */
+            $p = $pInfo['provider'];
+
+            if (!$p->isAvailable()) {
+                continue;
+            }
+
+            if (!$force) {
+                $exists = FinancialNotification::where('user_id', $user->id)
+                    ->where('type', 'ai_advice')
+                    ->whereDate('created_at', $today)
+                    ->where('data->provider', $pKey)
+                    ->exists();
+
+                if ($exists) {
+                    continue;
+                }
+            }
+
+            $resp = $p->complete($systemPrompt, $prompt, 1500);
+            if ($resp->status === 'success' && !empty(trim($resp->content))) {
+                $title = "💡 {$pInfo['label']} Tavsiyesi";
+                $message = "En yüksek faizli borçlarınıza odaklanarak bu ayki faiz yükünüzü hafifletebilirsiniz.";
+                $severity = "info";
+
+                $cleanedAi = \App\Helpers\AiFormatter::cleanUnicodeAndGlitches($resp->content);
+                if (preg_match('/(?:\*\*|\#\#)?\s*BAŞLIK\s*:\s*(?:\*\*)?\s*(.+)/iu', $cleanedAi, $m)) {
+                    $title = trim(str_replace(['*', '#'], '', $m[1]));
+                }
+                if (preg_match('/(?:\*\*|\#\#)?\s*MESAJ\s*:\s*(?:\*\*)?\s*(.+?)(?=(?:\*\*|\#\#)?\s*SEVERITY|\Z)/isu', $cleanedAi, $m)) {
+                    $message = trim($m[1]);
+                }
+                if (preg_match('/SEVERITY\s*:\s*(?:\*\*)?\s*(info|warning|danger|success)/iu', $cleanedAi, $m)) {
+                    $severity = strtolower(trim(str_replace('*', '', $m[1])));
+                }
+
+                $lastNotification = FinancialNotification::create([
+                    'user_id' => $user->id,
+                    'type' => 'ai_advice',
+                    'title' => $title,
+                    'message' => $message,
+                    'action_url' => route('ai.coach', [], false),
+                    'severity' => $severity,
+                    'data' => [
+                        'provider' => $pKey,
+                        'provider_label' => $pInfo['label'],
+                        'model_badge' => $pInfo['badge'],
+                        'context_snapshot' => [
+                            'toplam_borc' => $context['toplam_borc'] ?? 0,
+                            'aylik_yukumluluk' => $context['bu_ay_yukumluluk'] ?? 0,
+                        ],
+                    ],
+                ]);
+            }
+        }
+
+        // Eğer hiçbir sağlayıcıdan bildirim oluşturulamadıysa kural tabanlı üret
+        if (!$lastNotification) {
+            $exists = !$force && FinancialNotification::where('user_id', $user->id)
+                ->where('type', 'ai_advice')
+                ->whereDate('created_at', $today)
+                ->exists();
+
+            if (!$exists) {
+                $maxInterest = $context['en_yuksek_faizli'] ?? 'yüksek faizli borcunuz';
+                $lastNotification = FinancialNotification::create([
+                    'user_id' => $user->id,
+                    'type' => 'ai_advice',
+                    'title' => "⚡ Faiz Tasarrufu Hamlesi",
+                    'message' => "Bugün {$maxInterest} kaleminize asgarinin üzerinde ek ödeme yaparak faiz kartopunu yavaşlatın.",
+                    'action_url' => route('ai.coach', [], false),
+                    'severity' => "warning",
+                    'data' => [
+                        'provider' => 'offline_rule',
+                        'provider_label' => 'Kural Motoru',
+                        'model_badge' => '🛡️ Kural Tabanlı Motor',
+                    ],
+                ]);
+            }
+        }
+
+        return $lastNotification;
     }
 
     /**

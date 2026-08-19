@@ -16,8 +16,9 @@
             <a href="{{ route('contact') }}" class="hover:text-white transition-colors">İletişim</a>
         </div>
 
-        <div class="text-slate-500 text-xs max-w-2xl mx-auto leading-relaxed">
-            ⚖️ <strong>Yasal Uyarı:</strong> DVT Bank CRM bir kişisel finans ve borç takip aracıdır. 6362 sayılı Sermaye Piyasası Kanunu kapsamında yatırım, kredi veya finansal danışmanlık hizmeti sunmaz.
+        <div class="text-slate-500 text-xs max-w-2xl mx-auto leading-relaxed flex items-start justify-center gap-1.5">
+            <svg class="w-4 h-4 text-slate-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v17.25m0 0c-1.472 0-2.882.265-4.185.75M12 20.25c1.472 0 2.882.265 4.185.75M18.75 4.5H5.25A2.25 2.25 0 003 6.75v10.5a2.25 2.25 0 002.25 2.25h13.5A2.25 2.25 0 0021 17.25V6.75A2.25 2.25 0 0018.75 4.5z"/></svg>
+            <span><strong>Yasal Uyarı:</strong> DVT Bank CRM bir kişisel finans ve borç takip aracıdır. 6362 sayılı Sermaye Piyasası Kanunu kapsamında yatırım, kredi veya finansal danışmanlık hizmeti sunmaz.</span>
         </div>
 
         <div class="text-slate-600 text-xs pt-4 border-t border-slate-900">

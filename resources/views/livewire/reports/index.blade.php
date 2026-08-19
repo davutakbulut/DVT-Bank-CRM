@@ -3,7 +3,7 @@
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
             <h1 class="text-2xl font-black text-gray-900 tracking-tight flex items-center gap-2">
-                <span>📊</span>
+                <svg class="w-6 h-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z"/></svg>
                 <span>Finansal Analiz & Derin Raporlama Merkezi</span>
             </h1>
             <p class="text-sm text-gray-600">Ne harcıyorum, nereye harcıyorum, ne zaman daha çok harcıyorum ve bankalara ne kadar faiz ödüyorum?</p>
@@ -14,12 +14,15 @@
             <div class="relative inline-block group">
                 <button wire:click="exportExcel" 
                         class="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white text-xs font-black rounded-xl shadow-sm transition-all cursor-pointer">
-                    <span>📗</span>
+                    <svg class="w-4 h-4 text-emerald-100" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m.75 12l3 3m0 0l3-3m-3 3v-6m-1.5-9H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/></svg>
                     <span>Excel Raporu İndir</span>
                 </button>
                 <!-- Tooltip Popup -->
                 <div class="absolute right-0 top-full mt-2 hidden group-hover:block z-50 w-72 p-3 bg-slate-900 text-white text-xs rounded-xl shadow-2xl border border-slate-700 pointer-events-none transition-all">
-                    <p class="font-bold text-emerald-400 mb-1">📊 Kapsamlı Finansal Rapor (CSV/Excel)</p>
+                    <p class="font-bold text-emerald-400 mb-1 flex items-center gap-1">
+                        <svg class="w-3.5 h-3.5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z"/></svg>
+                        <span>Kapsamlı Finansal Rapor (CSV/Excel)</span>
+                    </p>
                     <p class="text-slate-300 text-[11px] leading-relaxed">
                         Tüm aktif borçlarınızı, kredi kartı limit/borç/jest lira/avans durumlarını, gelir ve gider kalemlerinizi tek bir Excel dosyasında UTF-8 formatında indirir.
                     </p>
@@ -67,7 +70,8 @@
 
                     <div class="space-y-1">
                         <span class="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full {{ $healthScore >= 70 ? 'bg-emerald-500/20 border-emerald-400/40 text-emerald-300' : ($healthScore >= 45 ? 'bg-amber-500/20 border-amber-400/40 text-amber-300' : 'bg-red-500/20 border-red-400/40 text-red-300') }} border text-[11px] font-black uppercase tracking-wider">
-                            {{ $healthScore >= 70 ? '🟢 Finansal Durum: Güçlü' : ($healthScore >= 45 ? '🟡 Finansal Durum: Dengede' : '🔴 Finansal Durum: Riskli') }}
+                            <span class="w-2 h-2 rounded-full {{ $healthScore >= 70 ? 'bg-emerald-400' : ($healthScore >= 45 ? 'bg-amber-400' : 'bg-red-400') }}"></span>
+                            <span>{{ $healthScore >= 70 ? 'Finansal Durum: Güçlü' : ($healthScore >= 45 ? 'Finansal Durum: Dengede' : 'Finansal Durum: Riskli') }}</span>
                         </span>
                         <h2 class="text-lg sm:text-xl font-black text-white">
                             Aylık Net Borç Kapatma Kapasiteniz: <span class="text-emerald-400">₺{{ number_format($netSavings, 2, ',', '.') }}</span>
@@ -115,23 +119,23 @@
     <!-- 3. RAPOR MODÜL SEKMELERİ -->
     <div class="flex items-center gap-2 overflow-x-auto no-scrollbar border-b border-gray-200 pb-2">
         <button wire:click="setTab('overview')" class="px-4 py-2 rounded-xl text-xs sm:text-sm font-black transition-all whitespace-nowrap flex items-center gap-2 {{ $activeTab === 'overview' ? 'bg-indigo-600 text-white shadow-md' : 'text-gray-600 hover:bg-gray-100' }}">
-            <span>🌟</span>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z"/></svg>
             <span>360° Genel Kokpit</span>
         </button>
         <button wire:click="setTab('categories')" class="px-4 py-2 rounded-xl text-xs sm:text-sm font-black transition-all whitespace-nowrap flex items-center gap-2 {{ $activeTab === 'categories' ? 'bg-indigo-600 text-white shadow-md' : 'text-gray-600 hover:bg-gray-100' }}">
-            <span>🛒</span>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z"/></svg>
             <span>Nereye Harcıyorum?</span>
         </button>
         <button wire:click="setTab('timing')" class="px-4 py-2 rounded-xl text-xs sm:text-sm font-black transition-all whitespace-nowrap flex items-center gap-2 {{ $activeTab === 'timing' ? 'bg-indigo-600 text-white shadow-md' : 'text-gray-600 hover:bg-gray-100' }}">
-            <span>⏳</span>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
             <span>Ne Zaman Harcıyorum?</span>
         </button>
         <button wire:click="setTab('banks')" class="px-4 py-2 rounded-xl text-xs sm:text-sm font-black transition-all whitespace-nowrap flex items-center gap-2 {{ $activeTab === 'banks' ? 'bg-indigo-600 text-white shadow-md' : 'text-gray-600 hover:bg-gray-100' }}">
-            <span>🏛️</span>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.5M4.5 21V10.5"/></svg>
             <span>Bankalar & Faiz Yükü</span>
         </button>
         <button wire:click="setTab('limits')" class="px-4 py-2 rounded-xl text-xs sm:text-sm font-black transition-all whitespace-nowrap flex items-center gap-2 {{ $activeTab === 'limits' ? 'bg-indigo-600 text-white shadow-md' : 'text-gray-600 hover:bg-gray-100' }}">
-            <span>💳</span>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5ptm-16.5 3h6m-6 3h6m-6 3h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5z"/></svg>
             <span>Kart & Limit Risk Matrisi</span>
         </button>
     </div>
@@ -144,14 +148,14 @@
             <!-- Sol: Gelir vs Gider Bütçe Akışı -->
             <div class="bg-white rounded-3xl p-6 border border-gray-200/90 shadow-sm space-y-4">
                 <h3 class="font-black text-gray-900 text-base flex items-center gap-2 border-b border-gray-100 pb-3">
-                    <span>⚖️</span>
+                    <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v17.25m0 0c-1.472 0-2.882.265-4.185.75M12 20.25c1.472 0 2.882.265 4.185.75M18.75 4.5l-6.75 3-6.75-3m13.5 0v4.5c0 1.243-3.022 2.25-6.75 2.25S5.25 10.243 5.25 9V4.5m13.5 0H5.25"/></svg>
                     <span>Nakit Giriş & Çıkış Dengesi</span>
                 </h3>
 
                 <div class="space-y-4 text-sm">
                     <div class="flex items-center justify-between p-3.5 bg-emerald-50/70 border border-emerald-100 rounded-2xl">
                         <div class="flex items-center gap-3">
-                            <span class="text-xl">🟢</span>
+                            <span class="w-3 h-3 rounded-full bg-emerald-500"></span>
                             <div>
                                 <span class="font-bold text-gray-900 block">Dönem Toplam Gelirleri</span>
                                 <span class="text-xs text-gray-500">Maaş, prim, ek gelirler</span>
@@ -162,7 +166,7 @@
 
                     <div class="flex items-center justify-between p-3.5 bg-red-50/70 border border-red-100 rounded-2xl">
                         <div class="flex items-center gap-3">
-                            <span class="text-xl">🔴</span>
+                            <span class="w-3 h-3 rounded-full bg-red-500"></span>
                             <div>
                                 <span class="font-bold text-gray-900 block">Dönem Toplam Giderleri</span>
                                 <span class="text-xs text-gray-500">Kira, faturalar, yaşam, kart harcamaları</span>
@@ -173,7 +177,7 @@
 
                     <div class="flex items-center justify-between p-3.5 bg-indigo-50/70 border border-indigo-100 rounded-2xl">
                         <div class="flex items-center gap-3">
-                            <span class="text-xl">✨</span>
+                            <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z"/></svg>
                             <div>
                                 <span class="font-bold text-gray-900 block">Borca Ayrılan Net Nakit</span>
                                 <span class="text-xs text-gray-500">Gelir - Gider Farkı</span>
@@ -187,7 +191,7 @@
             <!-- Sağ: En Büyük Harcama Kaçakları -->
             <div class="bg-white rounded-3xl p-6 border border-gray-200/90 shadow-sm space-y-4">
                 <h3 class="font-black text-gray-900 text-base flex items-center gap-2 border-b border-gray-100 pb-3">
-                    <span>🚨</span>
+                    <svg class="w-5 h-5 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"/></svg>
                     <span>En Çok Para Giden İlk 3 Kategori</span>
                 </h3>
 
@@ -196,7 +200,7 @@
                         <div class="p-3 bg-gray-50 rounded-2xl border border-gray-100 space-y-2">
                             <div class="flex items-center justify-between">
                                 <div class="flex items-center gap-2">
-                                    <span>{{ $cat['icon'] }}</span>
+                                    <span class="w-2.5 h-2.5 rounded-full" style="background-color: {{ $cat['color'] }};"></span>
                                     <span class="font-bold text-sm text-gray-900">{{ $cat['name'] }}</span>
                                 </div>
                                 <div class="text-right">
@@ -221,7 +225,7 @@
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-gray-100 pb-4">
                 <div>
                     <h3 class="text-lg font-black text-gray-900 flex items-center gap-2">
-                        <span>🛒</span>
+                        <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z"/></svg>
                         <span>Kategori Bazlı Harcama Dağılımı</span>
                     </h3>
                     <p class="text-xs text-gray-500">Paranızın yüzde kaçı nereye akıyor? En büyük bütçe tüketim kalemleriniz</p>
@@ -238,7 +242,7 @@
                         <div class="flex items-center justify-between">
                             <div class="flex items-center gap-3">
                                 <span class="w-10 h-10 rounded-xl flex items-center justify-center text-white text-base font-bold shadow-xs" style="background-color: {{ $cat['color'] }};">
-                                    {{ $cat['icon'] }}
+                                    <span class="w-3 h-3 rounded-full bg-white/80"></span>
                                 </span>
                                 <div>
                                     <h4 class="font-bold text-sm text-gray-900">{{ $cat['name'] }}</h4>
@@ -273,7 +277,7 @@
             <div class="bg-white rounded-3xl p-6 sm:p-7 border border-gray-200/90 shadow-sm space-y-5">
                 <div class="border-b border-gray-100 pb-3">
                     <h3 class="font-black text-gray-900 text-base flex items-center gap-2">
-                        <span>📅</span>
+                        <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5"/></svg>
                         <span>Hafta İçi vs Hafta Sonu Harcama Yoğunluğu</span>
                     </h3>
                     <p class="text-xs text-gray-500">Hafta sonu dışarıda yemek ve eğlence harcamaları bütçenizi ne kadar zorluyor?</p>
@@ -282,7 +286,7 @@
                 <div class="space-y-4">
                     <div class="p-4 rounded-2xl bg-blue-50/70 border border-blue-100 space-y-2">
                         <div class="flex justify-between items-center text-xs">
-                            <span class="font-bold text-blue-950">💼 Hafta İçi (Pazartesi - Cuma)</span>
+                            <span class="font-bold text-blue-950">Hafta İçi (Pazartesi - Cuma)</span>
                             <span class="font-black text-blue-800 text-sm">₺{{ number_format($timingAnalysis['weekday_total'], 2, ',', '.') }} (%{{ $timingAnalysis['weekday_percent'] }})</span>
                         </div>
                         <div class="w-full h-2.5 bg-blue-200 rounded-full overflow-hidden">
@@ -292,7 +296,7 @@
 
                     <div class="p-4 rounded-2xl bg-amber-50/70 border border-amber-100 space-y-2">
                         <div class="flex justify-between items-center text-xs">
-                            <span class="font-bold text-amber-950">🎉 Hafta Sonu (Cumartesi - Pazar)</span>
+                            <span class="font-bold text-amber-950">Hafta Sonu (Cumartesi - Pazar)</span>
                             <span class="font-black text-amber-800 text-sm">₺{{ number_format($timingAnalysis['weekend_total'], 2, ',', '.') }} (%{{ $timingAnalysis['weekend_percent'] }})</span>
                         </div>
                         <div class="w-full h-2.5 bg-amber-200 rounded-full overflow-hidden">
@@ -306,7 +310,7 @@
             <div class="bg-white rounded-3xl p-6 sm:p-7 border border-gray-200/90 shadow-sm space-y-5">
                 <div class="border-b border-gray-100 pb-3">
                     <h3 class="font-black text-gray-900 text-base flex items-center gap-2">
-                        <span>🗓️</span>
+                        <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                         <span>Ayın Hangi Evresinde Para Tükeniyor?</span>
                     </h3>
                     <p class="text-xs text-gray-500">Maaşın ilk günleri mi yoksa ay sonu kart kullanımı mı yüksek?</p>
@@ -354,7 +358,7 @@
         <div class="bg-white rounded-3xl p-6 sm:p-8 border border-gray-200/90 shadow-sm space-y-6">
             <div class="border-b border-gray-100 pb-3">
                 <h3 class="text-lg font-black text-gray-900 flex items-center gap-2">
-                    <span>🏛️</span>
+                    <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.5M4.5 21V10.5"/></svg>
                     <span>Banka Bazlı Borç & Yıllık Faiz Maliyeti Tablosu</span>
                 </h3>
                 <p class="text-xs text-gray-500">Hangi bankaya ne kadar borcunuz var ve her ay ne kadar faiz parası ödüyorsunuz?</p>
@@ -414,7 +418,7 @@
             <div class="bg-white rounded-3xl p-6 border border-gray-200/90 shadow-sm space-y-4">
                 <div class="flex items-center justify-between border-b border-gray-100 pb-3">
                     <h4 class="font-black text-gray-900 text-sm flex items-center gap-2">
-                        <span>💳</span>
+                        <svg class="w-4 h-4 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5ptm-16.5 3h6m-6 3h6m-6 3h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5z"/></svg>
                         <span>Kredi Kartı Limitleri</span>
                     </h4>
                     <span class="px-2.5 py-0.5 rounded-full text-xs font-black {{ $limitAnalysis['card_utilization'] > 80 ? 'bg-red-100 text-red-800' : 'bg-indigo-100 text-indigo-800' }}">
@@ -441,7 +445,7 @@
             <div class="bg-white rounded-3xl p-6 border border-gray-200/90 shadow-sm space-y-4">
                 <div class="flex items-center justify-between border-b border-gray-100 pb-3">
                     <h4 class="font-black text-gray-900 text-sm flex items-center gap-2">
-                        <span>⚡</span>
+                        <svg class="w-4 h-4 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"/></svg>
                         <span>KMH / Eksi Bakiye</span>
                     </h4>
                     <span class="px-2.5 py-0.5 rounded-full text-xs font-black {{ $limitAnalysis['kmh_utilization'] > 80 ? 'bg-red-100 text-red-800' : 'bg-indigo-100 text-indigo-800' }}">
@@ -468,7 +472,7 @@
             <div class="bg-white rounded-3xl p-6 border border-gray-200/90 shadow-sm space-y-4">
                 <div class="flex items-center justify-between border-b border-gray-100 pb-3">
                     <h4 class="font-black text-gray-900 text-sm flex items-center gap-2">
-                        <span>🛡️</span>
+                        <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751A11.959 11.959 0 0112 2.714z"/></svg>
                         <span>Genel Limit Yoğunluğu</span>
                     </h4>
                     <span class="px-2.5 py-0.5 rounded-full text-xs font-black bg-indigo-100 text-indigo-800">
@@ -496,7 +500,7 @@
     <!-- 5. SON ÖDEME GEÇMİŞİ (PAYMENTS_LOG) -->
     <div class="bg-white rounded-3xl p-6 sm:p-8 border border-gray-200/90 shadow-sm space-y-4">
         <h3 class="font-black text-gray-900 text-base flex items-center gap-2 border-b border-gray-100 pb-3">
-            <span>📜</span>
+            <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18c-2.305 0-4.408.867-6 2.292m0-14.25v14.25"/></svg>
             <span>Son Gerçekleşen Ödeme Geçmişi (MySQL Kayıtları)</span>
         </h3>
         <div class="divide-y divide-gray-100">

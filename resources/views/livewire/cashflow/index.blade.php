@@ -5,7 +5,7 @@
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 sm:gap-4 border-b border-gray-100 pb-3">
             <div>
                 <h1 class="text-lg sm:text-2xl font-black text-gray-900 tracking-tight flex items-center gap-2">
-                    <span>⚡</span>
+                    <svg class="w-7 h-7 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"/></svg>
                     <span>Gelir & Gider Yönetimi (Nakit Akışı)</span>
                 </h1>
                 <p class="text-xs sm:text-sm text-gray-500 mt-0.5">Aylık net nakit akışınız, tekrarlayan sabit giderleriniz ve borç ödemelerine ayrılabilir bütçeniz</p>
@@ -18,7 +18,7 @@
                             @mouseenter="show = true" 
                             @mouseleave="show = false"
                             class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300 font-bold text-xs rounded-xl shadow-2xs transition-all active:scale-95 cursor-pointer">
-                        <span>📥</span>
+                        <svg class="w-4 h-4 text-emerald-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"/></svg>
                         <span>Excel</span>
                     </button>
 
@@ -27,28 +27,31 @@
                          x-cloak
                          class="absolute left-0 sm:left-auto sm:right-0 top-full mt-2 w-72 p-3 bg-slate-900 text-white rounded-2xl shadow-2xl border border-slate-700 text-xs z-50 pointer-events-none transition-all">
                         <div class="flex items-center gap-1.5 font-bold text-emerald-300 border-b border-slate-800 pb-1 mb-1">
-                            <span>📈</span>
+                            <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 005.814-5.519l2.74-1.22m0 0l-5.94-2.28m5.94 2.28l-2.28 5.941"/></svg>
                             <span>Nakit Akışı Excel Raporu</span>
                         </div>
                         <p class="text-[11px] text-slate-300 leading-relaxed">
                             Tüm gelir ve gider kalemlerinizi, kategorileri ve tarihleri içeren <strong>Excel tablosunu</strong> indirir.
                         </p>
-                        <span class="block mt-1.5 text-[10px] font-bold text-emerald-400">✓ Excel & Google Sheets Uyumlu</span>
+                        <span class="block mt-1.5 text-[10px] font-bold text-emerald-400 flex items-center gap-1">
+                            <svg class="w-3.5 h-3.5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+                            <span>Excel & Google Sheets Uyumlu</span>
+                        </span>
                     </div>
                 </div>
 
                 <!-- Görünüm Seçici -->
                 <div class="inline-flex rounded-xl bg-gray-100 p-1 border border-gray-200">
                     <button wire:click="$set('viewMode', 'feed')" class="px-2.5 py-1 rounded-lg text-xs font-bold transition-all flex items-center gap-1 cursor-pointer {{ $viewMode === 'feed' ? 'bg-white text-indigo-700 shadow-xs' : 'text-gray-600 hover:text-gray-900' }}">
-                        <span>⚡</span>
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"/></svg>
                         <span class="hidden sm:inline">Zaman Akışı</span>
                     </button>
                     <button wire:click="$set('viewMode', 'columns')" class="px-2.5 py-1 rounded-lg text-xs font-bold transition-all flex items-center gap-1 cursor-pointer {{ $viewMode === 'columns' ? 'bg-white text-indigo-700 shadow-xs' : 'text-gray-600 hover:text-gray-900' }}">
-                        <span>📑</span>
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 4.5v15m6-15v15m-10.875 0h15.75c.621 0 1.125-.504 1.125-1.125V5.625c0-.621-.504-1.125-1.125-1.125H4.125C3.504 4.5 3 5.04 3 5.625v12.75c0 .621.504 1.125 1.125 1.125z"/></svg>
                         <span class="hidden sm:inline">Çift Kolon</span>
                     </button>
                     <button wire:click="$set('viewMode', 'table')" class="px-2.5 py-1 rounded-lg text-xs font-bold transition-all flex items-center gap-1 cursor-pointer {{ $viewMode === 'table' ? 'bg-white text-indigo-700 shadow-xs' : 'text-gray-600 hover:text-gray-900' }}">
-                        <span>📊</span>
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 12h16.5m-16.5 3.75h16.5M3.75 19.5h16.5M3.75 4.5h16.5M3.75 8.25h16.5"/></svg>
                         <span class="hidden sm:inline">Tablo</span>
                     </button>
                 </div>
@@ -58,13 +61,13 @@
         <!-- Alt Satır: Eşit Grid Ekleme Butonları (Mobilde Tam Simetrik 3 Sütun) -->
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pt-0.5">
             <span class="text-xs font-bold text-gray-500 hidden sm:inline-flex items-center gap-1.5">
-                <span>➕</span>
+                <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
                 <span>Hızlı Nakit Hareketi Ekle:</span>
             </span>
 
             <div class="grid grid-cols-3 gap-2 w-full sm:w-auto sm:flex sm:items-center">
                 <button wire:click="openExpectedIncomeModal" class="h-10 sm:h-auto px-2.5 sm:px-4 py-2 bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white font-bold text-xs sm:text-sm rounded-lg shadow-xs transition-all flex items-center justify-center gap-1 cursor-pointer text-center">
-                    <span>🗓️</span>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5"/></svg>
                     <span class="truncate">Beklenen</span>
                 </button>
                 <button wire:click="openIncomeModal" class="h-10 sm:h-auto px-2.5 sm:px-4 py-2 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-bold text-xs sm:text-sm rounded-lg shadow-xs transition-all flex items-center justify-center gap-1 cursor-pointer text-center">
@@ -82,7 +85,7 @@
 
     @if (session()->has('message'))
         <div class="p-3.5 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-lg text-sm font-bold flex items-center gap-2 shadow-xs">
-            <span>✓</span>
+            <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
             <span>{{ session('message') }}</span>
         </div>
     @endif
@@ -92,7 +95,7 @@
         <!-- Toplam Gelir -->
         <div class="bg-white p-3.5 sm:p-4 rounded-xl border border-slate-200/80 shadow-2xs flex items-center gap-2.5 sm:gap-3">
             <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center text-base sm:text-lg font-black shrink-0">
-                💰
+                ₺
             </div>
             <div class="min-w-0 flex-1">
                 <span class="text-[10px] sm:text-[11px] font-bold text-gray-500 block uppercase tracking-wider truncate">Toplam Gelir</span>
@@ -103,7 +106,7 @@
         <!-- Sabit & Değişken Giderler -->
         <div class="bg-white p-3.5 sm:p-4 rounded-xl border border-slate-200/80 shadow-2xs flex items-center gap-2.5 sm:gap-3">
             <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-rose-50 text-rose-600 flex items-center justify-center text-base sm:text-lg font-black shrink-0">
-                💸
+                ₺
             </div>
             <div class="min-w-0 flex-1">
                 <span class="text-[10px] sm:text-[11px] font-bold text-gray-500 block uppercase tracking-wider truncate">Toplam Gider</span>
@@ -114,7 +117,7 @@
         <!-- Borçlara Ayrılabilir Net Bütçe -->
         <div class="bg-white p-3.5 sm:p-4 rounded-xl border border-slate-200/80 shadow-2xs flex items-center gap-2.5 sm:gap-3">
             <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-lg {{ $netRemaining < 0 ? 'bg-red-50 text-red-600' : 'bg-indigo-50 text-indigo-600' }} flex items-center justify-center text-base sm:text-lg font-black shrink-0">
-                ⚡
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"/></svg>
             </div>
             <div class="min-w-0 flex-1">
                 <span class="text-[10px] sm:text-[11px] font-bold text-gray-500 block uppercase tracking-wider truncate">Borca Kalan Net</span>
@@ -127,7 +130,7 @@
         <!-- Tasarruf Oranı -->
         <div class="bg-white p-3.5 sm:p-4 rounded-xl border border-slate-200/80 shadow-2xs flex items-center gap-2.5 sm:gap-3">
             <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center text-base sm:text-lg font-black shrink-0">
-                📈
+                <svg class="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 005.814-5.519l2.74-1.22m0 0l-5.94-2.28m5.94 2.28l-2.28 5.941"/></svg>
             </div>
             <div class="min-w-0 flex-1">
                 <span class="text-[10px] sm:text-[11px] font-bold text-gray-500 block uppercase tracking-wider truncate">Tasarruf Oranı</span>
@@ -146,23 +149,23 @@
                     Tümü <span class="ml-1 text-[10px] font-mono px-1.5 py-0.5 rounded bg-slate-200/70 text-slate-700">({{ $stream->count() }})</span>
                 </button>
                 <button wire:click="$set('activeTab', 'expected')" class="px-3 py-1.5 text-xs font-bold rounded-md transition-all whitespace-nowrap shrink-0 {{ $activeTab === 'expected' ? 'bg-white text-slate-900 shadow-2xs border border-slate-200/60' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/40' }}">
-                    🗓️ Beklenen <span class="ml-1 text-[10px] font-mono px-1.5 py-0.5 rounded bg-slate-200/70 text-slate-700">({{ $expectedIncomes->count() }})</span>
+                    Beklenen <span class="ml-1 text-[10px] font-mono px-1.5 py-0.5 rounded bg-slate-200/70 text-slate-700">({{ $expectedIncomes->count() }})</span>
                 </button>
                 <button wire:click="$set('activeTab', 'income')" class="px-3 py-1.5 text-xs font-bold rounded-md transition-all whitespace-nowrap shrink-0 {{ $activeTab === 'income' ? 'bg-white text-emerald-700 shadow-2xs border border-slate-200/60' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/40' }}">
-                    🟢 Gelirler
+                    Gelirler
                 </button>
                 <button wire:click="$set('activeTab', 'expense')" class="px-3 py-1.5 text-xs font-bold rounded-md transition-all whitespace-nowrap shrink-0 {{ $activeTab === 'expense' ? 'bg-white text-rose-700 shadow-2xs border border-slate-200/60' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/40' }}">
-                    🔴 Giderler
+                    Giderler
                 </button>
                 <button wire:click="$set('activeTab', 'recurring')" class="px-3 py-1.5 text-xs font-bold rounded-md transition-all whitespace-nowrap shrink-0 {{ $activeTab === 'recurring' ? 'bg-white text-indigo-700 shadow-2xs border border-slate-200/60' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/40' }}">
-                    🔄 Sabit & Tekrarlayan
+                    Sabit & Tekrarlayan
                 </button>
             </div>
 
             <!-- Canlı Arama Inputu -->
             <div class="relative w-full lg:w-72">
                 <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400 text-xs">
-                    🔍
+                    <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/></svg>
                 </span>
                 <input type="text" 
                        wire:model.live.debounce.300ms="search" 
@@ -180,7 +183,7 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 items-center text-xs">
             <!-- 1. Kategori Seçimi -->
             <div>
-                <label class="block font-bold text-gray-600 mb-1 text-[11px]">📁 Kategori Filtresi</label>
+                <label class="block font-bold text-gray-600 mb-1 text-[11px]">Kategori Filtresi</label>
                 <select wire:model.live="selected_category_id" class="w-full rounded-lg border-slate-300 bg-slate-50 py-1.5 text-xs font-medium focus:bg-white focus:ring-1 focus:ring-indigo-600 focus:border-indigo-600">
                     <option value="">Tüm Kategoriler</option>
                     @foreach ($categories as $c)
@@ -191,24 +194,24 @@
 
             <!-- 2. Sıralama -->
             <div>
-                <label class="block font-bold text-gray-600 mb-1 text-[11px]">🔄 Sıralama Algoritması</label>
+                <label class="block font-bold text-gray-600 mb-1 text-[11px]">Sıralama Algoritması</label>
                 <select wire:model.live="sortBy" class="w-full rounded-lg border-slate-300 bg-slate-50 py-1.5 text-xs font-medium focus:bg-white focus:ring-1 focus:ring-indigo-600 focus:border-indigo-600">
-                    <option value="date_desc">📅 Tarihe Göre (En Yeni - İlk)</option>
-                    <option value="date_asc">📅 Tarihe Göre (En Eski)</option>
-                    <option value="amount_desc">💰 En Yüksek Tutar</option>
-                    <option value="amount_asc">📉 En Düşük Tutar</option>
-                    <option value="title">🔤 Başlık (A-Z)</option>
+                    <option value="date_desc">Tarihe Göre (En Yeni - İlk)</option>
+                    <option value="date_asc">Tarihe Göre (En Eski)</option>
+                    <option value="amount_desc">En Yüksek Tutar</option>
+                    <option value="amount_asc">En Düşük Tutar</option>
+                    <option value="title">Başlık (A-Z)</option>
                 </select>
             </div>
 
             <!-- 3. Tarih Aralığı -->
             <div>
-                <label class="block font-bold text-gray-600 mb-1 text-[11px]">📅 Başlangıç Tarihi</label>
+                <label class="block font-bold text-gray-600 mb-1 text-[11px]">Başlangıç Tarihi</label>
                 <input type="date" wire:model.live="date_from" class="w-full rounded-lg border-slate-300 bg-slate-50 py-1.5 text-xs font-medium focus:bg-white focus:ring-1 focus:ring-indigo-600 focus:border-indigo-600">
             </div>
 
             <div>
-                <label class="block font-bold text-gray-600 mb-1 text-[11px]">📅 Bitiş Tarihi</label>
+                <label class="block font-bold text-gray-600 mb-1 text-[11px]">Bitiş Tarihi</label>
                 <input type="date" wire:model.live="date_to" class="w-full rounded-lg border-slate-300 bg-slate-50 py-1.5 text-xs font-medium focus:bg-white focus:ring-1 focus:ring-indigo-600 focus:border-indigo-600">
             </div>
         </div>
@@ -269,24 +272,23 @@
                                     <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-lg text-[10.5px] font-black border shadow-xs" 
                                           style="background-color: {{ $item->source_color }}18; border-color: {{ $item->source_color }}60; color: {{ $item->source_color }};">
                                         <span class="w-1.5 h-1.5 rounded-full shrink-0" style="background-color: {{ $item->source_color }};"></span>
-                                        <span>{{ $item->source_icon }}</span>
                                         <span>{{ $item->source_label }}</span>
                                     </span>
                                 @endif
 
                                 @if (!empty($item->installment_badge))
                                     <span class="px-2 py-0.5 rounded-md text-[10px] font-black bg-indigo-50 text-indigo-700 border border-indigo-200">
-                                        🔢 {{ $item->installment_badge }}
+                                        {{ $item->installment_badge }}
                                     </span>
                                 @endif
                                 @if ($item->is_recurring && empty($item->installment_badge))
                                     <span class="px-2 py-0.5 rounded-md text-[10px] font-bold bg-indigo-50 text-indigo-700 border border-indigo-100">
-                                        🔄 Tekrarlayan
+                                        Tekrarlayan
                                     </span>
                                 @endif
                             </div>
                             <p class="text-xs text-gray-500 mt-0.5 flex items-center gap-2">
-                                <span>📅 {{ \Carbon\Carbon::parse($item->date)->format('d.m.Y') }}</span>
+                                <span>{{ \Carbon\Carbon::parse($item->date)->format('d.m.Y') }}</span>
                                 <span>·</span>
                                 <span>{{ $item->category_name }}</span>
                             </p>
@@ -307,30 +309,30 @@
                         <div class="flex items-center gap-1.5">
                             @if ($isExpected)
                                 <button wire:click="confirmExpectedIncome({{ $item->id }})" class="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-black text-xs shadow-xs" title="Hesaba Geçti Olarak Onayla">
-                                    ✓ Geldi
+                                    Geldi
                                 </button>
                                 <button wire:click="delayExpectedIncome({{ $item->id }}, 3)" class="px-2 py-1 bg-amber-50 hover:bg-amber-100 border border-amber-300 text-amber-900 rounded-lg font-bold text-xs" title="3 Gün Ertele">
-                                    ⏳ 3G
+                                    3G Ertele
                                 </button>
                                 <button wire:click="openEditExpectedIncome({{ $item->id }})" class="p-1.5 text-gray-400 hover:text-indigo-600 rounded-lg hover:bg-gray-100 transition-colors text-xs font-bold" title="Düzenle">
-                                    ✎
+                                    Düzenle
                                 </button>
                                 <button wire:click="deleteExpectedIncome({{ $item->id }})" wire:confirm="Bu beklenen geliri silmek istediğinize emin misiniz?" class="p-1.5 text-gray-400 hover:text-red-600 rounded-lg hover:bg-gray-100 transition-colors text-xs font-bold" title="Sil">
-                                    🗑
+                                    Sil
                                 </button>
                             @elseif ($isIncome)
                                 <button wire:click="openEditIncome({{ $item->id }})" class="p-1.5 text-gray-400 hover:text-indigo-600 rounded-lg hover:bg-gray-100 transition-colors text-xs font-bold">
-                                    ✎
+                                    Düzenle
                                 </button>
                                 <button wire:click="deleteIncome({{ $item->id }})" wire:confirm="Bu gelir kaydını silmek istediğinize emin misiniz?" class="p-1.5 text-gray-400 hover:text-red-600 rounded-lg hover:bg-gray-100 transition-colors text-xs font-bold">
-                                    🗑
+                                    Sil
                                 </button>
                             @else
                                 <button wire:click="openEditExpense({{ $item->id }})" class="p-1.5 text-gray-400 hover:text-indigo-600 rounded-lg hover:bg-gray-100 transition-colors text-xs font-bold">
-                                    ✎
+                                    Düzenle
                                 </button>
                                 <button wire:click="deleteExpense({{ $item->id }})" wire:confirm="Bu gider kaydını silmek istediğinize emin misiniz?" class="p-1.5 text-gray-400 hover:text-red-600 rounded-lg hover:bg-gray-100 transition-colors text-xs font-bold">
-                                    🗑
+                                    Sil
                                 </button>
                             @endif
                         </div>
@@ -338,7 +340,7 @@
                 </div>
             @empty
                 <div class="bg-white rounded-3xl p-12 text-center border-2 border-dashed border-gray-200 space-y-3">
-                    <div class="text-3xl">🔍</div>
+                    <svg class="w-10 h-10 text-gray-400 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/></svg>
                     <h3 class="font-bold text-gray-900 text-base">Filtre kriterlerine uygun nakit hareketi bulunamadı</h3>
                     <p class="text-xs text-gray-500">Seçili tarih aralığını veya filtreleri değiştirerek tekrar deneyin.</p>
                     <button wire:click="resetFilters" class="px-4 py-2 bg-indigo-50 text-indigo-700 rounded-xl text-xs font-bold hover:bg-indigo-100 transition-colors">
@@ -369,8 +371,8 @@
                             </div>
                             <div class="flex items-center gap-3">
                                 <span class="font-black text-sm text-emerald-600">+₺{{ number_format($inc->amount, 2, ',', '.') }}</span>
-                                <button wire:click="openEditIncome({{ $inc->id }})" class="text-gray-400 hover:text-indigo-600 text-xs">✎</button>
-                                <button wire:click="deleteIncome({{ $inc->id }})" wire:confirm="Bu geliri silmek istediğinize emin misiniz?" class="text-gray-400 hover:text-red-600 text-xs">🗑</button>
+                                <button wire:click="openEditIncome({{ $inc->id }})" class="text-gray-400 hover:text-indigo-600 text-xs">Düzenle</button>
+                                <button wire:click="deleteIncome({{ $inc->id }})" wire:confirm="Bu geliri silmek istediğinize emin misiniz?" class="text-gray-400 hover:text-red-600 text-xs">Sil</button>
                             </div>
                         </div>
                     @empty
@@ -403,30 +405,30 @@
                                         <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-black border shadow-xs" 
                                               style="background-color: {{ $expColor }}18; border-color: {{ $expColor }}60; color: {{ $expColor }};">
                                             <span class="w-1.5 h-1.5 rounded-full shrink-0" style="background-color: {{ $expColor }};"></span>
-                                            💳 {{ $exp->creditCard->bank?->name ?? '' }} · {{ $exp->creditCard->name }}
+                                            <span>{{ $exp->creditCard->bank?->name ?? '' }} · {{ $exp->creditCard->name }}</span>
                                         </span>
                                     @elseif (in_array($exp->payment_method, ['account', 'kmh']) && $exp->account)
                                         <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-black border shadow-xs" 
                                               style="background-color: {{ $expColor }}18; border-color: {{ $expColor }}60; color: {{ $expColor }};">
                                             <span class="w-1.5 h-1.5 rounded-full shrink-0" style="background-color: {{ $expColor }};"></span>
-                                            {{ $exp->payment_method === 'kmh' ? '⚡' : '🏛️' }} {{ $exp->account->bank?->name ?? '' }} · {{ $exp->account->name }}
+                                            <span>{{ $exp->account->bank?->name ?? '' }} · {{ $exp->account->name }}</span>
                                         </span>
                                     @elseif ($exp->payment_method === 'cash')
                                         <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-black bg-gray-100 text-gray-700 border border-gray-300">
-                                            💵 Nakit
+                                            Nakit
                                         </span>
                                     @endif
                                     @if ($exp->installment_count > 1)
                                         <span class="px-1.5 py-0.5 rounded text-[10px] font-black bg-indigo-50 text-indigo-700 border border-indigo-200">
-                                            🔢 {{ $exp->current_installment }}/{{ $exp->installment_count }} Taksit
+                                            {{ $exp->current_installment }}/{{ $exp->installment_count }} Taksit
                                         </span>
                                     @endif
                                 </div>
                             </div>
                             <div class="flex items-center gap-3">
                                 <span class="font-black text-sm text-rose-600">-₺{{ number_format($exp->amount, 2, ',', '.') }}</span>
-                                <button wire:click="openEditExpense({{ $exp->id }})" class="text-gray-400 hover:text-indigo-600 text-xs">✎</button>
-                                <button wire:click="deleteExpense({{ $exp->id }})" wire:confirm="Bu gideri silmek istediğinize emin misiniz?" class="text-gray-400 hover:text-red-600 text-xs">🗑</button>
+                                <button wire:click="openEditExpense({{ $exp->id }})" class="text-gray-400 hover:text-indigo-600 text-xs">Düzenle</button>
+                                <button wire:click="deleteExpense({{ $exp->id }})" wire:confirm="Bu gideri silmek istediğinize emin misiniz?" class="text-gray-400 hover:text-red-600 text-xs">Sil</button>
                             </div>
                         </div>
                     @empty
@@ -471,7 +473,6 @@
                                             <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-black border shadow-xs" 
                                                   style="background-color: {{ $item->source_color }}18; border-color: {{ $item->source_color }}60; color: {{ $item->source_color }};">
                                                 <span class="w-1.5 h-1.5 rounded-full shrink-0" style="background-color: {{ $item->source_color }};"></span>
-                                                <span>{{ $item->source_icon }}</span>
                                                 <span>{{ $item->source_label }}</span>
                                             </span>
                                             @if (!empty($item->installment_badge))
@@ -489,7 +490,7 @@
                                     {{ \Carbon\Carbon::parse($item->date)->format('d.m.Y') }}
                                 </td>
                                 <td class="px-6 py-4 text-xs text-gray-600">
-                                    {{ $item->is_recurring ? '🔄 Aylık Düzenli' : 'Tek Seferlik' }}
+                                    {{ $item->is_recurring ? 'Aylık Düzenli' : 'Tek Seferlik' }}
                                 </td>
                                 <td class="px-6 py-4 font-black text-right {{ $isIncome ? 'text-emerald-600' : 'text-rose-600' }}">
                                     {{ $isIncome ? '+' : '-' }}₺{{ number_format($item->amount, 2, ',', '.') }}
@@ -601,10 +602,10 @@
                         <div>
                             <label class="block text-xs font-bold text-gray-700 mb-1">Nereden Ödendi?</label>
                             <select wire:model.live="payment_method" class="w-full rounded-xl border-gray-300 text-xs font-bold focus:ring-rose-500 focus:border-rose-500">
-                                <option value="credit_card">💳 Kredi Kartı</option>
-                                <option value="kmh">⚡ KMH / Ek Para (Avans)</option>
-                                <option value="account">🏛️ Vadesiz Banka Hesabı</option>
-                                <option value="cash">💵 Nakit / Cüzdan</option>
+                                <option value="credit_card">Kredi Kartı</option>
+                                <option value="kmh">KMH / Ek Para (Avans)</option>
+                                <option value="account">Vadesiz Banka Hesabı</option>
+                                <option value="cash">Nakit / Cüzdan</option>
                             </select>
                         </div>
 
@@ -659,11 +660,11 @@
                     <div class="p-3 bg-amber-50/70 rounded-xl border border-amber-200/80 space-y-2.5">
                         <label class="flex items-center gap-2 cursor-pointer">
                             <input type="checkbox" wire:model.live="is_installment" class="rounded border-amber-400 text-amber-600 focus:ring-amber-500">
-                            <span class="text-xs font-black text-amber-900">💳 Taksitli İşlem (Gelecek Aylara Eşit Dağıt)</span>
+                            <span class="text-xs font-black text-amber-900">Taksitli İşlem (Gelecek Aylara Eşit Dağıt)</span>
                         </label>
 
                         @if ($is_installment)
-                            <div class="grid grid-cols-2 gap-3 pt-1 border-t border-amber-200/60 items-center">
+                            <div class="grid grid-cols-2 gap-3 pt-1 border-amber-200/60 items-center">
                                 <div>
                                     <label class="block text-[11px] font-bold text-amber-800 mb-1">Taksit Sayısı</label>
                                     <select wire:model.live="installment_count" class="w-full rounded-xl border-amber-300 text-xs font-bold bg-white focus:ring-amber-500 focus:border-amber-500">
@@ -685,7 +686,7 @@
                                 </div>
                             </div>
                             <p class="text-[10px] text-amber-700">
-                                ℹ️ {{ $installment_count }} ay boyunca her aya ₺{{ $installment_count > 0 && $expense_amount > 0 ? number_format($expense_amount / $installment_count, 2, ',', '.') : '0,00' }} taksit harcaması otomatik işlenir.
+                                {{ $installment_count }} ay boyunca her aya ₺{{ $installment_count > 0 && $expense_amount > 0 ? number_format($expense_amount / $installment_count, 2, ',', '.') : '0,00' }} taksit harcaması otomatik işlenir.
                             </p>
                         @endif
                     </div>
@@ -719,7 +720,7 @@
             <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
                 <div class="flex items-center justify-between border-b border-gray-100 pb-3">
                     <div class="flex items-center gap-2">
-                        <span class="w-8 h-8 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold">🗓️</span>
+                        <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5"/></svg>
                         <h3 class="font-bold text-base sm:text-lg text-gray-900">
                             {{ $expectedIncomeId ? 'Beklenen Geliri Düzenle' : 'Yeni Beklenen Gelir Tanımla' }}
                         </h3>
@@ -775,8 +776,9 @@
                     </div>
 
                     <div class="p-3 bg-indigo-50/70 rounded-xl border border-indigo-200/80">
-                        <p class="text-[11px] text-indigo-900 leading-relaxed font-medium">
-                            💡 <strong>Akıllı Takip:</strong> Bu tarihe gelindiğinde sistem Dashboard'da size <em>"Geldi mi / Gecikti mi?"</em> diye soracak ve onayladığınızda nakit akışınıza otomatik işlenecektir.
+                        <p class="text-[11px] text-indigo-900 leading-relaxed font-medium flex items-center gap-1">
+                            <svg class="w-4 h-4 text-indigo-700 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 18v-5.25m0 0a6.01 6.01 0 001.5-.189m-1.5.189a6.01 6.01 0 01-1.5-.189m3.75 7.478a12.06 12.06 0 01-4.5 0m3.75 2.383a14.406 14.406 0 01-3 0M14.25 18v-.192c0-.983.658-1.823 1.508-2.316a7.5 7.5 0 10-7.516 0c.85.493 1.508 1.333 1.508 2.316V18"/></svg>
+                            <span><strong>Akıllı Takip:</strong> Bu tarihe gelindiğinde sistem Dashboard'da size <em>"Geldi mi / Gecikti mi?"</em> diye soracak ve onayladığınızda nakit akışınıza otomatik işlenecektir.</span>
                         </p>
                     </div>
                 </div>
