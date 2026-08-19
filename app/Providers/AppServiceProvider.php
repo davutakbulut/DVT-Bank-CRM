@@ -43,15 +43,30 @@ class AppServiceProvider extends ServiceProvider
         Gate::define('generate-ai-advice', fn (User $user) => $user->canGenerateAiAdvice());
         Gate::define('access-feature', fn (User $user, string $feature) => $user->hasFeature($feature));
 
-        // Türkçe Şifre Sıfırlama E-postası Şablonu
+        // Türkçe Şifre Sıfırlama E-postası Şablonu (DB MailTemplate Destekli)
         \Illuminate\Auth\Notifications\ResetPassword::toMailUsing(function (object $notifiable, string $token) {
             $url = url(route('password.reset', [
                 'token' => $token,
                 'email' => $notifiable->getEmailForPasswordReset(),
             ], false));
 
+            $service = new \App\Services\MailTemplateService();
+            $rendered = $service->render('password_reset', [
+                'user_name' => $notifiable->name ?? 'Kullanıcımız',
+                'reset_url' => $url,
+            ]);
+
+            $subject = $rendered['subject'] ?? 'DVT Bank CRM — Şifre Sıfırlama Talebi';
+            $body = $rendered['body'] ?? null;
+
+            if ($body) {
+                return (new \Illuminate\Notifications\Messages\MailMessage)
+                    ->subject($subject)
+                    ->html($body);
+            }
+
             return (new \Illuminate\Notifications\Messages\MailMessage)
-                ->subject('DVT Bank CRM — Şifre Sıfırlama Talebi')
+                ->subject($subject)
                 ->greeting('Merhaba ' . ($notifiable->name ?? 'Kullanıcımız') . ',')
                 ->line('DVT Bank CRM hesabınız için şifre sıfırlama talebi aldık.')
                 ->action('Şifrenizi Sıfırlayın', $url)
