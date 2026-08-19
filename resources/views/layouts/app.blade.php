@@ -15,6 +15,15 @@
         <!-- Scripts & Styles -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                if (window.Chart) {
+                    Chart.defaults.font.family = "'Plus Jakarta Sans', system-ui, -apple-system, sans-serif";
+                    Chart.defaults.font.size = 11;
+                    Chart.defaults.color = "#64748b";
+                }
+            });
+        </script>
     </head>
     <body class="font-sans antialiased bg-gray-100 min-h-screen">
         <div class="min-h-screen flex flex-col justify-between">
