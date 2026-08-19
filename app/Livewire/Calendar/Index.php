@@ -147,6 +147,46 @@ class Index extends Component
                 'type_icon' => '🎯',
                 'status' => $item->status,
                 'badge_style' => 'bg-indigo-100 text-indigo-800 border-indigo-300',
+                'is_income' => false,
+            ]);
+        }
+
+        // 4. BEKLENEN GELİRLER (Nakit Girişleri)
+        $expectedIncomes = \App\Models\ExpectedIncome::where('user_id', $userId)
+            ->where('is_active', true)
+            ->get();
+
+        foreach ($expectedIncomes as $ei) {
+            $day = 1;
+            if ($ei->frequency === 'monthly' && $ei->expected_day) {
+                $day = min($daysInMonth, (int)$ei->expected_day);
+            } elseif ($ei->expected_date) {
+                $eiCarbon = Carbon::parse($ei->expected_date);
+                if ($eiCarbon->format('Y-m') === $date->format('Y-m')) {
+                    $day = min($daysInMonth, $eiCarbon->day);
+                } else {
+                    continue;
+                }
+            }
+
+            $eventDate = $date->copy()->day($day)->format('Y-m-d');
+
+            $events->push((object) [
+                'id' => 'expected-' . $ei->id,
+                'source_type' => 'expected_income',
+                'title' => $ei->title,
+                'bank_id' => null,
+                'bank_name' => 'Beklenen Gelir (+)',
+                'bank_color' => '#10b981',
+                'amount' => (float) $ei->amount,
+                'total_debt' => 0.0,
+                'due_date' => $eventDate,
+                'day' => $day,
+                'type_label' => 'Beklenen Gelir (+)',
+                'type_icon' => '💵',
+                'status' => $ei->status,
+                'badge_style' => 'bg-emerald-100 text-emerald-900 border-emerald-400 font-bold',
+                'is_income' => true,
             ]);
         }
 

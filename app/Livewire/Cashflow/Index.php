@@ -12,7 +12,7 @@ use Livewire\Component;
 class Index extends Component
 {
     // Filtreleme & Arama Özellikleri
-    public string $activeTab = 'all'; // all, income, expense, recurring
+    public string $activeTab = 'all'; // all, income, expense, expected, recurring
     public string $search = '';
     public ?int $selected_category_id = null;
     public ?string $date_from = null;
@@ -24,6 +24,16 @@ class Index extends Component
     // Modallar
     public bool $showIncomeModal = false;
     public bool $showExpenseModal = false;
+    public bool $showExpectedIncomeModal = false;
+
+    // Beklenen Gelir Formu
+    public ?int $expectedIncomeId = null;
+    public string $expected_title = '';
+    public float $expected_amount = 0.0;
+    public string $expected_date = '';
+    public string $expected_type = 'salary';
+    public string $expected_frequency = 'monthly';
+    public string $expected_notes = '';
 
     // Gelir Formu
     public ?int $incomeId = null;
@@ -138,6 +148,82 @@ class Index extends Component
         session()->flash('message', 'Gelir kaydı başarıyla kaydedildi.');
     }
 
+    public function openExpectedIncomeModal(): void
+    {
+        $this->reset(['expectedIncomeId', 'expected_title', 'expected_amount', 'expected_notes']);
+        $this->expected_type = 'salary';
+        $this->expected_frequency = 'monthly';
+        $this->expected_date = Carbon::now()->format('Y-m-d');
+        $this->showExpectedIncomeModal = true;
+    }
+
+    public function openEditExpectedIncome(int $id): void
+    {
+        $ei = \App\Models\ExpectedIncome::where('user_id', Auth::id())->findOrFail($id);
+        $this->expectedIncomeId = $ei->id;
+        $this->expected_title = $ei->title;
+        $this->expected_amount = (float) $ei->amount;
+        $this->expected_date = $ei->expected_date ? Carbon::parse($ei->expected_date)->format('Y-m-d') : Carbon::now()->format('Y-m-d');
+        $this->expected_type = $ei->type ?? 'salary';
+        $this->expected_frequency = $ei->frequency ?? 'monthly';
+        $this->expected_notes = $ei->notes ?? '';
+        $this->showExpectedIncomeModal = true;
+    }
+
+    public function saveExpectedIncome(): void
+    {
+        $this->validate([
+            'expected_title' => 'required|string|max:100',
+            'expected_amount' => 'required|numeric|min:1',
+            'expected_date' => 'required|date',
+        ]);
+
+        $day = Carbon::parse($this->expected_date)->day;
+
+        $data = [
+            'user_id' => Auth::id(),
+            'title' => $this->expected_title,
+            'amount' => $this->expected_amount,
+            'type' => $this->expected_type,
+            'frequency' => $this->expected_frequency,
+            'expected_day' => $day,
+            'expected_date' => $this->expected_date,
+            'notes' => $this->expected_notes,
+            'is_active' => true,
+            'status' => 'pending',
+        ];
+
+        if ($this->expectedIncomeId) {
+            \App\Models\ExpectedIncome::where('user_id', Auth::id())->findOrFail($this->expectedIncomeId)->update($data);
+        } else {
+            \App\Models\ExpectedIncome::create($data);
+        }
+
+        $this->showExpectedIncomeModal = false;
+        $this->reset(['expectedIncomeId', 'expected_title', 'expected_amount', 'expected_date', 'expected_notes']);
+        session()->flash('message', 'Beklenen gelir başarıyla kaydedildi.');
+    }
+
+    public function deleteExpectedIncome(int $id): void
+    {
+        $ei = \App\Models\ExpectedIncome::where('user_id', Auth::id())->findOrFail($id);
+        $ei->delete();
+        session()->flash('message', 'Beklenen gelir kaydı silindi.');
+    }
+
+    public function confirmExpectedIncome(int $id): void
+    {
+        $ei = \App\Models\ExpectedIncome::where('user_id', Auth::id())->findOrFail($id);
+        $ei->confirmReceived();
+        session()->flash('message', '🎉 ' . $ei->title . ' (₺' . number_format($ei->amount, 2, ',', '.') . ') hesaba geçti olarak kaydedildi ve nakit akışına eklendi.');
+    }
+
+    public function delayExpectedIncome(int $id, int $days = 3): void
+    {
+        $ei = \App\Models\ExpectedIncome::where('user_id', Auth::id())->findOrFail($id);
+        $ei->markDelayed($days);
+        session()->flash('message', '⏳ ' . $ei->title . ' ' . $days . ' gün ertelendi (' . $ei->expected_date?->format('d.m.Y') . ').');
+    }
 
     public function openExpenseModal(): void
     {
@@ -531,6 +617,30 @@ class Index extends Component
         }
 
 
+        $expectedIncomes = \App\Models\ExpectedIncome::where('user_id', $userId)->active()->orderBy('expected_date', 'asc')->get();
+
+        if ($this->activeTab === 'expected') {
+            foreach ($expectedIncomes as $ei) {
+                $stream->push((object) [
+                    'id' => $ei->id,
+                    'type' => 'expected_income',
+                    'title' => $ei->title,
+                    'amount' => (float) $ei->amount,
+                    'category_name' => $ei->type === 'salary' ? 'Maaş / Ana Gelir' : ($ei->type === 'freelance' ? 'Hakediş' : 'Beklenen Gelir'),
+                    'date' => $ei->expected_date ? $ei->expected_date->format('Y-m-d') : Carbon::now()->format('Y-m-d'),
+                    'is_recurring' => $ei->frequency === 'monthly',
+                    'badge' => $ei->status === 'delayed' ? '⏳ Gecikmeli Gelir' : '🔔 Beklenen Gelir',
+                    'color' => '#14b8a6',
+                    'source_label' => '🗓️ Vade: ' . ($ei->expected_date ? $ei->expected_date->format('d.m.Y') : '-'),
+                    'source_icon' => '💵',
+                    'source_bank' => 'Beklenen Nakit',
+                    'source_color' => '#14b8a6',
+                    'installment_badge' => $ei->frequency === 'monthly' ? 'Her Ay' : 'Tek Seferlik',
+                    'status' => $ei->status,
+                ]);
+            }
+        }
+
         // Sıralama
         if ($this->sortBy === 'date_desc') {
             $stream = $stream->sortByDesc('date');
@@ -547,6 +657,7 @@ class Index extends Component
         // Finansal KPI Özetleri
         $totalIncome = $incomes->sum('amount');
         $totalExpense = $expenses->sum('amount');
+        $totalExpectedIncome = $expectedIncomes->whereIn('status', ['pending', 'delayed'])->sum('amount');
         $netRemaining = $totalIncome - $totalExpense;
         $savingsRate = $totalIncome > 0 ? max(0, round(($netRemaining / $totalIncome) * 100)) : 0;
 
@@ -556,6 +667,8 @@ class Index extends Component
         return view('livewire.cashflow.index', [
             'incomes' => $incomes,
             'expenses' => $expenses,
+            'expectedIncomes' => $expectedIncomes,
+            'totalExpectedIncome' => $totalExpectedIncome,
             'stream' => $stream,
             'categories' => $categories,
             'userCards' => $userCards,

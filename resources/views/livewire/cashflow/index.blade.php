@@ -50,6 +50,9 @@
                 </button>
             </div>
 
+            <button wire:click="openExpectedIncomeModal" class="px-3.5 sm:px-4 py-2 bg-teal-600 hover:bg-teal-700 active:scale-95 text-white font-black text-xs sm:text-sm rounded-xl shadow-md transition-all flex items-center gap-1.5">
+                <span>🗓️ + Beklenen Gelir</span>
+            </button>
             <button wire:click="openIncomeModal" class="px-3.5 sm:px-4 py-2 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-black text-xs sm:text-sm rounded-xl shadow-md transition-all flex items-center gap-1.5">
                 <span>+ Gelir Ekle</span>
             </button>
@@ -124,6 +127,9 @@
             <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-1">
                 <button wire:click="$set('activeTab', 'all')" class="px-3.5 py-1.5 text-xs font-bold rounded-xl transition-all whitespace-nowrap {{ $activeTab === 'all' ? 'bg-indigo-600 text-white shadow-xs' : 'text-gray-600 hover:bg-gray-100' }}">
                     Tümü ({{ $stream->count() }})
+                </button>
+                <button wire:click="$set('activeTab', 'expected')" class="px-3.5 py-1.5 text-xs font-bold rounded-xl transition-all whitespace-nowrap {{ $activeTab === 'expected' ? 'bg-teal-600 text-white shadow-xs' : 'text-gray-600 hover:bg-gray-100' }}">
+                    🗓️ Beklenen ({{ $expectedIncomes->count() }})
                 </button>
                 <button wire:click="$set('activeTab', 'income')" class="px-3.5 py-1.5 text-xs font-bold rounded-xl transition-all whitespace-nowrap {{ $activeTab === 'income' ? 'bg-emerald-600 text-white shadow-xs' : 'text-gray-600 hover:bg-gray-100' }}">
                     🟢 Gelirler
@@ -224,21 +230,22 @@
         <div class="space-y-3">
             @forelse ($stream as $item)
                 @php
+                    $isExpected = $item->type === 'expected_income';
                     $isIncome = $item->type === 'income';
                 @endphp
                 <div class="bg-white rounded-2xl border border-gray-200/90 hover:border-gray-300 p-4 sm:p-5 shadow-xs hover:shadow-md transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-3 relative overflow-hidden group">
                     <!-- Sol Renk Şeridi -->
-                    <div class="absolute top-0 bottom-0 left-0 w-1.5 {{ $isIncome ? 'bg-emerald-500' : 'bg-rose-500' }}"></div>
+                    <div class="absolute top-0 bottom-0 left-0 w-1.5 {{ $isExpected ? 'bg-teal-500' : ($isIncome ? 'bg-emerald-500' : 'bg-rose-500') }}"></div>
 
                     <!-- Sol Taraf: İkon + Başlık + Tarih & Kategori -->
                     <div class="flex items-center gap-3.5 pl-2 min-w-0">
-                        <div class="w-10 h-10 rounded-xl {{ $isIncome ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-600' }} flex items-center justify-center text-lg font-black shrink-0">
-                            {{ $isIncome ? '↓' : '↑' }}
+                        <div class="w-10 h-10 rounded-xl {{ $isExpected ? 'bg-teal-50 text-teal-600' : ($isIncome ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-600') }} flex items-center justify-center text-lg font-black shrink-0">
+                            {{ $isExpected ? '🗓️' : ($isIncome ? '↓' : '↑') }}
                         </div>
                         <div class="min-w-0">
                             <div class="flex items-center gap-2 flex-wrap">
                                 <h3 class="font-bold text-gray-900 text-sm sm:text-base truncate">{{ $item->title }}</h3>
-                                <span class="px-2 py-0.5 rounded-md text-[10px] font-black {{ $isIncome ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800' }}">
+                                <span class="px-2 py-0.5 rounded-md text-[10px] font-black {{ $isExpected ? 'bg-teal-100 text-teal-800' : ($isIncome ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800') }}">
                                     {{ $item->badge }}
                                 </span>
                                 @if (!empty($item->source_label))
@@ -272,16 +279,29 @@
                     <!-- Sağ Taraf: Tutar + Hızlı Aksiyonlar -->
                     <div class="flex items-center justify-between sm:justify-end gap-4 pl-2 sm:pl-0 border-t sm:border-t-0 pt-2 sm:pt-0 border-gray-100">
                         <div class="text-left sm:text-right">
-                            <span class="text-lg sm:text-xl font-black block {{ $isIncome ? 'text-emerald-600' : 'text-rose-600' }}">
-                                {{ $isIncome ? '+' : '-' }}₺{{ number_format($item->amount, 2, ',', '.') }}
+                            <span class="text-lg sm:text-xl font-black block {{ $isExpected ? 'text-teal-600' : ($isIncome ? 'text-emerald-600' : 'text-rose-600') }}">
+                                {{ $isExpected ? '₺' : ($isIncome ? '+' : '-') . '₺' }}{{ number_format($item->amount, 2, ',', '.') }}
                             </span>
                             <span class="text-[10px] text-gray-400 font-medium block">
-                                {{ $isIncome ? 'Nakit Girişi' : 'Harcama / Çıkış' }}
+                                {{ $isExpected ? 'Beklenen Gelir' : ($isIncome ? 'Nakit Girişi' : 'Harcama / Çıkış') }}
                             </span>
                         </div>
 
                         <div class="flex items-center gap-1.5">
-                            @if ($isIncome)
+                            @if ($isExpected)
+                                <button wire:click="confirmExpectedIncome({{ $item->id }})" class="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-black text-xs shadow-xs" title="Hesaba Geçti Olarak Onayla">
+                                    ✓ Geldi
+                                </button>
+                                <button wire:click="delayExpectedIncome({{ $item->id }}, 3)" class="px-2 py-1 bg-amber-50 hover:bg-amber-100 border border-amber-300 text-amber-900 rounded-lg font-bold text-xs" title="3 Gün Ertele">
+                                    ⏳ 3G
+                                </button>
+                                <button wire:click="openEditExpectedIncome({{ $item->id }})" class="p-1.5 text-gray-400 hover:text-indigo-600 rounded-lg hover:bg-gray-100 transition-colors text-xs font-bold" title="Düzenle">
+                                    ✎
+                                </button>
+                                <button wire:click="deleteExpectedIncome({{ $item->id }})" wire:confirm="Bu beklenen geliri silmek istediğinize emin misiniz?" class="p-1.5 text-gray-400 hover:text-red-600 rounded-lg hover:bg-gray-100 transition-colors text-xs font-bold" title="Sil">
+                                    🗑
+                                </button>
+                            @elseif ($isIncome)
                                 <button wire:click="openEditIncome({{ $item->id }})" class="p-1.5 text-gray-400 hover:text-indigo-600 rounded-lg hover:bg-gray-100 transition-colors text-xs font-bold">
                                     ✎
                                 </button>
@@ -669,6 +689,86 @@
                         İptal
                     </button>
                     <button wire:click="saveExpense" class="px-6 py-2 text-sm font-black text-white bg-rose-600 hover:bg-rose-700 rounded-xl shadow-md transition-all active:scale-95">
+                        Kaydet
+                    </button>
+                </div>
+            </div>
+        </div>
+    @endif
+
+    <!-- BEKLENEN GELİR EKLEME / DÜZENLEME MODAL'I -->
+    @if ($showExpectedIncomeModal)
+        <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4">
+            <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
+                <div class="flex items-center justify-between border-b border-gray-100 pb-3">
+                    <div class="flex items-center gap-2">
+                        <span class="w-8 h-8 rounded-xl bg-teal-50 text-teal-600 flex items-center justify-center font-bold">🗓️</span>
+                        <h3 class="font-bold text-base sm:text-lg text-gray-900">
+                            {{ $expectedIncomeId ? 'Beklenen Geliri Düzenle' : 'Yeni Beklenen Gelir Tanımla' }}
+                        </h3>
+                    </div>
+                    <button wire:click="$set('showExpectedIncomeModal', false)" class="text-gray-400 hover:text-gray-600 text-lg font-bold">✕</button>
+                </div>
+
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-bold text-gray-700 mb-1">Gelir Başlığı / Kaynağı *</label>
+                        <input type="text" wire:model="expected_title" class="w-full rounded-xl border-gray-300 text-sm font-medium focus:ring-teal-500 focus:border-teal-500" placeholder="Örn: Melih Günal Hakediş, Maaş, Elden Tahsilat">
+                        @error('expected_title') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 mb-1">Beklenen Tutar (TL) *</label>
+                            <input type="number" step="0.01" wire:model="expected_amount" class="w-full rounded-xl border-gray-300 text-sm font-bold text-gray-900 focus:ring-teal-500 focus:border-teal-500" placeholder="0.00">
+                            @error('expected_amount') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 mb-1">Beklenen Vade / Tarih *</label>
+                            <input type="date" wire:model="expected_date" class="w-full rounded-xl border-gray-300 text-sm font-bold text-gray-900 focus:ring-teal-500 focus:border-teal-500">
+                            @error('expected_date') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 mb-1">Gelir Türü</label>
+                            <select wire:model="expected_type" class="w-full rounded-xl border-gray-300 text-xs font-bold bg-white focus:ring-teal-500 focus:border-teal-500">
+                                <option value="salary">Maaş / Ana Gelir</option>
+                                <option value="freelance">Freelance / Hakediş</option>
+                                <option value="rental">Kira Geliri</option>
+                                <option value="debt_collection">Borç Tahsilatı (Elden)</option>
+                                <option value="investment">Yatırım / Temettü</option>
+                                <option value="other">Diğer Gelir</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 mb-1">Tekrarlama Sıklığı</label>
+                            <select wire:model="expected_frequency" class="w-full rounded-xl border-gray-300 text-xs font-bold bg-white focus:ring-teal-500 focus:border-teal-500">
+                                <option value="monthly">Her Ay Tekrarlayan</option>
+                                <option value="once">Tek Seferlik</option>
+                                <option value="weekly">Haftalık</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-gray-700 mb-1">Not / Açıklama (İsteğe bağlı)</label>
+                        <textarea wire:model="expected_notes" rows="2" class="w-full rounded-xl border-gray-300 text-xs font-medium focus:ring-teal-500 focus:border-teal-500" placeholder="Örn: Proje teslimi sonrası ödenecek"></textarea>
+                    </div>
+
+                    <div class="p-3 bg-teal-50/70 rounded-xl border border-teal-200/80">
+                        <p class="text-[11px] text-teal-900 leading-relaxed font-medium">
+                            💡 <strong>Akıllı Takip:</strong> Bu tarihe gelindiğinde sistem Dashboard'da size <em>"Geldi mi / Gecikti mi?"</em> diye soracak ve onayladığınızda nakit akışınıza otomatik işlenecektir.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="flex justify-end gap-3 pt-3 border-t border-gray-100">
+                    <button wire:click="$set('showExpectedIncomeModal', false)" class="px-4 py-2 text-sm font-bold text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-xl transition-colors">
+                        İptal
+                    </button>
+                    <button wire:click="saveExpectedIncome" class="px-6 py-2 text-sm font-black text-white bg-teal-600 hover:bg-teal-700 rounded-xl shadow-md transition-all active:scale-95">
                         Kaydet
                     </button>
                 </div>

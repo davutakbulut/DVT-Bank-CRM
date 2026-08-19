@@ -45,6 +45,51 @@
         </div>
     </div>
 
+    <!-- GELİR GERÇEKLEŞME & ONAY AKSİYON KARTI (HERO PROMPT) -->
+    @if ($dueExpectedIncomes->count() > 0)
+        <div class="space-y-3">
+            @foreach ($dueExpectedIncomes as $ei)
+                <div class="bg-gradient-to-r from-emerald-500/10 via-teal-500/10 to-emerald-500/5 border-2 border-emerald-400/80 rounded-2xl p-4 sm:p-5 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <div class="flex items-start sm:items-center gap-3.5">
+                        <div class="w-11 h-11 rounded-2xl bg-emerald-600 text-white flex items-center justify-center font-black text-xl shadow-md shrink-0 animate-pulse">
+                            💵
+                        </div>
+                        <div>
+                            <div class="flex items-center gap-2 flex-wrap">
+                                <span class="px-2 py-0.5 rounded-md text-[10px] font-black bg-emerald-100 text-emerald-800 uppercase tracking-wide">
+                                    {{ $ei->status === 'delayed' ? '⏳ GECİKMELİ GELİR' : '🔔 VADESİ GELEN GELİR' }}
+                                </span>
+                                <span class="text-xs text-gray-500 font-medium">
+                                    Beklenen Tarih: <strong>{{ $ei->expected_date?->format('d.m.Y') }}</strong>
+                                </span>
+                            </div>
+                            <h3 class="text-base sm:text-lg font-black text-gray-900 mt-1">
+                                {{ $ei->title }} — <span class="text-emerald-600">₺{{ number_format($ei->amount, 2, ',', '.') }}</span>
+                            </h3>
+                            <p class="text-xs text-gray-600 mt-0.5">
+                                Bu beklenen gelir tutarı hesabınıza geçti mi? Yanıtınıza göre ödeme planı ve risk rotası anında güncellenecektir.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-2 shrink-0 self-end md:self-center">
+                        <button wire:click="confirmExpectedIncome({{ $ei->id }})" class="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-black text-xs rounded-xl shadow-md transition-all flex items-center gap-1.5 cursor-pointer">
+                            <span>✓</span>
+                            <span>Geldi / Hesaba Geçti</span>
+                        </button>
+                        <button wire:click="delayExpectedIncome({{ $ei->id }}, 3)" class="px-3.5 py-2.5 bg-amber-50 hover:bg-amber-100 border border-amber-300 text-amber-900 font-bold text-xs rounded-xl transition-all flex items-center gap-1.5 cursor-pointer" title="3 gün ertele">
+                            <span>⏳</span>
+                            <span>Henüz Gelmedi (3G Ertele)</span>
+                        </button>
+                        <button wire:click="cancelExpectedIncome({{ $ei->id }})" wire:confirm="Bu geliri iptal etmek istediğinize emin misiniz?" class="px-3 py-2.5 bg-gray-100 hover:bg-red-50 hover:text-red-700 text-gray-600 font-bold text-xs rounded-xl transition-all cursor-pointer" title="İptal Et">
+                            <span>✕</span>
+                        </button>
+                    </div>
+                </div>
+            @endforeach
+        </div>
+    @endif
+
     <!-- 2. ÜST 4 METRİK KARTI -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
         <!-- Toplam Borç -->

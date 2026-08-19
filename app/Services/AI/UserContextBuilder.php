@@ -73,6 +73,24 @@ class UserContextBuilder
             }
         }
 
+        // Beklenen / Planlanan Nakit Girişleri
+        $expectedIncomes = \App\Models\ExpectedIncome::where('user_id', $user->id)
+            ->where('is_active', true)
+            ->get()
+            ->map(function ($ei) {
+                $today = Carbon::now()->format('Y-m-d');
+                $isOverdue = $ei->expected_date && $ei->expected_date->format('Y-m-d') < $today && in_array($ei->status, ['pending', 'delayed']);
+                return [
+                    'baslik' => $ei->title,
+                    'tutar' => (float) $ei->amount,
+                    'tur' => $ei->type,
+                    'siklik' => $ei->frequency,
+                    'beklenen_tarih' => $ei->expected_date ? $ei->expected_date->format('Y-m-d') : null,
+                    'durum' => $ei->status,
+                    'gecikmede_mi' => $isOverdue,
+                ];
+            })->toArray();
+
         return [
             'aylik_gelir' => $monthlyIncome,
             'toplam_borc' => (float) $riskSummary['total_remaining'],
@@ -80,6 +98,7 @@ class UserContextBuilder
             'en_yuksek_faizli' => $highestInterestDebt ?: 'Belirtilmedi',
             'yasal_takip_riski' => $legalRisks,
             'borclar' => $debtList,
+            'beklenen_gelirler' => $expectedIncomes,
             'plan_stratejisi' => $activePlan?->strategy ?? 'avalanche',
             'para_birimi' => 'TRY',
         ];

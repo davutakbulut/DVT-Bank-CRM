@@ -74,11 +74,45 @@ class Index extends Component
         }
     }
 
+    public function confirmExpectedIncome(int $id): void
+    {
+        $ei = \App\Models\ExpectedIncome::where('user_id', Auth::id())->findOrFail($id);
+        $income = $ei->confirmReceived();
+
+        session()->flash('message', '🎉 ' . $ei->title . ' (₺' . number_format($ei->amount, 2, ',', '.') . ') hesaba geçti olarak kaydedildi ve nakit akışına eklendi.');
+    }
+
+    public function delayExpectedIncome(int $id, int $days = 3): void
+    {
+        $ei = \App\Models\ExpectedIncome::where('user_id', Auth::id())->findOrFail($id);
+        $ei->markDelayed($days);
+
+        session()->flash('message', '⏳ ' . $ei->title . ' ' . $days . ' gün ertelendi (' . $ei->expected_date?->format('d.m.Y') . '). Ödeme planı ve risk durumu güncellendi.');
+    }
+
+    public function cancelExpectedIncome(int $id): void
+    {
+        $ei = \App\Models\ExpectedIncome::where('user_id', Auth::id())->findOrFail($id);
+        $ei->markCancelled();
+
+        session()->flash('message', '❌ ' . $ei->title . ' iptal edildi olarak işaretlendi.');
+    }
+
     public function render()
     {
         $user = Auth::user();
         $riskService = new RiskCounter();
         $riskSummary = $riskService->calculateUserRiskSummary($user);
+
+        // Beklenen Gelirler: Onay bekleyenler (vadesi bugün veya geçmiş olanlar)
+        $dueExpectedIncomes = \App\Models\ExpectedIncome::where('user_id', $user->id)
+            ->dueForConfirmation()
+            ->get();
+
+        // Yaklaşan Beklenen Gelirler (Gelecek 15 gün içindekiler)
+        $upcomingExpectedIncomes = \App\Models\ExpectedIncome::where('user_id', $user->id)
+            ->upcoming(15)
+            ->get();
 
         // Yaklaşan ve geciken ödemeler (14 gün içinde)
         $upcomingDebts = Debt::where('user_id', $user->id)
@@ -132,6 +166,8 @@ class Index extends Component
 
         return view('livewire.dashboard.index', [
             'riskSummary' => $riskSummary,
+            'dueExpectedIncomes' => $dueExpectedIncomes,
+            'upcomingExpectedIncomes' => $upcomingExpectedIncomes,
             'upcomingDebts' => $upcomingDebts,
             'bankDistribution' => $bankDistribution,
             'latestAdvice' => $latestAdvice,
