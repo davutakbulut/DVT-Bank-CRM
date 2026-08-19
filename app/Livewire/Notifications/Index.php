@@ -18,6 +18,9 @@ class Index extends Component
     public string $activeTab = 'all'; // all, unread, ai_advice, risk_alert, cashflow_alert
     public string $search = '';
 
+    public ?int $selectedNotificationId = null;
+    public bool $showDetailModal = false;
+
     protected $listeners = [
         'refreshNotifications' => '$refresh',
     ];
@@ -66,6 +69,10 @@ class Index extends Component
             'cashflow_alert' => FinancialNotification::where('user_id', $user->id)->where('type', 'cashflow_alert')->count(),
         ];
 
-        return view('livewire.notifications.index', compact('notifications', 'counts'));
+        $selectedNotification = $this->selectedNotificationId 
+            ? FinancialNotification::where('user_id', $user->id)->find($this->selectedNotificationId) 
+            : null;
+
+        return view('livewire.notifications.index', compact('notifications', 'counts', 'selectedNotification'));
     }
 }

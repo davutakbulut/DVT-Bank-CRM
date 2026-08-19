@@ -200,14 +200,11 @@
 
                 <!-- Aksiyon Butonları -->
                 <div class="flex items-center gap-2 self-end sm:self-center shrink-0 pt-2 sm:pt-0 border-t sm:border-t-0 border-slate-100 w-full sm:w-auto justify-end">
-                    @if ($n->action_url)
-                        <a href="{{ $n->action_url }}" 
-                           wire:click="markAsRead({{ $n->id }})" 
-                           class="px-3 py-1.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-bold text-xs rounded-lg border border-indigo-200 transition-all flex items-center gap-1 cursor-pointer">
-                            <span>İncele</span>
-                            <span>→</span>
-                        </a>
-                    @endif
+                    <button wire:click="viewNotification({{ $n->id }})" 
+                            class="px-3 py-1.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-bold text-xs rounded-lg border border-indigo-200 transition-all flex items-center gap-1 cursor-pointer"
+                            title="Bildirim İçeriğini ve Analizini Gör">
+                        <span>🔍 İncele</span>
+                    </button>
 
                     <!-- Okundu / Okunmadı Durumu Değiştirici -->
                     <button wire:click="toggleRead({{ $n->id }})" 
@@ -239,4 +236,136 @@
             {{ $notifications->links() }}
         </div>
     </div>
+
+    <!-- 5. Bildirim İçerik & Analiz Detay Modalı -->
+    @if ($showDetailModal && $selectedNotification)
+        <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs transition-opacity animate-in fade-in duration-200"
+             x-data
+             @keydown.escape.window="$wire.closeDetailModal()">
+            <div class="bg-white rounded-2xl sm:rounded-3xl shadow-2xl border border-slate-200 max-w-2xl w-full max-h-[90vh] flex flex-col overflow-hidden animate-in zoom-in-95 duration-150">
+                
+                <!-- Modal Başlık Çubuğu -->
+                <div class="px-5 sm:px-6 py-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/70">
+                    <div class="flex items-center gap-3 min-w-0">
+                        <div class="w-10 h-10 rounded-xl flex items-center justify-center text-xl shrink-0 font-bold
+                            {{ $selectedNotification->severity === 'danger' ? 'bg-rose-100 text-rose-700' : '' }}
+                            {{ $selectedNotification->severity === 'warning' ? 'bg-amber-100 text-amber-700' : '' }}
+                            {{ $selectedNotification->severity === 'success' ? 'bg-emerald-100 text-emerald-700' : '' }}
+                            {{ $selectedNotification->severity === 'info' ? 'bg-indigo-100 text-indigo-700' : '' }}">
+                            @if ($selectedNotification->type === 'ai_advice')
+                                💡
+                            @elseif ($selectedNotification->type === 'risk_alert')
+                                🚨
+                            @elseif ($selectedNotification->type === 'cashflow_alert')
+                                💰
+                            @else
+                                🔔
+                            @endif
+                        </div>
+                        <div class="min-w-0">
+                            <span class="text-[11px] font-black uppercase tracking-wider block
+                                {{ $selectedNotification->severity === 'danger' ? 'text-rose-600' : '' }}
+                                {{ $selectedNotification->severity === 'warning' ? 'text-amber-600' : '' }}
+                                {{ $selectedNotification->severity === 'success' ? 'text-emerald-600' : '' }}
+                                {{ $selectedNotification->severity === 'info' ? 'text-indigo-600' : '' }}">
+                                @if ($selectedNotification->type === 'ai_advice')
+                                    Google Gemini • AI Finans Koçu
+                                @elseif ($selectedNotification->type === 'risk_alert')
+                                    Kritik Risk & Yasal Takip Alarmı
+                                @elseif ($selectedNotification->type === 'cashflow_alert')
+                                    Nakit Akışı Uyarısı
+                                @else
+                                    Sistem Bildirimi
+                                @endif
+                            </span>
+                            <span class="text-xs text-slate-400 font-medium">
+                                {{ $selectedNotification->created_at->translatedFormat('d F Y, H:i') }} ({{ $selectedNotification->created_at->diffForHumans() }})
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Kapat Butonu -->
+                    <button wire:click="closeDetailModal" 
+                            class="p-2 text-slate-400 hover:text-slate-700 hover:bg-slate-200/60 rounded-xl transition-all cursor-pointer">
+                        ✕
+                    </button>
+                </div>
+
+                <!-- Modal Gövde / Bildirim İçeriği -->
+                <div class="p-5 sm:p-6 overflow-y-auto space-y-4">
+                    <!-- Bildirim Ana Başlığı -->
+                    <h2 class="text-lg sm:text-xl font-black text-slate-900 tracking-tight leading-snug">
+                        {{ $selectedNotification->title }}
+                    </h2>
+
+                    <!-- Tam Mesaj & Markdown Tablo/Tipografi -->
+                    <div class="p-4 sm:p-5 rounded-2xl bg-slate-50 border border-slate-200 text-slate-800 text-sm leading-relaxed prose prose-sm max-w-none">
+                        {!! \App\Helpers\AiFormatter::format($selectedNotification->message, true) !!}
+                    </div>
+
+                    <!-- Varsa Snapshot Veriler (Banka, Gecikme, Tutar vb.) -->
+                    @if (!empty($selectedNotification->data))
+                        <div class="p-4 rounded-xl bg-indigo-50/50 border border-indigo-100 space-y-2">
+                            <h4 class="text-xs font-bold text-indigo-900 flex items-center gap-1.5">
+                                <span>📊</span>
+                                <span>Bildirime Esas Finansal Parametreler:</span>
+                            </h4>
+                            <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 text-xs">
+                                @if (isset($selectedNotification->data['provider']))
+                                    <div class="p-2 bg-white rounded-lg border border-indigo-100">
+                                        <span class="text-slate-400 block text-[10px]">Motor:</span>
+                                        <span class="font-bold text-indigo-700 uppercase">{{ $selectedNotification->data['provider'] }}</span>
+                                    </div>
+                                @endif
+                                @if (isset($selectedNotification->data['overdue_days']))
+                                    <div class="p-2 bg-white rounded-lg border border-rose-100">
+                                        <span class="text-slate-400 block text-[10px]">Gecikme:</span>
+                                        <span class="font-bold text-rose-600">{{ $selectedNotification->data['overdue_days'] }} Gün</span>
+                                    </div>
+                                @endif
+                                @if (isset($selectedNotification->data['bank_name']))
+                                    <div class="p-2 bg-white rounded-lg border border-indigo-100">
+                                        <span class="text-slate-400 block text-[10px]">İlgili Banka:</span>
+                                        <span class="font-bold text-slate-800">{{ $selectedNotification->data['bank_name'] }}</span>
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
+                    @endif
+                </div>
+
+                <!-- Modal Alt Bar & Aksiyonlar -->
+                <div class="px-5 sm:px-6 py-3.5 border-t border-slate-100 bg-slate-50 flex flex-wrap items-center justify-between gap-3">
+                    <div class="flex items-center gap-2">
+                        <button wire:click="toggleRead({{ $selectedNotification->id }})"
+                                class="px-3 py-1.5 text-xs font-bold rounded-lg border transition-all cursor-pointer flex items-center gap-1
+                                {{ is_null($selectedNotification->read_at) ? 'bg-white text-slate-700 border-slate-200 hover:bg-slate-100' : 'bg-indigo-50 text-indigo-700 border-indigo-200' }}">
+                            <span>{{ is_null($selectedNotification->read_at) ? '✓ Okundu Yap' : '↩️ Okunmadı Yap' }}</span>
+                        </button>
+
+                        <button wire:click="deleteNotification({{ $selectedNotification->id }})"
+                                class="px-3 py-1.5 text-xs font-bold text-rose-600 hover:bg-rose-50 rounded-lg border border-rose-200 transition-all cursor-pointer">
+                            🗑️ Sil
+                        </button>
+                    </div>
+
+                    <div class="flex items-center gap-2">
+                        @if ($selectedNotification->action_url)
+                            <a href="{{ $selectedNotification->action_url }}" 
+                               class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white font-bold text-xs rounded-xl shadow-xs transition-all flex items-center gap-1.5 cursor-pointer">
+                                <span>İlgili Sayfaya Git</span>
+                                <span>→</span>
+                            </a>
+                        @endif
+
+                        <button wire:click="closeDetailModal" 
+                                class="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold text-xs rounded-xl transition-all cursor-pointer">
+                            Kapat
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endif
 </div>
+

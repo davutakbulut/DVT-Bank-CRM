@@ -87,4 +87,34 @@ trait HandlesNotifications
             session()->flash('message', '✨ Yeni Gemini AI Finansal Tavsiyesi başarıyla üretildi!');
         }
     }
+
+    public function viewNotification(int $id): void
+    {
+        $user = Auth::user();
+        if (!$user) return;
+
+        $notif = FinancialNotification::where('user_id', $user->id)->find($id);
+        if ($notif) {
+            if (property_exists($this, 'selectedNotificationId')) {
+                $this->selectedNotificationId = $notif->id;
+            }
+            if (property_exists($this, 'showDetailModal')) {
+                $this->showDetailModal = true;
+            }
+            if (is_null($notif->read_at)) {
+                $notif->markAsRead();
+                $this->dispatch('refreshNotifications');
+            }
+        }
+    }
+
+    public function closeDetailModal(): void
+    {
+        if (property_exists($this, 'showDetailModal')) {
+            $this->showDetailModal = false;
+        }
+        if (property_exists($this, 'selectedNotificationId')) {
+            $this->selectedNotificationId = null;
+        }
+    }
 }
