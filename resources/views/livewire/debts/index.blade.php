@@ -268,12 +268,28 @@
                         </div>
                     </div>
 
-                    <!-- Orta Kısım: Finansal Rakamlar & Faiz -->
+                    <!-- Orta Kısım: Finansal Rakamlar, Toplam Tutar & İlerleme -->
                     <div class="p-3 bg-gray-50/90 rounded-xl border border-gray-100 space-y-2">
                         <div class="flex items-baseline justify-between">
                             <span class="text-[11px] font-bold text-gray-500">Kalan Borç:</span>
                             <span class="text-xl font-black text-red-600">₺{{ number_format($debt->remaining, 2, ',', '.') }}</span>
                         </div>
+
+                        @if ($debt->principal > 0 && ($debt->total_installments > 1 || (float)$debt->principal > (float)$debt->remaining))
+                            @php
+                                $paidAmount = max(0, (float)$debt->principal - (float)$debt->remaining);
+                                $progressPercent = $debt->principal > 0 ? min(100, round(($paidAmount / (float)$debt->principal) * 100)) : 0;
+                            @endphp
+                            <div class="space-y-1 pt-1.5 border-t border-gray-200/60">
+                                <div class="flex items-center justify-between text-[10.5px] font-bold">
+                                    <span class="text-gray-500">Toplam İşlem: <strong class="text-gray-900">₺{{ number_format($debt->principal, 2, ',', '.') }}</strong></span>
+                                    <span class="text-emerald-700">Ödenen: ₺{{ number_format($paidAmount, 2, ',', '.') }} (%{{ $progressPercent }})</span>
+                                </div>
+                                <div class="w-full bg-gray-200 rounded-full h-1.5 overflow-hidden">
+                                    <div class="bg-emerald-500 h-1.5 rounded-full transition-all" style="width: {{ $progressPercent }}%;"></div>
+                                </div>
+                            </div>
+                        @endif
 
                         <div class="grid grid-cols-2 gap-2 pt-1.5 border-t border-gray-200/60 text-[11px]">
                             <div>
@@ -286,6 +302,7 @@
                             </div>
                         </div>
                     </div>
+
 
 
                     <!-- Vade & Gecikme Çubuğu -->
@@ -379,9 +396,12 @@
                                         {{ $debt->type === 'kmh' ? 'KMH' : ($debt->type === 'credit_card' ? 'Kredi Kartı' : ($debt->type === 'personal' ? 'Şahıs' : 'Kredi')) }}
                                     </span>
                                 </td>
-                                <td class="px-6 py-4 font-black text-red-600">
-                                    ₺{{ number_format($debt->remaining, 2, ',', '.') }}
-                                </td>
+                                <td class="px-6 py-4">
+                                     <span class="font-black text-red-600 block">₺{{ number_format($debt->remaining, 2, ',', '.') }}</span>
+                                     @if ($debt->principal > 0 && ($debt->total_installments > 1 || (float)$debt->principal > (float)$debt->remaining))
+                                         <span class="text-[10px] text-gray-500 font-bold block">Toplam: ₺{{ number_format($debt->principal, 2, ',', '.') }}</span>
+                                     @endif
+                                 </td>
                                 <td class="px-6 py-4 font-bold text-gray-800">
                                     %{{ number_format($debt->interest_rate, 2) }}
                                 </td>
