@@ -242,47 +242,63 @@
         </div>
     </div>
 
-    <!-- 4. AI FİNANSAL KOÇ BRİFİNGİ -->
-    <div class="bg-white border-2 border-indigo-100 rounded-2xl p-5 sm:p-6 shadow-sm space-y-4">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-gray-100 pb-3">
+    <!-- 4. AI FİNANSAL KOÇ BRİFİNGİ (AÇILIR-KAPANIR, VARSAYILAN: KAPALI) -->
+    <div x-data="{ showBriefing: false }" class="bg-white border-2 border-indigo-100 rounded-2xl p-4 sm:p-5 shadow-sm transition-all">
+        <div @click="showBriefing = !showBriefing" class="flex items-center justify-between gap-3 cursor-pointer select-none">
             <div class="flex items-center gap-3">
                 <div class="w-10 h-10 rounded-xl bg-indigo-50 border border-indigo-200 text-indigo-700 flex items-center justify-center font-bold text-lg shrink-0">
                     <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456zM16.894 20.567L16.5 21.75l-.394-1.183a2.25 2.25 0 00-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 001.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 001.423 1.423l1.183.394-1.183.394a2.25 2.25 0 00-1.423 1.423z"/></svg>
                 </div>
                 <div>
-                    <h3 class="font-bold text-sm sm:text-base text-gray-900">AI Finansal Koçunuzun Günlük Durum Özeti</h3>
-                    <p class="text-xs text-gray-500">Veritabanınızdaki borç ve vadeler taranarak oluşturuldu</p>
+                    <h3 class="font-bold text-sm sm:text-base text-gray-900 flex items-center gap-2">
+                        <span>AI Finansal Koçunuzun Günlük Durum Özeti</span>
+                        <span class="px-2 py-0.5 rounded-full text-[10px] font-black bg-indigo-50 text-indigo-700 border border-indigo-200">AI TAVSİYESİ</span>
+                    </h3>
+                    <p class="text-xs text-gray-500">Tıklayarak güncel tavsiye ve durum analizini <span x-text="showBriefing ? 'gizleyebilirsiniz' : 'görüntüleyebilirsiniz'"></span></p>
                 </div>
             </div>
-            <a href="{{ route('ai.coach') }}" class="inline-flex items-center px-4 py-2 rounded-xl text-xs font-bold bg-indigo-600 hover:bg-indigo-700 text-white transition-colors self-start sm:self-auto gap-1">
-                <span>AI ile Soru-Cevap Yap</span>
-                <span>→</span>
-            </a>
+
+            <div class="flex items-center gap-2 shrink-0">
+                <a href="{{ route('ai.coach') }}" @click.stop class="hidden sm:inline-flex items-center px-3 py-1.5 rounded-xl text-xs font-bold bg-indigo-600 hover:bg-indigo-700 text-white transition-colors gap-1">
+                    <span>Soru-Cevap</span>
+                    <span>→</span>
+                </a>
+                <button type="button" class="p-2 rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-600 transition-colors flex items-center justify-center">
+                    <svg class="w-5 h-5 text-gray-600 transition-transform duration-200" :class="{ 'rotate-180': showBriefing }" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                    </svg>
+                </button>
+            </div>
         </div>
 
-        <div class="text-xs sm:text-sm text-slate-700 leading-relaxed space-y-2 prose prose-sm max-w-none
-            [&_table]:w-full [&_table]:border-collapse [&_table]:my-3 [&_table]:text-xs [&_table]:rounded-xl [&_table]:overflow-hidden [&_table]:border [&_table]:border-slate-200
-            [&_th]:bg-slate-100 [&_th]:p-2.5 [&_th]:border [&_th]:border-slate-200 [&_th]:text-slate-900 [&_th]:font-bold [&_th]:text-left
-            [&_td]:p-2.5 [&_td]:border [&_td]:border-slate-200 [&_td]:text-slate-700
-            [&_tr:nth-child(even)]:bg-slate-50/60
-            [&_h2]:text-sm [&_h2]:font-black [&_h2]:text-slate-900 [&_h2]:mt-3.5 [&_h2]:mb-1.5
-            [&_h3]:text-xs [&_h3]:font-black [&_h3]:text-slate-900 [&_h3]:mt-2.5 [&_h3]:mb-1
-            [&_ul]:list-disc [&_ul]:pl-5 [&_ul]:space-y-1 [&_ul]:my-2
-            [&_ol]:list-decimal [&_ol]:pl-5 [&_ol]:space-y-1 [&_ol]:my-2
-            [&_blockquote]:border-l-4 [&_blockquote]:border-indigo-500 [&_blockquote]:bg-indigo-50/40 [&_blockquote]:p-3 [&_blockquote]:rounded-r-lg [&_blockquote]:my-2 [&_blockquote]:text-indigo-900 [&_blockquote]:font-medium
-            [&_hr]:border-slate-100 [&_hr]:my-3">
-            @if ($latestAdvice)
-                {!! \App\Helpers\AiFormatter::format($latestAdvice->content, true) !!}
-            @else
-                <p>
-                    <strong>Kriz Strateji Tavsiyesi:</strong> Borçlarınızı sıfırlamak için en yüksek faizli KMH ve kredi kartlarına odaklanın (Çığ Yöntemi). Diğer bankalara asgari tutarı ödeyerek yasal takip süresini güvenle yönetin.
-                </p>
-            @endif
-        </div>
+        <div x-show="showBriefing" x-cloak x-collapse class="space-y-4 pt-3 border-t border-gray-100">
+            <div class="text-xs sm:text-sm text-slate-700 leading-relaxed space-y-2 prose prose-sm max-w-none
+                [&_table]:w-full [&_table]:border-collapse [&_table]:my-3 [&_table]:text-xs [&_table]:rounded-xl [&_table]:overflow-hidden [&_table]:border [&_table]:border-slate-200
+                [&_th]:bg-slate-100 [&_th]:p-2.5 [&_th]:border [&_th]:border-slate-200 [&_th]:text-slate-900 [&_th]:font-bold [&_th]:text-left
+                [&_td]:p-2.5 [&_td]:border [&_td]:border-slate-200 [&_td]:text-slate-700
+                [&_tr:nth-child(even)]:bg-slate-50/60
+                [&_h2]:text-sm [&_h2]:font-black [&_h2]:text-slate-900 [&_h2]:mt-3.5 [&_h2]:mb-1.5
+                [&_h3]:text-xs [&_h3]:font-black [&_h3]:text-slate-900 [&_h3]:mt-2.5 [&_h3]:mb-1
+                [&_ul]:list-disc [&_ul]:pl-5 [&_ul]:space-y-1 [&_ul]:my-2
+                [&_ol]:list-decimal [&_ol]:pl-5 [&_ol]:space-y-1 [&_ol]:my-2
+                [&_blockquote]:border-l-4 [&_blockquote]:border-indigo-500 [&_blockquote]:bg-indigo-50/40 [&_blockquote]:p-3 [&_blockquote]:rounded-r-lg [&_blockquote]:my-2 [&_blockquote]:text-indigo-900 [&_blockquote]:font-medium
+                [&_hr]:border-slate-100 [&_hr]:my-3">
+                @if ($latestAdvice)
+                    {!! \App\Helpers\AiFormatter::format($latestAdvice->content, true) !!}
+                @else
+                    <p>
+                        <strong>Kriz Strateji Tavsiyesi:</strong> Borçlarınızı sıfırlamak için en yüksek faizli KMH ve kredi kartlarına odaklanın (Çığ Yöntemi). Diğer bankalara asgari tutarı ödeyerek yasal takip süresini güvenle yönetin.
+                    </p>
+                @endif
+            </div>
 
-        <div class="pt-2 border-t border-gray-100 text-[10px] text-gray-400 flex items-center gap-1.5">
-            <svg class="w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v17.25m0 0c-1.472 0-2.882.265-4.185.75M12 20.25c1.472 0 2.882.265 4.185.75M18.75 4.5l-6.75 3-6.75-3m13.5 0v4.5c0 1.243-3.022 2.25-6.75 2.25S5.25 10.243 5.25 9V4.5m13.5 0H5.25"/></svg>
-            <em>Bu öneriler bilgilendirme amaçlıdır; 6362 sayılı Kanun kapsamında yatırım ve finansal danışmanlık değildir.</em>
+            <div class="pt-2 border-t border-gray-100 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-[10px] text-gray-400">
+                <div class="flex items-center gap-1.5">
+                    <svg class="w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v17.25m0 0c-1.472 0-2.882.265-4.185.75M12 20.25c1.472 0 2.882.265 4.185.75M18.75 4.5l-6.75 3-6.75-3m13.5 0v4.5c0 1.243-3.022 2.25-6.75 2.25S5.25 10.243 5.25 9V4.5m13.5 0H5.25"/></svg>
+                    <em>Bu öneriler bilgilendirme amaçlıdır; 6362 sayılı Kanun kapsamında yatırım ve finansal danışmanlık değildir.</em>
+                </div>
+                <a href="{{ route('ai.coach') }}" class="sm:hidden text-indigo-600 font-bold text-xs">AI Koç ile Soru-Cevap →</a>
+            </div>
         </div>
     </div>
 
