@@ -204,6 +204,22 @@ class NotificationService
             ->update(['read_at' => now()]);
     }
 
+    public function markAllAsUnread(User $user): int
+    {
+        return FinancialNotification::where('user_id', $user->id)
+            ->read()
+            ->update(['read_at' => null]);
+    }
+
+    public function toggleRead(User $user, int $id): ?FinancialNotification
+    {
+        $notif = FinancialNotification::where('user_id', $user->id)->find($id);
+        if ($notif) {
+            $notif->toggleRead();
+        }
+        return $notif;
+    }
+
     public function deleteAll(User $user): int
     {
         return FinancialNotification::where('user_id', $user->id)->delete();

@@ -57,4 +57,13 @@ class FinancialNotification extends Model
     {
         $this->update(['read_at' => null]);
     }
+
+    public function toggleRead(): void
+    {
+        if ($this->read_at) {
+            $this->update(['read_at' => null]);
+        } else {
+            $this->update(['read_at' => now()]);
+        }
+    }
 }

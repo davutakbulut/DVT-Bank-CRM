@@ -17,6 +17,10 @@ class Index extends Component
     public string $activeTab = 'all'; // all, unread, ai_advice, risk_alert, cashflow_alert
     public string $search = '';
 
+    protected $listeners = [
+        'refreshNotifications' => '$refresh',
+    ];
+
     public function updatedActiveTab(): void
     {
         $this->resetPage();
@@ -27,7 +31,19 @@ class Index extends Component
         $this->resetPage();
     }
 
-    public function markAsRead(int $id)
+    public function toggleRead(int $id, NotificationService $service): void
+    {
+        $user = Auth::user();
+        $notif = $service->toggleRead($user, $id);
+        $this->dispatch('refreshNotifications');
+
+        if ($notif) {
+            $msg = $notif->read_at ? 'Bildirim okundu olarak işaretlendi.' : 'Bildirim okunmadı olarak işaretlendi.';
+            session()->flash('message', $msg);
+        }
+    }
+
+    public function markAsRead(int $id, NotificationService $service)
     {
         $user = Auth::user();
         $notif = FinancialNotification::where('user_id', $user->id)->find($id);
@@ -48,7 +64,17 @@ class Index extends Component
         if ($user) {
             $service->markAllAsRead($user);
             $this->dispatch('refreshNotifications');
-            session()->flash('message', 'Tüm bildirimler başarıyla okundu olarak işaretlendi.');
+            session()->flash('message', 'Tüm bildirimler okundu olarak işaretlendi.');
+        }
+    }
+
+    public function markAllAsUnread(NotificationService $service): void
+    {
+        $user = Auth::user();
+        if ($user) {
+            $service->markAllAsUnread($user);
+            $this->dispatch('refreshNotifications');
+            session()->flash('message', 'Tüm bildirimler okunmadı olarak işaretlendi.');
         }
     }
 
@@ -57,6 +83,7 @@ class Index extends Component
         $user = Auth::user();
         FinancialNotification::where('user_id', $user->id)->where('id', $id)->delete();
         $this->dispatch('refreshNotifications');
+        session()->flash('message', 'Bildirim başarıyla silindi.');
     }
 
     public function deleteAll(NotificationService $service): void
@@ -73,9 +100,9 @@ class Index extends Component
     {
         $user = Auth::user();
         if ($user) {
-            $notif = $service->generateDailyAiNotification($user, true);
+            $service->generateDailyAiNotification($user, true);
             $this->dispatch('refreshNotifications');
-            session()->flash('message', 'Yeni Gemini AI Finansal Tavsiyesi başarıyla üretildi!');
+            session()->flash('message', '✨ Yeni Gemini AI Finansal Tavsiyesi başarıyla üretildi!');
         }
     }
 
@@ -102,11 +129,12 @@ class Index extends Component
             });
         }
 
-        $notifications = $query->paginate(15);
+        $notifications = $query->paginate(12);
 
         $counts = [
             'all' => FinancialNotification::where('user_id', $user->id)->count(),
             'unread' => FinancialNotification::where('user_id', $user->id)->unread()->count(),
+            'read' => FinancialNotification::where('user_id', $user->id)->read()->count(),
             'ai_advice' => FinancialNotification::where('user_id', $user->id)->where('type', 'ai_advice')->count(),
             'risk_alert' => FinancialNotification::where('user_id', $user->id)->where('type', 'risk_alert')->count(),
             'cashflow_alert' => FinancialNotification::where('user_id', $user->id)->where('type', 'cashflow_alert')->count(),

@@ -56,11 +56,30 @@ class Dropdown extends Component
         }
     }
 
+    public function toggleRead(int $id, NotificationService $service): void
+    {
+        $user = Auth::user();
+        if ($user) {
+            $service->toggleRead($user, $id);
+            $this->dispatch('refreshNotifications');
+        }
+    }
+
+    public function deleteNotification(int $id): void
+    {
+        $user = Auth::user();
+        if ($user) {
+            FinancialNotification::where('user_id', $user->id)->where('id', $id)->delete();
+            $this->dispatch('refreshNotifications');
+        }
+    }
+
     public function markAllAsRead(NotificationService $service): void
     {
         $user = Auth::user();
         if ($user) {
             $service->markAllAsRead($user);
+            $this->dispatch('refreshNotifications');
         }
     }
 

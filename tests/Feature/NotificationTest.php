@@ -39,5 +39,34 @@ class NotificationTest extends TestCase
 
         $service->markAllAsRead($user);
         $this->assertEquals(0, $service->getUnreadCount($user));
+
+        $service->markAllAsUnread($user);
+        $this->assertEquals(1, $service->getUnreadCount($user));
+    }
+
+    public function test_livewire_notifications_component_actions(): void
+    {
+        $user = User::factory()->create([
+            'status' => 'active',
+            'onboarding_completed' => true,
+        ]);
+
+        $notif = FinancialNotification::create([
+            'user_id' => $user->id,
+            'type' => 'ai_advice',
+            'title' => 'Test Başlık',
+            'message' => 'Test Mesaj',
+            'severity' => 'info',
+        ]);
+
+        \Livewire\Livewire::actingAs($user)
+            ->test(\App\Livewire\Notifications\Index::class)
+            ->assertSee('Test Başlık')
+            ->call('toggleRead', $notif->id)
+            ->assertDispatched('refreshNotifications')
+            ->call('deleteNotification', $notif->id)
+            ->assertDispatched('refreshNotifications');
+
+        $this->assertDatabaseMissing('financial_notifications', ['id' => $notif->id]);
     }
 }
