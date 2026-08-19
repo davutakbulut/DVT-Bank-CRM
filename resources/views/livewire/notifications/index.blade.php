@@ -1,4 +1,4 @@
-<div class="space-y-6">
+<div class="py-1 sm:py-6 px-3 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-5 sm:space-y-6">
     <!-- 1. Üst Başlık & Eylem Butonları -->
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
