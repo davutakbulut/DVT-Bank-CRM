@@ -207,11 +207,10 @@
             <div class="flex-1 overflow-y-auto px-5 py-6 space-y-5">
                 <!-- Top Brand & Close Button Bar -->
                 <div class="flex items-center justify-between border-b border-gray-100 pb-4">
-                    <div class="flex items-center gap-2">
+                    <a href="{{ route('dashboard') }}" class="flex items-center gap-2">
                         <x-application-logo class="h-7 w-auto text-indigo-700" />
-                        <span class="font-black text-sm text-gray-900 tracking-tight">DVT CRM</span>
-                    </div>
-                    <button @click="open = false" class="p-2 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-600 hover:text-gray-900 transition-colors">
+                    </a>
+                    <button @click="open = false" class="p-2 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-600 hover:text-gray-900 transition-colors cursor-pointer">
                         <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12" />
                         </svg>
