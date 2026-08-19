@@ -59,17 +59,18 @@ class ExpectedIncome extends Model
     {
         return $query->where('is_active', true)
             ->whereIn('status', ['pending', 'delayed'])
-            ->where('expected_date', '<=', Carbon::now()->format('Y-m-d'));
+            ->where('expected_date', '<=', Carbon::today()->format('Y-m-d'))
+            ->orderBy('expected_date', 'asc');
     }
 
-    public function scopeUpcoming(Builder $query, int $days = 15): Builder
+    public function scopeUpcoming(Builder $query, int $days = 7): Builder
     {
-        $today = Carbon::now()->format('Y-m-d');
-        $future = Carbon::now()->addDays($days)->format('Y-m-d');
+        $tomorrow = Carbon::tomorrow()->format('Y-m-d');
+        $future = Carbon::today()->addDays($days)->format('Y-m-d');
 
         return $query->where('is_active', true)
-            ->where('expected_date', '>=', $today)
-            ->where('expected_date', '<=', $future)
+            ->whereIn('status', ['pending', 'delayed'])
+            ->whereBetween('expected_date', [$tomorrow, $future])
             ->orderBy('expected_date', 'asc');
     }
 
@@ -114,12 +115,15 @@ class ExpectedIncome extends Model
     }
 
     /**
-     * Gelirin geciktiğini işaretler ve tarihi öteler.
+     * Gelirin geciktiğini işaretler ve tarihi bugünden itibaren ileriye öteler.
      */
     public function markDelayed(int $delayDays = 3): void
     {
-        $currentDate = $this->expected_date ? Carbon::parse($this->expected_date) : Carbon::now();
-        $this->expected_date = $currentDate->copy()->addDays($delayDays)->format('Y-m-d');
+        $today = Carbon::today();
+        $current = $this->expected_date ? Carbon::parse($this->expected_date) : $today;
+        $baseDate = $current->gt($today) ? $current : $today;
+
+        $this->expected_date = $baseDate->copy()->addDays($delayDays)->format('Y-m-d');
         $this->status = 'delayed';
         $this->save();
     }

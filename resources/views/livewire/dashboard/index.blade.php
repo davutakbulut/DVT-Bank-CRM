@@ -77,13 +77,56 @@
                             <span>✓</span>
                             <span>Geldi / Hesaba Geçti</span>
                         </button>
-                        <button wire:click="delayExpectedIncome({{ $ei->id }}, 3)" class="px-3.5 py-2.5 bg-amber-50 hover:bg-amber-100 border border-amber-300 text-amber-900 font-bold text-xs rounded-xl transition-all flex items-center gap-1.5 cursor-pointer" title="3 gün ertele">
+                        <button wire:click="delayExpectedIncome({{ $ei->id }}, 3)" class="px-3.5 py-2.5 bg-amber-50 hover:bg-amber-100 border border-amber-300 text-amber-900 font-bold text-xs rounded-xl transition-all flex items-center gap-1.5 cursor-pointer" title="Bugünden itibaren 3 gün ertele">
                             <span>⏳</span>
                             <span>Henüz Gelmedi (3G Ertele)</span>
                         </button>
                         <button wire:click="cancelExpectedIncome({{ $ei->id }})" wire:confirm="Bu geliri iptal etmek istediğinize emin misiniz?" class="px-3 py-2.5 bg-gray-100 hover:bg-red-50 hover:text-red-700 text-gray-600 font-bold text-xs rounded-xl transition-all cursor-pointer" title="İptal Et">
                             <span>✕</span>
                         </button>
+                    </div>
+                </div>
+            @endforeach
+        </div>
+    @elseif ($upcomingExpectedIncomes->count() > 0)
+        <!-- YAKLAŞAN BEKLENEN GELİR ÖN BİLGİLENDİRME (1 HAFTA İÇİNDE) -->
+        <div class="space-y-3">
+            @foreach ($upcomingExpectedIncomes->take(1) as $uei)
+                @php
+                    $daysLeft = (int) now()->startOfDay()->diffInDays($uei->expected_date?->startOfDay(), false);
+                @endphp
+                <div class="bg-slate-900 text-white border border-slate-700/80 rounded-2xl p-4 sm:p-5 shadow-lg flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <div class="flex items-start sm:items-center gap-3.5">
+                        <div class="w-11 h-11 rounded-2xl bg-indigo-600 text-white flex items-center justify-center font-black text-xl shadow-md shrink-0">
+                            🗓️
+                        </div>
+                        <div>
+                            <div class="flex items-center gap-2 flex-wrap">
+                                <span class="px-2 py-0.5 rounded-md text-[10px] font-black bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 uppercase tracking-wide">
+                                    🗓️ YAKLAŞAN BEKLENEN GELİR ({{ $daysLeft }} GÜN SONRA)
+                                </span>
+                                <span class="text-xs text-slate-300 font-medium">
+                                    Beklenen Tarih: <strong class="text-white">{{ $uei->expected_date?->format('d.m.Y') }}</strong>
+                                </span>
+                            </div>
+                            <h3 class="text-base sm:text-lg font-black text-white mt-1">
+                                {{ $uei->title }} — <span class="text-emerald-400">₺{{ number_format($uei->amount, 2, ',', '.') }}</span>
+                            </h3>
+                            <p class="text-xs text-slate-400 mt-0.5">
+                                Yaklaşan bu geliriniz vadesi geldiğinde sorulacaktır. Şimdiden hesaba geçtiyse doğrudan onaylayabilirsiniz.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-2 shrink-0 self-end md:self-center">
+                        <button wire:click="confirmExpectedIncome({{ $uei->id }})" class="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-500 active:scale-95 text-white font-black text-xs rounded-xl shadow-md transition-all flex items-center gap-1.5 cursor-pointer">
+                            <span>✓</span>
+                            <span>Erken Geldi / Hesaba Geçti</span>
+                        </button>
+                        <a href="{{ route('cashflow.index') }}" class="px-3.5 py-2.5 bg-slate-800 hover:bg-slate-700 border border-slate-600 text-slate-200 font-bold text-xs rounded-xl transition-all flex items-center gap-1.5">
+                            <span>📋</span>
+                            <span>Nakit Akışında Gör</span>
+                        </a>
                     </div>
                 </div>
             @endforeach
