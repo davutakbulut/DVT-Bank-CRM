@@ -484,6 +484,29 @@ EOT;
         return mb_strlen($text) > 15;
     }
 
+    /**
+     * Çoklu satırdan oluşan ekstre metnini satır satır ayrıştırır.
+     */
+    public function parseBulkLines(string $bulkText): array
+    {
+        $lines = explode("\n", $bulkText);
+        $parsedList = [];
+
+        foreach ($lines as $line) {
+            $trimmed = trim($line);
+            if (empty($trimmed) || mb_strlen($trimmed) < 3) {
+                continue;
+            }
+
+            $parsed = $this->parse($trimmed);
+            if (!empty($parsed['amount']) && $parsed['amount'] > 0) {
+                $parsedList[] = $parsed;
+            }
+        }
+
+        return $parsedList;
+    }
+
     protected function getEmptyResult(): array
     {
         return [
