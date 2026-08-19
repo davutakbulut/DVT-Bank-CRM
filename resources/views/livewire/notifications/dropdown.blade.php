@@ -92,7 +92,7 @@
                     @if (is_null($n->read_at))
                         <span class="w-2 h-2 rounded-full bg-indigo-600 shrink-0 self-center"></span>
                     @endif
-                </div>
+                </a>
             @empty
                 <div class="p-8 text-center text-slate-400 text-xs">
                     <span class="text-2xl block mb-1">🎉</span>

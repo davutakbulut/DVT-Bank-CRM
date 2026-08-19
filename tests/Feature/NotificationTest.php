@@ -68,5 +68,21 @@ class NotificationTest extends TestCase
             ->assertDispatched('refreshNotifications');
 
         $this->assertDatabaseMissing('financial_notifications', ['id' => $notif->id]);
+
+        $newNotif = FinancialNotification::create([
+            'user_id' => $user->id,
+            'type' => 'ai_advice',
+            'title' => 'Dropdown Test',
+            'message' => 'Dropdown Mesaj',
+            'severity' => 'info',
+        ]);
+
+        \Livewire\Livewire::actingAs($user)
+            ->test(\App\Livewire\Notifications\Dropdown::class)
+            ->assertSee('Dropdown Test')
+            ->call('markAllAsRead')
+            ->assertDispatched('refreshNotifications');
+
+        $this->assertNotNull($newNotif->fresh()->read_at);
     }
 }
