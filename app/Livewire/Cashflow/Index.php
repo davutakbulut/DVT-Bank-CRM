@@ -408,13 +408,16 @@ class Index extends Component
         }
 
         // 2. GİDERLER SORGUSU
-        $expenseQuery = Expense::where('user_id', $userId)->with('category');
+        $expenseQuery = Expense::where('user_id', $userId)->with(['category', 'creditCard.bank', 'account.bank']);
         if (!empty($this->search)) {
             $s = '%' . trim($this->search) . '%';
             $expenseQuery->where(function ($q) use ($s) {
                 $q->where('title', 'like', $s)
                   ->orWhereHas('category', function ($cq) use ($s) {
                       $cq->where('name', 'like', $s);
+                  })
+                  ->orWhereHas('creditCard', function ($ccq) use ($s) {
+                      $ccq->where('name', 'like', $s);
                   });
             });
         }
@@ -449,6 +452,11 @@ class Index extends Component
                     'is_recurring' => true,
                     'badge' => 'Maaş / Düzenli Gelir',
                     'color' => '#10b981',
+                    'source_label' => '💵 Banka / Maaş Hesabı',
+                    'source_icon' => '💵',
+                    'source_bank' => 'Maaş Hesabı',
+                    'source_color' => '#10b981',
+                    'installment_badge' => null,
                 ]);
             }
         }
@@ -458,6 +466,30 @@ class Index extends Component
                 if ($this->activeTab === 'recurring' && !$exp->is_recurring) {
                     continue;
                 }
+
+                $sourceLabel = '💵 Nakit / Cüzdan';
+                $sourceIcon = '💵';
+                $sourceBank = 'Nakit';
+                $sourceColor = '#64748b';
+
+                if ($exp->payment_method === 'credit_card' && $exp->creditCard) {
+                    $sourceBank = $exp->creditCard->bank?->name ?? 'Banka Kartı';
+                    $sourceLabel = ($exp->creditCard->bank?->name ?? 'Banka') . ' · ' . $exp->creditCard->name . ' (•••• ' . $exp->creditCard->last_four . ')';
+                    $sourceIcon = '💳';
+                    $sourceColor = $exp->creditCard->bank?->color ?? '#6366f1';
+                } elseif (in_array($exp->payment_method, ['account', 'kmh']) && $exp->account) {
+                    $sourceBank = $exp->account->bank?->name ?? 'Banka Hesabı';
+                    $prefix = $exp->payment_method === 'kmh' ? '⚡ KMH: ' : '🏛️ ';
+                    $sourceLabel = $prefix . ($exp->account->bank?->name ?? 'Banka') . ' · ' . $exp->account->name;
+                    $sourceIcon = $exp->payment_method === 'kmh' ? '⚡' : '🏛️';
+                    $sourceColor = $exp->account->bank?->color ?? '#0284c7';
+                }
+
+                $installmentBadge = null;
+                if ($exp->installment_count && $exp->installment_count > 1) {
+                    $installmentBadge = ($exp->current_installment ?: 1) . '/' . $exp->installment_count . ' Taksit';
+                }
+
                 $stream->push((object) [
                     'id' => $exp->id,
                     'type' => 'expense',
@@ -468,9 +500,15 @@ class Index extends Component
                     'is_recurring' => (bool) $exp->is_recurring,
                     'badge' => $exp->category?->name ?? 'Gider',
                     'color' => $exp->category?->color ?? '#ef4444',
+                    'source_label' => $sourceLabel,
+                    'source_icon' => $sourceIcon,
+                    'source_bank' => $sourceBank,
+                    'source_color' => $sourceColor,
+                    'installment_badge' => $installmentBadge,
                 ]);
             }
         }
+
 
         // Sıralama
         if ($this->sortBy === 'date_desc') {

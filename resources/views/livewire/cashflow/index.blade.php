@@ -241,7 +241,17 @@
                                 <span class="px-2 py-0.5 rounded-md text-[10px] font-black {{ $isIncome ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800' }}">
                                     {{ $item->badge }}
                                 </span>
-                                @if ($item->is_recurring)
+                                @if (!empty($item->source_label))
+                                    <span class="px-2 py-0.5 rounded-md text-[10px] font-bold text-gray-700 bg-gray-100 border border-gray-200">
+                                        {{ $item->source_label }}
+                                    </span>
+                                @endif
+                                @if (!empty($item->installment_badge))
+                                    <span class="px-2 py-0.5 rounded-md text-[10px] font-black bg-indigo-50 text-indigo-700 border border-indigo-200">
+                                        🔢 {{ $item->installment_badge }}
+                                    </span>
+                                @endif
+                                @if ($item->is_recurring && empty($item->installment_badge))
                                     <span class="px-2 py-0.5 rounded-md text-[10px] font-bold bg-indigo-50 text-indigo-700 border border-indigo-100">
                                         🔄 Tekrarlayan
                                     </span>
@@ -314,7 +324,7 @@
                         <div class="py-3 flex items-center justify-between hover:bg-gray-50/60 rounded-xl px-2 transition-colors">
                             <div>
                                 <span class="font-bold text-sm text-gray-900 block">{{ $inc->title }}</span>
-                                <span class="text-xs text-gray-500">{{ $inc->type === 'salary' ? 'Maaş / Düzenli' : 'Ek Gelir' }} · {{ $inc->frequency === 'monthly' ? 'Aylık' : 'Tek Seferlik' }}</span>
+                                <span class="text-xs text-gray-500">{{ $inc->type === 'salary' ? 'Maaş' : 'Ek Gelir' }} · Her Ayın 1'i</span>
                             </div>
                             <div class="flex items-center gap-3">
                                 <span class="font-black text-sm text-emerald-600">+₺{{ number_format($inc->amount, 2, ',', '.') }}</span>
@@ -343,7 +353,27 @@
                         <div class="py-3 flex items-center justify-between hover:bg-gray-50/60 rounded-xl px-2 transition-colors">
                             <div>
                                 <span class="font-bold text-sm text-gray-900 block">{{ $exp->title }}</span>
-                                <span class="text-xs text-gray-500">{{ $exp->category?->name ?? 'Genel Gider' }} · {{ \Carbon\Carbon::parse($exp->expense_date)->format('d.m.Y') }}</span>
+                                <div class="flex items-center gap-1.5 flex-wrap text-xs text-gray-500 mt-0.5">
+                                    <span>{{ $exp->category?->name ?? 'Genel Gider' }} · {{ \Carbon\Carbon::parse($exp->expense_date)->format('d.m.Y') }}</span>
+                                    @if ($exp->payment_method === 'credit_card' && $exp->creditCard)
+                                        <span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-amber-50 text-amber-800 border border-amber-200">
+                                            💳 {{ $exp->creditCard->bank?->name ?? '' }} · {{ $exp->creditCard->name }}
+                                        </span>
+                                    @elseif (in_array($exp->payment_method, ['account', 'kmh']) && $exp->account)
+                                        <span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-blue-50 text-blue-800 border border-blue-200">
+                                            {{ $exp->payment_method === 'kmh' ? '⚡' : '🏛️' }} {{ $exp->account->bank?->name ?? '' }} · {{ $exp->account->name }}
+                                        </span>
+                                    @elseif ($exp->payment_method === 'cash')
+                                        <span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-gray-100 text-gray-700 border border-gray-200">
+                                            💵 Nakit
+                                        </span>
+                                    @endif
+                                    @if ($exp->installment_count > 1)
+                                        <span class="px-1.5 py-0.5 rounded text-[10px] font-black bg-indigo-50 text-indigo-700 border border-indigo-200">
+                                            🔢 {{ $exp->current_installment }}/{{ $exp->installment_count }} Taksit
+                                        </span>
+                                    @endif
+                                </div>
                             </div>
                             <div class="flex items-center gap-3">
                                 <span class="font-black text-sm text-rose-600">-₺{{ number_format($exp->amount, 2, ',', '.') }}</span>
@@ -366,6 +396,7 @@
                         <tr>
                             <th class="px-6 py-3.5">İşlem Başlığı</th>
                             <th class="px-6 py-3.5">Tür & Kategori</th>
+                            <th class="px-6 py-3.5">Ödeme Kaynağı / Kart & Banka</th>
                             <th class="px-6 py-3.5">Tarih</th>
                             <th class="px-6 py-3.5">Tekrarlama</th>
                             <th class="px-6 py-3.5 text-right">Tutar</th>
@@ -385,6 +416,22 @@
                                     <span class="px-2.5 py-0.5 rounded-full text-xs font-black {{ $isIncome ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800' }}">
                                         {{ $item->badge }}
                                     </span>
+                                </td>
+                                <td class="px-6 py-4">
+                                    @if (!empty($item->source_label))
+                                        <div class="flex items-center gap-1.5">
+                                            <span class="px-2 py-0.5 rounded-md text-xs font-bold text-gray-700 bg-gray-50 border border-gray-200 truncate max-w-[220px]">
+                                                {{ $item->source_label }}
+                                            </span>
+                                            @if (!empty($item->installment_badge))
+                                                <span class="px-1.5 py-0.5 rounded text-[10px] font-black bg-indigo-50 text-indigo-700 border border-indigo-200 shrink-0">
+                                                    {{ $item->installment_badge }}
+                                                </span>
+                                            @endif
+                                        </div>
+                                    @else
+                                        <span class="text-xs text-gray-400">-</span>
+                                    @endif
                                 </td>
                                 <td class="px-6 py-4 text-xs text-gray-600">
                                     {{ \Carbon\Carbon::parse($item->date)->format('d.m.Y') }}
@@ -407,7 +454,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="6" class="px-6 py-8 text-center text-gray-500">
+                                <td colspan="7" class="px-6 py-8 text-center text-gray-500">
                                     Kayıtlı işlem bulunmamaktadır.
                                 </td>
                             </tr>
