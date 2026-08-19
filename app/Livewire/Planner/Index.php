@@ -25,11 +25,23 @@ class Index extends Component
     public function mount(): void
     {
         $user = Auth::user();
-        $totalIncome = (float) Income::where('user_id', $user->id)->sum('amount');
-        $totalExpense = (float) Expense::where('user_id', $user->id)->sum('amount');
-        $availableNet = max(0.0, $totalIncome - $totalExpense);
-        
-        $this->monthlyBudget = $availableNet > 500 ? $availableNet : 15000.0;
+        $activePlan = PaymentPlan::where('user_id', $user->id)
+            ->where('status', 'active')
+            ->latest()
+            ->first();
+
+        if ($activePlan) {
+            $this->monthlyBudget = (float) $activePlan->monthly_budget;
+            $this->strategy = $activePlan->strategy;
+            $this->activeStrategyTab = $activePlan->strategy;
+            $this->planName = $activePlan->name;
+        } else {
+            $totalIncome = (float) Income::where('user_id', $user->id)->sum('amount');
+            $totalExpense = (float) Expense::where('user_id', $user->id)->sum('amount');
+            $availableNet = max(0.0, $totalIncome - $totalExpense);
+            
+            $this->monthlyBudget = $availableNet > 500 ? $availableNet : 15000.0;
+        }
     }
 
     public function generateNewPlan(): void
@@ -42,6 +54,7 @@ class Index extends Component
         $planner = new PaymentPlanner();
         $planner->generatePlan(Auth::user(), $this->monthlyBudget, $this->strategy, $this->planName);
 
+        $this->activeStrategyTab = $this->strategy;
         $this->isCreatingPlan = false;
         session()->flash('message', 'Yeni borç kurtarma ödeme planınız başarıyla oluşturuldu!');
     }
@@ -147,15 +160,18 @@ class Index extends Component
         $user = Auth::user();
         $debts = Debt::where('user_id', $user->id)->where('status', 'active')->with('bank')->get();
 
-        // Strateji karşılaştırma simülasyonu
-        $calc = new DebtCalculator();
-        $comparison = $calc->compareStrategies($debts->toArray(), $this->monthlyBudget);
-
         $activePlan = PaymentPlan::where('user_id', $user->id)
             ->where('status', 'active')
             ->with(['items.debt.bank'])
             ->latest()
             ->first();
+
+        $effectiveBudget = $activePlan ? (float) $activePlan->monthly_budget : $this->monthlyBudget;
+        $effectiveStrategy = $activePlan ? $activePlan->strategy : $this->activeStrategyTab;
+
+        // Strateji karşılaştırma simülasyonu
+        $calc = new DebtCalculator();
+        $comparison = $calc->compareStrategies($debts->toArray(), $effectiveBudget);
 
         $monthlyGroups = [];
         $totalAllocated = 0;
@@ -184,7 +200,7 @@ class Index extends Component
 
         $cumulativeMonths = 0;
         foreach ($sortedDebts as $index => $d) {
-            $debtMonthlyAlloc = max(1, $this->monthlyBudget * 0.70); // %70 ana odak
+            $debtMonthlyAlloc = max(1, $effectiveBudget * 0.70); // %70 ana odak
             $approxMonths = ceil($d->remaining / $debtMonthlyAlloc);
             $cumulativeMonths += $approxMonths;
 
@@ -198,7 +214,8 @@ class Index extends Component
         }
 
         $totalDebtSum = $debts->sum('remaining');
-        $freedomMonths = $comparison['avalanche']['months'] ?? 12;
+        $activeStrategyResult = $comparison[$effectiveStrategy] ?? ($comparison['hybrid'] ?? ($comparison['avalanche'] ?? ['months' => 12]));
+        $freedomMonths = $activeStrategyResult['months'] ?? 12;
         $freedomDate = Carbon::now()->addMonths($freedomMonths)->translatedFormat('F Y');
 
         return view('livewire.planner.index', [
@@ -210,6 +227,7 @@ class Index extends Component
             'totalDebtSum' => $totalDebtSum,
             'freedomDate' => $freedomDate,
             'freedomMonths' => $freedomMonths,
+            'effectiveBudget' => $effectiveBudget,
             'planProgressPercent' => $planProgressPercent,
             'totalPaidInPlan' => $totalPaidInPlan,
         ])->layout('layouts.app');

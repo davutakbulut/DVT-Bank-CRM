@@ -67,7 +67,7 @@
                         Tüm Borçlarınız <span class="bg-gradient-to-r from-emerald-300 via-sky-300 to-indigo-300 bg-clip-text text-transparent">{{ $freedomDate }}</span> Tarihinde Tamamen Bitiyor!
                     </h2>
                     <p class="text-xs sm:text-sm text-slate-300 mt-1 max-w-2xl">
-                        Aylık ₺{{ number_format($monthlyBudget, 0, ',', '.') }} bütçe ile en yüksek faizli borçları sırayla yok ederek <strong>{{ $freedomMonths }} ay sonra</strong> sıfır borçlu özgür bir hayata kavuşuyorsunuz.
+                        Aylık ₺{{ number_format($effectiveBudget, 0, ',', '.') }} bütçe ile en yüksek faizli borçları sırayla yok ederek <strong>{{ $freedomMonths }} ay sonra</strong> sıfır borçlu özgür bir hayata kavuşuyorsunuz.
                     </p>
                 </div>
 
@@ -86,7 +86,7 @@
                 </div>
                 <div class="p-3.5 bg-white/5 rounded-xl border border-white/10">
                     <span class="text-slate-400 block text-[10px] font-bold uppercase">Aylık Borç Ödeme Bütçesi</span>
-                    <span class="text-lg sm:text-xl font-black text-indigo-300 mt-0.5 block">₺{{ number_format($monthlyBudget, 0, ',', '.') }}</span>
+                    <span class="text-lg sm:text-xl font-black text-indigo-300 mt-0.5 block">₺{{ number_format($effectiveBudget, 0, ',', '.') }}</span>
                 </div>
                 <div class="p-3.5 bg-white/5 rounded-xl border border-white/10">
                     <span class="text-slate-400 block text-[10px] font-bold uppercase">Çığ ile Kurtulma Süresi</span>

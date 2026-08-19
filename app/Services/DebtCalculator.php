@@ -40,6 +40,7 @@ class DebtCalculator
 
         $avalancheResult = $this->simulateStrategy($debts, $monthlyBudget, 'avalanche');
         $snowballResult = $this->simulateStrategy($debts, $monthlyBudget, 'snowball');
+        $hybridResult = $this->simulateStrategy($debts, $monthlyBudget, 'hybrid');
 
         $savingsAmount = max(0, $snowballResult['total_interest'] - $avalancheResult['total_interest']);
         $monthsSaved = max(0, $snowballResult['months'] - $avalancheResult['months']);
@@ -47,6 +48,7 @@ class DebtCalculator
         return [
             'avalanche' => $avalancheResult,
             'snowball' => $snowballResult,
+            'hybrid' => $hybridResult,
             'savings_amount' => round($savingsAmount, 2),
             'months_saved' => $monthsSaved,
         ];
