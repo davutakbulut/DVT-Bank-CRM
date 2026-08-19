@@ -155,10 +155,15 @@ class Index extends Component
             return;
         }
 
+        if (!$user->canGenerateAiAdvice()) {
+            session()->flash('error', 'Ücretsiz planınız haftada 1 kez AI önerisi üretmenize izin verir. Pro Plana geçerek her gün taze AI koçluk tavsiyesi alabilirsiniz.');
+            return;
+        }
+
         $service = app(NotificationService::class);
         $service->generateDailyAiNotification($user, true);
         $this->dispatch('refreshNotifications');
-        session()->flash('message', '✨ Yeni Gemini AI Finansal Tavsiyesi başarıyla üretildi!');
+        session()->flash('message', 'Yeni AI Finansal Tavsiyesi başarıyla üretildi!');
     }
 
     public function render()
@@ -199,6 +204,8 @@ class Index extends Component
             ? FinancialNotification::where('user_id', $user->id)->find($this->selectedNotificationId) 
             : null;
 
-        return view('livewire.notifications.index', compact('notifications', 'counts', 'selectedNotification'));
+        $canGenerateAi = $user->canGenerateAiAdvice();
+
+        return view('livewire.notifications.index', compact('notifications', 'counts', 'selectedNotification', 'canGenerateAi'));
     }
 }

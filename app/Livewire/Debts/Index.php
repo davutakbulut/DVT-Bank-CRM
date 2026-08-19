@@ -177,6 +177,11 @@ class Index extends Component
 
     public function openCreateModal(): void
     {
+        if (!Auth::user()->canCreateDebt()) {
+            session()->flash('error', 'Ücretsiz planınız maksimum 5 borç eklemenize izin vermektedir. Sınırsız borç eklemek için Pro Plana yükseltin.');
+            return;
+        }
+
         $this->reset(['debtId', 'bank_id', 'credit_card_id', 'account_id', 'creditor_name', 'title', 'principal', 'remaining', 'installment_count', 'installment_amount', 'next_due_date', 'last_payment_date', 'notes']);
         $this->type = 'loan';
         $this->loan_category = 'consumer';
@@ -207,6 +212,11 @@ class Index extends Component
 
     public function save(): void
     {
+        if (!$this->debtId && !Auth::user()->canCreateDebt()) {
+            $this->addError('title', 'Ücretsiz planınız maksimum 5 borç eklemenize izin vermektedir. Sınırsız borç eklemek için Pro Plana yükseltin.');
+            return;
+        }
+
         // Kredi kartı borcu eklendiğinde kart limiti aşım kontrolü
         if ($this->type === 'credit_card' && $this->credit_card_id) {
             $card = \App\Models\CreditCard::where('user_id', Auth::id())->find($this->credit_card_id);
@@ -220,7 +230,6 @@ class Index extends Component
         if ($this->type === 'personal' && !empty($this->creditor_name) && empty($this->title)) {
             $this->title = $this->creditor_name . ' (Şahıs Borcu)';
         }
-
 
         $data = [
             'user_id' => Auth::id(),
@@ -405,6 +414,10 @@ class Index extends Component
         $criticalCount = $debts->filter(fn($d) => (90 - $d->days_overdue) <= 25 && $d->days_overdue > 0)->count();
         $avgInterest = $debts->count() > 0 ? $debts->avg('interest_rate') : 0.0;
 
+        $user = Auth::user();
+        $userDebtCount = $user->debts()->count();
+        $maxDebts = $user->currentPlan()->max_debts;
+
         return view('livewire.debts.index', [
             'debts' => $debts,
             'banks' => $banks,
@@ -414,6 +427,9 @@ class Index extends Component
             'totalMonthly' => $totalMonthly,
             'criticalCount' => $criticalCount,
             'avgInterest' => $avgInterest,
+            'userDebtCount' => $userDebtCount,
+            'maxDebts' => $maxDebts,
+            'canCreateDebt' => $user->canCreateDebt(),
         ])->layout('layouts.app');
     }
 }

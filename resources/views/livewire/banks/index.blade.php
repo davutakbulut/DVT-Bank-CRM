@@ -1,10 +1,15 @@
 <div class="py-1 sm:py-6 px-3 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-6">
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-            <h1 class="text-2xl font-black text-gray-900 tracking-tight">Bankalarım</h1>
+            <div class="flex items-center gap-2">
+                <h1 class="text-2xl font-black text-gray-900 tracking-tight">Bankalarım</h1>
+                <span class="px-2.5 py-0.5 rounded-full text-xs font-black {{ $canCreateBank ? 'bg-indigo-50 text-indigo-700 border border-indigo-200' : 'bg-amber-100 text-amber-900 border border-amber-300' }}">
+                    {{ $userBankCount }} / {{ $maxBanks === -1 ? 'Sınırsız' : $maxBanks }} Banka
+                </span>
+            </div>
             <p class="text-sm text-gray-600">Sistem bankaları ve tanımladığınız özel finansal kurumlar</p>
         </div>
-        <button wire:click="openCreateModal" class="inline-flex items-center px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm rounded-xl shadow-sm transition-colors">
+        <button wire:click="openCreateModal" class="inline-flex items-center px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm rounded-xl shadow-sm transition-colors cursor-pointer">
             + Özel Banka / Kurum Ekle
         </button>
     </div>
@@ -13,6 +18,18 @@
         <div class="p-4 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-xl text-sm font-bold flex items-center gap-2">
             <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
             <span>{{ session('message') }}</span>
+        </div>
+    @endif
+
+    @if (session()->has('error'))
+        <div class="p-4 bg-amber-50 border border-amber-200 text-amber-900 rounded-xl text-sm font-bold flex items-center justify-between gap-3 shadow-xs">
+            <div class="flex items-center gap-2">
+                <svg class="w-5 h-5 text-amber-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"/></svg>
+                <span>{{ session('error') }}</span>
+            </div>
+            <a href="{{ route('pricing') }}" class="px-3 py-1.5 bg-amber-600 hover:bg-amber-700 text-white rounded-xl text-xs font-black shrink-0 transition-colors">
+                Pro Plana Yükselt →
+            </a>
         </div>
     @endif
 

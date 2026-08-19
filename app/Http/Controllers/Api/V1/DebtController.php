@@ -34,6 +34,14 @@ class DebtController extends Controller
 
     public function store(Request $request): JsonResponse
     {
+        if (!Auth::user()->canCreateDebt()) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Ücretsiz planınız maksimum 5 borç eklemenize izin vermektedir. Sınırsız borç eklemek için Pro Plana yükseltin.',
+                'upgrade_required' => true,
+            ], 403);
+        }
+
         $validated = $request->validate([
             'bank_id' => 'nullable|exists:banks,id',
             'type' => 'required|in:loan,kmh,credit_card,personal,other',

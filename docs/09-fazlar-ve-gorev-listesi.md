@@ -111,7 +111,7 @@ Her fazın sonundaki **"Faz Çıkış Kriteri"** sağlanmadan sonraki faza geçi
 
 ## FAZ 7 — Para Kazanma + İçerik (2-3 gün, opsiyonel faz)
 
-- [ ] **[G7.01]** Plan limitlerinin uygulanması (Gate/middleware: free plan 2 banka/5 borç/haftalık AI)
+- [x] **[G7.01]** Plan limitlerinin uygulanması (Gate/middleware: free plan 2 banka/5 borç/haftalık AI)
 - [ ] **[G7.02]** iyzico entegrasyonu (checkout form, webhook, subscription güncelleme)
 - [ ] **[G7.03]** Plan yükseltme/düşürme akışı + faturalama sayfası
 - [ ] **[G7.04]** Blog modülü (posts) + admin CRUD

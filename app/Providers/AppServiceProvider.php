@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Models\User;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 use Livewire\Livewire;
 
@@ -32,5 +34,11 @@ class AppServiceProvider extends ServiceProvider
         Livewire::component('notifications.index', \App\Livewire\Notifications\Index::class);
         Livewire::component('notifications.dropdown', \App\Livewire\Notifications\Dropdown::class);
         Livewire::component('notifications', \App\Livewire\Notifications\Index::class);
+
+        // Plan Limiti Gate Tanımları
+        Gate::define('create-bank', fn (User $user) => $user->canCreateBank());
+        Gate::define('create-debt', fn (User $user) => $user->canCreateDebt());
+        Gate::define('generate-ai-advice', fn (User $user) => $user->canGenerateAiAdvice());
+        Gate::define('access-feature', fn (User $user, string $feature) => $user->hasFeature($feature));
     }
 }

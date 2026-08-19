@@ -138,4 +138,84 @@ class User extends Authenticatable implements FilamentUser
     {
         return $this->hasMany(SupportTicket::class);
     }
+
+    public function currentPlan(): Plan
+    {
+        if ($this->relationLoaded('plan') && $this->plan) {
+            return $this->plan;
+        }
+
+        if ($this->plan_id && $plan = Plan::find($this->plan_id)) {
+            return $plan;
+        }
+
+        return Plan::where('slug', 'free')->first() ?? new Plan([
+            'name' => 'Ücretsiz Plan',
+            'slug' => 'free',
+            'max_banks' => 2,
+            'max_debts' => 5,
+            'ai_frequency' => 'weekly',
+            'features' => [],
+        ]);
+    }
+
+    public function canCreateBank(): bool
+    {
+        if ($this->hasRole('super_admin') || $this->hasRole('admin')) {
+            return true;
+        }
+
+        $plan = $this->currentPlan();
+        if ($plan->max_banks === -1) {
+            return true;
+        }
+
+        $userBankCount = $this->banks()->where('is_system', false)->count();
+        return $userBankCount < $plan->max_banks;
+    }
+
+    public function canCreateDebt(): bool
+    {
+        if ($this->hasRole('super_admin') || $this->hasRole('admin')) {
+            return true;
+        }
+
+        $plan = $this->currentPlan();
+        if ($plan->max_debts === -1) {
+            return true;
+        }
+
+        return $this->debts()->count() < $plan->max_debts;
+    }
+
+    public function canGenerateAiAdvice(): bool
+    {
+        if ($this->hasRole('super_admin') || $this->hasRole('admin')) {
+            return true;
+        }
+
+        $plan = $this->currentPlan();
+        $frequency = $plan->ai_frequency ?? 'weekly';
+
+        if ($frequency === 'daily') {
+            return !$this->aiAdvices()->whereDate('created_at', now()->today())->exists();
+        }
+
+        return !$this->aiAdvices()->where('created_at', '>=', now()->subDays(7))->exists();
+    }
+
+    public function hasFeature(string $featureKey): bool
+    {
+        if ($this->hasRole('super_admin') || $this->hasRole('admin')) {
+            return true;
+        }
+
+        $plan = $this->currentPlan();
+        if ($plan->slug === 'pro') {
+            return true;
+        }
+
+        $features = $plan->features ?? [];
+        return !empty($features[$featureKey]);
+    }
 }

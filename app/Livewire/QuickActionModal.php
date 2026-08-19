@@ -342,6 +342,11 @@ class QuickActionModal extends Component
 
     public function saveManualDebt(): void
     {
+        if (!Auth::user()->canCreateDebt()) {
+            $this->addError('debtTitle', 'Ücretsiz planınız maksimum 5 borç eklemenize izin vermektedir. Sınırsız borç eklemek için Pro Plana yükseltin.');
+            return;
+        }
+
         $this->validate([
             'debtAmount' => 'required|numeric|min:10',
             'debtTitle' => 'required|string|max:255',

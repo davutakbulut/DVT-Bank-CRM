@@ -22,6 +22,14 @@ class BankController extends Controller
 
     public function store(Request $request): JsonResponse
     {
+        if (!Auth::user()->canCreateBank()) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Ücretsiz planınız maksimum 2 banka eklemenize izin vermektedir. Sınırsız banka eklemek için Pro Plana geçin.',
+                'upgrade_required' => true,
+            ], 403);
+        }
+
         $validated = $request->validate([
             'name' => 'required|string|max:100',
             'code' => 'required|string|max:20',

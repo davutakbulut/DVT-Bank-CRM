@@ -20,6 +20,11 @@ class Index extends Component
 
     public function openCreateModal(): void
     {
+        if (!Auth::user()->canCreateBank()) {
+            session()->flash('error', 'Ücretsiz planınız maksimum 2 banka eklemenize izin vermektedir. Sınırsız banka eklemek için Pro Plana geçin.');
+            return;
+        }
+
         $this->reset(['bankId', 'name', 'color']);
         $this->color = '#6366f1';
         $this->showModal = true;
@@ -45,6 +50,11 @@ class Index extends Component
                 'color' => $this->color,
             ]);
         } else {
+            if (!Auth::user()->canCreateBank()) {
+                $this->addError('name', 'Ücretsiz planınız maksimum 2 banka eklemenize izin vermektedir. Sınırsız banka eklemek için Pro Plana geçin.');
+                return;
+            }
+
             Bank::create([
                 'user_id' => Auth::id(),
                 'name' => $this->name,
@@ -67,10 +77,16 @@ class Index extends Component
 
     public function render()
     {
+        $user = Auth::user();
         $banks = Bank::withCount(['accounts', 'creditCards', 'debts'])->get();
+        $userBankCount = $user->banks()->where('is_system', false)->count();
+        $maxBanks = $user->currentPlan()->max_banks;
 
         return view('livewire.banks.index', [
             'banks' => $banks,
+            'userBankCount' => $userBankCount,
+            'maxBanks' => $maxBanks,
+            'canCreateBank' => $user->canCreateBank(),
         ])->layout('layouts.app');
     }
 }

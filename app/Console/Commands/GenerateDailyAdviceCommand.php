@@ -20,6 +20,10 @@ class GenerateDailyAdviceCommand extends Command
         $count = 0;
 
         foreach ($users as $user) {
+            if (!$user->canGenerateAiAdvice()) {
+                continue;
+            }
+
             try {
                 $aiManager->generateAdviceForUser($user, 'daily');
                 $count++;
