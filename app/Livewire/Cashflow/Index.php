@@ -29,6 +29,7 @@ class Index extends Component
     public ?int $incomeId = null;
     public string $income_title = '';
     public float $income_amount = 0.0;
+    public string $income_date = '';
     public string $income_type = 'salary';
     public string $income_frequency = 'monthly';
 
@@ -90,6 +91,7 @@ class Index extends Component
     public function openIncomeModal(): void
     {
         $this->reset(['incomeId', 'income_title', 'income_amount']);
+        $this->income_date = Carbon::now()->format('Y-m-d');
         $this->income_type = 'salary';
         $this->income_frequency = 'monthly';
         $this->showIncomeModal = true;
@@ -101,6 +103,7 @@ class Index extends Component
         $this->incomeId = $inc->id;
         $this->income_title = $inc->title;
         $this->income_amount = (float) $inc->amount;
+        $this->income_date = $inc->income_date ? Carbon::parse($inc->income_date)->format('Y-m-d') : ($inc->created_at ? $inc->created_at->format('Y-m-d') : Carbon::now()->format('Y-m-d'));
         $this->income_type = $inc->type ?? 'salary';
         $this->income_frequency = $inc->frequency ?? 'monthly';
         $this->showIncomeModal = true;
@@ -111,15 +114,17 @@ class Index extends Component
         $this->validate([
             'income_title' => 'required|string|max:100',
             'income_amount' => 'required|numeric|min:1',
+            'income_date' => 'required|date',
         ]);
 
         $data = [
             'user_id' => Auth::id(),
             'title' => $this->income_title,
             'amount' => $this->income_amount,
+            'income_date' => $this->income_date,
             'type' => $this->income_type,
             'frequency' => $this->income_frequency,
-            'is_recurring' => true,
+            'is_recurring' => $this->income_frequency === 'monthly',
         ];
 
         if ($this->incomeId) {
@@ -129,7 +134,7 @@ class Index extends Component
         }
 
         $this->showIncomeModal = false;
-        $this->reset(['incomeId', 'income_title', 'income_amount']);
+        $this->reset(['incomeId', 'income_title', 'income_amount', 'income_date']);
         session()->flash('message', 'Gelir kaydı başarıyla kaydedildi.');
     }
 
@@ -406,6 +411,22 @@ class Index extends Component
             $s = '%' . trim($this->search) . '%';
             $incomeQuery->where('title', 'like', $s);
         }
+        if (!empty($this->date_from)) {
+            $incomeQuery->where(function ($q) {
+                $q->where('income_date', '>=', $this->date_from)
+                  ->orWhere(function ($sq) {
+                      $sq->whereNull('income_date')->where('created_at', '>=', $this->date_from);
+                  });
+            });
+        }
+        if (!empty($this->date_to)) {
+            $incomeQuery->where(function ($q) {
+                $q->where('income_date', '<=', $this->date_to)
+                  ->orWhere(function ($sq) {
+                      $sq->whereNull('income_date')->where('created_at', '<=', $this->date_to);
+                  });
+            });
+        }
 
         // 2. GİDERLER SORGUSU
         $expenseQuery = Expense::where('user_id', $userId)->with(['category', 'creditCard.bank', 'account.bank']);
@@ -447,10 +468,10 @@ class Index extends Component
                     'type' => 'income',
                     'title' => $inc->title,
                     'amount' => (float) $inc->amount,
-                    'category_name' => $inc->type === 'salary' ? 'Maaş / Ana Gelir' : 'Ek Gelir',
-                    'date' => Carbon::now()->startOfMonth()->format('Y-m-d'), // Aylık periyot
-                    'is_recurring' => true,
-                    'badge' => 'Maaş / Düzenli Gelir',
+                    'category_name' => $inc->type === 'salary' ? 'Maaş / Ana Gelir' : ($inc->type === 'freelance' ? 'Hakediş / Serbest Gelir' : 'Ek Gelir'),
+                    'date' => $inc->income_date ? Carbon::parse($inc->income_date)->format('Y-m-d') : ($inc->created_at ? $inc->created_at->format('Y-m-d') : Carbon::now()->format('Y-m-d')),
+                    'is_recurring' => (bool) $inc->is_recurring,
+                    'badge' => $inc->is_recurring ? 'Maaş / Düzenli Gelir' : 'Tek Seferlik Gelir',
                     'color' => '#10b981',
                     'source_label' => '💵 Banka / Maaş Hesabı',
                     'source_icon' => '💵',

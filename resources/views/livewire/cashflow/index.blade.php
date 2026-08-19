@@ -517,10 +517,17 @@
                         </div>
                     </div>
 
-                    <div>
-                        <label class="block text-xs font-bold text-gray-700 mb-1">Net Tutar (TL)</label>
-                        <input type="number" step="0.01" wire:model="income_amount" class="w-full rounded-xl border-gray-300 text-sm font-black text-emerald-600 focus:ring-emerald-500 focus:border-emerald-500" placeholder="65000">
-                        @error('income_amount') <span class="text-red-500 text-xs font-bold">{{ $message }}</span> @enderror
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 mb-1">Gelir Tarihi</label>
+                            <input type="date" wire:model="income_date" class="w-full rounded-xl border-gray-300 text-sm font-medium focus:ring-emerald-500 focus:border-emerald-500">
+                            @error('income_date') <span class="text-red-500 text-xs font-bold">{{ $message }}</span> @enderror
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 mb-1">Net Tutar (TL)</label>
+                            <input type="number" step="0.01" wire:model="income_amount" class="w-full rounded-xl border-gray-300 text-sm font-black text-emerald-600 focus:ring-emerald-500 focus:border-emerald-500" placeholder="65000">
+                            @error('income_amount') <span class="text-red-500 text-xs font-bold">{{ $message }}</span> @enderror
+                        </div>
                     </div>
                 </div>
 

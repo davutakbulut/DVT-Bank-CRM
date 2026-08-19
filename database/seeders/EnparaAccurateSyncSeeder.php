@@ -286,11 +286,12 @@ class EnparaAccurateSyncSeeder extends Seeder
                 'user_id' => $user->id,
                 'title' => $inc['title'],
                 'amount' => $inc['amount'],
+                'income_date' => $inc['created_at'],
                 'type' => $inc['type'],
                 'frequency' => $inc['frequency'],
                 'is_recurring' => false,
-                'created_at' => $inc['created_at'],
-                'updated_at' => $inc['created_at'],
+                'created_at' => $inc['created_at'] . ' 12:00:00',
+                'updated_at' => $inc['created_at'] . ' 12:00:00',
             ]);
         }
 

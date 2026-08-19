@@ -17,6 +17,7 @@ class Income extends Model
         'category_id',
         'title',
         'amount',
+        'income_date',
         'type',
         'frequency',
         'received_day',
@@ -27,6 +28,7 @@ class Income extends Model
     {
         return [
             'amount' => 'decimal:2',
+            'income_date' => 'date',
             'received_day' => 'integer',
             'is_recurring' => 'boolean',
         ];
