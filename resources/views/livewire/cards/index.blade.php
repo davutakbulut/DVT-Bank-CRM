@@ -51,37 +51,6 @@
         </div>
     @endif
 
-    <!-- 📊 KART LİMİT VE ASGARİ ANALİZ GRAFİKLERİ -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-5 mb-6">
-        <!-- Kart Limit Kullanım Oranları (Stacked Bar) -->
-        <div class="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm">
-            <div class="flex items-center justify-between border-b border-gray-100 pb-3 mb-3">
-                <div>
-                    <h3 class="font-bold text-sm text-gray-900">Kart Limit Kullanım Durumu</h3>
-                    <p class="text-xs text-gray-500">Kullanılan bakiye vs kalan serbest limit</p>
-                </div>
-                <span class="text-xs font-bold text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-lg">Limit Oranı</span>
-            </div>
-            <div class="relative h-56 w-full flex items-center justify-center">
-                <canvas id="cardsLimitChart"></canvas>
-            </div>
-        </div>
-
-        <!-- Kart Bazlı Asgari Ödemeler (Doughnut) -->
-        <div class="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm">
-            <div class="flex items-center justify-between border-b border-gray-100 pb-3 mb-3">
-                <div>
-                    <h3 class="font-bold text-sm text-gray-900">Kart Asgari Ödeme Dağılımı</h3>
-                    <p class="text-xs text-gray-500">Kart başına ödenmesi gereken aylık asgariler</p>
-                </div>
-                <span class="text-xs font-bold text-amber-600 bg-amber-50 px-2.5 py-1 rounded-lg">Aylık Asgari</span>
-            </div>
-            <div class="relative h-56 w-full flex items-center justify-center">
-                <canvas id="cardsMinPaymentChart"></canvas>
-            </div>
-        </div>
-    </div>
-
     <!-- Kartlar Grid -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         @forelse ($cards as $card)
@@ -438,81 +407,4 @@
             </div>
         </div>
     @endif
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            // Limits Chart
-            const limCtx = document.getElementById('cardsLimitChart');
-            if (limCtx) {
-                const limData = @json($cardLimitsData);
-                new Chart(limCtx, {
-                    type: 'bar',
-                    data: {
-                        labels: limData.map(i => i.name),
-                        datasets: [
-                            {
-                                label: 'Kullanılan Borç (₺)',
-                                data: limData.map(i => i.used),
-                                backgroundColor: '#ef4444',
-                                borderRadius: 6
-                            },
-                            {
-                                label: 'Kalan Serbest Limit (₺)',
-                                data: limData.map(i => i.available),
-                                backgroundColor: '#10b981',
-                                borderRadius: 6
-                            }
-                        ]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        scales: {
-                            x: { stacked: true },
-                            y: {
-                                stacked: true,
-                                ticks: {
-                                    callback: function(v) { return '₺' + new Intl.NumberFormat('tr-TR', { notation: 'compact' }).format(v); }
-                                }
-                            }
-                        },
-                        plugins: {
-                            legend: { position: 'bottom', labels: { font: { family: 'Plus Jakarta Sans', size: 11, weight: 'bold' } } }
-                        }
-                    }
-                });
-            }
-
-            // Min Payments Chart
-            const minCtx = document.getElementById('cardsMinPaymentChart');
-            if (minCtx) {
-                const minData = @json($cardMinPaymentsData);
-                new Chart(minCtx, {
-                    type: 'doughnut',
-                    data: {
-                        labels: minData.map(i => i.name),
-                        datasets: [{
-                            data: minData.map(i => i.min_payment),
-                            backgroundColor: ['#6366f1', '#f59e0b', '#ef4444', '#10b981', '#8b5cf6', '#06b6d4'],
-                            borderWidth: 2
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: { position: 'bottom', labels: { font: { family: 'Plus Jakarta Sans', size: 10, weight: 'bold' } } },
-                            tooltip: {
-                                callbacks: {
-                                    label: function(context) {
-                                        return ' ' + context.label + ': ₺' + new Intl.NumberFormat('tr-TR').format(context.raw);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                });
-            }
-        });
-    </script>
 </div>
