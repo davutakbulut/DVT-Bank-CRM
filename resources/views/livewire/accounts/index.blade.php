@@ -14,7 +14,7 @@
                 <button wire:click="exportExcel" 
                         @mouseenter="show = true" 
                         @mouseleave="show = false"
-                        class="inline-flex items-center gap-1 px-3 py-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300 font-bold text-xs rounded-xl shadow-2xs transition-all active:scale-95 cursor-pointer">
+                        class="inline-flex items-center gap-1 px-3 py-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300 font-bold text-xs rounded-lg shadow-2xs transition-all active:scale-95 cursor-pointer">
                     <span>📥</span>
                     <span>Excel</span>
                 </button>
@@ -22,7 +22,7 @@
                 <!-- Açıklayıcı Bilgi Popup (Tooltip) -->
                 <div x-show="show" 
                      x-cloak
-                     class="absolute left-0 sm:left-auto sm:right-0 top-full mt-2 w-72 p-3 bg-slate-900 text-white rounded-2xl shadow-2xl border border-slate-700 text-xs z-50 pointer-events-none transition-all">
+                     class="absolute left-0 sm:left-auto sm:right-0 top-full mt-2 w-72 p-3 bg-slate-900 text-white rounded-xl shadow-2xl border border-slate-700 text-xs z-50 pointer-events-none transition-all">
                     <div class="flex items-center gap-1.5 font-bold text-emerald-300 border-b border-slate-800 pb-1.5 mb-1.5">
                         <span>🏦</span>
                         <span>Banka Hesapları Excel Raporu</span>
@@ -35,22 +35,22 @@
             </div>
 
             <!-- Görünüm Seçici -->
-            <div class="inline-flex rounded-xl bg-gray-100 p-1 border border-gray-200 shadow-2xs">
-                <button wire:click="$set('viewMode', 'stacked')" class="px-2.5 py-1 rounded-lg text-xs font-bold transition-all flex items-center gap-1 cursor-pointer {{ $viewMode === 'stacked' ? 'bg-white text-indigo-700 shadow-xs' : 'text-gray-600 hover:text-gray-900' }}">
+            <div class="inline-flex rounded-lg bg-slate-100 p-1 border border-slate-200/80 shadow-2xs">
+                <button wire:click="$set('viewMode', 'stacked')" class="px-2.5 py-1 rounded-md text-xs font-bold transition-all flex items-center gap-1 cursor-pointer {{ $viewMode === 'stacked' ? 'bg-white text-indigo-700 shadow-2xs border border-slate-200/60' : 'text-slate-600 hover:text-slate-900' }}">
                     <span>🗂️</span>
                     <span class="hidden sm:inline">Banka Yığını</span>
                 </button>
-                <button wire:click="$set('viewMode', 'grid')" class="px-2.5 py-1 rounded-lg text-xs font-bold transition-all flex items-center gap-1 cursor-pointer {{ $viewMode === 'grid' ? 'bg-white text-indigo-700 shadow-xs' : 'text-gray-600 hover:text-gray-900' }}">
+                <button wire:click="$set('viewMode', 'grid')" class="px-2.5 py-1 rounded-md text-xs font-bold transition-all flex items-center gap-1 cursor-pointer {{ $viewMode === 'grid' ? 'bg-white text-indigo-700 shadow-2xs border border-slate-200/60' : 'text-slate-600 hover:text-slate-900' }}">
                     <span>▦</span>
                     <span class="hidden sm:inline">Izgara</span>
                 </button>
-                <button wire:click="$set('viewMode', 'table')" class="px-2.5 py-1 rounded-lg text-xs font-bold transition-all flex items-center gap-1 cursor-pointer {{ $viewMode === 'table' ? 'bg-white text-indigo-700 shadow-xs' : 'text-gray-600 hover:text-gray-900' }}">
+                <button wire:click="$set('viewMode', 'table')" class="px-2.5 py-1 rounded-md text-xs font-bold transition-all flex items-center gap-1 cursor-pointer {{ $viewMode === 'table' ? 'bg-white text-indigo-700 shadow-2xs border border-slate-200/60' : 'text-slate-600 hover:text-slate-900' }}">
                     <span>📑</span>
                     <span class="hidden sm:inline">Tablo</span>
                 </button>
             </div>
 
-            <button wire:click="openCreateModal" class="inline-flex items-center gap-1.5 px-3.5 sm:px-4 py-2 sm:py-2.5 bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white font-black text-xs sm:text-sm rounded-xl shadow-md transition-all whitespace-nowrap cursor-pointer">
+            <button wire:click="openCreateModal" class="inline-flex items-center gap-1.5 px-3.5 sm:px-4 py-2 bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white font-black text-xs sm:text-sm rounded-lg shadow-xs transition-all whitespace-nowrap cursor-pointer">
                 <span>+ Yeni Hesap</span>
             </button>
         </div>
@@ -58,17 +58,17 @@
 
 
     @if (session()->has('message'))
-        <div class="p-4 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-xl text-sm font-bold flex items-center gap-2 shadow-xs">
+        <div class="p-3.5 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-lg text-sm font-bold flex items-center gap-2 shadow-xs">
             <span>✓</span>
             <span>{{ session('message') }}</span>
         </div>
     @endif
 
-    <!-- 2. Finansal KPI Özet Kartları (Mobilde Kesilmeyen Font ve Padding) -->
-    <div class="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4">
+    <!-- 2. Finansal KPI Özet Kartları (Net ve Kesilmeyen Geometri) -->
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3.5">
         <!-- Kullanılabilir Toplam Likidite (Vadesiz + Kalan KMH) -->
-        <div class="bg-white p-3 sm:p-4 rounded-2xl border border-gray-200/80 shadow-2xs flex items-center gap-2.5 sm:gap-3">
-            <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-base sm:text-lg font-black shrink-0">
+        <div class="bg-white p-3.5 sm:p-4 rounded-xl border border-slate-200/80 shadow-2xs flex items-center gap-2.5 sm:gap-3">
+            <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center text-base sm:text-lg font-black shrink-0">
                 💰
             </div>
             <div class="min-w-0 flex-1">
@@ -79,8 +79,8 @@
         </div>
 
         <!-- Kullanılan KMH Borcu -->
-        <div class="bg-white p-3 sm:p-4 rounded-2xl border border-gray-200/80 shadow-2xs flex items-center gap-2.5 sm:gap-3">
-            <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-red-50 text-red-600 flex items-center justify-center text-base sm:text-lg font-black shrink-0">
+        <div class="bg-white p-3.5 sm:p-4 rounded-xl border border-slate-200/80 shadow-2xs flex items-center gap-2.5 sm:gap-3">
+            <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-red-50 text-red-600 flex items-center justify-center text-base sm:text-lg font-black shrink-0">
                 ⚡
             </div>
             <div class="min-w-0 flex-1">
@@ -91,8 +91,8 @@
         </div>
 
         <!-- Toplam KMH Limiti -->
-        <div class="bg-white p-3 sm:p-4 rounded-2xl border border-gray-200/80 shadow-2xs flex items-center gap-2.5 sm:gap-3">
-            <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-base sm:text-lg font-black shrink-0">
+        <div class="bg-white p-3.5 sm:p-4 rounded-xl border border-slate-200/80 shadow-2xs flex items-center gap-2.5 sm:gap-3">
+            <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center text-base sm:text-lg font-black shrink-0">
                 🛡️
             </div>
             <div class="min-w-0 flex-1">
@@ -103,8 +103,8 @@
         </div>
 
         <!-- Net Likidite -->
-        <div class="bg-white p-3 sm:p-4 rounded-2xl border border-gray-200/80 shadow-2xs flex items-center gap-2.5 sm:gap-3">
-            <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl {{ $netLiquidity < 0 ? 'bg-red-50 text-red-600' : 'bg-blue-50 text-blue-600' }} flex items-center justify-center text-base sm:text-lg font-black shrink-0">
+        <div class="bg-white p-3.5 sm:p-4 rounded-xl border border-slate-200/80 shadow-2xs flex items-center gap-2.5 sm:gap-3">
+            <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-lg {{ $netLiquidity < 0 ? 'bg-red-50 text-red-600' : 'bg-blue-50 text-blue-600' }} flex items-center justify-center text-base sm:text-lg font-black shrink-0">
                 📊
             </div>
             <div class="min-w-0 flex-1">
@@ -117,28 +117,28 @@
         </div>
     </div>
 
-    <!-- 3. ÜST FİLTRE & ARAMA BAR -->
-    <div class="bg-white rounded-2xl border border-gray-200/90 shadow-sm p-4 space-y-3">
+    <!-- 3. ÜST FİLTRE & ARAMA BAR (Segmented Control & Linear Inputs) -->
+    <div class="bg-white rounded-xl border border-slate-200 shadow-2xs p-3.5 sm:p-4 space-y-3">
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-3">
-            <!-- Tür Sekmeleri (Mobilde Yatay Kaydırılabilir) -->
-            <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-1">
-                <button wire:click="$set('activeType', 'all')" class="px-3 py-1.5 text-xs font-bold rounded-xl transition-all whitespace-nowrap shrink-0 {{ $activeType === 'all' ? 'bg-indigo-600 text-white shadow-xs' : 'text-gray-600 hover:bg-gray-100' }}">
-                    Tümü ({{ $accounts->count() }})
+            <!-- Tür Sekmeleri (Segmented Bar) -->
+            <div class="inline-flex p-1 bg-slate-100 rounded-lg border border-slate-200/80 overflow-x-auto no-scrollbar">
+                <button wire:click="$set('activeType', 'all')" class="px-3 py-1.5 text-xs font-bold rounded-md transition-all whitespace-nowrap shrink-0 {{ $activeType === 'all' ? 'bg-white text-slate-900 shadow-2xs border border-slate-200/60' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/40' }}">
+                    Tümü <span class="ml-1 text-[10px] font-mono px-1.5 py-0.5 rounded bg-slate-200/70 text-slate-700">({{ $accounts->count() }})</span>
                 </button>
-                <button wire:click="$set('activeType', 'checking')" class="px-3 py-1.5 text-xs font-bold rounded-xl transition-all whitespace-nowrap shrink-0 {{ $activeType === 'checking' ? 'bg-indigo-600 text-white shadow-xs' : 'text-gray-600 hover:bg-gray-100' }}">
+                <button wire:click="$set('activeType', 'checking')" class="px-3 py-1.5 text-xs font-bold rounded-md transition-all whitespace-nowrap shrink-0 {{ $activeType === 'checking' ? 'bg-white text-slate-900 shadow-2xs border border-slate-200/60' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/40' }}">
                     💳 Vadesiz
                 </button>
-                <button wire:click="$set('activeType', 'kmh')" class="px-3 py-1.5 text-xs font-bold rounded-xl transition-all whitespace-nowrap shrink-0 {{ $activeType === 'kmh' ? 'bg-indigo-600 text-white shadow-xs' : 'text-gray-600 hover:bg-gray-100' }}">
+                <button wire:click="$set('activeType', 'kmh')" class="px-3 py-1.5 text-xs font-bold rounded-md transition-all whitespace-nowrap shrink-0 {{ $activeType === 'kmh' ? 'bg-white text-slate-900 shadow-2xs border border-slate-200/60' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/40' }}">
                     ⚡ KMH / Eksi
                 </button>
-                <button wire:click="$set('activeType', 'savings')" class="px-3 py-1.5 text-xs font-bold rounded-xl transition-all whitespace-nowrap shrink-0 {{ $activeType === 'savings' ? 'bg-indigo-600 text-white shadow-xs' : 'text-gray-600 hover:bg-gray-100' }}">
+                <button wire:click="$set('activeType', 'savings')" class="px-3 py-1.5 text-xs font-bold rounded-md transition-all whitespace-nowrap shrink-0 {{ $activeType === 'savings' ? 'bg-white text-slate-900 shadow-2xs border border-slate-200/60' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/40' }}">
                     📈 Vadeli Mevduat
                 </button>
             </div>
 
             <!-- Banka Seçimi & Canlı Arama -->
             <div class="flex items-center gap-2">
-                <select wire:model.live="selected_bank_id" class="rounded-xl border-gray-200 bg-gray-50 py-1.5 text-xs font-medium focus:bg-white focus:ring-indigo-500">
+                <select wire:model.live="selected_bank_id" class="rounded-lg border-slate-300 bg-slate-50 py-1.5 text-xs font-medium focus:bg-white focus:ring-1 focus:ring-indigo-600 focus:border-indigo-600">
                     <option value="">Tüm Bankalar</option>
                     @foreach ($banks as $b)
                         <option value="{{ $b->id }}">{{ $b->name }}</option>
@@ -149,12 +149,12 @@
                     <input type="text" 
                            wire:model.live.debounce.300ms="search" 
                            placeholder="Hesap veya IBAN ara..." 
-                           class="w-full pl-8 pr-7 py-1.5 bg-gray-50 border border-gray-200 rounded-xl text-xs font-medium focus:bg-white focus:ring-indigo-500">
-                    <span class="absolute inset-y-0 left-0 pl-2.5 flex items-center pointer-events-none text-gray-400 text-xs">
+                           class="w-full pl-8 pr-7 py-1.5 bg-slate-50 border border-slate-300 rounded-lg text-xs font-medium focus:bg-white focus:ring-1 focus:ring-indigo-600 focus:border-indigo-600">
+                    <span class="absolute inset-y-0 left-0 pl-2.5 flex items-center pointer-events-none text-slate-400 text-xs">
                         🔍
                     </span>
                     @if ($search)
-                        <button wire:click="$set('search', '')" class="absolute inset-y-0 right-0 pr-2 flex items-center text-gray-400 hover:text-gray-600 text-xs font-bold">
+                        <button wire:click="$set('search', '')" class="absolute inset-y-0 right-0 pr-2 flex items-center text-slate-400 hover:text-slate-600 text-xs font-bold cursor-pointer">
                             ✕
                         </button>
                     @endif

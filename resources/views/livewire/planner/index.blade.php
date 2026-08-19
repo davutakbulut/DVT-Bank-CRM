@@ -14,7 +14,7 @@
                 <button wire:click="exportExcel" 
                         @mouseenter="show = true" 
                         @mouseleave="show = false"
-                        class="inline-flex items-center gap-1.5 px-3.5 py-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300 font-black text-xs sm:text-sm rounded-xl shadow-2xs transition-all active:scale-95">
+                        class="inline-flex items-center gap-1.5 px-3.5 py-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300 font-bold text-xs sm:text-sm rounded-lg shadow-2xs transition-all active:scale-95 cursor-pointer">
                     <span>📥</span>
                     <span>Excel'e Aktar</span>
                 </button>
@@ -22,7 +22,7 @@
                 <!-- Açıklayıcı Bilgi Popup (Tooltip) -->
                 <div x-show="show" 
                      x-cloak
-                     class="absolute right-0 top-full mt-2 w-72 p-3 bg-slate-900 text-white rounded-2xl shadow-2xl border border-slate-700 text-xs z-50 pointer-events-none transition-all">
+                     class="absolute right-0 top-full mt-2 w-72 p-3 bg-slate-900 text-white rounded-xl shadow-2xl border border-slate-700 text-xs z-50 pointer-events-none transition-all">
                     <div class="flex items-center gap-1.5 font-bold text-emerald-300 border-b border-slate-800 pb-1.5 mb-1.5">
                         <span>🎯</span>
                         <span>Ödeme Planı Excel Raporu</span>
@@ -34,7 +34,7 @@
                 </div>
             </div>
 
-            <button wire:click="$toggle('isCreatingPlan')" class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white font-black text-xs sm:text-sm rounded-xl shadow-md transition-all flex items-center gap-2">
+            <button wire:click="$toggle('isCreatingPlan')" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white font-black text-xs sm:text-sm rounded-lg shadow-xs transition-all flex items-center gap-2 cursor-pointer">
                 <span>{{ $isCreatingPlan ? '← Planı & Yol Haritasını Görüntüle' : '+ Yeni Plan Simülasyonu Başlat' }}</span>
             </button>
         </div>
@@ -42,21 +42,21 @@
 
 
     @if (session()->has('message'))
-        <div class="p-4 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-xl text-sm font-bold flex items-center gap-2 shadow-xs">
+        <div class="p-3.5 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-lg text-sm font-bold flex items-center gap-2 shadow-xs">
             <span>✓</span>
             <span>{{ session('message') }}</span>
         </div>
     @endif
 
     <!-- 2. FİNANSAL ÖZGÜRLÜK & KURTULUŞ SKOR PANOSU -->
-    <div class="relative rounded-3xl bg-gradient-to-br from-slate-950 via-indigo-950 to-slate-900 border border-indigo-500/30 p-6 sm:p-8 text-white shadow-2xl overflow-hidden">
+    <div class="relative rounded-2xl bg-gradient-to-br from-slate-950 via-indigo-950 to-slate-900 border border-indigo-500/30 p-6 sm:p-8 text-white shadow-2xl overflow-hidden">
         <div class="absolute -top-24 -right-24 w-96 h-96 bg-indigo-500/15 rounded-full blur-3xl pointer-events-none"></div>
         <div class="absolute -bottom-24 -left-24 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
 
         <div class="relative z-10 space-y-6">
             <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-indigo-800/50 pb-5">
                 <div>
-                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-400/40 text-emerald-300 text-[11px] font-black uppercase tracking-wider mb-2">
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-md bg-emerald-500/20 border border-emerald-400/40 text-emerald-300 text-[11px] font-black uppercase tracking-wider mb-2">
                         ✨ Matematiksel Çıkış Rotası
                     </span>
                     <h2 class="text-xl sm:text-2xl font-black text-white">
@@ -67,7 +67,7 @@
                     </p>
                 </div>
 
-                <div class="text-left lg:text-right bg-white/5 border border-white/10 p-4 rounded-2xl backdrop-blur-md">
+                <div class="text-left lg:text-right bg-white/5 border border-white/10 p-4 rounded-xl backdrop-blur-md">
                     <span class="text-[10px] font-bold text-slate-400 block uppercase tracking-wider">TOPLAM FAİZ KAZANCI</span>
                     <span class="text-2xl font-black text-emerald-400 block">₺{{ number_format($comparison['savings_amount'] ?? 0, 0, ',', '.') }}</span>
                     <span class="text-[11px] text-emerald-200 font-semibold">Çığ yöntemiyle cebinizde kalan net tasarruf</span>
@@ -76,19 +76,19 @@
 
             <!-- 4'lü İstatistik Şeridi -->
             <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 text-xs">
-                <div class="p-3.5 bg-white/5 rounded-2xl border border-white/10">
+                <div class="p-3.5 bg-white/5 rounded-xl border border-white/10">
                     <span class="text-slate-400 block text-[10px] font-bold uppercase">Toplam Kapatılacak Borç</span>
                     <span class="text-lg sm:text-xl font-black text-white mt-0.5 block">₺{{ number_format($totalDebtSum, 0, ',', '.') }}</span>
                 </div>
-                <div class="p-3.5 bg-white/5 rounded-2xl border border-white/10">
+                <div class="p-3.5 bg-white/5 rounded-xl border border-white/10">
                     <span class="text-slate-400 block text-[10px] font-bold uppercase">Aylık Borç Ödeme Bütçesi</span>
                     <span class="text-lg sm:text-xl font-black text-indigo-300 mt-0.5 block">₺{{ number_format($monthlyBudget, 0, ',', '.') }}</span>
                 </div>
-                <div class="p-3.5 bg-white/5 rounded-2xl border border-white/10">
+                <div class="p-3.5 bg-white/5 rounded-xl border border-white/10">
                     <span class="text-slate-400 block text-[10px] font-bold uppercase">Çığ ile Kurtulma Süresi</span>
                     <span class="text-lg sm:text-xl font-black text-emerald-300 mt-0.5 block">{{ $comparison['avalanche']['months'] ?? 0 }} Ay</span>
                 </div>
-                <div class="p-3.5 bg-white/5 rounded-2xl border border-white/10">
+                <div class="p-3.5 bg-white/5 rounded-xl border border-white/10">
                     <span class="text-slate-400 block text-[10px] font-bold uppercase">Kartopu ile Kurtulma</span>
                     <span class="text-lg sm:text-xl font-black text-amber-300 mt-0.5 block">{{ $comparison['snowball']['months'] ?? 0 }} Ay</span>
                 </div>
@@ -97,25 +97,25 @@
     </div>
 
     <!-- 3. STRATEJİ KARŞILAŞTIRMA & EĞİTİCİ REHBER LABORATUVARI -->
-    <div class="bg-white rounded-3xl border border-gray-200/90 p-5 sm:p-7 shadow-sm space-y-6">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-gray-100 pb-4">
+    <div class="bg-white rounded-2xl border border-slate-200 shadow-2xs p-5 sm:p-6 space-y-5">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-3.5">
             <div>
-                <h3 class="text-lg font-black text-gray-900 flex items-center gap-2">
+                <h3 class="text-base sm:text-lg font-black text-gray-900 flex items-center gap-2">
                     <span>🧠</span>
                     <span>Stratejiler Nasıl Çalışır? Hangisini Seçmeliyim?</span>
                 </h3>
                 <p class="text-xs text-gray-500">Borç kapatırken kullanılan 3 altın metodun akılda kalıcı çalışma mantığı</p>
             </div>
 
-            <!-- Strateji Sekmeleri -->
-            <div class="inline-flex rounded-xl bg-gray-100 p-1 border border-gray-200 text-xs font-bold">
-                <button wire:click="$set('activeStrategyTab', 'avalanche')" class="px-3 py-1.5 rounded-lg transition-all {{ $activeStrategyTab === 'avalanche' ? 'bg-indigo-600 text-white shadow-xs' : 'text-gray-600 hover:text-gray-900' }}">
+            <!-- Strateji Sekmeleri (Segmented Bar) -->
+            <div class="inline-flex p-1 bg-slate-100 rounded-lg border border-slate-200/80 text-xs font-bold">
+                <button wire:click="$set('activeStrategyTab', 'avalanche')" class="px-3 py-1.5 rounded-md transition-all cursor-pointer {{ $activeStrategyTab === 'avalanche' ? 'bg-white text-slate-900 shadow-2xs border border-slate-200/60 font-black' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/40' }}">
                     🏔️ Çığ (En Kârlı)
                 </button>
-                <button wire:click="$set('activeStrategyTab', 'snowball')" class="px-3 py-1.5 rounded-lg transition-all {{ $activeStrategyTab === 'snowball' ? 'bg-indigo-600 text-white shadow-xs' : 'text-gray-600 hover:text-gray-900' }}">
+                <button wire:click="$set('activeStrategyTab', 'snowball')" class="px-3 py-1.5 rounded-md transition-all cursor-pointer {{ $activeStrategyTab === 'snowball' ? 'bg-white text-slate-900 shadow-2xs border border-slate-200/60 font-black' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/40' }}">
                     ⛄ Kartopu (Motivasyon)
                 </button>
-                <button wire:click="$set('activeStrategyTab', 'hybrid')" class="px-3 py-1.5 rounded-lg transition-all {{ $activeStrategyTab === 'hybrid' ? 'bg-indigo-600 text-white shadow-xs' : 'text-gray-600 hover:text-gray-900' }}">
+                <button wire:click="$set('activeStrategyTab', 'hybrid')" class="px-3 py-1.5 rounded-md transition-all cursor-pointer {{ $activeStrategyTab === 'hybrid' ? 'bg-white text-slate-900 shadow-2xs border border-slate-200/60 font-black' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/40' }}">
                     🛡️ 90 Gün Hibrit
                 </button>
             </div>

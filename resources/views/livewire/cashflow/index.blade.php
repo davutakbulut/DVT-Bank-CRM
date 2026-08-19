@@ -63,15 +63,15 @@
             </span>
 
             <div class="grid grid-cols-3 gap-2 w-full sm:w-auto sm:flex sm:items-center">
-                <button wire:click="openExpectedIncomeModal" class="h-10 sm:h-auto px-2.5 sm:px-4 py-2 bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white font-bold text-xs sm:text-sm rounded-xl shadow-xs transition-all flex items-center justify-center gap-1 cursor-pointer text-center">
+                <button wire:click="openExpectedIncomeModal" class="h-10 sm:h-auto px-2.5 sm:px-4 py-2 bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white font-bold text-xs sm:text-sm rounded-lg shadow-xs transition-all flex items-center justify-center gap-1 cursor-pointer text-center">
                     <span>🗓️</span>
                     <span class="truncate">Beklenen</span>
                 </button>
-                <button wire:click="openIncomeModal" class="h-10 sm:h-auto px-2.5 sm:px-4 py-2 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-bold text-xs sm:text-sm rounded-xl shadow-xs transition-all flex items-center justify-center gap-1 cursor-pointer text-center">
+                <button wire:click="openIncomeModal" class="h-10 sm:h-auto px-2.5 sm:px-4 py-2 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-bold text-xs sm:text-sm rounded-lg shadow-xs transition-all flex items-center justify-center gap-1 cursor-pointer text-center">
                     <span>+</span>
                     <span class="truncate">Gelir</span>
                 </button>
-                <button wire:click="openExpenseModal" class="h-10 sm:h-auto px-2.5 sm:px-4 py-2 bg-rose-600 hover:bg-rose-700 active:scale-95 text-white font-bold text-xs sm:text-sm rounded-xl shadow-xs transition-all flex items-center justify-center gap-1 cursor-pointer text-center">
+                <button wire:click="openExpenseModal" class="h-10 sm:h-auto px-2.5 sm:px-4 py-2 bg-rose-600 hover:bg-rose-700 active:scale-95 text-white font-bold text-xs sm:text-sm rounded-lg shadow-xs transition-all flex items-center justify-center gap-1 cursor-pointer text-center">
                     <span>+</span>
                     <span class="truncate">Gider</span>
                 </button>
@@ -81,17 +81,17 @@
 
 
     @if (session()->has('message'))
-        <div class="p-4 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-xl text-sm font-bold flex items-center gap-2 shadow-xs">
+        <div class="p-3.5 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-lg text-sm font-bold flex items-center gap-2 shadow-xs">
             <span>✓</span>
             <span>{{ session('message') }}</span>
         </div>
     @endif
 
-    <!-- 2. Finansal KPI Özet Kartları -->
-    <div class="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4">
+    <!-- 2. Finansal KPI Özet Kartları (Net ve Kesilmeyen Geometri) -->
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3.5">
         <!-- Toplam Gelir -->
-        <div class="bg-white p-3 sm:p-4 rounded-2xl border border-gray-200/80 shadow-2xs flex items-center gap-2.5 sm:gap-3">
-            <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-base sm:text-lg font-black shrink-0">
+        <div class="bg-white p-3.5 sm:p-4 rounded-xl border border-slate-200/80 shadow-2xs flex items-center gap-2.5 sm:gap-3">
+            <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center text-base sm:text-lg font-black shrink-0">
                 💰
             </div>
             <div class="min-w-0 flex-1">
@@ -101,8 +101,8 @@
         </div>
 
         <!-- Sabit & Değişken Giderler -->
-        <div class="bg-white p-3 sm:p-4 rounded-2xl border border-gray-200/80 shadow-2xs flex items-center gap-2.5 sm:gap-3">
-            <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center text-base sm:text-lg font-black shrink-0">
+        <div class="bg-white p-3.5 sm:p-4 rounded-xl border border-slate-200/80 shadow-2xs flex items-center gap-2.5 sm:gap-3">
+            <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-rose-50 text-rose-600 flex items-center justify-center text-base sm:text-lg font-black shrink-0">
                 💸
             </div>
             <div class="min-w-0 flex-1">
@@ -112,8 +112,8 @@
         </div>
 
         <!-- Borçlara Ayrılabilir Net Bütçe -->
-        <div class="bg-white p-3 sm:p-4 rounded-2xl border border-gray-200/80 shadow-2xs flex items-center gap-2.5 sm:gap-3">
-            <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl {{ $netRemaining < 0 ? 'bg-red-50 text-red-600' : 'bg-indigo-50 text-indigo-600' }} flex items-center justify-center text-base sm:text-lg font-black shrink-0">
+        <div class="bg-white p-3.5 sm:p-4 rounded-xl border border-slate-200/80 shadow-2xs flex items-center gap-2.5 sm:gap-3">
+            <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-lg {{ $netRemaining < 0 ? 'bg-red-50 text-red-600' : 'bg-indigo-50 text-indigo-600' }} flex items-center justify-center text-base sm:text-lg font-black shrink-0">
                 ⚡
             </div>
             <div class="min-w-0 flex-1">
@@ -125,8 +125,8 @@
         </div>
 
         <!-- Tasarruf Oranı -->
-        <div class="bg-white p-3 sm:p-4 rounded-2xl border border-gray-200/80 shadow-2xs flex items-center gap-2.5 sm:gap-3">
-            <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-base sm:text-lg font-black shrink-0">
+        <div class="bg-white p-3.5 sm:p-4 rounded-xl border border-slate-200/80 shadow-2xs flex items-center gap-2.5 sm:gap-3">
+            <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center text-base sm:text-lg font-black shrink-0">
                 📈
             </div>
             <div class="min-w-0 flex-1">
@@ -136,40 +136,40 @@
         </div>
     </div>
 
-    <!-- 3. KAPSAMLI ÜST FİLTRE & ARAMA PANELİ -->
-    <div class="bg-white rounded-2xl border border-gray-200/90 shadow-sm p-4 sm:p-5 space-y-4">
+    <!-- 3. KAPSAMLI ÜST FİLTRE & ARAMA PANELİ (Segmented Control & Linear Inputs) -->
+    <div class="bg-white rounded-xl border border-slate-200 shadow-2xs p-3.5 sm:p-4 space-y-3">
         <!-- Üst Satır: Sekmeler + Arama -->
-        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-3 pb-3 border-b border-gray-100">
-            <!-- Tür Sekmeleri (Mobilde Yatay Kaydırılabilir) -->
-            <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-1">
-                <button wire:click="$set('activeTab', 'all')" class="px-3 py-1.5 text-xs font-bold rounded-xl transition-all whitespace-nowrap shrink-0 {{ $activeTab === 'all' ? 'bg-indigo-600 text-white shadow-xs' : 'text-gray-600 hover:bg-gray-100' }}">
-                    Tümü ({{ $stream->count() }})
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-3 pb-3 border-b border-slate-100">
+            <!-- Tür Sekmeleri (Segmented Bar) -->
+            <div class="inline-flex p-1 bg-slate-100 rounded-lg border border-slate-200/80 overflow-x-auto no-scrollbar">
+                <button wire:click="$set('activeTab', 'all')" class="px-3 py-1.5 text-xs font-bold rounded-md transition-all whitespace-nowrap shrink-0 {{ $activeTab === 'all' ? 'bg-white text-slate-900 shadow-2xs border border-slate-200/60' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/40' }}">
+                    Tümü <span class="ml-1 text-[10px] font-mono px-1.5 py-0.5 rounded bg-slate-200/70 text-slate-700">({{ $stream->count() }})</span>
                 </button>
-                <button wire:click="$set('activeTab', 'expected')" class="px-3 py-1.5 text-xs font-bold rounded-xl transition-all whitespace-nowrap shrink-0 {{ $activeTab === 'expected' ? 'bg-indigo-600 text-white shadow-xs' : 'text-gray-600 hover:bg-gray-100' }}">
-                    🗓️ Beklenen ({{ $expectedIncomes->count() }})
+                <button wire:click="$set('activeTab', 'expected')" class="px-3 py-1.5 text-xs font-bold rounded-md transition-all whitespace-nowrap shrink-0 {{ $activeTab === 'expected' ? 'bg-white text-slate-900 shadow-2xs border border-slate-200/60' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/40' }}">
+                    🗓️ Beklenen <span class="ml-1 text-[10px] font-mono px-1.5 py-0.5 rounded bg-slate-200/70 text-slate-700">({{ $expectedIncomes->count() }})</span>
                 </button>
-                <button wire:click="$set('activeTab', 'income')" class="px-3 py-1.5 text-xs font-bold rounded-xl transition-all whitespace-nowrap shrink-0 {{ $activeTab === 'income' ? 'bg-emerald-600 text-white shadow-xs' : 'text-gray-600 hover:bg-gray-100' }}">
+                <button wire:click="$set('activeTab', 'income')" class="px-3 py-1.5 text-xs font-bold rounded-md transition-all whitespace-nowrap shrink-0 {{ $activeTab === 'income' ? 'bg-white text-emerald-700 shadow-2xs border border-slate-200/60' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/40' }}">
                     🟢 Gelirler
                 </button>
-                <button wire:click="$set('activeTab', 'expense')" class="px-3 py-1.5 text-xs font-bold rounded-xl transition-all whitespace-nowrap shrink-0 {{ $activeTab === 'expense' ? 'bg-rose-600 text-white shadow-xs' : 'text-gray-600 hover:bg-gray-100' }}">
+                <button wire:click="$set('activeTab', 'expense')" class="px-3 py-1.5 text-xs font-bold rounded-md transition-all whitespace-nowrap shrink-0 {{ $activeTab === 'expense' ? 'bg-white text-rose-700 shadow-2xs border border-slate-200/60' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/40' }}">
                     🔴 Giderler
                 </button>
-                <button wire:click="$set('activeTab', 'recurring')" class="px-3 py-1.5 text-xs font-bold rounded-xl transition-all whitespace-nowrap shrink-0 {{ $activeTab === 'recurring' ? 'bg-indigo-600 text-white shadow-xs' : 'text-gray-600 hover:bg-gray-100' }}">
+                <button wire:click="$set('activeTab', 'recurring')" class="px-3 py-1.5 text-xs font-bold rounded-md transition-all whitespace-nowrap shrink-0 {{ $activeTab === 'recurring' ? 'bg-white text-indigo-700 shadow-2xs border border-slate-200/60' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/40' }}">
                     🔄 Sabit & Tekrarlayan
                 </button>
             </div>
 
             <!-- Canlı Arama Inputu -->
             <div class="relative w-full lg:w-72">
-                <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400 text-xs">
+                <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400 text-xs">
                     🔍
                 </span>
                 <input type="text" 
                        wire:model.live.debounce.300ms="search" 
                        placeholder="Gelir, gider veya kategori ara..." 
-                       class="w-full pl-9 pr-8 py-1.5 bg-gray-50 border border-gray-200 rounded-xl text-xs sm:text-sm font-medium focus:bg-white focus:ring-indigo-500 focus:border-indigo-500 transition-all">
+                       class="w-full pl-9 pr-8 py-1.5 bg-slate-50 border border-slate-300 rounded-lg text-xs sm:text-sm font-medium focus:bg-white focus:ring-1 focus:ring-indigo-600 focus:border-indigo-600 transition-all">
                 @if ($search)
-                    <button wire:click="$set('search', '')" class="absolute inset-y-0 right-0 pr-2.5 flex items-center text-gray-400 hover:text-gray-600 text-xs font-bold">
+                    <button wire:click="$set('search', '')" class="absolute inset-y-0 right-0 pr-2.5 flex items-center text-slate-400 hover:text-slate-600 text-xs font-bold cursor-pointer">
                         ✕
                     </button>
                 @endif
@@ -181,7 +181,7 @@
             <!-- 1. Kategori Seçimi -->
             <div>
                 <label class="block font-bold text-gray-600 mb-1 text-[11px]">📁 Kategori Filtresi</label>
-                <select wire:model.live="selected_category_id" class="w-full rounded-xl border-gray-200 bg-gray-50/80 py-1.5 text-xs font-medium focus:bg-white focus:ring-indigo-500 focus:border-indigo-500">
+                <select wire:model.live="selected_category_id" class="w-full rounded-lg border-slate-300 bg-slate-50 py-1.5 text-xs font-medium focus:bg-white focus:ring-1 focus:ring-indigo-600 focus:border-indigo-600">
                     <option value="">Tüm Kategoriler</option>
                     @foreach ($categories as $c)
                         <option value="{{ $c->id }}">{{ $c->name }}</option>
@@ -192,7 +192,7 @@
             <!-- 2. Sıralama -->
             <div>
                 <label class="block font-bold text-gray-600 mb-1 text-[11px]">🔄 Sıralama Algoritması</label>
-                <select wire:model.live="sortBy" class="w-full rounded-xl border-gray-200 bg-gray-50/80 py-1.5 text-xs font-medium focus:bg-white focus:ring-indigo-500 focus:border-indigo-500">
+                <select wire:model.live="sortBy" class="w-full rounded-lg border-slate-300 bg-slate-50 py-1.5 text-xs font-medium focus:bg-white focus:ring-1 focus:ring-indigo-600 focus:border-indigo-600">
                     <option value="date_desc">📅 Tarihe Göre (En Yeni - İlk)</option>
                     <option value="date_asc">📅 Tarihe Göre (En Eski)</option>
                     <option value="amount_desc">💰 En Yüksek Tutar</option>
@@ -204,12 +204,12 @@
             <!-- 3. Tarih Aralığı -->
             <div>
                 <label class="block font-bold text-gray-600 mb-1 text-[11px]">📅 Başlangıç Tarihi</label>
-                <input type="date" wire:model.live="date_from" class="w-full rounded-xl border-gray-200 bg-gray-50/80 py-1.5 text-xs font-medium focus:bg-white focus:ring-indigo-500 focus:border-indigo-500">
+                <input type="date" wire:model.live="date_from" class="w-full rounded-lg border-slate-300 bg-slate-50 py-1.5 text-xs font-medium focus:bg-white focus:ring-1 focus:ring-indigo-600 focus:border-indigo-600">
             </div>
 
             <div>
                 <label class="block font-bold text-gray-600 mb-1 text-[11px]">📅 Bitiş Tarihi</label>
-                <input type="date" wire:model.live="date_to" class="w-full rounded-xl border-gray-200 bg-gray-50/80 py-1.5 text-xs font-medium focus:bg-white focus:ring-indigo-500 focus:border-indigo-500">
+                <input type="date" wire:model.live="date_to" class="w-full rounded-lg border-slate-300 bg-slate-50 py-1.5 text-xs font-medium focus:bg-white focus:ring-1 focus:ring-indigo-600 focus:border-indigo-600">
             </div>
         </div>
 
