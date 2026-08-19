@@ -152,7 +152,7 @@
     <!-- 4. Bildirim Listesi -->
     <div class="space-y-3">
         @forelse ($notifications as $n)
-            <div class="bg-white rounded-xl border {{ is_null($n->read_at) ? 'border-indigo-300 bg-indigo-50/20 border-l-4 border-l-indigo-600 shadow-xs' : 'border-slate-200 shadow-2xs' }} p-4 sm:p-5 transition-all flex flex-col sm:flex-row sm:items-start justify-between gap-4">
+            <div wire:key="notif-card-{{ $n->id }}" class="bg-white rounded-xl border {{ is_null($n->read_at) ? 'border-indigo-300 bg-indigo-50/20 border-l-4 border-l-indigo-600 shadow-xs' : 'border-slate-200 shadow-2xs' }} p-4 sm:p-5 transition-all flex flex-col sm:flex-row sm:items-start justify-between gap-4">
                 <div class="flex items-start gap-3.5 min-w-0 flex-1">
                     <!-- Tip / Severity İkonu -->
                     <div class="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 text-lg font-bold

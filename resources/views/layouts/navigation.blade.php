@@ -53,7 +53,7 @@
             <!-- Right Side: User Profile Dropdown & Notifications (Desktop) -->
             <div class="hidden md:flex items-center gap-2.5 shrink-0">
                 <!-- Bildirim Zili Dropdown -->
-                @livewire('notifications.dropdown')
+                @livewire('notifications.dropdown', key('notifications-dropdown-desktop'))
 
                 <!-- User Profile & Role Panels Menu -->
                 <x-dropdown align="right" width="72">
@@ -166,7 +166,7 @@
 
             <!-- Mobile Hamburger Button & Notifications -->
             <div class="flex items-center gap-1.5 md:hidden">
-                @livewire('notifications.dropdown')
+                @livewire('notifications.dropdown', key('notifications-dropdown-mobile'))
 
                 <button @click="open = true" class="inline-flex items-center justify-center p-2 rounded-lg text-gray-700 bg-gray-50 hover:bg-gray-100 border border-gray-200 focus:outline-none transition-colors shadow-xs cursor-pointer" aria-label="Menüyü Aç">
                     <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
