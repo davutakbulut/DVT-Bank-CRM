@@ -294,13 +294,20 @@
                         <div class="grid grid-cols-2 gap-2 pt-1.5 border-t border-gray-200/60 text-[11px]">
                             <div>
                                 <span class="text-gray-400 block font-semibold">Aylık Faiz:</span>
-                                <span class="font-black text-gray-800">%{{ number_format($debt->interest_rate, 2) }}</span>
+                                @if ($debt->interest_rate > 0)
+                                    <span class="font-black text-gray-800">%{{ number_format($debt->interest_rate, 2) }}</span>
+                                @else
+                                    <span class="inline-block px-1.5 py-0.5 rounded text-[10px] font-black bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                        Faizsiz (%0)
+                                    </span>
+                                @endif
                             </div>
                             <div class="text-right">
                                 <span class="text-gray-400 block font-semibold">Aylık Taksit:</span>
                                 <span class="font-black text-indigo-700">{{ $debt->installment_amount ? '₺' . number_format($debt->installment_amount, 2, ',', '.') : '-' }}</span>
                             </div>
                         </div>
+
                     </div>
 
 
@@ -402,9 +409,15 @@
                                          <span class="text-[10px] text-gray-500 font-bold block">Toplam: ₺{{ number_format($debt->principal, 2, ',', '.') }}</span>
                                      @endif
                                  </td>
-                                <td class="px-6 py-4 font-bold text-gray-800">
-                                    %{{ number_format($debt->interest_rate, 2) }}
-                                </td>
+                                <td class="px-6 py-4">
+                                     @if ($debt->interest_rate > 0)
+                                         <span class="font-bold text-gray-800">%{{ number_format($debt->interest_rate, 2) }}</span>
+                                     @else
+                                         <span class="inline-block px-2 py-0.5 rounded text-xs font-black bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                             Faizsiz (%0)
+                                         </span>
+                                     @endif
+                                 </td>
                                 <td class="px-6 py-4 text-indigo-700 font-bold">
                                     {{ $debt->installment_amount ? '₺' . number_format($debt->installment_amount, 2, ',', '.') : '-' }}
                                 </td>
