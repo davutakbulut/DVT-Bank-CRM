@@ -55,8 +55,13 @@ class Index extends Component
         $events = collect();
 
         // 1. KREDİ KARTLARI (due_day ile aylık son ödeme günü)
-        $cards = CreditCard::where('user_id', $userId)->with('bank')->get();
-        $trackedCardIds = [];
+        $cards = CreditCard::where('user_id', $userId)
+            ->where('status', 'active')
+            ->where('current_debt', '>', 0)
+            ->with('bank')
+            ->get();
+        $trackedCardIds = CreditCard::where('user_id', $userId)->pluck('id')->toArray();
+
 
         foreach ($cards as $card) {
             $day = $card->due_day ? min($daysInMonth, (int)$card->due_day) : 15;
