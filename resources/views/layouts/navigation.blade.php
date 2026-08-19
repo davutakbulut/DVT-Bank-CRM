@@ -204,9 +204,9 @@
              class="fixed inset-y-0 right-0 w-full max-w-xs bg-white border-l border-gray-200 shadow-2xl flex flex-col justify-between overflow-hidden z-50 text-gray-900">
             
             <!-- Drawer Header & Navigation (Scrollable) -->
-            <div class="flex-1 overflow-y-auto px-5 py-6 space-y-5">
+            <div class="flex-1 overflow-y-auto px-5 py-5 space-y-4">
                 <!-- Top Brand & Close Button Bar -->
-                <div class="flex items-center justify-between border-b border-gray-100 pb-4">
+                <div class="flex items-center justify-between border-b border-gray-100 pb-3.5">
                     <a href="{{ route('dashboard') }}" class="flex items-center gap-2">
                         <x-application-logo class="h-7 w-auto text-indigo-700" />
                     </a>
@@ -217,65 +217,9 @@
                     </button>
                 </div>
 
-                <!-- Return to Public Home Action (Mobile) -->
-                <a href="{{ route('home') }}" class="flex items-center justify-between px-3.5 py-2.5 rounded-lg text-xs font-bold text-indigo-700 bg-indigo-50 border border-indigo-200 hover:bg-indigo-100 transition-colors">
-                    <span class="flex items-center gap-2">
-                        <span>🌐</span>
-                        <span>DVT Bank Ana Sayfası</span>
-                    </span>
-                    <span>→</span>
-                </a>
-
-                <!-- Hızlı İşlem Ekle Butonu (Mobile) -->
-                <button @click="open = false; $dispatch('openQuickAction')" class="w-full flex items-center justify-between px-3.5 py-2.5 rounded-lg text-xs font-black text-white bg-gradient-to-r from-indigo-600 to-sky-600 hover:from-indigo-700 shadow-sm transition-all">
-                    <span class="flex items-center gap-2">
-                        <span>⚡</span>
-                        <span>Hızlı İşlem / AI Ekle</span>
-                    </span>
-                    <span>+</span>
-                </button>
-
-                <!-- User Profile Card (Light Gray Card) -->
-                <div class="p-3 rounded-lg bg-gray-50 border border-gray-200 flex items-center gap-3">
-                    <div class="w-9 h-9 rounded-md bg-indigo-600 text-white flex items-center justify-center font-black text-xs shadow-xs">
-                        {{ mb_substr(Auth::user()->name, 0, 1) }}
-                    </div>
-                    <div class="min-w-0 flex-1">
-                        <p class="font-bold text-xs text-gray-900 truncate">{{ Auth::user()->name }}</p>
-                        <p class="text-[10px] text-gray-500 truncate">{{ Auth::user()->email }}</p>
-                    </div>
-                </div>
-
-                <!-- Management Panels (If Super Admin / Admin) -->
-                @if (Auth::user()->hasRole('super_admin') || Auth::user()->hasRole('admin'))
-                    <div class="space-y-1.5">
-                        <span class="text-[10px] font-black uppercase tracking-wider text-indigo-600 px-1 block">Yetkili Panelleri</span>
-                        <div class="grid grid-cols-1 gap-1.5">
-                            @if (Auth::user()->hasRole('super_admin'))
-                                <a href="/super" target="_blank" class="flex items-center justify-between p-2.5 rounded-lg bg-red-50 border border-red-200 text-red-700 font-bold text-xs hover:bg-red-100 transition-colors">
-                                    <span class="flex items-center gap-2">
-                                        <span>⚙️</span>
-                                        <span>Süper Admin Paneli</span>
-                                    </span>
-                                    <span class="text-[9px] px-1.5 py-0.5 rounded bg-red-200 text-red-800 font-black">SUPER</span>
-                                </a>
-                            @endif
-                            @if (Auth::user()->hasRole('admin'))
-                                <a href="/admin" target="_blank" class="flex items-center justify-between p-2.5 rounded-lg bg-indigo-50 border border-indigo-200 text-indigo-700 font-bold text-xs hover:bg-indigo-100 transition-colors">
-                                    <span class="flex items-center gap-2">
-                                        <span>🛡️</span>
-                                        <span>Yönetim Paneli</span>
-                                    </span>
-                                    <span class="text-[9px] px-1.5 py-0.5 rounded bg-indigo-200 text-indigo-800 font-black">ADMIN</span>
-                                </a>
-                            @endif
-                        </div>
-                    </div>
-                @endif
-
                 <!-- Core Navigation Links (Clean Light Theme) -->
                 <div class="space-y-1">
-                    <span class="text-[10px] font-black uppercase tracking-wider text-gray-400 px-1 block mb-1.5">Finansal Menü</span>
+                    <span class="text-[10px] font-black uppercase tracking-wider text-gray-400 px-1 block mb-1">Finansal Menü</span>
                     
                     <a href="{{ route('dashboard') }}" class="flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-bold transition-all {{ request()->routeIs('dashboard') ? 'bg-indigo-50 text-indigo-700 border-l-4 border-indigo-600' : 'text-gray-700 hover:bg-gray-50 hover:text-indigo-600' }}">
                         <span>📊</span>
@@ -331,22 +275,70 @@
                         <span>Bankalarım</span>
                     </a>
                 </div>
+
+                <!-- Yetkili Panelleri & Alt Bilgiler -->
+                @if (Auth::user()->hasRole('super_admin') || Auth::user()->hasRole('admin'))
+                    <div class="space-y-1.5 pt-3 border-t border-gray-100">
+                        <span class="text-[10px] font-black uppercase tracking-wider text-indigo-600 px-1 block">Yetkili Panelleri</span>
+                        <div class="grid grid-cols-1 gap-1.5">
+                            @if (Auth::user()->hasRole('super_admin'))
+                                <a href="/super" target="_blank" class="flex items-center justify-between p-2.5 rounded-lg bg-red-50 border border-red-200 text-red-700 font-bold text-xs hover:bg-red-100 transition-colors">
+                                    <span class="flex items-center gap-2">
+                                        <span>⚙️</span>
+                                        <span>Süper Admin Paneli</span>
+                                    </span>
+                                    <span class="text-[9px] px-1.5 py-0.5 rounded bg-red-200 text-red-800 font-black">SUPER</span>
+                                </a>
+                            @endif
+                            @if (Auth::user()->hasRole('admin'))
+                                <a href="/admin" target="_blank" class="flex items-center justify-between p-2.5 rounded-lg bg-indigo-50 border border-indigo-200 text-indigo-700 font-bold text-xs hover:bg-indigo-100 transition-colors">
+                                    <span class="flex items-center gap-2">
+                                        <span>🛡️</span>
+                                        <span>Yönetim Paneli</span>
+                                    </span>
+                                    <span class="text-[9px] px-1.5 py-0.5 rounded bg-indigo-200 text-indigo-800 font-black">ADMIN</span>
+                                </a>
+                            @endif
+                        </div>
+                    </div>
+                @endif
             </div>
 
-            <!-- Drawer Bottom Actions (Pinned Light Theme) -->
-            <div class="p-4 border-t border-gray-100 bg-gray-50/80 space-y-1.5">
-                <a href="{{ route('profile.edit') }}" class="flex items-center gap-3 w-full px-3 py-2 rounded-lg text-xs font-bold text-gray-700 hover:bg-white hover:text-indigo-600 border border-transparent hover:border-gray-200 transition-all">
-                    <span>👤</span>
-                    <span>Profil & Güvenlik Ayarları</span>
-                </a>
+            <!-- Drawer Bottom Actions (User Profile & Account Settings Pinned to Bottom) -->
+            <div class="p-4 border-t border-gray-100 bg-gray-50 space-y-2">
+                <!-- User Profile Card -->
+                <div class="p-2.5 rounded-xl bg-white border border-gray-200 shadow-2xs flex items-center gap-2.5">
+                    <div class="w-8 h-8 rounded-lg bg-indigo-600 text-white flex items-center justify-center font-black text-xs shadow-xs shrink-0">
+                        {{ mb_substr(Auth::user()->name, 0, 1) }}
+                    </div>
+                    <div class="min-w-0 flex-1">
+                        <p class="font-bold text-xs text-gray-900 truncate">{{ Auth::user()->name }}</p>
+                        <p class="text-[10px] text-gray-500 truncate">{{ Auth::user()->email }}</p>
+                    </div>
+                </div>
 
-                <form method="POST" action="{{ route('logout') }}" class="w-full">
-                    @csrf
-                    <button type="submit" class="flex items-center gap-3 w-full px-3 py-2 rounded-lg text-xs font-bold text-red-600 hover:bg-red-50 transition-colors text-left">
-                        <span>🚪</span>
-                        <span>Güvenli Çıkış Yap</span>
-                    </button>
-                </form>
+                <div class="space-y-1">
+                    <a href="{{ route('home') }}" class="flex items-center justify-between px-3 py-1.5 rounded-lg text-xs font-bold text-indigo-700 bg-indigo-50/70 border border-indigo-100 hover:bg-indigo-100 transition-colors">
+                        <span class="flex items-center gap-2">
+                            <span>🌐</span>
+                            <span>DVT Bank Ana Sayfası</span>
+                        </span>
+                        <span>→</span>
+                    </a>
+
+                    <a href="{{ route('profile.edit') }}" class="flex items-center gap-2.5 w-full px-3 py-1.5 rounded-lg text-xs font-bold text-gray-700 hover:bg-white hover:text-indigo-600 transition-all">
+                        <span>👤</span>
+                        <span>Profil & Güvenlik Ayarları</span>
+                    </a>
+
+                    <form method="POST" action="{{ route('logout') }}" class="w-full">
+                        @csrf
+                        <button type="submit" class="flex items-center gap-2.5 w-full px-3 py-1.5 rounded-lg text-xs font-bold text-red-600 hover:bg-red-50 transition-colors text-left cursor-pointer">
+                            <span>🚪</span>
+                            <span>Güvenli Çıkış Yap</span>
+                        </button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
