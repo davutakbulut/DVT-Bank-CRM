@@ -17,6 +17,58 @@ use Illuminate\Support\Facades\Log;
 class NaturalLanguageTransactionParser
 {
     /**
+     * Çoklu veya tekli serbest Türkçe metni analiz edip bir veya birden fazla işlem listesi döner.
+     */
+    public function parseAll(string $text, ?User $user = null): array
+    {
+        $cleanText = trim($text);
+        if (empty($cleanText)) {
+            return [];
+        }
+
+        $user = $user ?? Auth::user();
+
+        // 1. Temel ayrıştırıcılar (noktalama, satır başı, bağlaçlar)
+        $rawSegments = preg_split('/(?:,\s*|\.\s*|\n|;\s*|\bve\b|\bayrıca\b|\bbir de\b|\bsonra da\b|\bhem de\b)/ui', $cleanText);
+        $finalSegments = [];
+
+        foreach ($rawSegments as $chunk) {
+            $chunk = trim($chunk);
+            if (empty($chunk)) continue;
+
+            // Tek parçada birden fazla tutar ifadesi varsa akıllıca alt parçalara böl
+            if (preg_match_all('/(?:[0-9]+(?:\.[0-9]{3})*(?:,[0-9]{1,2})?\s*(?:tl|₺|lira|bin|k)|(?:₺|tl)\s*[0-9]+)/ui', $chunk, $m) && count($m[0]) > 1) {
+                $subparts = preg_split('/(?<=[0-9₺tlira]\s{0,8}(?:yattı|yatti|aldım|aldim|ödedim|odedim|çektim|cektim|harcadım|harcadim|geldi|gecti|yansıdı|yansidi))\s+/ui', $chunk);
+                foreach ($subparts as $sp) {
+                    if (!empty(trim($sp))) $finalSegments[] = trim($sp);
+                }
+            } else {
+                $finalSegments[] = $chunk;
+            }
+        }
+
+        $results = [];
+        foreach ($finalSegments as $seg) {
+            $seg = trim($seg);
+            if (empty($seg) || mb_strlen($seg) < 3) continue;
+            $parsed = $this->parse($seg, $user);
+            if (!empty($parsed['amount']) && $parsed['amount'] > 0) {
+                $results[] = $parsed;
+            }
+        }
+
+        // Eğer parçalanamadıysa tekil olarak parse et
+        if (empty($results)) {
+            $single = $this->parse($cleanText, $user);
+            if (!empty($single['amount']) && $single['amount'] > 0) {
+                $results[] = $single;
+            }
+        }
+
+        return $results;
+    }
+
+    /**
      * Serbest Türkçe metni analiz edip yapısal finansal işlem verisine dönüştürür.
      */
     public function parse(string $text, ?User $user = null): array
@@ -243,10 +295,12 @@ class NaturalLanguageTransactionParser
             $result['title'] = ($result['bank_name'] ? $result['bank_name'] . ' - ' : '') . ($result['income_type'] === 'salary' ? 'Maaş Geliri' : ($result['income_type'] === 'freelance' ? 'Prim / Hakediş Geliri' : 'Gelir Girişi'));
         } else {
             // Harcama türü analizi
-            if (preg_match('/(sigara|bakkal|market|migros|bim|a101|şok|carrefour|gıda|manav|kasap|fırın|ekmek|tekel)/u', $lower)) {
+            if (preg_match('/(sigara|bakkal|market|migros|bim|a101|şok|carrefour|gıda|manav|kasap|fırın|ekmek|tekel|su aldım|su aldim|meyve|sebze|içecek|icecek)/u', $lower)) {
                 $cat = $categories->first(fn($c) => str_contains(mb_strtolower($c->name), 'market') || str_contains(mb_strtolower($c->name), 'gıda'));
                 if (str_contains($lower, 'sigara')) {
                     $result['title'] = 'Bakkal / Tekel (Sigara Alışverişi)';
+                } elseif (str_contains($lower, 'su aldım') || str_contains($lower, 'su aldim') || preg_match('/\bsu\b/u', $lower)) {
+                    $result['title'] = 'Market / Büfe (Su & İçecek Alışverişi)';
                 } elseif (str_contains($lower, 'bakkal')) {
                     $result['title'] = 'Bakkal Harcaması';
                 } else {
@@ -261,7 +315,7 @@ class NaturalLanguageTransactionParser
             } elseif (preg_match('/(kira|ev sahibi|aidat|apartman|bina)/u', $lower)) {
                 $cat = $categories->first(fn($c) => str_contains(mb_strtolower($c->name), 'kira') || str_contains(mb_strtolower($c->name), 'konut'));
                 $result['title'] = 'Kira & Konut Ödemesi';
-            } elseif (preg_match('/(fatura|elektrik|su|doğalgaz|internet|turkcell|vodafone|türk telekom)/u', $lower)) {
+            } elseif (preg_match('/(fatura|elektrik|su faturası|su faturasi|doğalgaz|dogalgaz|internet|turkcell|vodafone|türk telekom|turk telekom)/u', $lower)) {
                 $cat = $categories->first(fn($c) => str_contains(mb_strtolower($c->name), 'fatura'));
                 $result['title'] = 'Fatura Ödemesi';
             } elseif (preg_match('/(trendyol|hepsiburada|amazon|giyim|kıyafet|ayakkabı|zara|lcw|mango|boyner|beymen)/u', $lower)) {

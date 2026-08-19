@@ -21,6 +21,7 @@ class QuickActionModal extends Component
     // AI Smart Input
     public string $aiInputText = '';
     public ?array $parsedData = null;
+    public array $parsedTransactions = [];
 
     // Hızlı Gider / Gelir Formu
     public string $cashflowType = 'expense'; // expense, income
@@ -68,15 +69,17 @@ class QuickActionModal extends Component
     public function close(): void
     {
         $this->isOpen = false;
-        $this->reset(['aiInputText', 'parsedData', 'bulkText', 'bulkParsedList']);
+        $this->reset(['aiInputText', 'parsedData', 'parsedTransactions', 'bulkText', 'bulkParsedList']);
     }
 
     public function updatedAiInputText(string $value): void
     {
         if (mb_strlen(trim($value)) >= 3) {
             $parser = new NaturalLanguageTransactionParser();
-            $this->parsedData = $parser->parse($value, Auth::user());
+            $this->parsedTransactions = $parser->parseAll($value, Auth::user());
+            $this->parsedData = $this->parsedTransactions[0] ?? null;
         } else {
+            $this->parsedTransactions = [];
             $this->parsedData = null;
         }
     }
@@ -85,22 +88,64 @@ class QuickActionModal extends Component
     {
         if (mb_strlen(trim($this->aiInputText)) >= 3) {
             $parser = new NaturalLanguageTransactionParser();
-            $this->parsedData = $parser->parse($this->aiInputText, Auth::user());
+            $this->parsedTransactions = $parser->parseAll($this->aiInputText, Auth::user());
+            $this->parsedData = $this->parsedTransactions[0] ?? null;
         }
+    }
+
+    public function saveSingleTransaction(int $index): void
+    {
+        if (!isset($this->parsedTransactions[$index])) {
+            return;
+        }
+
+        $p = $this->parsedTransactions[$index];
+        $this->persistTransactionItem($p);
+
+        unset($this->parsedTransactions[$index]);
+        $this->parsedTransactions = array_values($this->parsedTransactions);
+        $this->parsedData = $this->parsedTransactions[0] ?? null;
+
+        if (empty($this->parsedTransactions)) {
+            $this->close();
+        }
+        $this->dispatch('refreshTransactions');
+    }
+
+    public function saveAllTransactions(): void
+    {
+        if (empty($this->parsedTransactions)) {
+            if ($this->parsedData) {
+                $this->persistTransactionItem($this->parsedData);
+            } else {
+                session()->flash('error', 'Lütfen geçerli bir tutar içeren metin girin.');
+                return;
+            }
+        } else {
+            $count = 0;
+            foreach ($this->parsedTransactions as $p) {
+                if (!empty($p['amount']) && $p['amount'] > 0) {
+                    $this->persistTransactionItem($p);
+                    $count++;
+                }
+            }
+            session()->flash('success', "✨ Toplam {$count} adet işlem başarıyla veritabanına kaydedildi!");
+        }
+
+        $this->close();
+        $this->dispatch('refreshTransactions');
     }
 
     public function saveParsedTransaction(): void
     {
-        if (!$this->parsedData || $this->parsedData['amount'] <= 0) {
-            session()->flash('error', 'Lütfen geçerli bir tutar içeren metin girin.');
-            return;
-        }
+        $this->saveAllTransactions();
+    }
 
+    protected function persistTransactionItem(array $p): void
+    {
         $userId = Auth::id();
-        $p = $this->parsedData;
 
         if ($p['type'] === 'income') {
-            // Kategori kontrolü
             $catId = $p['category_id'];
             if (!$catId) {
                 $cat = Category::where('user_id', $userId)->where('type', 'income')->first()
@@ -122,8 +167,6 @@ class QuickActionModal extends Component
                 'received_day' => $day,
                 'is_recurring' => (bool) ($p['is_recurring'] ?? false),
             ]);
-
-            session()->flash('success', '🟢 Gelir kaydı (₺' . number_format($p['amount'], 2, ',', '.') . ') başarıyla veritabanına eklendi!');
         } elseif ($p['type'] === 'card') {
             CreditCard::create([
                 'user_id' => $userId,
@@ -131,11 +174,10 @@ class QuickActionModal extends Component
                 'name' => $p['title'] ?: 'Kredi Kartı',
                 'credit_limit' => $p['credit_limit'] ?: $p['amount'],
                 'current_debt' => 0.0,
-                'interest_rate' => $p['interest_rate'],
+                'interest_rate' => $p['interest_rate'] ?? 4.25,
                 'due_day' => 15,
                 'status' => 'active',
             ]);
-            session()->flash('success', '💳 Kredi kartı başarıyla tanımlandı!');
         } elseif ($p['type'] === 'debt') {
             Debt::create([
                 'user_id' => $userId,
@@ -144,12 +186,11 @@ class QuickActionModal extends Component
                 'title' => $p['title'] ?: 'Kredi Borcu',
                 'principal' => $p['amount'],
                 'remaining' => $p['amount'],
-                'interest_rate' => $p['interest_rate'],
+                'interest_rate' => $p['interest_rate'] ?? 4.25,
                 'installment_amount' => $p['installment_amount'] ?: round($p['amount'] / 12, 2),
-                'next_due_date' => Carbon::parse($p['date'])->addMonth()->format('Y-m-d'),
+                'next_due_date' => Carbon::parse($p['date'] ?? Carbon::today())->addMonth()->format('Y-m-d'),
                 'status' => 'active',
             ]);
-            session()->flash('success', '🏦 Kredi borcu kaydı başarıyla eklendi!');
         } else {
             // Expense
             $catId = $p['category_id'];
@@ -169,12 +210,7 @@ class QuickActionModal extends Component
                 'payment_method' => $p['payment_method'] ?? 'cash',
                 'is_recurring' => (bool) ($p['is_recurring'] ?? false),
             ]);
-
-            session()->flash('success', '🔴 Gider kaydı (₺' . number_format($p['amount'], 2, ',', '.') . ' - ' . ($p['payment_method'] === 'credit_card' ? 'Kredi Kartı' : 'Nakit') . ') başarıyla veritabanına eklendi!');
         }
-
-        $this->close();
-        $this->dispatch('refreshTransactions');
     }
 
     public function addQuickAmount(float $val): void

@@ -110,8 +110,64 @@
                                 </button>
                             </div>
 
-                            <!-- Canlı Ayrıştırma Önizleme Kartı -->
-                            @if ($parsedData && $parsedData['amount'] > 0)
+                            <!-- Canlı Ayrıştırma Önizleme Kartı / Listesi -->
+                            @if (!empty($parsedTransactions) && count($parsedTransactions) > 1)
+                                <div class="p-4 rounded-2xl bg-indigo-50/80 border border-indigo-100 space-y-3 animate-fade-in">
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-xs font-black text-indigo-900 flex items-center gap-1.5">
+                                            <span>✨</span>
+                                            <span>AI Tespit Edilen <strong>{{ count($parsedTransactions) }} Ayrı İşlem</strong> Bulundu:</span>
+                                        </span>
+                                        <span class="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-indigo-200 text-indigo-900">
+                                            ⚡ Çoklu Ayrıştırma
+                                        </span>
+                                    </div>
+
+                                    <div class="space-y-2">
+                                        @foreach ($parsedTransactions as $idx => $item)
+                                            <div class="p-3 bg-white rounded-xl border border-indigo-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs">
+                                                <div class="flex items-start sm:items-center gap-3">
+                                                    <span class="w-8 h-8 rounded-lg flex items-center justify-center text-base shrink-0 {{ $item['type'] === 'income' ? 'bg-emerald-100 text-emerald-700' : 'bg-red-100 text-red-700' }}">
+                                                        {{ $item['type'] === 'income' ? '💰' : '🛒' }}
+                                                    </span>
+                                                    <div>
+                                                        <div class="flex items-center gap-2 flex-wrap">
+                                                            <span class="text-xs font-black text-gray-900">{{ $item['title'] }}</span>
+                                                            <span class="px-2 py-0.2 rounded text-[10px] font-bold {{ $item['type'] === 'income' ? 'bg-emerald-50 text-emerald-700' : 'bg-red-50 text-red-700' }}">
+                                                                {{ $item['type'] === 'income' ? 'Gelir' : 'Gider' }}
+                                                            </span>
+                                                        </div>
+                                                        <div class="text-[11px] text-gray-500 flex items-center gap-2 mt-0.5">
+                                                            <span>🏷️ {{ $item['category_name'] ?: 'Genel' }}</span>
+                                                            @if ($item['bank_name'])
+                                                                <span>• 🏦 {{ $item['bank_name'] }}</span>
+                                                            @endif
+                                                            <span>• {{ ($item['payment_method'] ?? 'cash') === 'credit_card' ? '💳 Kart' : '💵 Nakit' }}</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="flex items-center justify-between sm:justify-end gap-3 shrink-0 pt-2 sm:pt-0 border-t sm:border-t-0 border-gray-100">
+                                                    <span class="text-sm font-black {{ $item['type'] === 'income' ? 'text-emerald-600' : 'text-gray-900' }}">
+                                                        {{ $item['type'] === 'income' ? '+' : '-' }}₺{{ number_format($item['amount'], 2, ',', '.') }}
+                                                    </span>
+                                                    <button type="button" wire:click="saveSingleTransaction({{ $idx }})" class="px-3 py-1.5 bg-gray-100 hover:bg-indigo-600 hover:text-white text-gray-700 font-bold text-xs rounded-lg transition-colors cursor-pointer">
+                                                        ✓ Kaydet
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                    </div>
+
+                                    <div class="pt-2 flex items-center justify-between">
+                                        <span class="text-[11px] text-gray-500">Tümünü tek hamlede veritabanına ekleyebilirsiniz</span>
+                                        <button type="button" wire:click="saveAllTransactions" class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white font-black text-xs rounded-xl shadow-md transition-all flex items-center gap-2 cursor-pointer">
+                                            <span>✓</span>
+                                            <span>Tümünü Birden Kaydet ({{ count($parsedTransactions) }} İşlem)</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            @elseif ($parsedData && $parsedData['amount'] > 0)
                                 <div class="p-4 rounded-2xl bg-indigo-50/70 border border-indigo-100 space-y-3 animate-fade-in">
                                     <div class="flex items-center justify-between">
                                         <span class="text-xs font-black text-indigo-900 flex items-center gap-1.5">
