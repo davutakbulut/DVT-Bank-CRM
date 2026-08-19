@@ -75,36 +75,38 @@
                     @if ($activeTab === 'ai')
                         <div class="space-y-4">
                             <div>
-                                <label class="block text-xs font-bold text-gray-700 mb-1.5">
-                                    Nasıl bir işlem yaptığınızı tek cümleyle yazın:
+                                <label class="block text-xs font-bold text-gray-700 mb-1.5 flex items-center justify-between">
+                                    <span>Nasıl bir işlem yaptığınızı tek cümleyle serbestçe yazın:</span>
+                                    <span class="text-[10px] font-bold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-md border border-indigo-100">🤖 NLP & AI Aktif</span>
                                 </label>
                                 <div class="relative">
-                                    <textarea wire:model.live.debounce.300ms="aiInputText" 
+                                    <textarea wire:model.live.debounce.250ms="aiInputText" 
+                                              wire:keydown.enter.prevent="saveParsedTransaction"
                                               rows="3" 
-                                              placeholder="Örn: Bugün Migros'tan 650 TL market alışverişi yaptım Garanti kartıyla..." 
+                                              placeholder="Örn: Enpara hesabıma 45.000 maaş yattı veya bakkaldan 2 paket sigara aldım 250₺..." 
                                               class="w-full rounded-2xl border-gray-300 text-sm font-medium focus:ring-indigo-500 focus:border-indigo-500 p-3.5 leading-relaxed shadow-xs"></textarea>
                                     @if ($aiInputText)
-                                        <button wire:click="$set('aiInputText', '')" class="absolute top-3 right-3 text-gray-400 hover:text-gray-600 text-xs font-black">
+                                        <button wire:click="$set('aiInputText', '')" class="absolute top-3 right-3 text-gray-400 hover:text-gray-600 text-xs font-black cursor-pointer">
                                             Temizle ✕
                                         </button>
                                     @endif
                                 </div>
                             </div>
 
-                            <!-- Örnek Şablon Cümleleri -->
+                            <!-- Örnek Şablon Cümleleri (Tıklanabilir) -->
                             <div class="flex items-center gap-1.5 flex-wrap text-[11px]">
-                                <span class="text-gray-400 font-semibold">Örnekler:</span>
-                                <button type="button" wire:click="$set('aiInputText', 'Bugün Migros 850 TL market harcaması Garanti kartı')" class="px-2.5 py-1 bg-gray-100 hover:bg-indigo-50 hover:text-indigo-600 rounded-lg text-gray-600 font-medium transition-colors">
+                                <span class="text-gray-400 font-semibold">Dene:</span>
+                                <button type="button" wire:click="$set('aiInputText', 'Enpara Bankası hesabıma 45.000 maaş yattı')" class="px-2.5 py-1 bg-gray-100 hover:bg-indigo-50 hover:text-indigo-600 rounded-lg text-gray-600 font-medium transition-colors cursor-pointer">
+                                    💰 Enpara 45.000 Maaş
+                                </button>
+                                <button type="button" wire:click="$set('aiInputText', 'bakkaldan 2 paket sigara aldım 250₺')" class="px-2.5 py-1 bg-gray-100 hover:bg-indigo-50 hover:text-indigo-600 rounded-lg text-gray-600 font-medium transition-colors cursor-pointer">
+                                    🚬 Bakkal Sigara 250₺
+                                </button>
+                                <button type="button" wire:click="$set('aiInputText', 'Migros\'tan 850 TL market alışverişi yaptım Garanti kartıyla')" class="px-2.5 py-1 bg-gray-100 hover:bg-indigo-50 hover:text-indigo-600 rounded-lg text-gray-600 font-medium transition-colors cursor-pointer">
                                     🛒 Migros 850 TL
                                 </button>
-                                <button type="button" wire:click="$set('aiInputText', 'Shell 1500 TL benzin yakıt harcaması Akbank')" class="px-2.5 py-1 bg-gray-100 hover:bg-indigo-50 hover:text-indigo-600 rounded-lg text-gray-600 font-medium transition-colors">
+                                <button type="button" wire:click="$set('aiInputText', 'Shell 1500 TL benzin yakıt harcaması Akbank')" class="px-2.5 py-1 bg-gray-100 hover:bg-indigo-50 hover:text-indigo-600 rounded-lg text-gray-600 font-medium transition-colors cursor-pointer">
                                     ⛽ Shell 1.500 TL
-                                </button>
-                                <button type="button" wire:click="$set('aiInputText', 'İş Bankası hesabıma 45.000 TL maaş yattı')" class="px-2.5 py-1 bg-gray-100 hover:bg-indigo-50 hover:text-indigo-600 rounded-lg text-gray-600 font-medium transition-colors">
-                                    💰 Maaş 45.000 TL
-                                </button>
-                                <button type="button" wire:click="$set('aiInputText', 'Ziraat Bankası 50000 TL ihtiyaç kredisi çektim %3.99 faiz')" class="px-2.5 py-1 bg-gray-100 hover:bg-indigo-50 hover:text-indigo-600 rounded-lg text-gray-600 font-medium transition-colors">
-                                    🏦 50.000 TL Kredi
                                 </button>
                             </div>
 
@@ -114,14 +116,14 @@
                                     <div class="flex items-center justify-between">
                                         <span class="text-xs font-black text-indigo-900 flex items-center gap-1.5">
                                             <span>✨</span>
-                                            <span>AI Tespit Edilen İşlem Detayı:</span>
+                                            <span>AI Tespit Edilen İşlem: <strong>{{ $parsedData['title'] }}</strong></span>
                                         </span>
                                         <span class="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider {{ $parsedData['type'] === 'income' ? 'bg-emerald-100 text-emerald-800' : ($parsedData['type'] === 'debt' ? 'bg-blue-100 text-blue-800' : ($parsedData['type'] === 'card' ? 'bg-amber-100 text-amber-800' : 'bg-red-100 text-red-800')) }}">
                                             {{ $parsedData['type'] === 'income' ? '🟢 Gelir' : ($parsedData['type'] === 'debt' ? '🏦 Kredi Borcu' : ($parsedData['type'] === 'card' ? '💳 Kredi Kartı' : '🔴 Gider / Harcama')) }}
                                         </span>
                                     </div>
 
-                                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
+                                    <div class="grid grid-cols-2 sm:grid-cols-5 gap-2 text-xs">
                                         <div class="p-2.5 bg-white rounded-xl border border-indigo-100/60">
                                             <span class="text-[10px] text-gray-400 font-bold block uppercase">TUTAR</span>
                                             <span class="text-sm font-black text-gray-900">₺{{ number_format($parsedData['amount'], 2, ',', '.') }}</span>
@@ -135,13 +137,18 @@
                                             <span class="text-xs font-bold text-gray-800 truncate block">{{ $parsedData['bank_name'] ?: 'Belirtilmedi' }}</span>
                                         </div>
                                         <div class="p-2.5 bg-white rounded-xl border border-indigo-100/60">
+                                            <span class="text-[10px] text-gray-400 font-bold block uppercase">ÖDEME KANALI</span>
+                                            <span class="text-xs font-bold text-gray-800 block">{{ ($parsedData['payment_method'] ?? 'cash') === 'credit_card' ? '💳 Kredi Kartı' : (($parsedData['payment_method'] ?? 'cash') === 'bank_transfer' ? '🏦 Banka Hesabı' : '💵 Nakit') }}</span>
+                                        </div>
+                                        <div class="p-2.5 bg-white rounded-xl border border-indigo-100/60 col-span-2 sm:col-span-1">
                                             <span class="text-[10px] text-gray-400 font-bold block uppercase">TARİH</span>
                                             <span class="text-xs font-bold text-gray-800 block">{{ \Carbon\Carbon::parse($parsedData['date'])->format('d.m.Y') }}</span>
                                         </div>
                                     </div>
 
-                                    <div class="pt-2 flex justify-end">
-                                        <button wire:click="saveParsedTransaction" class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white font-black text-xs rounded-xl shadow-md transition-all flex items-center gap-2">
+                                    <div class="pt-2 flex items-center justify-between">
+                                        <span class="text-[11px] text-gray-500">Enter'a basarak da kaydedebilirsiniz ⏎</span>
+                                        <button wire:click="saveParsedTransaction" class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white font-black text-xs rounded-xl shadow-md transition-all flex items-center gap-2 cursor-pointer">
                                             <span>✓</span>
                                             <span>Doğrudan Veritabanına Kaydet</span>
                                         </button>

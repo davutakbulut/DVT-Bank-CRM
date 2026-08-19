@@ -73,11 +73,19 @@ class QuickActionModal extends Component
 
     public function updatedAiInputText(string $value): void
     {
-        if (mb_strlen(trim($value)) >= 4) {
+        if (mb_strlen(trim($value)) >= 3) {
             $parser = new NaturalLanguageTransactionParser();
-            $this->parsedData = $parser->parse($value);
+            $this->parsedData = $parser->parse($value, Auth::user());
         } else {
             $this->parsedData = null;
+        }
+    }
+
+    public function parseManual(): void
+    {
+        if (mb_strlen(trim($this->aiInputText)) >= 3) {
+            $parser = new NaturalLanguageTransactionParser();
+            $this->parsedData = $parser->parse($this->aiInputText, Auth::user());
         }
     }
 
@@ -92,15 +100,30 @@ class QuickActionModal extends Component
         $p = $this->parsedData;
 
         if ($p['type'] === 'income') {
+            // Kategori kontrolü
+            $catId = $p['category_id'];
+            if (!$catId) {
+                $cat = Category::where('user_id', $userId)->where('type', 'income')->first()
+                    ?? Category::firstOrCreate(['name' => 'Maaş & Düzenli Gelir'], ['user_id' => $userId, 'icon' => '💵', 'type' => 'income']);
+                $catId = $cat->id;
+            }
+
+            $date = $p['date'] ?? Carbon::today()->format('Y-m-d');
+            $day = (int) date('d', strtotime($date));
+
             Income::create([
                 'user_id' => $userId,
-                'category_id' => $p['category_id'],
-                'title' => $p['title'] ?: 'Gelir',
+                'category_id' => $catId,
+                'title' => $p['title'] ?: 'Gelir Girişi',
                 'amount' => $p['amount'],
-                'received_day' => Carbon::parse($p['date'])->day,
-                'is_recurring' => $p['is_recurring'],
+                'income_date' => $date,
+                'type' => $p['income_type'] ?? 'salary',
+                'frequency' => $p['frequency'] ?? ($p['is_recurring'] ? 'monthly' : 'one_time'),
+                'received_day' => $day,
+                'is_recurring' => (bool) ($p['is_recurring'] ?? false),
             ]);
-            session()->flash('success', '🟢 Gelir kaydı (₺' . number_format($p['amount'], 2) . ') başarıyla veritabanına eklendi!');
+
+            session()->flash('success', '🟢 Gelir kaydı (₺' . number_format($p['amount'], 2, ',', '.') . ') başarıyla veritabanına eklendi!');
         } elseif ($p['type'] === 'card') {
             CreditCard::create([
                 'user_id' => $userId,
@@ -129,15 +152,25 @@ class QuickActionModal extends Component
             session()->flash('success', '🏦 Kredi borcu kaydı başarıyla eklendi!');
         } else {
             // Expense
+            $catId = $p['category_id'];
+            if (!$catId) {
+                $cat = Category::where('user_id', $userId)->where('type', 'expense')->first()
+                    ?? Category::firstOrCreate(['name' => 'Market & Alışveriş'], ['user_id' => $userId, 'icon' => '🛒', 'type' => 'expense']);
+                $catId = $cat->id;
+            }
+
             Expense::create([
                 'user_id' => $userId,
-                'category_id' => $p['category_id'],
+                'category_id' => $catId,
+                'credit_card_id' => $p['credit_card_id'] ?? null,
                 'title' => $p['title'] ?: 'Harcama',
                 'amount' => $p['amount'],
-                'expense_date' => $p['date'],
-                'is_recurring' => $p['is_recurring'],
+                'expense_date' => $p['date'] ?? Carbon::today()->format('Y-m-d'),
+                'payment_method' => $p['payment_method'] ?? 'cash',
+                'is_recurring' => (bool) ($p['is_recurring'] ?? false),
             ]);
-            session()->flash('success', '🔴 Gider kaydı (₺' . number_format($p['amount'], 2) . ') başarıyla veritabanına eklendi!');
+
+            session()->flash('success', '🔴 Gider kaydı (₺' . number_format($p['amount'], 2, ',', '.') . ' - ' . ($p['payment_method'] === 'credit_card' ? 'Kredi Kartı' : 'Nakit') . ') başarıyla veritabanına eklendi!');
         }
 
         $this->close();
