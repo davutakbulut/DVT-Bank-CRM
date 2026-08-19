@@ -1,34 +1,34 @@
 <div class="py-2 sm:py-6 px-3 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-6">
     <!-- 1. Header & Yeni Borç Ekle -->
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
         <div>
-            <h1 class="text-2xl font-black text-gray-900 tracking-tight flex items-center gap-2">
+            <h1 class="text-xl sm:text-2xl font-black text-gray-900 tracking-tight flex items-center gap-2">
                 <span>📋</span>
                 <span>Borçlarım & Kredilerim</span>
             </h1>
-            <p class="text-sm text-gray-600">Tüm banka kredileri, KMH eksi bakiyeleri, şahıs borçları ve 90 günlük yasal takip sayaçları</p>
+            <p class="text-xs sm:text-sm text-gray-600 mt-0.5">Tüm banka kredileri, KMH eksi bakiyeleri, şahıs borçları ve 90 günlük yasal takip sayaçları</p>
         </div>
-        <div class="flex items-center gap-2.5 flex-wrap">
-            <!-- Excel / CSV İndirme Butonu (Tooltip Popup ile) -->
+        <div class="flex items-center justify-between sm:justify-end gap-2 sm:gap-2.5 w-full sm:w-auto">
+            <!-- Excel / CSV İndirme Butonu -->
             <div class="relative group/tooltip" x-data="{ show: false }">
                 <button wire:click="exportExcel" 
                         @mouseenter="show = true" 
                         @mouseleave="show = false"
-                        class="inline-flex items-center gap-1.5 px-3.5 py-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300 font-black text-xs sm:text-sm rounded-xl shadow-2xs transition-all active:scale-95">
+                        class="inline-flex items-center gap-1 px-3 py-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300 font-bold text-xs rounded-xl shadow-2xs transition-all active:scale-95 cursor-pointer">
                     <span>📥</span>
-                    <span>Excel'e Aktar</span>
+                    <span>Excel</span>
                 </button>
 
                 <!-- Açıklayıcı Bilgi Popup (Tooltip) -->
                 <div x-show="show" 
                      x-cloak
-                     class="absolute right-0 top-full mt-2 w-72 p-3 bg-slate-900 text-white rounded-2xl shadow-2xl border border-slate-700 text-xs z-50 pointer-events-none transition-all">
+                     class="absolute left-0 sm:left-auto sm:right-0 top-full mt-2 w-72 p-3 bg-slate-900 text-white rounded-2xl shadow-2xl border border-slate-700 text-xs z-50 pointer-events-none transition-all">
                     <div class="flex items-center gap-1.5 font-bold text-emerald-300 border-b border-slate-800 pb-1.5 mb-1.5">
                         <span>📊</span>
                         <span>Borç Verisi Excel Raporu</span>
                     </div>
                     <p class="text-[11px] text-slate-300 leading-relaxed">
-                        Tüm banka borçlarınızı, kalan ana para bakiyelerini, aylık taksit yüklerini, faiz oranlarını ve 90 günlük yasal takip gecikme sayaçlarını içeren <strong>UTF-8 uyumlu Excel tablosunu</strong> anında bilgisayarınıza indirir.
+                        Tüm banka borçlarınızı, kalan ana para bakiyelerini, aylık taksit yüklerini, faiz oranlarını ve 90 günlük yasal takip gecikme sayaçlarını içeren <strong>UTF-8 uyumlu Excel tablosunu</strong> indirir.
                     </p>
                     <span class="block mt-2 text-[10px] font-bold text-emerald-400">✓ Excel & Google Sheets Uyumlu</span>
                 </div>
@@ -36,18 +36,18 @@
 
             <!-- Görünüm Modu Değiştirici -->
             <div class="inline-flex rounded-xl bg-gray-100 p-1 border border-gray-200 shadow-2xs">
-                <button wire:click="$set('viewMode', 'flow')" class="px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 {{ $viewMode === 'flow' ? 'bg-white text-indigo-700 shadow-xs' : 'text-gray-600 hover:text-gray-900' }}">
+                <button wire:click="$set('viewMode', 'flow')" class="px-2.5 py-1 rounded-lg text-xs font-bold transition-all flex items-center gap-1 cursor-pointer {{ $viewMode === 'flow' ? 'bg-white text-indigo-700 shadow-xs' : 'text-gray-600 hover:text-gray-900' }}">
                     <span>🎴</span>
-                    <span class="hidden sm:inline">Kart Akışı</span>
+                    <span class="hidden sm:inline">Kart</span>
                 </button>
-                <button wire:click="$set('viewMode', 'table')" class="px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 {{ $viewMode === 'table' ? 'bg-white text-indigo-700 shadow-xs' : 'text-gray-600 hover:text-gray-900' }}">
+                <button wire:click="$set('viewMode', 'table')" class="px-2.5 py-1 rounded-lg text-xs font-bold transition-all flex items-center gap-1 cursor-pointer {{ $viewMode === 'table' ? 'bg-white text-indigo-700 shadow-xs' : 'text-gray-600 hover:text-gray-900' }}">
                     <span>📑</span>
                     <span class="hidden sm:inline">Tablo</span>
                 </button>
             </div>
 
-            <button wire:click="openCreateModal" class="inline-flex items-center gap-1.5 px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white font-black text-sm rounded-xl shadow-md transition-all">
-                <span>+ Yeni Borç Ekle</span>
+            <button wire:click="openCreateModal" class="inline-flex items-center gap-1.5 px-3.5 sm:px-4 py-2 sm:py-2.5 bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white font-black text-xs sm:text-sm rounded-xl shadow-md transition-all whitespace-nowrap cursor-pointer">
+                <span>+ Yeni Borç</span>
             </button>
         </div>
     </div>
@@ -60,49 +60,49 @@
         </div>
     @endif
 
-    <!-- 2. Finansal KPI Özet Kartları -->
-    <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+    <!-- 2. Finansal KPI Özet Kartları (Mobilde Asla Kesilmeyen Font ve Padding) -->
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4">
         <!-- Toplam Kalan Borç -->
-        <div class="bg-white p-4 rounded-2xl border border-gray-200/80 shadow-xs flex items-center gap-3">
-            <div class="w-10 h-10 rounded-xl bg-red-50 text-red-600 flex items-center justify-center text-lg font-black shrink-0">
+        <div class="bg-white p-3 sm:p-4 rounded-2xl border border-gray-200/80 shadow-2xs flex items-center gap-2.5 sm:gap-3">
+            <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-red-50 text-red-600 flex items-center justify-center text-base sm:text-lg font-black shrink-0">
                 ₺
             </div>
-            <div class="min-w-0">
-                <span class="text-[11px] font-bold text-gray-500 block uppercase tracking-wider truncate">Kalan Toplam Borç</span>
-                <span class="text-lg sm:text-xl font-black text-gray-900 truncate block">₺{{ number_format($totalRemaining, 2, ',', '.') }}</span>
+            <div class="min-w-0 flex-1">
+                <span class="text-[10px] sm:text-[11px] font-bold text-gray-500 block uppercase tracking-wider truncate">Kalan Toplam</span>
+                <span class="text-[13px] sm:text-lg lg:text-xl font-black font-mono text-gray-900 tracking-tight block">₺{{ number_format($totalRemaining, 2, ',', '.') }}</span>
             </div>
         </div>
 
         <!-- Aylık Taksit Yükü -->
-        <div class="bg-white p-4 rounded-2xl border border-gray-200/80 shadow-xs flex items-center gap-3">
-            <div class="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-lg font-black shrink-0">
+        <div class="bg-white p-3 sm:p-4 rounded-2xl border border-gray-200/80 shadow-2xs flex items-center gap-2.5 sm:gap-3">
+            <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-base sm:text-lg font-black shrink-0">
                 📅
             </div>
-            <div class="min-w-0">
-                <span class="text-[11px] font-bold text-gray-500 block uppercase tracking-wider truncate">Aylık Taksit Yükü</span>
-                <span class="text-lg sm:text-xl font-black text-indigo-700 truncate block">₺{{ number_format($totalMonthly, 2, ',', '.') }}</span>
+            <div class="min-w-0 flex-1">
+                <span class="text-[10px] sm:text-[11px] font-bold text-gray-500 block uppercase tracking-wider truncate">Aylık Taksit</span>
+                <span class="text-[13px] sm:text-lg lg:text-xl font-black font-mono text-indigo-700 tracking-tight block">₺{{ number_format($totalMonthly, 2, ',', '.') }}</span>
             </div>
         </div>
 
         <!-- Ortalama Faiz Oranı -->
-        <div class="bg-white p-4 rounded-2xl border border-gray-200/80 shadow-xs flex items-center gap-3">
-            <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-lg font-black shrink-0">
+        <div class="bg-white p-3 sm:p-4 rounded-2xl border border-gray-200/80 shadow-2xs flex items-center gap-2.5 sm:gap-3">
+            <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-base sm:text-lg font-black shrink-0">
                 %
             </div>
-            <div class="min-w-0">
-                <span class="text-[11px] font-bold text-gray-500 block uppercase tracking-wider truncate">Ort. Aylık Faiz</span>
-                <span class="text-lg sm:text-xl font-black text-gray-900 truncate block">%{{ number_format($avgInterest, 2) }}</span>
+            <div class="min-w-0 flex-1">
+                <span class="text-[10px] sm:text-[11px] font-bold text-gray-500 block uppercase tracking-wider truncate">Ort. Faiz</span>
+                <span class="text-[13px] sm:text-lg lg:text-xl font-black font-mono text-gray-900 tracking-tight block">%{{ number_format($avgInterest, 2) }}</span>
             </div>
         </div>
 
         <!-- Kritik Risk Sayacı -->
-        <div class="bg-white p-4 rounded-2xl border border-gray-200/80 shadow-xs flex items-center gap-3">
-            <div class="w-10 h-10 rounded-xl {{ $criticalCount > 0 ? 'bg-red-600 text-white animate-pulse' : 'bg-emerald-50 text-emerald-600' }} flex items-center justify-center text-lg font-black shrink-0">
+        <div class="bg-white p-3 sm:p-4 rounded-2xl border border-gray-200/80 shadow-2xs flex items-center gap-2.5 sm:gap-3">
+            <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl {{ $criticalCount > 0 ? 'bg-red-600 text-white animate-pulse' : 'bg-emerald-50 text-emerald-600' }} flex items-center justify-center text-base sm:text-lg font-black shrink-0">
                 🚨
             </div>
-            <div class="min-w-0">
-                <span class="text-[11px] font-bold text-gray-500 block uppercase tracking-wider truncate">Yasal Takip Riski</span>
-                <span class="text-lg sm:text-xl font-black {{ $criticalCount > 0 ? 'text-red-600' : 'text-emerald-600' }} truncate block">
+            <div class="min-w-0 flex-1">
+                <span class="text-[10px] sm:text-[11px] font-bold text-gray-500 block uppercase tracking-wider truncate">Yasal Takip</span>
+                <span class="text-[13px] sm:text-lg lg:text-xl font-black tracking-tight {{ $criticalCount > 0 ? 'text-red-600' : 'text-emerald-600' }} block truncate">
                     {{ $criticalCount > 0 ? $criticalCount . ' Borç Kritik' : 'Güvende' }}
                 </span>
             </div>
@@ -113,21 +113,21 @@
     <div class="bg-white rounded-2xl border border-gray-200/90 shadow-sm p-4 sm:p-5 space-y-4">
         <!-- Üst Satır: Sekmeler + Arama + Sıralama -->
         <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-3 pb-3 border-b border-gray-100">
-            <!-- Tür Sekmeleri -->
+            <!-- Tür Sekmeleri (Mobilde Yatay Kaydırılabilir) -->
             <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-1">
-                <button wire:click="$set('activeTab', 'all')" class="px-3.5 py-1.5 text-xs font-bold rounded-xl transition-all whitespace-nowrap {{ $activeTab === 'all' ? 'bg-indigo-600 text-white shadow-xs' : 'text-gray-600 hover:bg-gray-100' }}">
+                <button wire:click="$set('activeTab', 'all')" class="px-3 py-1.5 text-xs font-bold rounded-xl transition-all whitespace-nowrap shrink-0 {{ $activeTab === 'all' ? 'bg-indigo-600 text-white shadow-xs' : 'text-gray-600 hover:bg-gray-100' }}">
                     Tümü ({{ $debts->count() }})
                 </button>
-                <button wire:click="$set('activeTab', 'loan')" class="px-3.5 py-1.5 text-xs font-bold rounded-xl transition-all whitespace-nowrap {{ $activeTab === 'loan' ? 'bg-indigo-600 text-white shadow-xs' : 'text-gray-600 hover:bg-gray-100' }}">
+                <button wire:click="$set('activeTab', 'loan')" class="px-3 py-1.5 text-xs font-bold rounded-xl transition-all whitespace-nowrap shrink-0 {{ $activeTab === 'loan' ? 'bg-indigo-600 text-white shadow-xs' : 'text-gray-600 hover:bg-gray-100' }}">
                     🏦 Krediler
                 </button>
-                <button wire:click="$set('activeTab', 'kmh')" class="px-3.5 py-1.5 text-xs font-bold rounded-xl transition-all whitespace-nowrap {{ $activeTab === 'kmh' ? 'bg-indigo-600 text-white shadow-xs' : 'text-gray-600 hover:bg-gray-100' }}">
-                    ⚡ KMH / Eksi Bakiye
+                <button wire:click="$set('activeTab', 'kmh')" class="px-3 py-1.5 text-xs font-bold rounded-xl transition-all whitespace-nowrap shrink-0 {{ $activeTab === 'kmh' ? 'bg-indigo-600 text-white shadow-xs' : 'text-gray-600 hover:bg-gray-100' }}">
+                    ⚡ KMH / Eksi
                 </button>
-                <button wire:click="$set('activeTab', 'credit_card')" class="px-3.5 py-1.5 text-xs font-bold rounded-xl transition-all whitespace-nowrap {{ $activeTab === 'credit_card' ? 'bg-indigo-600 text-white shadow-xs' : 'text-gray-600 hover:bg-gray-100' }}">
-                    💳 Kart Borçları
+                <button wire:click="$set('activeTab', 'credit_card')" class="px-3 py-1.5 text-xs font-bold rounded-xl transition-all whitespace-nowrap shrink-0 {{ $activeTab === 'credit_card' ? 'bg-indigo-600 text-white shadow-xs' : 'text-gray-600 hover:bg-gray-100' }}">
+                    💳 Kartlar
                 </button>
-                <button wire:click="$set('activeTab', 'personal')" class="px-3.5 py-1.5 text-xs font-bold rounded-xl transition-all whitespace-nowrap {{ $activeTab === 'personal' ? 'bg-indigo-600 text-white shadow-xs' : 'text-gray-600 hover:bg-gray-100' }}">
+                <button wire:click="$set('activeTab', 'personal')" class="px-3 py-1.5 text-xs font-bold rounded-xl transition-all whitespace-nowrap shrink-0 {{ $activeTab === 'personal' ? 'bg-indigo-600 text-white shadow-xs' : 'text-gray-600 hover:bg-gray-100' }}">
                     👤 Şahıs / Diğer
                 </button>
             </div>
