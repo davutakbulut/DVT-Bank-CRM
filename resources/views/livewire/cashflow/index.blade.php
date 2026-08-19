@@ -242,10 +242,14 @@
                                     {{ $item->badge }}
                                 </span>
                                 @if (!empty($item->source_label))
-                                    <span class="px-2 py-0.5 rounded-md text-[10px] font-bold text-gray-700 bg-gray-100 border border-gray-200">
-                                        {{ $item->source_label }}
+                                    <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-lg text-[10.5px] font-black border shadow-xs" 
+                                          style="background-color: {{ $item->source_color }}18; border-color: {{ $item->source_color }}60; color: {{ $item->source_color }};">
+                                        <span class="w-1.5 h-1.5 rounded-full shrink-0" style="background-color: {{ $item->source_color }};"></span>
+                                        <span>{{ $item->source_icon }}</span>
+                                        <span>{{ $item->source_label }}</span>
                                     </span>
                                 @endif
+
                                 @if (!empty($item->installment_badge))
                                     <span class="px-2 py-0.5 rounded-md text-[10px] font-black bg-indigo-50 text-indigo-700 border border-indigo-200">
                                         🔢 {{ $item->installment_badge }}
@@ -355,16 +359,23 @@
                                 <span class="font-bold text-sm text-gray-900 block">{{ $exp->title }}</span>
                                 <div class="flex items-center gap-1.5 flex-wrap text-xs text-gray-500 mt-0.5">
                                     <span>{{ $exp->category?->name ?? 'Genel Gider' }} · {{ \Carbon\Carbon::parse($exp->expense_date)->format('d.m.Y') }}</span>
+                                    @php
+                                        $expColor = $exp->creditCard?->bank?->color ?? ($exp->account?->bank?->color ?? '#64748b');
+                                    @endphp
                                     @if ($exp->payment_method === 'credit_card' && $exp->creditCard)
-                                        <span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-amber-50 text-amber-800 border border-amber-200">
+                                        <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-black border shadow-xs" 
+                                              style="background-color: {{ $expColor }}18; border-color: {{ $expColor }}60; color: {{ $expColor }};">
+                                            <span class="w-1.5 h-1.5 rounded-full shrink-0" style="background-color: {{ $expColor }};"></span>
                                             💳 {{ $exp->creditCard->bank?->name ?? '' }} · {{ $exp->creditCard->name }}
                                         </span>
                                     @elseif (in_array($exp->payment_method, ['account', 'kmh']) && $exp->account)
-                                        <span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-blue-50 text-blue-800 border border-blue-200">
+                                        <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-black border shadow-xs" 
+                                              style="background-color: {{ $expColor }}18; border-color: {{ $expColor }}60; color: {{ $expColor }};">
+                                            <span class="w-1.5 h-1.5 rounded-full shrink-0" style="background-color: {{ $expColor }};"></span>
                                             {{ $exp->payment_method === 'kmh' ? '⚡' : '🏛️' }} {{ $exp->account->bank?->name ?? '' }} · {{ $exp->account->name }}
                                         </span>
                                     @elseif ($exp->payment_method === 'cash')
-                                        <span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-gray-100 text-gray-700 border border-gray-200">
+                                        <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-black bg-gray-100 text-gray-700 border border-gray-300">
                                             💵 Nakit
                                         </span>
                                     @endif
@@ -419,9 +430,12 @@
                                 </td>
                                 <td class="px-6 py-4">
                                     @if (!empty($item->source_label))
-                                        <div class="flex items-center gap-1.5">
-                                            <span class="px-2 py-0.5 rounded-md text-xs font-bold text-gray-700 bg-gray-50 border border-gray-200 truncate max-w-[220px]">
-                                                {{ $item->source_label }}
+                                        <div class="flex items-center gap-1.5 flex-wrap">
+                                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-black border shadow-xs" 
+                                                  style="background-color: {{ $item->source_color }}18; border-color: {{ $item->source_color }}60; color: {{ $item->source_color }};">
+                                                <span class="w-1.5 h-1.5 rounded-full shrink-0" style="background-color: {{ $item->source_color }};"></span>
+                                                <span>{{ $item->source_icon }}</span>
+                                                <span>{{ $item->source_label }}</span>
                                             </span>
                                             @if (!empty($item->installment_badge))
                                                 <span class="px-1.5 py-0.5 rounded text-[10px] font-black bg-indigo-50 text-indigo-700 border border-indigo-200 shrink-0">
@@ -433,6 +447,7 @@
                                         <span class="text-xs text-gray-400">-</span>
                                     @endif
                                 </td>
+
                                 <td class="px-6 py-4 text-xs text-gray-600">
                                     {{ \Carbon\Carbon::parse($item->date)->format('d.m.Y') }}
                                 </td>
