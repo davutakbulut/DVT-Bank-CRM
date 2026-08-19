@@ -127,6 +127,8 @@ class Index extends Component
             'income_date' => 'required|date',
         ]);
 
+        $day = !empty($this->income_date) ? \Carbon\Carbon::parse($this->income_date)->day : 1;
+
         $data = [
             'user_id' => Auth::id(),
             'title' => $this->income_title,
@@ -134,7 +136,8 @@ class Index extends Component
             'income_date' => $this->income_date,
             'type' => $this->income_type,
             'frequency' => $this->income_frequency,
-            'is_recurring' => $this->income_frequency === 'monthly',
+            'received_day' => $day,
+            'is_recurring' => in_array($this->income_frequency, ['monthly', 'weekly']),
         ];
 
         if ($this->incomeId) {
