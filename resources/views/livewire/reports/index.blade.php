@@ -94,37 +94,6 @@
                 </div>
             </div>
 
-            <!-- 📊 KAPSAMLI FİNANSAL ANALİZ GRAFİKLERİ -->
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
-                <!-- Banka Bazlı Faiz Yükü (Bar Chart) -->
-                <div class="bg-white/5 p-5 rounded-2xl border border-white/10 backdrop-blur-md">
-                    <div class="flex items-center justify-between border-b border-indigo-800/50 pb-3 mb-3">
-                        <div>
-                            <h3 class="font-bold text-sm text-white">Banka Bazlı Borç & Aylık Faiz Maliyeti</h3>
-                            <p class="text-[10px] text-slate-400">Bankalara göre toplam borç tutarı</p>
-                        </div>
-                        <span class="text-[10px] font-bold text-indigo-300 bg-indigo-900/50 px-2.5 py-1 rounded-lg">Banka Maliyeti</span>
-                    </div>
-                    <div class="relative h-60 w-full flex items-center justify-center">
-                        <canvas id="reportsBankDebtChart"></canvas>
-                    </div>
-                </div>
-
-                <!-- Harcama Döngü Analizi -->
-                <div class="bg-white/5 p-5 rounded-2xl border border-white/10 backdrop-blur-md">
-                    <div class="flex items-center justify-between border-b border-indigo-800/50 pb-3 mb-3">
-                        <div>
-                            <h3 class="font-bold text-sm text-white">Harcama Dönemi Analizi</h3>
-                            <p class="text-[10px] text-slate-400">Ayın hangi günlerinde daha yoğun harcama yapıyorsunuz?</p>
-                        </div>
-                        <span class="text-[10px] font-bold text-amber-300 bg-amber-900/50 px-2.5 py-1 rounded-lg">Döngü Analizi</span>
-                    </div>
-                    <div class="relative h-60 w-full flex items-center justify-center">
-                        <canvas id="reportsTimingChart"></canvas>
-                    </div>
-                </div>
-            </div>
-
             <!-- 4'lü Hızlı Özet Şeridi -->
             <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 text-xs">
                 <div class="p-3.5 bg-white/5 rounded-2xl border border-white/10">
@@ -249,6 +218,131 @@
                 </div>
             </div>
         </div>
+
+        <!-- 📊 RAPORLAR GRAFİK PANOSU -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 my-6">
+            <!-- Grafik 1: Harcama Kategorileri Dağılımı (Doughnut) -->
+            <div class="bg-white p-5 rounded-3xl border border-gray-200 shadow-sm flex flex-col justify-between">
+                <div class="flex items-center justify-between border-b border-gray-100 pb-3 mb-3">
+                    <div>
+                        <h4 class="font-heading font-black text-sm text-gray-900">Gider Kategori Dağılımı</h4>
+                        <p class="text-[11px] text-gray-500">Nereye ne kadar harcama yapıldı?</p>
+                    </div>
+                    <span class="text-[10px] font-black px-2 py-0.5 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-200">KATEGORİ</span>
+                </div>
+                <div class="relative w-full h-60 flex items-center justify-center">
+                    <canvas id="reportCategoryChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Grafik 2: Bankalara Göre Borç & Yıllık Faiz Dağılımı (Horizontal Bar) -->
+            <div class="bg-white p-5 rounded-3xl border border-gray-200 shadow-sm flex flex-col justify-between">
+                <div class="flex items-center justify-between border-b border-gray-100 pb-3 mb-3">
+                    <div>
+                        <h4 class="font-heading font-black text-sm text-gray-900">Bankalara Göre Borç & Yıllık Faiz Yükü</h4>
+                        <p class="text-[11px] text-gray-500">Banka bazında anapara borcu ve yıllık faiz maliyeti</p>
+                    </div>
+                    <span class="text-[10px] font-black px-2 py-0.5 rounded-full bg-red-50 text-red-700 border border-red-200">FAİZ YÜKÜ</span>
+                </div>
+                <div class="relative w-full h-60">
+                    <canvas id="reportBankChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                if (typeof Chart === 'undefined') return;
+
+                // Category Doughnut Chart
+                const catCtx = document.getElementById('reportCategoryChart');
+                if (catCtx) {
+                    new Chart(catCtx, {
+                        type: 'doughnut',
+                        data: {
+                            labels: {!! json_encode($reportCatLabels) !!},
+                            datasets: [{
+                                data: {!! json_encode($reportCatValues) !!},
+                                backgroundColor: {!! json_encode($reportCatColors) !!},
+                                borderWidth: 2,
+                                borderColor: '#ffffff',
+                                hoverOffset: 6
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: {
+                                    position: 'bottom',
+                                    labels: { font: { family: "'Plus Jakarta Sans', sans-serif", size: 11, weight: '600' }, boxWidth: 10, padding: 12 }
+                                },
+                                tooltip: {
+                                    callbacks: {
+                                        label: ctx => ' ' + ctx.label + ': ₺' + ctx.raw.toLocaleString('tr-TR', {minimumFractionDigits: 2})
+                                    }
+                                }
+                            },
+                            cutout: '65%'
+                        }
+                    });
+                }
+
+                // Bank Debt & Interest Chart
+                const bankReportCtx = document.getElementById('reportBankChart');
+                if (bankReportCtx) {
+                    new Chart(bankReportCtx, {
+                        type: 'bar',
+                        data: {
+                            labels: {!! json_encode($reportBankNames) !!},
+                            datasets: [
+                                {
+                                    label: 'Toplam Borç (₺)',
+                                    data: {!! json_encode($reportBankDebts) !!},
+                                    backgroundColor: 'rgba(99, 102, 241, 0.85)',
+                                    borderRadius: 6
+                                },
+                                {
+                                    label: 'Yıllık Faiz Maliyeti (₺)',
+                                    data: {!! json_encode($reportBankInterests) !!},
+                                    backgroundColor: 'rgba(239, 68, 68, 0.85)',
+                                    borderRadius: 6
+                                }
+                            ]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            indexAxis: 'y',
+                            scales: {
+                                x: {
+                                    grid: { color: 'rgba(226, 232, 240, 0.6)' },
+                                    ticks: {
+                                        font: { family: "'Plus Jakarta Sans', sans-serif", size: 10 },
+                                        callback: v => '₺' + (v / 1000).toFixed(0) + 'k'
+                                    }
+                                },
+                                y: {
+                                    grid: { display: false },
+                                    ticks: { font: { family: "'Plus Jakarta Sans', sans-serif", size: 11, weight: '600' } }
+                                }
+                            },
+                            plugins: {
+                                legend: {
+                                    position: 'top',
+                                    labels: { font: { family: "'Plus Jakarta Sans', sans-serif", size: 11, weight: '600' }, boxWidth: 12 }
+                                },
+                                tooltip: {
+                                    callbacks: {
+                                        label: ctx => ' ' + ctx.dataset.label + ': ₺' + ctx.raw.toLocaleString('tr-TR', {minimumFractionDigits: 2})
+                                    }
+                                }
+                            }
+                        }
+                    });
+                }
+            });
+        </script>
 
     <!-- MODÜL 2: NEREYE HARCIYORUM? (KATEGORİLER) -->
     @elseif ($activeTab === 'categories')
@@ -548,67 +642,4 @@
             @endforelse
         </div>
     </div>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            // Bank Debt Chart
-            const bankCtx = document.getElementById('reportsBankDebtChart');
-            if (bankCtx) {
-                const bankData = @json($bankAnalysis);
-                new Chart(bankCtx, {
-                    type: 'bar',
-                    data: {
-                        labels: bankData.map(i => i.bank_name),
-                        datasets: [{
-                            label: 'Toplam Borç (₺)',
-                            data: bankData.map(i => i.total_debt),
-                            backgroundColor: bankData.map(i => i.bank_color),
-                            borderRadius: 6
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: { display: false }
-                        },
-                        scales: {
-                            x: {
-                                ticks: { color: '#cbd5e1', font: { family: 'Plus Jakarta Sans', size: 10, weight: 'bold' } }
-                            },
-                            y: {
-                                ticks: {
-                                    color: '#cbd5e1',
-                                    callback: function(v) { return '₺' + new Intl.NumberFormat('tr-TR', { notation: 'compact' }).format(v); }
-                                }
-                            }
-                        }
-                    }
-                });
-            }
-
-            // Timing Chart
-            const timeCtx = document.getElementById('reportsTimingChart');
-            if (timeCtx) {
-                new Chart(timeCtx, {
-                    type: 'doughnut',
-                    data: {
-                        labels: ['Ayın 1-10 Dönemi', 'Ayın 11-20 Dönemi', 'Ayın 21-31 Dönemi'],
-                        datasets: [{
-                            data: [{{ $timingAnalysis['p1_10'] }}, {{ $timingAnalysis['p11_20'] }}, {{ $timingAnalysis['p21_31'] }}],
-                            backgroundColor: ['#818cf8', '#34d399', '#fbbf24'],
-                            borderWidth: 2
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: { position: 'bottom', labels: { color: '#cbd5e1', font: { family: 'Plus Jakarta Sans', size: 10, weight: 'bold' } } }
-                        }
-                    }
-                });
-            }
-        });
-    </script>
 </div>

@@ -103,39 +103,16 @@
             </div>
         </div>
 
-        <!-- Kritik Uyarı Borç Sayısı -->
+        <!-- Kritik Risk Sayacı -->
         <div class="bg-white p-3.5 sm:p-4 rounded-xl border border-slate-200/80 shadow-2xs flex items-center gap-2.5 sm:gap-3">
-            <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-red-50 text-red-600 flex items-center justify-center text-base sm:text-lg font-black shrink-0">
-                <svg class="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"/></svg>
+            <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-lg {{ $criticalCount > 0 ? 'bg-red-600 text-white animate-pulse' : 'bg-emerald-50 text-emerald-600' }} flex items-center justify-center text-base sm:text-lg font-black shrink-0">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"/></svg>
             </div>
             <div class="min-w-0 flex-1">
-                <span class="text-[10px] sm:text-[11px] font-bold text-gray-500 block uppercase tracking-wider truncate">Kritik Riskli</span>
-                <span class="text-[13px] sm:text-lg lg:text-xl font-black font-mono text-red-600 tracking-tight block">{{ $criticalCount }} Adet Borç</span>
-            </div>
-        </div>
-    </div>
-
-    <!-- 📊 BORÇ RISK & FAİZ ANALİZ GRAFİKLERİ -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <!-- Gecikme Risk Durum Dağılımı -->
-        <div class="bg-white p-4 rounded-xl border border-slate-200/80 shadow-2xs">
-            <div class="flex items-center justify-between border-b border-slate-100 pb-2 mb-3">
-                <h3 class="font-bold text-xs sm:text-sm text-gray-900">Gecikme Risk Durum Dağılımı</h3>
-                <span class="text-[10px] font-bold text-red-600 bg-red-50 px-2 py-0.5 rounded">Gecikme Analizi</span>
-            </div>
-            <div class="relative h-56 w-full flex items-center justify-center">
-                <canvas id="debtRiskChart"></canvas>
-            </div>
-        </div>
-
-        <!-- En Yüksek Faizli Borçlar -->
-        <div class="bg-white p-4 rounded-xl border border-slate-200/80 shadow-2xs">
-            <div class="flex items-center justify-between border-b border-slate-100 pb-2 mb-3">
-                <h3 class="font-bold text-xs sm:text-sm text-gray-900">En Yüksek Faizli Borçlarınız</h3>
-                <span class="text-[10px] font-bold text-amber-600 bg-amber-50 px-2 py-0.5 rounded">Faiz Yükü</span>
-            </div>
-            <div class="relative h-56 w-full flex items-center justify-center">
-                <canvas id="debtInterestChart"></canvas>
+                <span class="text-[10px] sm:text-[11px] font-bold text-gray-500 block uppercase tracking-wider truncate">Yasal Takip</span>
+                <span class="text-[13px] sm:text-lg lg:text-xl font-black tracking-tight {{ $criticalCount > 0 ? 'text-red-600' : 'text-emerald-600' }} block truncate">
+                    {{ $criticalCount > 0 ? $criticalCount . ' Borç Kritik' : 'Güvende' }}
+                </span>
             </div>
         </div>
     </div>
@@ -635,69 +612,4 @@
             </div>
         </div>
     @endif
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            // Risk Chart
-            const riskCtx = document.getElementById('debtRiskChart');
-            if (riskCtx) {
-                new Chart(riskCtx, {
-                    type: 'doughnut',
-                    data: {
-                        labels: ['Güncel (Gecikmesiz)', '1-15 Gün Gecikmede', '16-30 Gün Gecikmede', '31+ Gün Riskli'],
-                        datasets: [{
-                            data: [
-                                {{ $debtRiskChartData['regular'] }},
-                                {{ $debtRiskChartData['mild'] }},
-                                {{ $debtRiskChartData['warning'] }},
-                                {{ $debtRiskChartData['critical'] }}
-                            ],
-                            backgroundColor: ['#10b981', '#f59e0b', '#f97316', '#ef4444'],
-                            borderWidth: 2
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: { position: 'bottom', labels: { font: { family: 'Plus Jakarta Sans', size: 10, weight: 'bold' } } }
-                        }
-                    }
-                });
-            }
-
-            // Interest Chart
-            const intCtx = document.getElementById('debtInterestChart');
-            if (intCtx) {
-                const intData = @json($topInterestDebts);
-                new Chart(intCtx, {
-                    type: 'bar',
-                    data: {
-                        labels: intData.map(i => i.title),
-                        datasets: [{
-                            label: 'Aylık Faiz Oranı (%)',
-                            data: intData.map(i => i.rate),
-                            backgroundColor: '#6366f1',
-                            borderRadius: 6
-                        }]
-                    },
-                    options: {
-                        indexAxis: 'y',
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: { display: false }
-                        },
-                        scales: {
-                            x: {
-                                ticks: {
-                                    callback: function(v) { return '%' + v; }
-                                }
-                            }
-                        }
-                    }
-                });
-            }
-        });
-    </script>
 </div>

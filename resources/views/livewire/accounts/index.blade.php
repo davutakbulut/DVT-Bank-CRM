@@ -120,20 +120,6 @@
         </div>
     </div>
 
-    <!-- 📊 HESAP BAKİYELERİ GRAFİĞİ -->
-    <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-2xs mb-4">
-        <div class="flex items-center justify-between border-b border-slate-100 pb-3 mb-3">
-            <div>
-                <h3 class="font-bold text-sm text-gray-900">Hesap Bakiyeleri ve KMH Kullanımı</h3>
-                <p class="text-xs text-gray-500">Pozitif vadesiz bakiyeler ve eksi kullanılan KMH limitleri</p>
-            </div>
-            <span class="text-xs font-bold text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-lg">Bakiye Analizi</span>
-        </div>
-        <div class="relative h-60 w-full flex items-center justify-center">
-            <canvas id="accountBalancesChart"></canvas>
-        </div>
-    </div>
-
     <!-- 3. ÜST FİLTRE & ARAMA BAR (Segmented Control & Linear Inputs) -->
     <div class="bg-white rounded-xl border border-slate-200 shadow-2xs p-3.5 sm:p-4 space-y-3">
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-3">
@@ -688,47 +674,4 @@
             </div>
         </div>
     @endif
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const accCtx = document.getElementById('accountBalancesChart');
-            if (accCtx) {
-                const accData = @json($accountBalancesChartData);
-                new Chart(accCtx, {
-                    type: 'bar',
-                    data: {
-                        labels: accData.map(i => i.name),
-                        datasets: [
-                            {
-                                label: 'Pozitif Vadesiz Bakiye (₺)',
-                                data: accData.map(i => i.positive),
-                                backgroundColor: '#10b981',
-                                borderRadius: 6
-                            },
-                            {
-                                label: 'Kullanılan KMH / Eksi Bakiye (₺)',
-                                data: accData.map(i => i.kmh_used),
-                                backgroundColor: '#ef4444',
-                                borderRadius: 6
-                            }
-                        ]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: { position: 'bottom', labels: { font: { family: 'Plus Jakarta Sans', size: 11, weight: 'bold' } } }
-                        },
-                        scales: {
-                            y: {
-                                ticks: {
-                                    callback: function(v) { return '₺' + new Intl.NumberFormat('tr-TR', { notation: 'compact' }).format(v); }
-                                }
-                            }
-                        }
-                    }
-                });
-            }
-        });
-    </script>
 </div>

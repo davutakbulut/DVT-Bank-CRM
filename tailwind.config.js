@@ -13,6 +13,8 @@ export default {
         extend: {
             fontFamily: {
                 sans: ['"Plus Jakarta Sans"', ...defaultTheme.fontFamily.sans],
+                heading: ['"Outfit"', '"Plus Jakarta Sans"', ...defaultTheme.fontFamily.sans],
+                display: ['"Outfit"', '"Plus Jakarta Sans"', ...defaultTheme.fontFamily.sans],
                 mono: ['"JetBrains Mono"', ...defaultTheme.fontFamily.mono],
             },
             letterSpacing: {

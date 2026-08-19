@@ -242,36 +242,159 @@
         </div>
     </div>
 
-    <!-- 📊 FİNANSAL GÖRSEL ANALİZ GRAFİKLERİ -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
-        <!-- Borç Türü Dağılımı (Doughnut Chart) -->
+    <!-- 📊 ETKİLEŞİMLİ FİNANSAL GRAFİKLER (DASHBOARD CHARTS) -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+        <!-- Grafik 1: Bankalara Göre Borç Dağılımı (Doughnut Chart) -->
         <div class="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm flex flex-col justify-between">
             <div class="flex items-center justify-between border-b border-gray-100 pb-3 mb-3">
                 <div>
-                    <h3 class="font-bold text-sm text-gray-900">Borç Türü Dağılımı</h3>
-                    <p class="text-xs text-gray-500">Aktif borçlarınızın kategorilere göre oranı</p>
+                    <h3 class="font-heading font-bold text-sm text-gray-900">Bankalara Göre Borç Oranları</h3>
+                    <p class="text-[11px] text-gray-500">Aktif borçların banka bazlı yüzdesel yükü</p>
                 </div>
-                <span class="text-xs font-bold text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-lg">Canlı Veri</span>
+                <span class="text-[10px] font-black px-2 py-0.5 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-200">ORANLAR</span>
             </div>
-            <div class="relative h-64 w-full flex items-center justify-center">
-                <canvas id="dashboardDebtTypeChart"></canvas>
+            <div class="relative w-full h-56 flex items-center justify-center">
+                <canvas id="dashboardBankChart"></canvas>
             </div>
         </div>
 
-        <!-- Aylık Nakit Akışı ve Asgari Yük (Bar Chart) -->
-        <div class="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm flex flex-col justify-between">
+        <!-- Grafik 2: 6 Aylık Borç Ödeme & Erime Projeksiyonu (Combo Chart - 2 Kolon) -->
+        <div class="lg:col-span-2 bg-white p-5 rounded-2xl border border-gray-200 shadow-sm flex flex-col justify-between">
             <div class="flex items-center justify-between border-b border-gray-100 pb-3 mb-3">
                 <div>
-                    <h3 class="font-bold text-sm text-gray-900">Aylık Nakit Dengesi</h3>
-                    <p class="text-xs text-gray-500">Gelir, sabit gider ve asgari borç ödemesi kıyaslaması</p>
+                    <h3 class="font-heading font-bold text-sm text-gray-900">6 Aylık Borç Ödeme & Erime Eğrisi</h3>
+                    <p class="text-[11px] text-gray-500">Aktif ödeme planınıza göre aylık bütçe ödemeleri ve kalan borç projeksiyonu</p>
                 </div>
-                <span class="text-xs font-bold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-lg">Aylık Özet</span>
+                <span class="text-[10px] font-black px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">TREND</span>
             </div>
-            <div class="relative h-64 w-full flex items-center justify-center">
-                <canvas id="dashboardCashflowChart"></canvas>
+            <div class="relative w-full h-56">
+                <canvas id="dashboardProjectionChart"></canvas>
             </div>
         </div>
     </div>
+
+    <!-- Chart.js Scripts Initialization -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            if (typeof Chart === 'undefined') return;
+
+            // Chart 1: Doughnut
+            const bankCtx = document.getElementById('dashboardBankChart');
+            if (bankCtx) {
+                new Chart(bankCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: {!! json_encode($chartBankLabels) !!},
+                        datasets: [{
+                            data: {!! json_encode($chartBankValues) !!},
+                            backgroundColor: {!! json_encode($chartBankColors) !!},
+                            borderWidth: 2,
+                            borderColor: '#ffffff',
+                            hoverOffset: 6
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
+                                labels: {
+                                    boxWidth: 10,
+                                    font: { family: "'Plus Jakarta Sans', sans-serif", size: 11, weight: '600' },
+                                    padding: 12
+                                }
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(ctx) {
+                                        let value = ctx.raw || 0;
+                                        return ' ' + ctx.label + ': ₺' + value.toLocaleString('tr-TR', {minimumFractionDigits: 2});
+                                    }
+                                }
+                            }
+                        },
+                        cutout: '68%'
+                    }
+                });
+            }
+
+            // Chart 2: Projection Bar + Line Combo
+            const projCtx = document.getElementById('dashboardProjectionChart');
+            if (projCtx) {
+                new Chart(projCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: {!! json_encode($projectionLabels) !!},
+                        datasets: [
+                            {
+                                label: 'Aylık Ödeme (₺)',
+                                data: {!! json_encode($projectionPayments) !!},
+                                backgroundColor: 'rgba(99, 102, 241, 0.85)',
+                                borderRadius: 8,
+                                yAxisID: 'y'
+                            },
+                            {
+                                label: 'Kalan Toplam Borç (₺)',
+                                data: {!! json_encode($projectionBalances) !!},
+                                type: 'line',
+                                borderColor: '#ef4444',
+                                backgroundColor: 'rgba(239, 68, 68, 0.08)',
+                                fill: true,
+                                tension: 0.35,
+                                pointRadius: 4,
+                                pointBackgroundColor: '#ef4444',
+                                yAxisID: 'y1'
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            x: {
+                                grid: { display: false },
+                                ticks: { font: { family: "'Plus Jakarta Sans', sans-serif", size: 11, weight: '600' } }
+                            },
+                            y: {
+                                type: 'linear',
+                                display: true,
+                                position: 'left',
+                                grid: { color: 'rgba(226, 232, 240, 0.6)' },
+                                ticks: {
+                                    font: { family: "'Plus Jakarta Sans', sans-serif", size: 10 },
+                                    callback: v => '₺' + (v / 1000).toFixed(0) + 'k'
+                                }
+                            },
+                            y1: {
+                                type: 'linear',
+                                display: true,
+                                position: 'right',
+                                grid: { drawOnChartArea: false },
+                                ticks: {
+                                    font: { family: "'Plus Jakarta Sans', sans-serif", size: 10 },
+                                    callback: v => '₺' + (v / 1000).toFixed(0) + 'k'
+                                }
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                position: 'top',
+                                labels: { font: { family: "'Plus Jakarta Sans', sans-serif", size: 11, weight: '600' }, boxWidth: 12 }
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(ctx) {
+                                        return ' ' + ctx.dataset.label + ': ₺' + ctx.raw.toLocaleString('tr-TR', {minimumFractionDigits: 2});
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        });
+    </script>
 
     <!-- 4. AI FİNANSAL KOÇ BRİFİNGİ (AÇILIR-KAPANIR, VARSAYILAN: KAPALI) -->
     <div x-data="{ showBriefing: false }" class="bg-white border-2 border-indigo-100 rounded-2xl p-4 sm:p-5 shadow-sm transition-all">
@@ -452,80 +575,4 @@
             </div>
         </div>
     @endif
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            // 1. Borç Türü Doughnut Chart
-            const typeCtx = document.getElementById('dashboardDebtTypeChart');
-            if (typeCtx) {
-                const typeData = @json($debtTypeDistribution->values());
-                new Chart(typeCtx, {
-                    type: 'doughnut',
-                    data: {
-                        labels: typeData.map(i => i.name),
-                        datasets: [{
-                            data: typeData.map(i => i.total),
-                            backgroundColor: ['#6366f1', '#f59e0b', '#ef4444', '#10b981', '#8b5cf6'],
-                            borderWidth: 2,
-                            borderColor: '#ffffff'
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: { position: 'bottom', labels: { font: { family: 'Plus Jakarta Sans', size: 11, weight: 'bold' } } },
-                            tooltip: {
-                                callbacks: {
-                                    label: function(context) {
-                                        return ' ' + context.label + ': ₺' + new Intl.NumberFormat('tr-TR').format(context.raw);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                });
-            }
-
-            // 2. Nakit Dengesi Bar Chart
-            const cashCtx = document.getElementById('dashboardCashflowChart');
-            if (cashCtx) {
-                new Chart(cashCtx, {
-                    type: 'bar',
-                    data: {
-                        labels: ['Aylık Gelir', 'Sabit Giderler', 'Borç Asgari Ödemesi'],
-                        datasets: [{
-                            label: 'Tutar (₺)',
-                            data: [{{ $totalMonthlyIncome }}, {{ $totalMonthlyExpense }}, {{ $riskSummary['total_monthly_commitment'] }}],
-                            backgroundColor: ['#10b981', '#f59e0b', '#ef4444'],
-                            borderRadius: 8
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: { display: false },
-                            tooltip: {
-                                callbacks: {
-                                    label: function(context) {
-                                        return ' ₺' + new Intl.NumberFormat('tr-TR').format(context.raw);
-                                    }
-                                }
-                            }
-                        },
-                        scales: {
-                            y: {
-                                ticks: {
-                                    callback: function(value) {
-                                        return '₺' + new Intl.NumberFormat('tr-TR', { notation: 'compact' }).format(value);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                });
-            }
-        });
-    </script>
 </div>

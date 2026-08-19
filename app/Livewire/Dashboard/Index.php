@@ -189,21 +189,40 @@ class Index extends Component
             ->unique();
         $connectedBanksCount = $userBankIds->count();
 
-        // Tür bazında borç dağılımı (Grafik için)
-        $debtTypeDistribution = Debt::where('user_id', $user->id)
-            ->where('status', 'active')
-            ->get()
-            ->groupBy('type')
-            ->map(fn($group, $type) => [
-                'name' => match($type) {
-                    'credit_card' => 'Kredi Kartı',
-                    'kmh' => 'Ekpara / KMH',
-                    'loan' => 'Kredi',
-                    'installment' => 'Taksitli Borç',
-                    default => 'Diğer'
-                },
-                'total' => (float) $group->sum('remaining'),
-            ]);
+        // Chart 1: Banka Dağılımı Grafiği Verileri
+        $chartBankLabels = [];
+        $chartBankValues = [];
+        $chartBankColors = [];
+
+        foreach ($bankDistribution as $bankName => $info) {
+            $chartBankLabels[] = $bankName;
+            $chartBankValues[] = round($info['total'], 2);
+            $chartBankColors[] = $info['color'] ?: '#6366f1';
+        }
+
+        // Chart 2: 6 Aylık Borç Ödeme ve Erime Projeksiyonu
+        $activePlan = \App\Models\PaymentPlan::where('user_id', $user->id)->where('status', 'active')->first();
+        $projectionLabels = [];
+        $projectionPayments = [];
+        $projectionBalances = [];
+
+        if ($activePlan) {
+            $planItems = \App\Models\PaymentPlanItem::where('payment_plan_id', $activePlan->id)
+                ->get()
+                ->groupBy('month');
+
+            $runningBalance = (float) Debt::where('user_id', $user->id)->where('status', 'active')->sum('remaining');
+
+            foreach ($planItems->take(6) as $monthStr => $items) {
+                $monthName = \Carbon\Carbon::parse($monthStr)->translatedFormat('M Y');
+                $monthPayment = (float) $items->sum('allocated_amount');
+                $runningBalance = max(0, $runningBalance - $monthPayment);
+
+                $projectionLabels[] = $monthName;
+                $projectionPayments[] = round($monthPayment, 2);
+                $projectionBalances[] = round($runningBalance, 2);
+            }
+        }
 
         return view('livewire.dashboard.index', [
             'riskSummary' => $riskSummary,
@@ -211,7 +230,6 @@ class Index extends Component
             'upcomingExpectedIncomes' => $upcomingExpectedIncomes,
             'upcomingDebts' => $upcomingDebts,
             'bankDistribution' => $bankDistribution,
-            'debtTypeDistribution' => $debtTypeDistribution,
             'latestAdvice' => $latestAdvice,
             'totalMonthlyIncome' => $totalMonthlyIncome,
             'totalMonthlyExpense' => $totalMonthlyExpense,
@@ -221,6 +239,12 @@ class Index extends Component
             'activeAccountsCount' => $activeAccountsCount,
             'debtToIncomeRatio' => $debtToIncomeRatio,
             'connectedBanksCount' => $connectedBanksCount,
+            'chartBankLabels' => $chartBankLabels,
+            'chartBankValues' => $chartBankValues,
+            'chartBankColors' => $chartBankColors,
+            'projectionLabels' => $projectionLabels,
+            'projectionPayments' => $projectionPayments,
+            'projectionBalances' => $projectionBalances,
         ])->layout('layouts.app');
     }
 }

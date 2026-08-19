@@ -286,9 +286,29 @@ class Index extends Component
         ];
 
         // 8. SON ÖDEME GEÇMİŞİ
-        $paymentLogs = PaymentLog::where('user_id', $userId)->latest('paid_at')->take(10)->get();
-
         $estimatedPayoffMonths = ($netSavings > 0 && $totalDebt > 0) ? ceil($totalDebt / $netSavings) : 0;
+
+        // Chart Datasets for Reports
+        // 1. Category Chart
+        $reportCatLabels = $categoryBreakdown->pluck('name')->toArray();
+        $reportCatValues = $categoryBreakdown->pluck('amount')->toArray();
+        $reportCatColors = $categoryBreakdown->pluck('color')->toArray();
+
+        // 2. Timing Chart (Ay içi dönemler + Hafta Sonu)
+        $reportTimingLabels = ['1-10 Gün (Maaş Başı)', '11-20 Gün (Ay Ortası)', '21-31 Gün (Ay Sonu)', 'Hafta İçi', 'Hafta Sonu'];
+        $reportTimingValues = [
+            $timingAnalysis['p1_10'],
+            $timingAnalysis['p11_20'],
+            $timingAnalysis['p21_31'],
+            $timingAnalysis['weekday_total'],
+            $timingAnalysis['weekend_total'],
+        ];
+
+        // 3. Bank Debt & Interest Chart
+        $reportBankNames = $bankAnalysis->pluck('bank_name')->toArray();
+        $reportBankDebts = $bankAnalysis->pluck('total_debt')->toArray();
+        $reportBankInterests = $bankAnalysis->pluck('annual_interest_cost')->toArray();
+        $reportBankColors = $bankAnalysis->pluck('bank_color')->toArray();
 
         return view('livewire.reports.index', [
             'totalExpense' => $totalExpense,
@@ -306,6 +326,15 @@ class Index extends Component
             'limitAnalysis' => $limitAnalysis,
             'paymentLogs' => $paymentLogs,
             'estimatedPayoffMonths' => $estimatedPayoffMonths,
+            'reportCatLabels' => $reportCatLabels,
+            'reportCatValues' => $reportCatValues,
+            'reportCatColors' => $reportCatColors,
+            'reportTimingLabels' => $reportTimingLabels,
+            'reportTimingValues' => $reportTimingValues,
+            'reportBankNames' => $reportBankNames,
+            'reportBankDebts' => $reportBankDebts,
+            'reportBankInterests' => $reportBankInterests,
+            'reportBankColors' => $reportBankColors,
         ])->layout('layouts.app');
     }
 }

@@ -10,17 +10,7 @@ use Livewire\Component;
 
 class Index extends Component
 {
-    // Filtreleme & Arama Özellikleri
-    public string $search = '';
-    public ?int $selected_bank_id = null;
-    public string $statusFilter = 'all'; // all, high_utilization, cash_advance, rewards, restructured
-    public string $sortBy = 'utilization_desc'; // utilization_desc, debt_desc, available_desc, limit_desc, name_asc
-    public string $viewMode = 'grid'; // grid (3D kartlar), table (tablo görünümü)
-
-    public function resetFilters(): void
-    {
-        $this->reset(['search', 'selected_bank_id', 'statusFilter', 'sortBy']);
-    }
+    public bool $showModal = false;
     public ?int $cardId = null;
     public ?int $bank_id = null;
     public string $name = '';
@@ -196,52 +186,7 @@ class Index extends Component
 
     public function render()
     {
-        $query = CreditCard::where('user_id', Auth::id())->with('bank');
-
-        // 1. Banka Filtresi
-        if (!empty($this->selected_bank_id)) {
-            $query->where('bank_id', $this->selected_bank_id);
-        }
-
-        // 2. Metin Arama
-        if (!empty($this->search)) {
-            $search = '%' . trim($this->search) . '%';
-            $query->where(function ($q) use ($search) {
-                $q->where('name', 'like', $search)
-                  ->orWhere('last_four', 'like', $search)
-                  ->orWhere('card_number', 'like', $search)
-                  ->orWhereHas('bank', function ($bq) use ($search) {
-                      $bq->where('name', 'like', $search);
-                  });
-            });
-        }
-
-        // 3. Durum Filtresi
-        if ($this->statusFilter === 'high_utilization') {
-            $query->whereRaw('current_debt / credit_limit >= 0.80');
-        } elseif ($this->statusFilter === 'cash_advance') {
-            $query->where('is_cash_advance_blocked', false);
-        } elseif ($this->statusFilter === 'rewards') {
-            $query->where('reward_balance', '>', 0);
-        } elseif ($this->statusFilter === 'restructured') {
-            $query->where('is_restructured', true);
-        }
-
-        $allCards = $query->get();
-
-        // 4. Sıralama
-        if ($this->sortBy === 'utilization_desc') {
-            $cards = $allCards->sortByDesc(fn($c) => $c->credit_limit > 0 ? ($c->current_debt / $c->credit_limit) : 0)->values();
-        } elseif ($this->sortBy === 'debt_desc') {
-            $cards = $allCards->sortByDesc('current_debt')->values();
-        } elseif ($this->sortBy === 'available_desc') {
-            $cards = $allCards->sortByDesc(fn($c) => max(0, $c->credit_limit - $c->current_debt))->values();
-        } elseif ($this->sortBy === 'limit_desc') {
-            $cards = $allCards->sortByDesc('credit_limit')->values();
-        } else {
-            $cards = $allCards->sortBy('name')->values();
-        }
-
+        $cards = CreditCard::where('user_id', Auth::id())->with('bank')->get();
         $banks = Bank::all();
 
         return view('livewire.cards.index', [

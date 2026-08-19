@@ -3,104 +3,21 @@
 @tailwind utilities;
 
 @layer base {
-    /* ----------------------------------------------------
-     * DVT BANK CRM TIPOGRAFİ HİYERARŞİSİ (MAKSİMUM 2 FONT)
-     * 1. Ana UI & Metin Fontu: Plus Jakarta Sans
-     * 2. Rakam & Finansal Veri Fontu: JetBrains Mono
-     * ---------------------------------------------------- */
-
     html, body {
-        font-family: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
         text-rendering: optimizeLegibility;
-        letter-spacing: -0.011em;
-        color: #0f172a;
+        letter-spacing: -0.012em;
     }
 
-    /* Tipografik Başlık Hiyerarşisi */
-    h1, h2, h3, h4, h5, h6 {
-        font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
-        font-weight: 800;
-        letter-spacing: -0.025em;
-        color: #0f172a;
-    }
-
-    h1 {
-        font-size: 1.75rem;
-        line-height: 2.25rem;
-        letter-spacing: -0.03em;
-    }
-
-    h2 {
-        font-size: 1.375rem;
-        line-height: 1.875rem;
+    h1, h2, h3, h4, h5, h6, .font-heading, .font-display {
+        font-family: 'Outfit', 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         letter-spacing: -0.025em;
     }
 
-    h3 {
-        font-size: 1.125rem;
-        line-height: 1.625rem;
-        letter-spacing: -0.02em;
-    }
-
-    /* Form ve Etkileşim Elemanları */
     input, select, textarea, button {
-        font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+        font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         letter-spacing: -0.01em;
     }
-
-    /* Rakamsal ve Finansal Veri Hizalaması (Tabular Numbers) */
-    .font-mono, code, kbd, samp, .font-financial {
-        font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace !important;
-        font-variant-numeric: tabular-nums !important;
-        font-feature-settings: "tnum" 1, "zero" 1 !important;
-    }
 }
-
-@layer utilities {
-    /* Yardımcı Tipografi Sınıfları */
-    .font-ui {
-        font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
-    }
-    
-    .font-data {
-        font-family: 'JetBrains Mono', monospace;
-        font-variant-numeric: tabular-nums;
-        font-feature-settings: "tnum" 1;
-    }
-
-    .heading-hero {
-        font-family: 'Plus Jakarta Sans', sans-serif;
-        font-weight: 900;
-        letter-spacing: -0.035em;
-    }
-
-    .heading-section {
-        font-family: 'Plus Jakarta Sans', sans-serif;
-        font-weight: 800;
-        letter-spacing: -0.025em;
-    }
-
-    .heading-card {
-        font-family: 'Plus Jakarta Sans', sans-serif;
-        font-weight: 700;
-        letter-spacing: -0.02em;
-    }
-
-    .text-body-clean {
-        font-family: 'Plus Jakarta Sans', sans-serif;
-        font-weight: 400;
-        line-height: 1.6;
-        letter-spacing: -0.005em;
-    }
-
-    .text-micro-label {
-        font-family: 'Plus Jakarta Sans', sans-serif;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-        font-size: 0.6875rem; /* 11px */
-    }
-}
-
