@@ -62,7 +62,7 @@ class AppServiceProvider extends ServiceProvider
             if ($body) {
                 return (new \Illuminate\Notifications\Messages\MailMessage)
                     ->subject($subject)
-                    ->html($body);
+                    ->view('emails.raw', ['body' => $body]);
             }
 
             return (new \Illuminate\Notifications\Messages\MailMessage)
