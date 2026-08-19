@@ -51,6 +51,72 @@
         </div>
     @endif
 
+    <!-- 🔍 DETAYLI FİLTRE & ARAMA BAR (Segmented Control & Grid/Table Toggle) -->
+    <div class="bg-white rounded-xl border border-slate-200 shadow-2xs p-3.5 sm:p-4 space-y-3">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-3">
+            <!-- Durum Sekmeleri (Segmented Bar) -->
+            <div class="inline-flex p-1 bg-slate-100 rounded-lg border border-slate-200/80 overflow-x-auto no-scrollbar">
+                <button wire:click="$set('statusFilter', 'all')" class="px-3 py-1.5 text-xs font-bold rounded-md transition-all whitespace-nowrap shrink-0 {{ $statusFilter === 'all' ? 'bg-white text-slate-900 shadow-2xs border border-slate-200/60' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/40' }}">
+                    Tümü <span class="ml-1 text-[10px] font-mono px-1.5 py-0.5 rounded bg-slate-200/70 text-slate-700">({{ $cards->count() }})</span>
+                </button>
+                <button wire:click="$set('statusFilter', 'high_utilization')" class="px-3 py-1.5 text-xs font-bold rounded-md transition-all whitespace-nowrap shrink-0 {{ $statusFilter === 'high_utilization' ? 'bg-white text-red-700 shadow-2xs border border-slate-200/60' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/40' }}">
+                    🔥 Yüksek Doluluk (%80+)
+                </button>
+                <button wire:click="$set('statusFilter', 'cash_advance')" class="px-3 py-1.5 text-xs font-bold rounded-md transition-all whitespace-nowrap shrink-0 {{ $statusFilter === 'cash_advance' ? 'bg-white text-indigo-700 shadow-2xs border border-slate-200/60' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/40' }}">
+                    ⚡ Avans Açık
+                </button>
+                <button wire:click="$set('statusFilter', 'rewards')" class="px-3 py-1.5 text-xs font-bold rounded-md transition-all whitespace-nowrap shrink-0 {{ $statusFilter === 'rewards' ? 'bg-white text-amber-700 shadow-2xs border border-slate-200/60' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/40' }}">
+                    🎁 Puanlı Kartlar
+                </button>
+                <button wire:click="$set('statusFilter', 'restructured')" class="px-3 py-1.5 text-xs font-bold rounded-md transition-all whitespace-nowrap shrink-0 {{ $statusFilter === 'restructured' ? 'bg-white text-emerald-700 shadow-2xs border border-slate-200/60' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/40' }}">
+                    🔄 Yapılandırılmış
+                </button>
+            </div>
+
+            <!-- Görünüm Seçici (Kart vs Tablo) -->
+            <div class="flex items-center gap-1.5 shrink-0 bg-slate-100 p-1 rounded-lg border border-slate-200/80">
+                <button wire:click="$set('viewMode', 'grid')" class="px-2.5 py-1 rounded-md text-xs font-bold transition-all flex items-center gap-1 cursor-pointer {{ $viewMode === 'grid' ? 'bg-white text-indigo-700 shadow-2xs border border-slate-200/60' : 'text-slate-600 hover:text-slate-900' }}">
+                    <span>💳</span>
+                    <span class="hidden sm:inline">Kart Akışı</span>
+                </button>
+                <button wire:click="$set('viewMode', 'table')" class="px-2.5 py-1 rounded-md text-xs font-bold transition-all flex items-center gap-1 cursor-pointer {{ $viewMode === 'table' ? 'bg-white text-indigo-700 shadow-2xs border border-slate-200/60' : 'text-slate-600 hover:text-slate-900' }}">
+                    <span>📑</span>
+                    <span class="hidden sm:inline">Tablo</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Arama, Banka & Sıralama Barı -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-1 border-t border-slate-100">
+            <!-- Arama Kutusu -->
+            <div class="relative">
+                <input type="text" wire:model.live.debounce.300ms="search" placeholder="Kart adı, son 4 hane veya banka ara..." class="w-full pl-9 pr-3 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xs font-medium text-slate-800 placeholder-slate-400 focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all">
+                <svg class="w-4 h-4 text-slate-400 absolute left-3 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/></svg>
+            </div>
+
+            <!-- Banka Seçimi -->
+            <div>
+                <select wire:model.live="selected_bank_id" class="w-full py-1.5 px-3 bg-slate-50 border border-slate-200 rounded-lg text-xs font-semibold text-slate-800 focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all">
+                    <option value="">Tüm Bankalar</option>
+                    @foreach ($banks as $b)
+                        <option value="{{ $b->id }}">{{ $b->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+
+            <!-- Sıralama -->
+            <div>
+                <select wire:model.live="sortBy" class="w-full py-1.5 px-3 bg-slate-50 border border-slate-200 rounded-lg text-xs font-semibold text-slate-800 focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all">
+                    <option value="utilization_desc">Doluluk Oranına Göre (Yüksek -> Düşük)</option>
+                    <option value="debt_desc">Borç Tutarına Göre (En Çok Borçlu)</option>
+                    <option value="available_desc">Kullanılabilir Limite Göre (En Yüksek)</option>
+                    <option value="limit_desc">Toplam Limite Göre</option>
+                    <option value="name_asc">Kart Adına Göre (A-Z)</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
     <!-- Kartlar Grid -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         @forelse ($cards as $card)
@@ -242,41 +308,150 @@
                         </div>
 
                         <!-- Düzenle / Sil -->
-                        <div class="flex items-center gap-1">
-                            <button wire:click="openEditModal({{ $card->id }})" title="Düzenle" class="p-1.5 bg-white/10 hover:bg-white/20 active:scale-90 text-white rounded-lg text-xs font-bold backdrop-blur-xs transition-all">
-                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
-                            </button>
-                            <button wire:click="delete({{ $card->id }})" wire:confirm="Bu kartı silmek istediğinize emin misiniz?" title="Sil" class="p-1.5 bg-red-600/30 hover:bg-red-600 text-red-200 hover:text-white rounded-lg text-xs font-bold backdrop-blur-xs transition-all">
-                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
-                            </button>
+                            </div>
+
+                            <!-- Siyah Manyetik Bant Simülasyonu -->
+                            <div class="-mx-5 sm:-mx-6 h-9 bg-slate-950 border-y border-slate-800 flex items-center justify-end px-4">
+                                <span class="text-[10px] font-mono text-slate-500 tracking-widest">MAGNETIC STRIPE SECURITY</span>
+                            </div>
+
+                            <!-- Ekstra Metrikler Grid -->
+                            <div class="grid grid-cols-2 gap-3 text-xs">
+                                <div class="p-2 bg-white/5 rounded-xl border border-white/10">
+                                    <span class="text-[9px] text-slate-400 uppercase block font-bold">Nakit Avans Limiti</span>
+                                    @if ($card->is_cash_advance_blocked)
+                                        <span class="font-bold text-red-400 text-xs">⛔ Nakit Avansa Kapalı</span>
+                                    @else
+                                        <span class="font-mono font-bold text-emerald-300 text-sm">₺{{ number_format($card->cash_advance_limit ?: $available, 2, ',', '.') }}</span>
+                                    @endif
+                                </div>
+
+                                <div class="p-2 bg-white/5 rounded-xl border border-white/10">
+                                    <span class="text-[9px] text-slate-400 uppercase block font-bold">Biriken Puan / Jest Lira</span>
+                                    <span class="font-mono font-bold text-amber-300 text-sm">₺{{ number_format($card->reward_balance ?: 0, 2, ',', '.') }}</span>
+                                </div>
+
+                                <div class="p-2 bg-white/5 rounded-xl border border-white/10">
+                                    <span class="text-[9px] text-slate-400 uppercase block font-bold">Aylık Akdi Faiz Oranı</span>
+                                    <span class="font-mono font-bold text-white text-sm">%{{ number_format($card->interest_rate, 2) }}</span>
+                                </div>
+
+                                <div class="p-2 bg-white/5 rounded-xl border border-white/10">
+                                    <span class="text-[9px] text-slate-400 uppercase block font-bold">Yapılandırma Durumu</span>
+                                    <span class="font-bold text-xs {{ $card->is_restructured ? 'text-amber-300' : 'text-slate-300' }}">
+                                        {{ $card->is_restructured ? '🔄 Yapılandırılmış' : 'Standart Sezon' }}
+                                    </span>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <!-- Risk Sayacı Uyarısı (Eğer Gecikme Varsa) -->
-                @if ($daysOverdue > 0)
-                    <div class="mt-2.5 -mx-5 sm:-mx-6 -mb-5 sm:-mb-6 p-2 text-center text-[10px] font-black tracking-wide {{ $isNearLegal ? 'bg-red-600 text-white animate-pulse' : 'bg-amber-500 text-slate-950' }}">
-                        {{ $daysOverdue }} Gündür Ödeme Yok • Yasal Takibe {{ $daysToLegal }} Gün Kaldı!
+                    <!-- Risk Sayacı Uyarısı (Eğer Gecikme Varsa) -->
+                    @if ($daysOverdue > 0)
+                        <div class="mt-2.5 -mx-5 sm:-mx-6 -mb-5 sm:-mb-6 p-2 text-center text-[10px] font-black tracking-wide {{ $isNearLegal ? 'bg-red-600 text-white animate-pulse' : 'bg-amber-500 text-slate-950' }}">
+                            {{ $daysOverdue }} Gündür Ödeme Yok • Yasal Takibe {{ $daysToLegal }} Gün Kaldı!
+                        </div>
+                    @endif
+                </div>
+            @empty
+                <div class="col-span-full bg-white rounded-3xl p-12 text-center border-2 border-dashed border-gray-200 space-y-4 shadow-sm">
+                    <div class="w-16 h-16 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center mx-auto text-3xl shadow-xs">
+                        <svg class="w-8 h-8 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 3h6m-6 3h6m-6 3h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5z"/></svg>
                     </div>
-                @endif
-            </div>
-        @empty
-            <div class="col-span-full bg-white rounded-3xl p-12 text-center border-2 border-dashed border-gray-200 space-y-4 shadow-sm">
-                <div class="w-16 h-16 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center mx-auto text-3xl shadow-xs">
-                    <svg class="w-8 h-8 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 3h6m-6 3h6m-6 3h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5z"/></svg>
+                    <div>
+                        <h3 class="text-lg font-bold text-gray-900">Henüz Kayıtlı Kredi Kartınız Yok</h3>
+                        <p class="text-sm text-gray-500 max-w-md mx-auto mt-1">
+                            Bankalardaki kredi kartlarınızı, limitlerini ve güncel dönem borçlarını ekleyerek banka temalı gerçek kart görselleriyle takip edin.
+                        </p>
+                    </div>
+                    <button wire:click="openCreateModal" class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm rounded-xl shadow-md transition-all">
+                        + İlk Kredi Kartınızı Ekleyin
+                    </button>
                 </div>
-                <div>
-                    <h3 class="text-lg font-bold text-gray-900">Henüz Kayıtlı Kredi Kartınız Yok</h3>
-                    <p class="text-sm text-gray-500 max-w-md mx-auto mt-1">
-                        Bankalardaki kredi kartlarınızı, limitlerini ve güncel dönem borçlarını ekleyerek banka temalı gerçek kart görselleriyle takip edin.
-                    </p>
-                </div>
-                <button wire:click="openCreateModal" class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm rounded-xl shadow-md transition-all">
-                    + İlk Kredi Kartınızı Ekleyin
-                </button>
+            @endforelse
+        </div>
+
+    @elseif ($viewMode === 'table')
+        <!-- TABLO GÖRÜNÜMÜ -->
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-2xs overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-xs">
+                    <thead class="bg-slate-50 border-b border-slate-200 text-slate-700 font-bold uppercase tracking-wider">
+                        <tr>
+                            <th class="px-4 py-3">Banka & Kart</th>
+                            <th class="px-4 py-3 text-right">Kart Limiti</th>
+                            <th class="px-4 py-3 text-right">Güncel Borç</th>
+                            <th class="px-4 py-3 text-right">Serbest Limit</th>
+                            <th class="px-4 py-3 text-right">Asgari Ödeme</th>
+                            <th class="px-4 py-3 text-center">Doluluk %</th>
+                            <th class="px-4 py-3 text-center">Kesim / Son Vade</th>
+                            <th class="px-4 py-3 text-center">Avans Durumu</th>
+                            <th class="px-4 py-3 text-right">İşlemler</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100 font-medium text-slate-800">
+                        @forelse ($cards as $c)
+                            @php
+                                $limit = (float) $c->credit_limit;
+                                $debt = (float) $c->current_debt;
+                                $avail = max(0, $limit - $debt);
+                                $util = $limit > 0 ? min(100, round(($debt / $limit) * 100)) : 0;
+                                $minPay = (float) ($c->minimum_payment ?: ($debt * 0.40));
+                            @endphp
+                            <tr class="hover:bg-slate-50/80 transition-colors">
+                                <td class="px-4 py-3">
+                                    <div class="flex items-center gap-2.5">
+                                        <span class="w-7 h-7 rounded-lg flex items-center justify-center text-white text-[10px] font-black shrink-0" style="background-color: {{ $c->bank?->color ?? '#6366f1' }}">
+                                            {{ mb_substr($c->bank?->name ?? 'K', 0, 2) }}
+                                        </span>
+                                        <div>
+                                            <span class="font-bold text-slate-900 block">{{ $c->name }}</span>
+                                            <span class="text-[10px] text-slate-500">{{ $c->bank?->name ?? 'Banka' }} · •••• {{ $c->last_four ?: '----' }}</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-4 py-3 text-right font-mono font-bold text-slate-900">₺{{ number_format($limit, 2, ',', '.') }}</td>
+                                <td class="px-4 py-3 text-right font-mono font-bold text-red-600">₺{{ number_format($debt, 2, ',', '.') }}</td>
+                                <td class="px-4 py-3 text-right font-mono font-bold text-emerald-600">₺{{ number_format($avail, 2, ',', '.') }}</td>
+                                <td class="px-4 py-3 text-right font-mono font-bold text-amber-600">₺{{ number_format($minPay, 2, ',', '.') }}</td>
+                                <td class="px-4 py-3 text-center font-mono">
+                                    <span class="px-2 py-0.5 rounded-md font-bold text-[10px] {{ $util >= 80 ? 'bg-red-100 text-red-800' : 'bg-slate-100 text-slate-800' }}">
+                                        %{{ $util }}
+                                    </span>
+                                </td>
+                                <td class="px-4 py-3 text-center text-slate-600">
+                                    Ayın {{ $c->statement_day }}'i / {{ $c->due_day }}'u
+                                </td>
+                                <td class="px-4 py-3 text-center">
+                                    @if ($c->is_cash_advance_blocked)
+                                        <span class="px-2 py-0.5 bg-red-100 text-red-700 font-bold text-[10px] rounded">Kapalı</span>
+                                    @else
+                                        <span class="px-2 py-0.5 bg-emerald-100 text-emerald-700 font-bold text-[10px] rounded">Açık</span>
+                                    @endif
+                                </td>
+                                <td class="px-4 py-3 text-right">
+                                    <div class="flex items-center justify-end gap-1.5">
+                                        <button wire:click="openEditModal({{ $c->id }})" class="p-1 text-slate-500 hover:text-indigo-600 transition-colors">
+                                            Düzenle
+                                        </button>
+                                        <button wire:click="delete({{ $c->id }})" wire:confirm="Bu kartı silmek istediğinize emin misiniz?" class="p-1 text-red-500 hover:text-red-700 transition-colors">
+                                            Sil
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="9" class="px-4 py-8 text-center text-slate-400">
+                                    Kayıtlı kredi kartı bulunamadı.
+                                </td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
             </div>
-        @endforelse
-    </div>
+        </div>
+    @endif
 
     <!-- KART EKLEME / DÜZENLEME MODALI (CANLI KART ÖNİZLEMELİ) -->
     @if ($showModal)
