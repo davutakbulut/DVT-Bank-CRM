@@ -50,16 +50,8 @@
                 </div>
             </div>
 
-            <!-- Right Side: Quick Action Button & User Profile Dropdown (Desktop) -->
+            <!-- Right Side: User Profile Dropdown (Desktop) -->
             <div class="hidden md:flex items-center gap-2.5 shrink-0">
-                <!-- Hızlı Ekle Butonu -->
-                <button @click="$dispatch('openQuickAction')" 
-                        title="AI Akıllı Doğal Dil veya Hızlı İşlem Ekle"
-                        class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-r from-indigo-600 to-sky-600 hover:from-indigo-700 hover:to-sky-700 text-white font-black text-xs shadow-xs transition-all hover:scale-105 active:scale-95">
-                    <span>⚡</span>
-                    <span>Hızlı Ekle</span>
-                </button>
-
                 <!-- User Profile & Role Panels Menu -->
                 <x-dropdown align="right" width="72">
                     <x-slot name="trigger">
