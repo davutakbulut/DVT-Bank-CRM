@@ -17,11 +17,11 @@ class Dropdown extends Component
         'debtUpdated' => 'handleUpdate',
     ];
 
-    public function mount(NotificationService $service): void
+    public function mount(): void
     {
         $user = Auth::user();
         if ($user) {
-            // Arka planda günlük kontrol yap
+            $service = app(NotificationService::class);
             $service->generateDailyAiNotification($user);
             $service->checkAndCreateRiskAlerts($user);
         }
@@ -29,7 +29,7 @@ class Dropdown extends Component
 
     public function handleUpdate(): void
     {
-        // Tetikleme sonrası yeniden render et
+        // Re-render
     }
 
     public function toggleDropdown(): void
@@ -42,9 +42,11 @@ class Dropdown extends Component
         $this->isOpen = false;
     }
 
-    public function markAsRead(int $id, NotificationService $service)
+    public function markAsRead(int $id)
     {
         $user = Auth::user();
+        if (!$user) return;
+
         $notif = FinancialNotification::where('user_id', $user->id)->find($id);
 
         if ($notif) {
@@ -56,10 +58,11 @@ class Dropdown extends Component
         }
     }
 
-    public function toggleRead(int $id, NotificationService $service): void
+    public function toggleRead(int $id): void
     {
         $user = Auth::user();
         if ($user) {
+            $service = app(NotificationService::class);
             $service->toggleRead($user, $id);
             $this->dispatch('refreshNotifications');
         }
@@ -74,45 +77,50 @@ class Dropdown extends Component
         }
     }
 
-    public function markAllAsRead(NotificationService $service): void
+    public function markAllAsRead(): void
     {
         $user = Auth::user();
         if ($user) {
+            $service = app(NotificationService::class);
             $service->markAllAsRead($user);
             $this->dispatch('refreshNotifications');
         }
     }
 
-    public function markAllAsUnread(NotificationService $service): void
+    public function markAllAsUnread(): void
     {
         $user = Auth::user();
         if ($user) {
+            $service = app(NotificationService::class);
             $service->markAllAsUnread($user);
             $this->dispatch('refreshNotifications');
         }
     }
 
-    public function deleteAll(NotificationService $service): void
+    public function deleteAll(): void
     {
         $user = Auth::user();
         if ($user) {
+            $service = app(NotificationService::class);
             $service->deleteAll($user);
             $this->dispatch('refreshNotifications');
         }
     }
 
-    public function generateAiAdvice(NotificationService $service): void
+    public function generateAiAdvice(): void
     {
         $user = Auth::user();
         if ($user) {
+            $service = app(NotificationService::class);
             $service->generateDailyAiNotification($user, true);
             $this->dispatch('refreshNotifications');
         }
     }
 
-    public function render(NotificationService $service)
+    public function render()
     {
         $user = Auth::user();
+        $service = app(NotificationService::class);
         $unreadCount = $user ? $service->getUnreadCount($user) : 0;
         $notifications = $user ? $service->getRecent($user, 6) : collect();
 
