@@ -69,7 +69,46 @@ class QuickActionModal extends Component
     public function close(): void
     {
         $this->isOpen = false;
-        $this->reset(['aiInputText', 'parsedData', 'parsedTransactions', 'bulkText', 'bulkParsedList']);
+        $this->reset(['parsedData', 'parsedTransactions', 'aiInputText', 'bulkText', 'bulkParsedList']);
+    }
+
+    public function markAllAsRead(): void
+    {
+        $user = Auth::user();
+        if ($user) {
+            $service = app(\App\Services\NotificationService::class);
+            $service->markAllAsRead($user);
+            $this->dispatch('refreshNotifications');
+        }
+    }
+
+    public function markAllAsUnread(): void
+    {
+        $user = Auth::user();
+        if ($user) {
+            $service = app(\App\Services\NotificationService::class);
+            $service->markAllAsUnread($user);
+            $this->dispatch('refreshNotifications');
+        }
+    }
+
+    public function toggleRead(int $id): void
+    {
+        $user = Auth::user();
+        if ($user) {
+            $service = app(\App\Services\NotificationService::class);
+            $service->toggleRead($user, $id);
+            $this->dispatch('refreshNotifications');
+        }
+    }
+
+    public function deleteNotification(int $id): void
+    {
+        $user = Auth::user();
+        if ($user) {
+            \App\Models\FinancialNotification::where('user_id', $user->id)->where('id', $id)->delete();
+            $this->dispatch('refreshNotifications');
+        }
     }
 
     public function updatedAiInputText(string $value): void
