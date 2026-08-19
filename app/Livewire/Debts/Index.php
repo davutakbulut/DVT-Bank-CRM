@@ -408,6 +408,11 @@ class Index extends Component
         $userCards = \App\Models\CreditCard::where('user_id', $userId)->with('bank')->get();
         $userAccounts = \App\Models\Account::where('user_id', $userId)->with('bank')->get();
 
+        $user = Auth::user();
+        $userDebtCount = Debt::where('user_id', $userId)->count();
+        $plan = $user ? $user->currentPlan() : null;
+        $maxDebts = ($plan && $plan->max_debts === -1) || ($user && ($user->hasRole('super_admin') || $user->hasRole('admin'))) ? 'Sınırsız' : ($plan->max_debts ?? 5);
+
         // Finansal Özet İstatistikleri (Tüm Filtrelenen Borçlar Üzerinden)
         $totalRemaining = $debts->sum('remaining');
         $totalMonthly = $debts->sum('installment_amount');
@@ -443,7 +448,7 @@ class Index extends Component
             'avgInterest' => $avgInterest,
             'userDebtCount' => $userDebtCount,
             'maxDebts' => $maxDebts,
-            'canCreateDebt' => $user->canCreateDebt(),
+            'canCreateDebt' => $user ? $user->canCreateDebt() : true,
             'debtRiskChartData' => $debtRiskChartData,
             'topInterestDebts' => $topInterestDebts,
         ])->layout('layouts.app');
