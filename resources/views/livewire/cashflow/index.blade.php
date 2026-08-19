@@ -1,31 +1,31 @@
 <div class="py-2 sm:py-6 px-3 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-6">
     <!-- 1. Header & Aksiyonlar -->
-    <div class="bg-white p-4 sm:p-5 rounded-2xl border border-gray-200/90 shadow-sm space-y-4">
+    <div class="bg-white p-4 sm:p-5 rounded-2xl border border-gray-200/90 shadow-sm space-y-3.5 sm:space-y-4">
         <!-- Üst Satır: Başlık + Görünüm Seçici & Excel -->
-        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-gray-100 pb-3.5">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 sm:gap-4 border-b border-gray-100 pb-3">
             <div>
-                <h1 class="text-xl sm:text-2xl font-black text-gray-900 tracking-tight flex items-center gap-2">
+                <h1 class="text-lg sm:text-2xl font-black text-gray-900 tracking-tight flex items-center gap-2">
                     <span>⚡</span>
                     <span>Gelir & Gider Yönetimi (Nakit Akışı)</span>
                 </h1>
                 <p class="text-xs sm:text-sm text-gray-500 mt-0.5">Aylık net nakit akışınız, tekrarlayan sabit giderleriniz ve borç ödemelerine ayrılabilir bütçeniz</p>
             </div>
 
-            <div class="flex items-center gap-2 sm:gap-3 self-start md:self-auto">
-                <!-- Excel / CSV İndirme Butonu (Tooltip Popup ile) -->
+            <div class="flex items-center justify-between sm:justify-end gap-2 sm:gap-3 w-full md:w-auto pt-1 md:pt-0">
+                <!-- Excel / CSV İndirme Butonu -->
                 <div class="relative group/tooltip" x-data="{ show: false }">
                     <button wire:click="exportExcel" 
                             @mouseenter="show = true" 
                             @mouseleave="show = false"
                             class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300 font-bold text-xs rounded-xl shadow-2xs transition-all active:scale-95 cursor-pointer">
                         <span>📥</span>
-                        <span>Excel'e Aktar</span>
+                        <span>Excel</span>
                     </button>
 
                     <!-- Açıklayıcı Bilgi Popup (Tooltip) -->
                     <div x-show="show" 
                          x-cloak
-                         class="absolute right-0 top-full mt-2 w-72 p-3 bg-slate-900 text-white rounded-2xl shadow-2xl border border-slate-700 text-xs z-50 pointer-events-none transition-all">
+                         class="absolute left-0 sm:left-auto sm:right-0 top-full mt-2 w-72 p-3 bg-slate-900 text-white rounded-2xl shadow-2xl border border-slate-700 text-xs z-50 pointer-events-none transition-all">
                         <div class="flex items-center gap-1.5 font-bold text-emerald-300 border-b border-slate-800 pb-1 mb-1">
                             <span>📈</span>
                             <span>Nakit Akışı Excel Raporu</span>
@@ -39,15 +39,15 @@
 
                 <!-- Görünüm Seçici -->
                 <div class="inline-flex rounded-xl bg-gray-100 p-1 border border-gray-200">
-                    <button wire:click="$set('viewMode', 'feed')" class="px-2.5 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer {{ $viewMode === 'feed' ? 'bg-white text-indigo-700 shadow-xs' : 'text-gray-600 hover:text-gray-900' }}">
+                    <button wire:click="$set('viewMode', 'feed')" class="px-2.5 py-1 rounded-lg text-xs font-bold transition-all flex items-center gap-1 cursor-pointer {{ $viewMode === 'feed' ? 'bg-white text-indigo-700 shadow-xs' : 'text-gray-600 hover:text-gray-900' }}">
                         <span>⚡</span>
                         <span class="hidden sm:inline">Zaman Akışı</span>
                     </button>
-                    <button wire:click="$set('viewMode', 'columns')" class="px-2.5 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer {{ $viewMode === 'columns' ? 'bg-white text-indigo-700 shadow-xs' : 'text-gray-600 hover:text-gray-900' }}">
+                    <button wire:click="$set('viewMode', 'columns')" class="px-2.5 py-1 rounded-lg text-xs font-bold transition-all flex items-center gap-1 cursor-pointer {{ $viewMode === 'columns' ? 'bg-white text-indigo-700 shadow-xs' : 'text-gray-600 hover:text-gray-900' }}">
                         <span>📑</span>
                         <span class="hidden sm:inline">Çift Kolon</span>
                     </button>
-                    <button wire:click="$set('viewMode', 'table')" class="px-2.5 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer {{ $viewMode === 'table' ? 'bg-white text-indigo-700 shadow-xs' : 'text-gray-600 hover:text-gray-900' }}">
+                    <button wire:click="$set('viewMode', 'table')" class="px-2.5 py-1 rounded-lg text-xs font-bold transition-all flex items-center gap-1 cursor-pointer {{ $viewMode === 'table' ? 'bg-white text-indigo-700 shadow-xs' : 'text-gray-600 hover:text-gray-900' }}">
                         <span>📊</span>
                         <span class="hidden sm:inline">Tablo</span>
                     </button>
@@ -55,25 +55,25 @@
             </div>
         </div>
 
-        <!-- Alt Satır: Tek Satırda Ekleme Butonları -->
-        <div class="flex items-center justify-between gap-3 flex-wrap sm:flex-nowrap pt-0.5">
+        <!-- Alt Satır: Eşit Grid Ekleme Butonları (Mobilde Tam Simetrik 3 Sütun) -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pt-0.5">
             <span class="text-xs font-bold text-gray-500 hidden sm:inline-flex items-center gap-1.5">
                 <span>➕</span>
                 <span>Hızlı Nakit Hareketi Ekle:</span>
             </span>
 
-            <div class="flex items-center gap-2 w-full sm:w-auto justify-end">
-                <button wire:click="openExpectedIncomeModal" class="flex-1 sm:flex-none px-4 py-2 bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white font-bold text-xs sm:text-sm rounded-xl shadow-xs transition-all flex items-center justify-center gap-1.5 cursor-pointer">
+            <div class="grid grid-cols-3 gap-2 w-full sm:w-auto sm:flex sm:items-center">
+                <button wire:click="openExpectedIncomeModal" class="h-10 sm:h-auto px-2.5 sm:px-4 py-2 bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white font-bold text-xs sm:text-sm rounded-xl shadow-xs transition-all flex items-center justify-center gap-1 cursor-pointer text-center">
                     <span>🗓️</span>
-                    <span>+ Beklenen Gelir</span>
+                    <span class="truncate">Beklenen</span>
                 </button>
-                <button wire:click="openIncomeModal" class="flex-1 sm:flex-none px-4 py-2 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-bold text-xs sm:text-sm rounded-xl shadow-xs transition-all flex items-center justify-center gap-1.5 cursor-pointer">
+                <button wire:click="openIncomeModal" class="h-10 sm:h-auto px-2.5 sm:px-4 py-2 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-bold text-xs sm:text-sm rounded-xl shadow-xs transition-all flex items-center justify-center gap-1 cursor-pointer text-center">
                     <span>+</span>
-                    <span>Gelir Ekle</span>
+                    <span class="truncate">Gelir</span>
                 </button>
-                <button wire:click="openExpenseModal" class="flex-1 sm:flex-none px-4 py-2 bg-rose-600 hover:bg-rose-700 active:scale-95 text-white font-bold text-xs sm:text-sm rounded-xl shadow-xs transition-all flex items-center justify-center gap-1.5 cursor-pointer">
+                <button wire:click="openExpenseModal" class="h-10 sm:h-auto px-2.5 sm:px-4 py-2 bg-rose-600 hover:bg-rose-700 active:scale-95 text-white font-bold text-xs sm:text-sm rounded-xl shadow-xs transition-all flex items-center justify-center gap-1 cursor-pointer text-center">
                     <span>+</span>
-                    <span>Gider Ekle</span>
+                    <span class="truncate">Gider</span>
                 </button>
             </div>
         </div>
@@ -88,50 +88,50 @@
     @endif
 
     <!-- 2. Finansal KPI Özet Kartları -->
-    <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4">
         <!-- Toplam Gelir -->
-        <div class="bg-white p-4 rounded-2xl border border-gray-200/80 shadow-xs flex items-center gap-3">
-            <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-lg font-black shrink-0">
+        <div class="bg-white p-3 sm:p-4 rounded-2xl border border-gray-200/80 shadow-2xs flex items-center gap-2.5 sm:gap-3">
+            <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-base sm:text-lg font-black shrink-0">
                 💰
             </div>
-            <div class="min-w-0">
-                <span class="text-[11px] font-bold text-gray-500 block uppercase tracking-wider truncate">Toplam Gelir</span>
-                <span class="text-lg sm:text-xl font-black text-emerald-600 truncate block">₺{{ number_format($totalIncome, 2, ',', '.') }}</span>
+            <div class="min-w-0 flex-1">
+                <span class="text-[10px] sm:text-[11px] font-bold text-gray-500 block uppercase tracking-wider truncate">Toplam Gelir</span>
+                <span class="text-sm sm:text-xl font-black font-mono text-emerald-600 truncate block">₺{{ number_format($totalIncome, 2, ',', '.') }}</span>
             </div>
         </div>
 
         <!-- Sabit & Değişken Giderler -->
-        <div class="bg-white p-4 rounded-2xl border border-gray-200/80 shadow-xs flex items-center gap-3">
-            <div class="w-10 h-10 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center text-lg font-black shrink-0">
+        <div class="bg-white p-3 sm:p-4 rounded-2xl border border-gray-200/80 shadow-2xs flex items-center gap-2.5 sm:gap-3">
+            <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center text-base sm:text-lg font-black shrink-0">
                 💸
             </div>
-            <div class="min-w-0">
-                <span class="text-[11px] font-bold text-gray-500 block uppercase tracking-wider truncate">Toplam Giderler</span>
-                <span class="text-lg sm:text-xl font-black text-rose-600 truncate block">₺{{ number_format($totalExpense, 2, ',', '.') }}</span>
+            <div class="min-w-0 flex-1">
+                <span class="text-[10px] sm:text-[11px] font-bold text-gray-500 block uppercase tracking-wider truncate">Toplam Gider</span>
+                <span class="text-sm sm:text-xl font-black font-mono text-rose-600 truncate block">₺{{ number_format($totalExpense, 2, ',', '.') }}</span>
             </div>
         </div>
 
         <!-- Borçlara Ayrılabilir Net Bütçe -->
-        <div class="bg-white p-4 rounded-2xl border border-gray-200/80 shadow-xs flex items-center gap-3">
-            <div class="w-10 h-10 rounded-xl {{ $netRemaining < 0 ? 'bg-red-50 text-red-600' : 'bg-indigo-50 text-indigo-600' }} flex items-center justify-center text-lg font-black shrink-0">
+        <div class="bg-white p-3 sm:p-4 rounded-2xl border border-gray-200/80 shadow-2xs flex items-center gap-2.5 sm:gap-3">
+            <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl {{ $netRemaining < 0 ? 'bg-red-50 text-red-600' : 'bg-indigo-50 text-indigo-600' }} flex items-center justify-center text-base sm:text-lg font-black shrink-0">
                 ⚡
             </div>
-            <div class="min-w-0">
-                <span class="text-[11px] font-bold text-gray-500 block uppercase tracking-wider truncate">Borca Ayrılabilir Net</span>
-                <span class="text-lg sm:text-xl font-black {{ $netRemaining < 0 ? 'text-red-600' : 'text-indigo-700' }} truncate block">
+            <div class="min-w-0 flex-1">
+                <span class="text-[10px] sm:text-[11px] font-bold text-gray-500 block uppercase tracking-wider truncate">Borca Kalan Net</span>
+                <span class="text-sm sm:text-xl font-black font-mono {{ $netRemaining < 0 ? 'text-red-600' : 'text-indigo-700' }} truncate block">
                     ₺{{ number_format($netRemaining, 2, ',', '.') }}
                 </span>
             </div>
         </div>
 
         <!-- Tasarruf Oranı -->
-        <div class="bg-white p-4 rounded-2xl border border-gray-200/80 shadow-xs flex items-center gap-3">
-            <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-lg font-black shrink-0">
+        <div class="bg-white p-3 sm:p-4 rounded-2xl border border-gray-200/80 shadow-2xs flex items-center gap-2.5 sm:gap-3">
+            <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-base sm:text-lg font-black shrink-0">
                 📈
             </div>
-            <div class="min-w-0">
-                <span class="text-[11px] font-bold text-gray-500 block uppercase tracking-wider truncate">Tasarruf Oranı</span>
-                <span class="text-lg sm:text-xl font-black text-gray-900 truncate block">%{{ $savingsRate }}</span>
+            <div class="min-w-0 flex-1">
+                <span class="text-[10px] sm:text-[11px] font-bold text-gray-500 block uppercase tracking-wider truncate">Tasarruf Oranı</span>
+                <span class="text-sm sm:text-xl font-black font-mono text-gray-900 truncate block">%{{ $savingsRate }}</span>
             </div>
         </div>
     </div>
@@ -140,21 +140,21 @@
     <div class="bg-white rounded-2xl border border-gray-200/90 shadow-sm p-4 sm:p-5 space-y-4">
         <!-- Üst Satır: Sekmeler + Arama -->
         <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-3 pb-3 border-b border-gray-100">
-            <!-- Tür Sekmeleri -->
+            <!-- Tür Sekmeleri (Mobilde Yatay Kaydırılabilir) -->
             <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-1">
-                <button wire:click="$set('activeTab', 'all')" class="px-3.5 py-1.5 text-xs font-bold rounded-xl transition-all whitespace-nowrap {{ $activeTab === 'all' ? 'bg-indigo-600 text-white shadow-xs' : 'text-gray-600 hover:bg-gray-100' }}">
+                <button wire:click="$set('activeTab', 'all')" class="px-3 py-1.5 text-xs font-bold rounded-xl transition-all whitespace-nowrap shrink-0 {{ $activeTab === 'all' ? 'bg-indigo-600 text-white shadow-xs' : 'text-gray-600 hover:bg-gray-100' }}">
                     Tümü ({{ $stream->count() }})
                 </button>
-                <button wire:click="$set('activeTab', 'expected')" class="px-3.5 py-1.5 text-xs font-bold rounded-xl transition-all whitespace-nowrap {{ $activeTab === 'expected' ? 'bg-indigo-600 text-white shadow-xs' : 'text-gray-600 hover:bg-gray-100' }}">
+                <button wire:click="$set('activeTab', 'expected')" class="px-3 py-1.5 text-xs font-bold rounded-xl transition-all whitespace-nowrap shrink-0 {{ $activeTab === 'expected' ? 'bg-indigo-600 text-white shadow-xs' : 'text-gray-600 hover:bg-gray-100' }}">
                     🗓️ Beklenen ({{ $expectedIncomes->count() }})
                 </button>
-                <button wire:click="$set('activeTab', 'income')" class="px-3.5 py-1.5 text-xs font-bold rounded-xl transition-all whitespace-nowrap {{ $activeTab === 'income' ? 'bg-emerald-600 text-white shadow-xs' : 'text-gray-600 hover:bg-gray-100' }}">
+                <button wire:click="$set('activeTab', 'income')" class="px-3 py-1.5 text-xs font-bold rounded-xl transition-all whitespace-nowrap shrink-0 {{ $activeTab === 'income' ? 'bg-emerald-600 text-white shadow-xs' : 'text-gray-600 hover:bg-gray-100' }}">
                     🟢 Gelirler
                 </button>
-                <button wire:click="$set('activeTab', 'expense')" class="px-3.5 py-1.5 text-xs font-bold rounded-xl transition-all whitespace-nowrap {{ $activeTab === 'expense' ? 'bg-rose-600 text-white shadow-xs' : 'text-gray-600 hover:bg-gray-100' }}">
+                <button wire:click="$set('activeTab', 'expense')" class="px-3 py-1.5 text-xs font-bold rounded-xl transition-all whitespace-nowrap shrink-0 {{ $activeTab === 'expense' ? 'bg-rose-600 text-white shadow-xs' : 'text-gray-600 hover:bg-gray-100' }}">
                     🔴 Giderler
                 </button>
-                <button wire:click="$set('activeTab', 'recurring')" class="px-3.5 py-1.5 text-xs font-bold rounded-xl transition-all whitespace-nowrap {{ $activeTab === 'recurring' ? 'bg-indigo-600 text-white shadow-xs' : 'text-gray-600 hover:bg-gray-100' }}">
+                <button wire:click="$set('activeTab', 'recurring')" class="px-3 py-1.5 text-xs font-bold rounded-xl transition-all whitespace-nowrap shrink-0 {{ $activeTab === 'recurring' ? 'bg-indigo-600 text-white shadow-xs' : 'text-gray-600 hover:bg-gray-100' }}">
                     🔄 Sabit & Tekrarlayan
                 </button>
             </div>
