@@ -50,13 +50,13 @@
                 </button>
             </div>
 
-            <button wire:click="openExpectedIncomeModal" class="px-3.5 sm:px-4 py-2 bg-teal-600 hover:bg-teal-700 active:scale-95 text-white font-black text-xs sm:text-sm rounded-xl shadow-md transition-all flex items-center gap-1.5">
+            <button wire:click="openExpectedIncomeModal" class="px-3.5 sm:px-4 py-2 bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white font-black text-xs sm:text-sm rounded-xl shadow-md transition-all flex items-center gap-1.5 cursor-pointer">
                 <span>🗓️ + Beklenen Gelir</span>
             </button>
-            <button wire:click="openIncomeModal" class="px-3.5 sm:px-4 py-2 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-black text-xs sm:text-sm rounded-xl shadow-md transition-all flex items-center gap-1.5">
+            <button wire:click="openIncomeModal" class="px-3.5 sm:px-4 py-2 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-black text-xs sm:text-sm rounded-xl shadow-md transition-all flex items-center gap-1.5 cursor-pointer">
                 <span>+ Gelir Ekle</span>
             </button>
-            <button wire:click="openExpenseModal" class="px-3.5 sm:px-4 py-2 bg-rose-600 hover:bg-rose-700 active:scale-95 text-white font-black text-xs sm:text-sm rounded-xl shadow-md transition-all flex items-center gap-1.5">
+            <button wire:click="openExpenseModal" class="px-3.5 sm:px-4 py-2 bg-rose-600 hover:bg-rose-700 active:scale-95 text-white font-black text-xs sm:text-sm rounded-xl shadow-md transition-all flex items-center gap-1.5 cursor-pointer">
                 <span>+ Gider Ekle</span>
             </button>
         </div>
@@ -128,7 +128,7 @@
                 <button wire:click="$set('activeTab', 'all')" class="px-3.5 py-1.5 text-xs font-bold rounded-xl transition-all whitespace-nowrap {{ $activeTab === 'all' ? 'bg-indigo-600 text-white shadow-xs' : 'text-gray-600 hover:bg-gray-100' }}">
                     Tümü ({{ $stream->count() }})
                 </button>
-                <button wire:click="$set('activeTab', 'expected')" class="px-3.5 py-1.5 text-xs font-bold rounded-xl transition-all whitespace-nowrap {{ $activeTab === 'expected' ? 'bg-teal-600 text-white shadow-xs' : 'text-gray-600 hover:bg-gray-100' }}">
+                <button wire:click="$set('activeTab', 'expected')" class="px-3.5 py-1.5 text-xs font-bold rounded-xl transition-all whitespace-nowrap {{ $activeTab === 'expected' ? 'bg-indigo-600 text-white shadow-xs' : 'text-gray-600 hover:bg-gray-100' }}">
                     🗓️ Beklenen ({{ $expectedIncomes->count() }})
                 </button>
                 <button wire:click="$set('activeTab', 'income')" class="px-3.5 py-1.5 text-xs font-bold rounded-xl transition-all whitespace-nowrap {{ $activeTab === 'income' ? 'bg-emerald-600 text-white shadow-xs' : 'text-gray-600 hover:bg-gray-100' }}">
@@ -702,7 +702,7 @@
             <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
                 <div class="flex items-center justify-between border-b border-gray-100 pb-3">
                     <div class="flex items-center gap-2">
-                        <span class="w-8 h-8 rounded-xl bg-teal-50 text-teal-600 flex items-center justify-center font-bold">🗓️</span>
+                        <span class="w-8 h-8 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold">🗓️</span>
                         <h3 class="font-bold text-base sm:text-lg text-gray-900">
                             {{ $expectedIncomeId ? 'Beklenen Geliri Düzenle' : 'Yeni Beklenen Gelir Tanımla' }}
                         </h3>
@@ -713,19 +713,19 @@
                 <div class="space-y-4">
                     <div>
                         <label class="block text-xs font-bold text-gray-700 mb-1">Gelir Başlığı / Kaynağı *</label>
-                        <input type="text" wire:model="expected_title" class="w-full rounded-xl border-gray-300 text-sm font-medium focus:ring-teal-500 focus:border-teal-500" placeholder="Örn: Melih Günal Hakediş, Maaş, Elden Tahsilat">
+                        <input type="text" wire:model="expected_title" class="w-full rounded-xl border-gray-300 text-sm font-medium focus:ring-indigo-500 focus:border-indigo-500" placeholder="Örn: Melih Günal Hakediş, Maaş, Elden Tahsilat">
                         @error('expected_title') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
                     </div>
 
                     <div class="grid grid-cols-2 gap-3">
                         <div>
                             <label class="block text-xs font-bold text-gray-700 mb-1">Beklenen Tutar (TL) *</label>
-                            <input type="number" step="0.01" wire:model="expected_amount" class="w-full rounded-xl border-gray-300 text-sm font-bold text-gray-900 focus:ring-teal-500 focus:border-teal-500" placeholder="0.00">
+                            <input type="number" step="0.01" wire:model="expected_amount" class="w-full rounded-xl border-gray-300 text-sm font-bold text-gray-900 focus:ring-indigo-500 focus:border-indigo-500" placeholder="0.00">
                             @error('expected_amount') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
                         </div>
                         <div>
                             <label class="block text-xs font-bold text-gray-700 mb-1">Beklenen Vade / Tarih *</label>
-                            <input type="date" wire:model="expected_date" class="w-full rounded-xl border-gray-300 text-sm font-bold text-gray-900 focus:ring-teal-500 focus:border-teal-500">
+                            <input type="date" wire:model="expected_date" class="w-full rounded-xl border-gray-300 text-sm font-bold text-gray-900 focus:ring-indigo-500 focus:border-indigo-500">
                             @error('expected_date') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
                         </div>
                     </div>
@@ -733,7 +733,7 @@
                     <div class="grid grid-cols-2 gap-3">
                         <div>
                             <label class="block text-xs font-bold text-gray-700 mb-1">Gelir Türü</label>
-                            <select wire:model="expected_type" class="w-full rounded-xl border-gray-300 text-xs font-bold bg-white focus:ring-teal-500 focus:border-teal-500">
+                            <select wire:model="expected_type" class="w-full rounded-xl border-gray-300 text-xs font-bold bg-white focus:ring-indigo-500 focus:border-indigo-500">
                                 <option value="salary">Maaş / Ana Gelir</option>
                                 <option value="freelance">Freelance / Hakediş</option>
                                 <option value="rental">Kira Geliri</option>
@@ -744,7 +744,7 @@
                         </div>
                         <div>
                             <label class="block text-xs font-bold text-gray-700 mb-1">Tekrarlama Sıklığı</label>
-                            <select wire:model="expected_frequency" class="w-full rounded-xl border-gray-300 text-xs font-bold bg-white focus:ring-teal-500 focus:border-teal-500">
+                            <select wire:model="expected_frequency" class="w-full rounded-xl border-gray-300 text-xs font-bold bg-white focus:ring-indigo-500 focus:border-indigo-500">
                                 <option value="monthly">Her Ay Tekrarlayan</option>
                                 <option value="once">Tek Seferlik</option>
                                 <option value="weekly">Haftalık</option>
@@ -754,21 +754,21 @@
 
                     <div>
                         <label class="block text-xs font-bold text-gray-700 mb-1">Not / Açıklama (İsteğe bağlı)</label>
-                        <textarea wire:model="expected_notes" rows="2" class="w-full rounded-xl border-gray-300 text-xs font-medium focus:ring-teal-500 focus:border-teal-500" placeholder="Örn: Proje teslimi sonrası ödenecek"></textarea>
+                        <textarea wire:model="expected_notes" rows="2" class="w-full rounded-xl border-gray-300 text-xs font-medium focus:ring-indigo-500 focus:border-indigo-500" placeholder="Örn: Proje teslimi sonrası ödenecek"></textarea>
                     </div>
 
-                    <div class="p-3 bg-teal-50/70 rounded-xl border border-teal-200/80">
-                        <p class="text-[11px] text-teal-900 leading-relaxed font-medium">
+                    <div class="p-3 bg-indigo-50/70 rounded-xl border border-indigo-200/80">
+                        <p class="text-[11px] text-indigo-900 leading-relaxed font-medium">
                             💡 <strong>Akıllı Takip:</strong> Bu tarihe gelindiğinde sistem Dashboard'da size <em>"Geldi mi / Gecikti mi?"</em> diye soracak ve onayladığınızda nakit akışınıza otomatik işlenecektir.
                         </p>
                     </div>
                 </div>
 
                 <div class="flex justify-end gap-3 pt-3 border-t border-gray-100">
-                    <button wire:click="$set('showExpectedIncomeModal', false)" class="px-4 py-2 text-sm font-bold text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-xl transition-colors">
+                    <button wire:click="$set('showExpectedIncomeModal', false)" class="px-4 py-2 text-sm font-bold text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-xl transition-colors cursor-pointer">
                         İptal
                     </button>
-                    <button wire:click="saveExpectedIncome" class="px-6 py-2 text-sm font-black text-white bg-teal-600 hover:bg-teal-700 rounded-xl shadow-md transition-all active:scale-95">
+                    <button wire:click="saveExpectedIncome" class="px-6 py-2 text-sm font-black text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl shadow-md transition-all active:scale-95 cursor-pointer">
                         Kaydet
                     </button>
                 </div>
