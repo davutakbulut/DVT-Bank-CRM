@@ -128,13 +128,45 @@
         </div>
 
         <!-- Tasarruf Oranı -->
-        <div class="bg-white p-3.5 sm:p-4 rounded-xl border border-slate-200/80 shadow-2xs flex items-center gap-2.5 sm:gap-3">
-            <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center text-base sm:text-lg font-black shrink-0">
-                <svg class="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 005.814-5.519l2.74-1.22m0 0l-5.94-2.28m5.94 2.28l-2.28 5.941"/></svg>
+        <div class="bg-white p-3.5 sm:p-4 rounded-xl border border-gray-200 shadow-2xs flex items-center gap-2.5 sm:gap-3">
+            <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center text-base sm:text-lg font-black shrink-0">
+                %
             </div>
             <div class="min-w-0 flex-1">
-                <span class="text-[10px] sm:text-[11px] font-bold text-gray-500 block uppercase tracking-wider truncate">Tasarruf Oranı</span>
-                <span class="text-sm sm:text-xl font-black font-mono text-gray-900 truncate block">%{{ $savingsRate }}</span>
+                <span class="text-[10px] sm:text-[11px] font-bold text-gray-500 block uppercase tracking-wider truncate">Kalan Marjı</span>
+                <span class="text-[13px] sm:text-lg lg:text-xl font-black font-mono text-indigo-700 tracking-tight block">%{{ $savingsRate }}</span>
+                <span class="text-[9px] text-gray-400 block truncate font-medium">Net Kalan / Gelir Oranı</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 📊 NAKİT AKIŞI VE GİDER KATEGORİ GRAFİKLERİ -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-5 mb-6">
+        <!-- Aylık Nakit Akışı Kıyaslaması (Bar Chart) -->
+        <div class="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm">
+            <div class="flex items-center justify-between border-b border-gray-100 pb-3 mb-3">
+                <div>
+                    <h3 class="font-bold text-sm text-gray-900">Aylık Nakit Denge Analizi</h3>
+                    <p class="text-xs text-gray-500">Gelirler, giderler ve beklenen tahsilatlar</p>
+                </div>
+                <span class="text-xs font-bold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-lg">Aylık Dengem</span>
+            </div>
+            <div class="relative h-56 w-full flex items-center justify-center">
+                <canvas id="cashflowComparisonChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Gider Kategorileri Dağılımı (Doughnut Chart) -->
+        <div class="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm">
+            <div class="flex items-center justify-between border-b border-gray-100 pb-3 mb-3">
+                <div>
+                    <h3 class="font-bold text-sm text-gray-900">Gider Kategori Dağılımı</h3>
+                    <p class="text-xs text-gray-500">Harcamalarınızın kategorilere göre oranı</p>
+                </div>
+                <span class="text-xs font-bold text-rose-600 bg-rose-50 px-2.5 py-1 rounded-lg">Kategori Analizi</span>
+            </div>
+            <div class="relative h-56 w-full flex items-center justify-center">
+                <canvas id="cashflowCategoryChart"></canvas>
             </div>
         </div>
     </div>
@@ -794,4 +826,70 @@
             </div>
         </div>
     @endif
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Comparison Chart
+            const compCtx = document.getElementById('cashflowComparisonChart');
+            if (compCtx) {
+                new Chart(compCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Gerçekleşen Gelir', 'Sabit Giderler', 'Beklenen Gelirler', 'Net Kalan Bütçe'],
+                        datasets: [{
+                            label: 'Tutar (₺)',
+                            data: [{{ $totalIncome }}, {{ $totalExpense }}, {{ $totalExpectedIncome }}, {{ max(0, $netRemaining) }}],
+                            backgroundColor: ['#10b981', '#ef4444', '#14b8a6', '#6366f1'],
+                            borderRadius: 6
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false }
+                        },
+                        scales: {
+                            y: {
+                                ticks: {
+                                    callback: function(v) { return '₺' + new Intl.NumberFormat('tr-TR', { notation: 'compact' }).format(v); }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Category Chart
+            const catCtx = document.getElementById('cashflowCategoryChart');
+            if (catCtx) {
+                const catData = @json($categoryExpensesChartData);
+                new Chart(catCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: catData.map(i => i.name),
+                        datasets: [{
+                            data: catData.map(i => i.total),
+                            backgroundColor: catData.map(i => i.color),
+                            borderWidth: 2
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { position: 'bottom', labels: { font: { family: 'Plus Jakarta Sans', size: 10, weight: 'bold' } } },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        return ' ' + context.label + ': ₺' + new Intl.NumberFormat('tr-TR').format(context.raw);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        });
+    </script>
 </div>

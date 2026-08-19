@@ -674,6 +674,16 @@ class Index extends Component
         $userCards = \App\Models\CreditCard::where('user_id', $userId)->with('bank')->get();
         $userAccounts = \App\Models\Account::where('user_id', $userId)->with('bank')->get();
 
+        // Gider Kategorileri Grafik Verisi
+        $categoryExpensesChartData = $expenses->groupBy('category_id')->map(function ($group) {
+            $cat = $group->first()->category;
+            return [
+                'name' => $cat?->name ?? 'Diğer Gider',
+                'total' => (float) $group->sum('amount'),
+                'color' => $cat?->color ?? '#ef4444',
+            ];
+        })->values();
+
         return view('livewire.cashflow.index', [
             'incomes' => $incomes,
             'expenses' => $expenses,
@@ -687,6 +697,7 @@ class Index extends Component
             'totalExpense' => $totalExpense,
             'netRemaining' => $netRemaining,
             'savingsRate' => $savingsRate,
+            'categoryExpensesChartData' => $categoryExpensesChartData,
         ])->layout('layouts.app');
     }
 }

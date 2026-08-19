@@ -314,11 +314,27 @@
                             <span>Plan İlerlemesi</span>
                             <span class="text-indigo-600 font-black">%{{ $planProgressPercent }}</span>
                         </div>
-                        <div class="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
-                            <div class="h-full bg-indigo-600 transition-all duration-500" style="width: {{ $planProgressPercent }}%;"></div>
+                        <div class="h-2.5 bg-indigo-950 rounded-full overflow-hidden border border-indigo-800">
+                            <div class="h-full bg-gradient-to-r from-emerald-400 to-teal-300 rounded-full transition-all duration-700" style="width: {{ $planProgressPercent }}%"></div>
                         </div>
                     </div>
                 </div>
+
+                <!-- 📊 BORÇSUZLUĞA İLERLEME EĞRİSİ GRAFİĞİ -->
+                @if (isset($planChartData) && $planChartData->count() > 0)
+                    <div class="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm">
+                        <div class="flex items-center justify-between border-b border-gray-100 pb-3 mb-3">
+                            <div>
+                                <h3 class="font-bold text-sm text-gray-900">Borçsuzluğa İlerleme ve Borç Düşüş Eğrisi</h3>
+                                <p class="text-xs text-gray-500">Planlandığı şekilde aydan aya toplam borcun 0 TL'ye düşüş simülasyonu</p>
+                            </div>
+                            <span class="text-xs font-bold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-lg">Ödeme Takvimi Eğrisi</span>
+                        </div>
+                        <div class="relative h-64 w-full flex items-center justify-center">
+                            <canvas id="plannerDropChart"></canvas>
+                        </div>
+                    </div>
+                @endif
 
                 <!-- Aylık Ödeme Kartları -->
                 <div class="space-y-4">
@@ -376,6 +392,56 @@
                     İlk Ödeme Planımı Oluştur →
                 </button>
             </div>
+            </div>
         @endif
+    @endif
+
+    @if (isset($planChartData) && $planChartData->count() > 0)
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const planCtx = document.getElementById('plannerDropChart');
+                if (planCtx) {
+                    const planData = @json($planChartData);
+                    new Chart(planCtx, {
+                        type: 'line',
+                        data: {
+                            labels: planData.map(i => i.month),
+                            datasets: [{
+                                label: 'Kalan Toplam Borç (₺)',
+                                data: planData.map(i => i.remaining),
+                                borderColor: '#10b981',
+                                backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                                fill: true,
+                                tension: 0.3,
+                                borderWidth: 3,
+                                pointRadius: 4,
+                                pointBackgroundColor: '#10b981'
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: { display: false },
+                                tooltip: {
+                                    callbacks: {
+                                        label: function(context) {
+                                            return ' Kalan Borç: ₺' + new Intl.NumberFormat('tr-TR').format(context.raw);
+                                        }
+                                    }
+                                }
+                            },
+                            scales: {
+                                y: {
+                                    ticks: {
+                                        callback: function(v) { return '₺' + new Intl.NumberFormat('tr-TR', { notation: 'compact' }).format(v); }
+                                    }
+                                }
+                            }
+                        }
+                    });
+                }
+            });
+        </script>
     @endif
 </div>

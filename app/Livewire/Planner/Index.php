@@ -218,6 +218,22 @@ class Index extends Component
         $freedomMonths = $activeStrategyResult['months'] ?? 12;
         $freedomDate = Carbon::now()->addMonths($freedomMonths)->translatedFormat('F Y');
 
+        // Grafik Verisi (Aydan Aya Kalan Borç Düşüş Eğrisi)
+        $planChartData = collect();
+        if ($activePlan && isset($monthlyGroups) && $monthlyGroups->count() > 0) {
+            $runningRemaining = $totalDebtSum;
+            foreach ($monthlyGroups as $mKey => $mItems) {
+                $monthName = Carbon::parse($mKey . '-01')->translatedFormat('M Y');
+                $mTotal = $mItems->sum('allocated_amount');
+                $runningRemaining = max(0, $runningRemaining - $mTotal);
+                $planChartData->push([
+                    'month' => $monthName,
+                    'remaining' => round($runningRemaining, 2),
+                    'paid' => round($mTotal, 2),
+                ]);
+            }
+        }
+
         return view('livewire.planner.index', [
             'activePlan' => $activePlan,
             'monthlyGroups' => $monthlyGroups,
@@ -230,6 +246,7 @@ class Index extends Component
             'effectiveBudget' => $effectiveBudget,
             'planProgressPercent' => $planProgressPercent,
             'totalPaidInPlan' => $totalPaidInPlan,
+            'planChartData' => $planChartData,
         ])->layout('layouts.app');
     }
 }

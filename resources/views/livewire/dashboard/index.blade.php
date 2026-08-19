@@ -242,6 +242,37 @@
         </div>
     </div>
 
+    <!-- 📊 FİNANSAL GÖRSEL ANALİZ GRAFİKLERİ -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+        <!-- Borç Türü Dağılımı (Doughnut Chart) -->
+        <div class="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm flex flex-col justify-between">
+            <div class="flex items-center justify-between border-b border-gray-100 pb-3 mb-3">
+                <div>
+                    <h3 class="font-bold text-sm text-gray-900">Borç Türü Dağılımı</h3>
+                    <p class="text-xs text-gray-500">Aktif borçlarınızın kategorilere göre oranı</p>
+                </div>
+                <span class="text-xs font-bold text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-lg">Canlı Veri</span>
+            </div>
+            <div class="relative h-64 w-full flex items-center justify-center">
+                <canvas id="dashboardDebtTypeChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Aylık Nakit Akışı ve Asgari Yük (Bar Chart) -->
+        <div class="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm flex flex-col justify-between">
+            <div class="flex items-center justify-between border-b border-gray-100 pb-3 mb-3">
+                <div>
+                    <h3 class="font-bold text-sm text-gray-900">Aylık Nakit Dengesi</h3>
+                    <p class="text-xs text-gray-500">Gelir, sabit gider ve asgari borç ödemesi kıyaslaması</p>
+                </div>
+                <span class="text-xs font-bold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-lg">Aylık Özet</span>
+            </div>
+            <div class="relative h-64 w-full flex items-center justify-center">
+                <canvas id="dashboardCashflowChart"></canvas>
+            </div>
+        </div>
+    </div>
+
     <!-- 4. AI FİNANSAL KOÇ BRİFİNGİ (AÇILIR-KAPANIR, VARSAYILAN: KAPALI) -->
     <div x-data="{ showBriefing: false }" class="bg-white border-2 border-indigo-100 rounded-2xl p-4 sm:p-5 shadow-sm transition-all">
         <div @click="showBriefing = !showBriefing" class="flex items-center justify-between gap-3 cursor-pointer select-none">
@@ -421,4 +452,80 @@
             </div>
         </div>
     @endif
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // 1. Borç Türü Doughnut Chart
+            const typeCtx = document.getElementById('dashboardDebtTypeChart');
+            if (typeCtx) {
+                const typeData = @json($debtTypeDistribution->values());
+                new Chart(typeCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: typeData.map(i => i.name),
+                        datasets: [{
+                            data: typeData.map(i => i.total),
+                            backgroundColor: ['#6366f1', '#f59e0b', '#ef4444', '#10b981', '#8b5cf6'],
+                            borderWidth: 2,
+                            borderColor: '#ffffff'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { position: 'bottom', labels: { font: { family: 'Plus Jakarta Sans', size: 11, weight: 'bold' } } },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        return ' ' + context.label + ': ₺' + new Intl.NumberFormat('tr-TR').format(context.raw);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // 2. Nakit Dengesi Bar Chart
+            const cashCtx = document.getElementById('dashboardCashflowChart');
+            if (cashCtx) {
+                new Chart(cashCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Aylık Gelir', 'Sabit Giderler', 'Borç Asgari Ödemesi'],
+                        datasets: [{
+                            label: 'Tutar (₺)',
+                            data: [{{ $totalMonthlyIncome }}, {{ $totalMonthlyExpense }}, {{ $riskSummary['total_monthly_commitment'] }}],
+                            backgroundColor: ['#10b981', '#f59e0b', '#ef4444'],
+                            borderRadius: 8
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        return ' ₺' + new Intl.NumberFormat('tr-TR').format(context.raw);
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                ticks: {
+                                    callback: function(value) {
+                                        return '₺' + new Intl.NumberFormat('tr-TR', { notation: 'compact' }).format(value);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        });
+    </script>
 </div>

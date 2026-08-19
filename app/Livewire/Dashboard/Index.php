@@ -189,12 +189,29 @@ class Index extends Component
             ->unique();
         $connectedBanksCount = $userBankIds->count();
 
+        // Tür bazında borç dağılımı (Grafik için)
+        $debtTypeDistribution = Debt::where('user_id', $user->id)
+            ->where('status', 'active')
+            ->get()
+            ->groupBy('type')
+            ->map(fn($group, $type) => [
+                'name' => match($type) {
+                    'credit_card' => 'Kredi Kartı',
+                    'kmh' => 'Ekpara / KMH',
+                    'loan' => 'Kredi',
+                    'installment' => 'Taksitli Borç',
+                    default => 'Diğer'
+                },
+                'total' => (float) $group->sum('remaining'),
+            ]);
+
         return view('livewire.dashboard.index', [
             'riskSummary' => $riskSummary,
             'dueExpectedIncomes' => $dueExpectedIncomes,
             'upcomingExpectedIncomes' => $upcomingExpectedIncomes,
             'upcomingDebts' => $upcomingDebts,
             'bankDistribution' => $bankDistribution,
+            'debtTypeDistribution' => $debtTypeDistribution,
             'latestAdvice' => $latestAdvice,
             'totalMonthlyIncome' => $totalMonthlyIncome,
             'totalMonthlyExpense' => $totalMonthlyExpense,

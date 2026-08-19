@@ -94,6 +94,37 @@
                 </div>
             </div>
 
+            <!-- 📊 KAPSAMLI FİNANSAL ANALİZ GRAFİKLERİ -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+                <!-- Banka Bazlı Faiz Yükü (Bar Chart) -->
+                <div class="bg-white/5 p-5 rounded-2xl border border-white/10 backdrop-blur-md">
+                    <div class="flex items-center justify-between border-b border-indigo-800/50 pb-3 mb-3">
+                        <div>
+                            <h3 class="font-bold text-sm text-white">Banka Bazlı Borç & Aylık Faiz Maliyeti</h3>
+                            <p class="text-[10px] text-slate-400">Bankalara göre toplam borç tutarı</p>
+                        </div>
+                        <span class="text-[10px] font-bold text-indigo-300 bg-indigo-900/50 px-2.5 py-1 rounded-lg">Banka Maliyeti</span>
+                    </div>
+                    <div class="relative h-60 w-full flex items-center justify-center">
+                        <canvas id="reportsBankDebtChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Harcama Döngü Analizi -->
+                <div class="bg-white/5 p-5 rounded-2xl border border-white/10 backdrop-blur-md">
+                    <div class="flex items-center justify-between border-b border-indigo-800/50 pb-3 mb-3">
+                        <div>
+                            <h3 class="font-bold text-sm text-white">Harcama Dönemi Analizi</h3>
+                            <p class="text-[10px] text-slate-400">Ayın hangi günlerinde daha yoğun harcama yapıyorsunuz?</p>
+                        </div>
+                        <span class="text-[10px] font-bold text-amber-300 bg-amber-900/50 px-2.5 py-1 rounded-lg">Döngü Analizi</span>
+                    </div>
+                    <div class="relative h-60 w-full flex items-center justify-center">
+                        <canvas id="reportsTimingChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
             <!-- 4'lü Hızlı Özet Şeridi -->
             <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 text-xs">
                 <div class="p-3.5 bg-white/5 rounded-2xl border border-white/10">
@@ -517,4 +548,67 @@
             @endforelse
         </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Bank Debt Chart
+            const bankCtx = document.getElementById('reportsBankDebtChart');
+            if (bankCtx) {
+                const bankData = @json($bankAnalysis);
+                new Chart(bankCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: bankData.map(i => i.bank_name),
+                        datasets: [{
+                            label: 'Toplam Borç (₺)',
+                            data: bankData.map(i => i.total_debt),
+                            backgroundColor: bankData.map(i => i.bank_color),
+                            borderRadius: 6
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false }
+                        },
+                        scales: {
+                            x: {
+                                ticks: { color: '#cbd5e1', font: { family: 'Plus Jakarta Sans', size: 10, weight: 'bold' } }
+                            },
+                            y: {
+                                ticks: {
+                                    color: '#cbd5e1',
+                                    callback: function(v) { return '₺' + new Intl.NumberFormat('tr-TR', { notation: 'compact' }).format(v); }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Timing Chart
+            const timeCtx = document.getElementById('reportsTimingChart');
+            if (timeCtx) {
+                new Chart(timeCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Ayın 1-10 Dönemi', 'Ayın 11-20 Dönemi', 'Ayın 21-31 Dönemi'],
+                        datasets: [{
+                            data: [{{ $timingAnalysis['p1_10'] }}, {{ $timingAnalysis['p11_20'] }}, {{ $timingAnalysis['p21_31'] }}],
+                            backgroundColor: ['#818cf8', '#34d399', '#fbbf24'],
+                            borderWidth: 2
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { position: 'bottom', labels: { color: '#cbd5e1', font: { family: 'Plus Jakarta Sans', size: 10, weight: 'bold' } } }
+                        }
+                    }
+                });
+            }
+        });
+    </script>
 </div>

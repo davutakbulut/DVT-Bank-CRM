@@ -189,9 +189,22 @@ class Index extends Component
         $cards = CreditCard::where('user_id', Auth::id())->with('bank')->get();
         $banks = Bank::all();
 
+        $cardLimitsData = $cards->map(fn($c) => [
+            'name' => mb_strimwidth($c->name, 0, 18, '...'),
+            'used' => (float) $c->current_debt,
+            'available' => max(0, (float) $c->credit_limit - (float) $c->current_debt),
+        ])->values();
+
+        $cardMinPaymentsData = $cards->map(fn($c) => [
+            'name' => mb_strimwidth($c->name, 0, 18, '...'),
+            'min_payment' => (float) ($c->minimum_payment ?: ($c->current_debt * 0.40)),
+        ])->values();
+
         return view('livewire.cards.index', [
             'cards' => $cards,
             'banks' => $banks,
+            'cardLimitsData' => $cardLimitsData,
+            'cardMinPaymentsData' => $cardMinPaymentsData,
         ])->layout('layouts.app');
     }
 }

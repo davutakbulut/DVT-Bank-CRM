@@ -414,9 +414,23 @@ class Index extends Component
         $criticalCount = $debts->filter(fn($d) => (90 - $d->days_overdue) <= 25 && $d->days_overdue > 0)->count();
         $avgInterest = $debts->count() > 0 ? $debts->avg('interest_rate') : 0.0;
 
-        $user = Auth::user();
-        $userDebtCount = $user->debts()->count();
-        $maxDebts = $user->currentPlan()->max_debts;
+        // Grafik Verileri (Gecikme Risk Durumu)
+        $debtRiskChartData = [
+            'regular' => $debts->filter(fn($d) => $d->days_overdue == 0 && $d->remaining > 0)->sum('remaining'),
+            'mild' => $debts->filter(fn($d) => $d->days_overdue > 0 && $d->days_overdue <= 15)->sum('remaining'),
+            'warning' => $debts->filter(fn($d) => $d->days_overdue > 15 && $d->days_overdue <= 30)->sum('remaining'),
+            'critical' => $debts->filter(fn($d) => $d->days_overdue > 30)->sum('remaining'),
+        ];
+
+        // Grafik Verileri (En Yüksek Faizli Borçlar Top 6)
+        $topInterestDebts = $debts->filter(fn($d) => $d->remaining > 0)
+            ->sortByDesc('interest_rate')
+            ->take(6)
+            ->map(fn($d) => [
+                'title' => mb_strimwidth($d->title, 0, 22, '...'),
+                'rate' => (float) $d->interest_rate,
+                'remaining' => (float) $d->remaining,
+            ])->values();
 
         return view('livewire.debts.index', [
             'debts' => $debts,
@@ -430,6 +444,8 @@ class Index extends Component
             'userDebtCount' => $userDebtCount,
             'maxDebts' => $maxDebts,
             'canCreateDebt' => $user->canCreateDebt(),
+            'debtRiskChartData' => $debtRiskChartData,
+            'topInterestDebts' => $topInterestDebts,
         ])->layout('layouts.app');
     }
 }

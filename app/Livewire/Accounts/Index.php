@@ -217,9 +217,12 @@ class Index extends Component
             return 0;
         });
 
-        // Toplam harcanabilir / çekilebilir hazır likidite (Vadesiz Pozitif Nakit + Kalan Kullanılabilir KMH Limitleri)
-        $totalAvailableLiquidity = $totalPositive + $totalAvailableKmh;
-        $netLiquidity = (float) $accounts->sum('balance');
+        // Chart Data (Hesap Bakiyeleri & KMH Kullanımı)
+        $accountBalancesChartData = $accounts->map(fn($acc) => [
+            'name' => mb_strimwidth(($acc->bank?->name ? $acc->bank->name . ' - ' : '') . $acc->name, 0, 20, '...'),
+            'positive' => max(0, (float) $acc->balance),
+            'kmh_used' => abs(min(0, (float) $acc->balance)),
+        ])->values();
 
         return view('livewire.accounts.index', [
             'accounts' => $accounts,
@@ -231,6 +234,7 @@ class Index extends Component
             'totalAvailableKmh' => $totalAvailableKmh,
             'totalAvailableLiquidity' => $totalAvailableLiquidity,
             'netLiquidity' => $netLiquidity,
+            'accountBalancesChartData' => $accountBalancesChartData,
         ])->layout('layouts.app');
     }
 }
