@@ -242,9 +242,19 @@
             </a>
         </div>
 
-        <div class="text-xs sm:text-sm text-gray-700 leading-relaxed space-y-2">
+        <div class="text-xs sm:text-sm text-slate-700 leading-relaxed space-y-2 prose prose-sm max-w-none
+            [&_table]:w-full [&_table]:border-collapse [&_table]:my-3 [&_table]:text-xs [&_table]:rounded-xl [&_table]:overflow-hidden [&_table]:border [&_table]:border-slate-200
+            [&_th]:bg-slate-100 [&_th]:p-2.5 [&_th]:border [&_th]:border-slate-200 [&_th]:text-slate-900 [&_th]:font-bold [&_th]:text-left
+            [&_td]:p-2.5 [&_td]:border [&_td]:border-slate-200 [&_td]:text-slate-700
+            [&_tr:nth-child(even)]:bg-slate-50/60
+            [&_h2]:text-sm [&_h2]:font-black [&_h2]:text-slate-900 [&_h2]:mt-3.5 [&_h2]:mb-1.5
+            [&_h3]:text-xs [&_h3]:font-black [&_h3]:text-slate-900 [&_h3]:mt-2.5 [&_h3]:mb-1
+            [&_ul]:list-disc [&_ul]:pl-5 [&_ul]:space-y-1 [&_ul]:my-2
+            [&_ol]:list-decimal [&_ol]:pl-5 [&_ol]:space-y-1 [&_ol]:my-2
+            [&_blockquote]:border-l-4 [&_blockquote]:border-indigo-500 [&_blockquote]:bg-indigo-50/40 [&_blockquote]:p-3 [&_blockquote]:rounded-r-lg [&_blockquote]:my-2 [&_blockquote]:text-indigo-900 [&_blockquote]:font-medium
+            [&_hr]:border-slate-100 [&_hr]:my-3">
             @if ($latestAdvice)
-                {!! nl2br(e($latestAdvice->content)) !!}
+                {!! \App\Helpers\AiFormatter::format($latestAdvice->content, true) !!}
             @else
                 <p>
                     <strong>Kriz Strateji Tavsiyesi:</strong> Borçlarınızı sıfırlamak için en yüksek faizli KMH ve kredi kartlarına odaklanın (Çığ Yöntemi). Diğer bankalara asgari tutarı ödeyerek yasal takip süresini güvenle yönetin.

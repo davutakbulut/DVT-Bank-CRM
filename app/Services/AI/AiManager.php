@@ -52,7 +52,12 @@ EOT;
     {
         $contextBuilder = new UserContextBuilder();
         $context = $contextBuilder->build($user);
-        $userPrompt = "Kullanıcının güncel finansal veri tablosu:\n" . json_encode($context, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+
+        $userPrompt = ($type === 'analysis') 
+            ? PromptMatrix::deepAnalysisPrompt($context) 
+            : PromptMatrix::dailyAdvicePrompt($context);
+
+        $systemPrompt = PromptMatrix::baseSystemPrompt();
 
         $defaultProviderKey = Setting::get('ai.default_provider') ?: env('AI_DEFAULT_PROVIDER', 'groq');
         $providerOrder = array_unique([$defaultProviderKey, 'groq', 'gemini', 'openrouter']);
@@ -61,7 +66,7 @@ EOT;
 
         foreach ($providerOrder as $pKey) {
             if (isset($this->providers[$pKey]) && $this->providers[$pKey]->isAvailable()) {
-                $response = $this->providers[$pKey]->complete(self::SYSTEM_PROMPT, $userPrompt);
+                $response = $this->providers[$pKey]->complete($systemPrompt, $userPrompt);
                 if ($response->status === 'success' && !empty(trim($response->content))) {
                     $aiResponse = $response;
                     break;
@@ -80,8 +85,9 @@ EOT;
             );
         }
 
-        // Yasal sorumluluk reddi ekle
-        $finalContent = trim($aiResponse->content) . self::LEGAL_DISCLAIMER;
+        // Unicode ve sayı formatı temizliği
+        $cleanedContent = \App\Helpers\AiFormatter::cleanUnicodeAndGlitches($aiResponse->content);
+        $finalContent = trim($cleanedContent) . self::LEGAL_DISCLAIMER;
 
         // Kullanımı kaydet
         $this->recordUsage($aiResponse->provider, $aiResponse->promptTokens + $aiResponse->completionTokens);
@@ -108,8 +114,8 @@ EOT;
         $contextBuilder = new UserContextBuilder();
         $context = $contextBuilder->build($user);
 
-        $prompt = "Kullanıcı Finansal Özeti: " . json_encode($context, JSON_UNESCAPED_UNICODE) . "\n\n";
-        $prompt .= "Kullanıcının Sorusu: " . $userMessage;
+        $prompt = PromptMatrix::chatPrompt($context, $userMessage);
+        $systemPrompt = PromptMatrix::baseSystemPrompt();
 
         $defaultProviderKey = Setting::get('ai.default_provider') ?: env('AI_DEFAULT_PROVIDER', 'groq');
         $providerOrder = array_unique([$defaultProviderKey, 'groq', 'gemini', 'openrouter']);
@@ -118,7 +124,7 @@ EOT;
 
         foreach ($providerOrder as $pKey) {
             if (isset($this->providers[$pKey]) && $this->providers[$pKey]->isAvailable()) {
-                $response = $this->providers[$pKey]->complete(self::SYSTEM_PROMPT, $prompt);
+                $response = $this->providers[$pKey]->complete($systemPrompt, $prompt);
                 if ($response->status === 'success' && !empty(trim($response->content))) {
                     $content = $response->content;
                     $this->recordUsage($response->provider, $response->promptTokens + $response->completionTokens);
@@ -131,7 +137,9 @@ EOT;
             $content = $this->fallbackEngine->generateChatResponse($context, $userMessage);
         }
 
-        return trim($content) . self::LEGAL_DISCLAIMER;
+        $cleanedContent = \App\Helpers\AiFormatter::cleanUnicodeAndGlitches($content);
+
+        return trim($cleanedContent) . self::LEGAL_DISCLAIMER;
     }
 
     protected function recordUsage(string $provider, int $tokens): void

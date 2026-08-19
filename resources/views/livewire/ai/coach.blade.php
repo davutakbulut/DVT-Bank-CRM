@@ -49,11 +49,20 @@
                         </div>
                     @else
                         <div class="flex items-start gap-3">
-                            <div class="w-8 h-8 rounded-full bg-indigo-600 text-white flex items-center justify-center font-bold text-xs shrink-0">
+                            <div class="w-8 h-8 rounded-full bg-indigo-600 text-white flex items-center justify-center font-bold text-xs shrink-0 shadow-xs">
                                 AI
                             </div>
-                            <div class="bg-gray-50 border border-gray-200 text-gray-800 p-4 rounded-2xl text-xs leading-relaxed max-w-[85%]">
-                                {!! nl2br(e($msg->content)) !!}
+                            <div class="bg-slate-50 border border-slate-200 text-slate-800 p-4 rounded-2xl text-xs leading-relaxed max-w-[85%] prose prose-sm max-w-none
+                                [&_table]:w-full [&_table]:border-collapse [&_table]:my-2 [&_table]:text-[11px] [&_table]:rounded-lg [&_table]:overflow-hidden [&_table]:border [&_table]:border-slate-200
+                                [&_th]:bg-slate-200/70 [&_th]:p-2 [&_th]:border [&_th]:border-slate-300 [&_th]:text-slate-900 [&_th]:font-bold [&_th]:text-left
+                                [&_td]:p-2 [&_td]:border [&_td]:border-slate-200 [&_td]:text-slate-700
+                                [&_tr:nth-child(even)]:bg-white
+                                [&_h2]:text-xs [&_h2]:font-black [&_h2]:text-slate-900 [&_h2]:mt-2 [&_h2]:mb-1
+                                [&_h3]:text-[11px] [&_h3]:font-black [&_h3]:text-slate-900 [&_h3]:mt-2 [&_h3]:mb-0.5
+                                [&_ul]:list-disc [&_ul]:pl-4 [&_ul]:space-y-0.5 [&_ul]:my-1
+                                [&_ol]:list-decimal [&_ol]:pl-4 [&_ol]:space-y-0.5 [&_ol]:my-1
+                                [&_blockquote]:border-l-2 [&_blockquote]:border-indigo-500 [&_blockquote]:bg-indigo-50/50 [&_blockquote]:p-2 [&_blockquote]:rounded-r [&_blockquote]:my-1.5 [&_blockquote]:text-indigo-900">
+                                {!! \App\Helpers\AiFormatter::format($msg->content) !!}
                             </div>
                         </div>
                     @endif
@@ -73,17 +82,22 @@
 
         <!-- SAĞ: SON ÖNERİ GEÇMİŞİ (1 KOLON) -->
         <div class="bg-white rounded-3xl border border-gray-100 shadow-sm p-6 space-y-4 flex flex-col h-[650px] overflow-hidden">
-            <h3 class="font-bold text-gray-900 text-base border-b border-gray-100 pb-3">Kişisel Öneri Geçmişi</h3>
+            <div class="flex items-center justify-between border-b border-gray-100 pb-3">
+                <h3 class="font-bold text-sm text-gray-900">Rapor & Analiz Geçmişi</h3>
+                <button wire:click="generateFullAnalysis" class="text-xs font-bold text-indigo-600 hover:text-indigo-800 cursor-pointer">
+                    + Yeni Analiz
+                </button>
+            </div>
 
-            <div class="flex-1 overflow-y-auto space-y-4 pr-1">
+            <div class="flex-1 overflow-y-auto space-y-3">
                 @forelse ($advices as $adv)
-                    <div class="p-4 bg-gray-50 rounded-2xl border border-gray-100 space-y-2">
+                    <div class="p-3.5 bg-slate-50 rounded-xl border border-slate-200/80 space-y-1.5">
                         <div class="flex items-center justify-between text-[11px]">
                             <span class="font-bold text-indigo-700 uppercase">{{ $adv->type === 'daily' ? 'Günlük Öneri' : 'Detaylı Analiz' }}</span>
                             <span class="text-gray-400">{{ $adv->created_at->translatedFormat('d M H:i') }}</span>
                         </div>
-                        <div class="text-xs text-gray-700 leading-relaxed font-sans">
-                            {!! nl2br(e(mb_substr($adv->content, 0, 300))) !!}...
+                        <div class="text-xs text-slate-700 leading-relaxed font-sans prose prose-sm max-w-none [&_table]:hidden [&_h2]:text-xs [&_h2]:font-bold [&_h3]:text-[11px] [&_h3]:font-bold">
+                            {!! \App\Helpers\AiFormatter::format(mb_substr($adv->content, 0, 250), true) !!}...
                         </div>
                     </div>
                 @empty
