@@ -72,17 +72,18 @@
                         </div>
                     </div>
 
-                    <div class="flex items-center gap-2 shrink-0 self-end md:self-center">
-                        <button wire:click="confirmExpectedIncome({{ $ei->id }})" class="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-black text-xs rounded-xl shadow-md transition-all flex items-center gap-1.5 cursor-pointer">
+                    <div class="grid grid-cols-2 sm:flex items-center gap-2 w-full md:w-auto shrink-0 pt-2 md:pt-0">
+                        <button wire:click="confirmExpectedIncome({{ $ei->id }})" class="w-full sm:w-auto px-3 sm:px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-black text-xs rounded-xl shadow-md transition-all flex items-center justify-center gap-1.5 cursor-pointer text-center">
                             <span>✓</span>
-                            <span>Geldi / Hesaba Geçti</span>
+                            <span class="truncate">Hesaba Geçti</span>
                         </button>
-                        <button wire:click="delayExpectedIncome({{ $ei->id }}, 3)" class="px-3.5 py-2.5 bg-amber-50 hover:bg-amber-100 border border-amber-300 text-amber-900 font-bold text-xs rounded-xl transition-all flex items-center gap-1.5 cursor-pointer" title="Bugünden itibaren 3 gün ertele">
+                        <button wire:click="delayExpectedIncome({{ $ei->id }}, 3)" class="w-full sm:w-auto px-2.5 sm:px-3.5 py-2.5 bg-amber-50 hover:bg-amber-100 border border-amber-300 text-amber-900 font-bold text-xs rounded-xl transition-all flex items-center justify-center gap-1.5 cursor-pointer text-center" title="Bugünden itibaren 3 gün ertele">
                             <span>⏳</span>
-                            <span>Henüz Gelmedi (3G Ertele)</span>
+                            <span class="truncate">3 Gün Ertele</span>
                         </button>
-                        <button wire:click="cancelExpectedIncome({{ $ei->id }})" wire:confirm="Bu geliri iptal etmek istediğinize emin misiniz?" class="px-3 py-2.5 bg-gray-100 hover:bg-red-50 hover:text-red-700 text-gray-600 font-bold text-xs rounded-xl transition-all cursor-pointer" title="İptal Et">
-                            <span>✕</span>
+                        <button wire:click="cancelExpectedIncome({{ $ei->id }})" wire:confirm="Bu geliri iptal etmek istediğinize emin misiniz?" class="col-span-2 sm:col-span-1 px-3 py-2 sm:py-2.5 bg-gray-100 hover:bg-red-50 hover:text-red-700 text-gray-600 font-bold text-xs rounded-xl transition-all flex items-center justify-center cursor-pointer" title="İptal Et">
+                            <span class="hidden sm:inline">✕</span>
+                            <span class="sm:hidden">✕ Gelir Kaydını İptal Et</span>
                         </button>
                     </div>
                 </div>
@@ -118,14 +119,14 @@
                         </div>
                     </div>
 
-                    <div class="flex items-center gap-2 shrink-0 self-end md:self-center">
-                        <button wire:click="confirmExpectedIncome({{ $uei->id }})" class="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-500 active:scale-95 text-white font-black text-xs rounded-xl shadow-md transition-all flex items-center gap-1.5 cursor-pointer">
+                    <div class="grid grid-cols-2 gap-2 w-full md:w-auto md:flex md:items-center shrink-0 pt-2 md:pt-0">
+                        <button wire:click="confirmExpectedIncome({{ $uei->id }})" class="w-full md:w-auto px-3 sm:px-4 py-2.5 bg-emerald-600 hover:bg-emerald-500 active:scale-95 text-white font-black text-xs rounded-xl shadow-md transition-all flex items-center justify-center gap-1.5 cursor-pointer text-center">
                             <span>✓</span>
-                            <span>Erken Geldi / Hesaba Geçti</span>
+                            <span class="truncate">Hesaba Geçti</span>
                         </button>
-                        <a href="{{ route('cashflow.index') }}" class="px-3.5 py-2.5 bg-slate-800 hover:bg-slate-700 border border-slate-600 text-slate-200 font-bold text-xs rounded-xl transition-all flex items-center gap-1.5">
+                        <a href="{{ route('cashflow.index') }}" class="w-full md:w-auto px-3 sm:px-3.5 py-2.5 bg-slate-800 hover:bg-slate-700 border border-slate-600 text-slate-200 font-bold text-xs rounded-xl transition-all flex items-center justify-center gap-1.5 text-center">
                             <span>📋</span>
-                            <span>Nakit Akışında Gör</span>
+                            <span class="truncate">Nakit Akışı</span>
                         </a>
                     </div>
                 </div>
