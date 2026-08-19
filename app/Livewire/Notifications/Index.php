@@ -35,6 +35,42 @@ class Index extends Component
         $this->resetPage();
     }
 
+    /**
+     * Bildirimi okundu olarak işaretler ve varsa ilgili sayfaya yönlendirir.
+     * Veri İzolasyonu (User Scoping) - IDOR Koruması sağlanmıştır.
+     */
+    public function viewNotification(string|int $id)
+    {
+        $user = Auth::user();
+        if (!$user) {
+            return;
+        }
+
+        // Veri İzolasyonu: Sadece aktif kullanıcıya ait bildirim
+        $notif = FinancialNotification::where('user_id', $user->id)->find((int) $id);
+        if (!$notif) {
+            return;
+        }
+
+        // Bildirimi okundu işaretle
+        $notif->markAsRead();
+        $this->dispatch('refreshNotifications');
+
+        // Varsa ilgili sayfaya yönlendir
+        if (!empty($notif->action_url)) {
+            return $this->redirect($notif->action_url, navigate: true);
+        }
+
+        $this->selectedNotificationId = $notif->id;
+        $this->showDetailModal = true;
+    }
+
+    public function closeDetailModal(): void
+    {
+        $this->showDetailModal = false;
+        $this->selectedNotificationId = null;
+    }
+
     public function render()
     {
         $user = Auth::user();

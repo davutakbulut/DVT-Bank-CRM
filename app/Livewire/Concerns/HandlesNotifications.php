@@ -88,22 +88,25 @@ trait HandlesNotifications
         }
     }
 
-    public function viewNotification(int $id): void
+    public function viewNotification(string|int $id)
     {
         $user = Auth::user();
         if (!$user) return;
 
-        $notif = FinancialNotification::where('user_id', $user->id)->find($id);
+        $notif = FinancialNotification::where('user_id', $user->id)->find((int) $id);
         if ($notif) {
+            $notif->markAsRead();
+            $this->dispatch('refreshNotifications');
+
+            if (!empty($notif->action_url)) {
+                return $this->redirect($notif->action_url, navigate: true);
+            }
+
             if (property_exists($this, 'selectedNotificationId')) {
                 $this->selectedNotificationId = $notif->id;
             }
             if (property_exists($this, 'showDetailModal')) {
                 $this->showDetailModal = true;
-            }
-            if (is_null($notif->read_at)) {
-                $notif->markAsRead();
-                $this->dispatch('refreshNotifications');
             }
         }
     }

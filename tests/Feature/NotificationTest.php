@@ -69,20 +69,37 @@ class NotificationTest extends TestCase
 
         $this->assertDatabaseMissing('financial_notifications', ['id' => $notif->id]);
 
-        $newNotif = FinancialNotification::create([
+        $notifToView = FinancialNotification::create([
             'user_id' => $user->id,
             'type' => 'ai_advice',
-            'title' => 'Dropdown Test',
-            'message' => 'Dropdown Mesaj',
+            'title' => 'İnceleme Başlığı',
+            'message' => 'İnceleme Mesajı',
             'severity' => 'info',
+            'action_url' => '/app/borclar',
         ]);
 
         \Livewire\Livewire::actingAs($user)
-            ->test(\App\Livewire\Notifications\Dropdown::class)
-            ->assertSee('Dropdown Test')
-            ->call('markAllAsRead')
-            ->assertDispatched('refreshNotifications');
+            ->test(\App\Livewire\Notifications\Index::class)
+            ->call('viewNotification', (string) $notifToView->id)
+            ->assertRedirect('/app/borclar');
 
-        $this->assertNotNull($newNotif->fresh()->read_at);
+        $this->assertNotNull($notifToView->fresh()->read_at);
+
+        // IDOR Test: Başka kullanıcının bildirimini çağırma girişimi
+        $otherUser = User::factory()->create();
+        $otherNotif = FinancialNotification::create([
+            'user_id' => $otherUser->id,
+            'type' => 'ai_advice',
+            'title' => 'Başka Kullanıcı',
+            'message' => 'Gizli Bilgi',
+            'severity' => 'danger',
+        ]);
+
+        \Livewire\Livewire::actingAs($user)
+            ->test(\App\Livewire\Notifications\Index::class)
+            ->call('viewNotification', (string) $otherNotif->id);
+
+        // Başka kullanıcının bildirimi okunmadı olarak kalmalı
+        $this->assertNull($otherNotif->fresh()->read_at);
     }
 }
