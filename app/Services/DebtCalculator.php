@@ -65,6 +65,7 @@ class DebtCalculator
                 'remaining' => (float) ($d['remaining'] ?? 0),
                 'interest_rate' => (float) ($d['interest_rate'] ?? 0) / 100, // aylık faiz oranı
                 'min_payment' => (float) ($d['installment_amount'] ?? ($d['remaining'] * 0.10)),
+                'days_overdue' => (int) ($d['days_overdue'] ?? 0),
             ];
         }, $debts);
 
@@ -72,6 +73,14 @@ class DebtCalculator
         if ($strategy === 'avalanche') {
             // En yüksek faiz en başta
             usort($activeDebts, fn($a, $b) => $b['interest_rate'] <=> $a['interest_rate']);
+        } elseif ($strategy === 'hybrid') {
+            // Hibrit: Önce takibe/gecikmeye en yakın ve en yüksek faizli olanlar
+            usort($activeDebts, function ($a, $b) {
+                if (($b['days_overdue'] ?? 0) !== ($a['days_overdue'] ?? 0)) {
+                    return ($b['days_overdue'] ?? 0) <=> ($a['days_overdue'] ?? 0);
+                }
+                return $b['interest_rate'] <=> $a['interest_rate'];
+            });
         } else {
             // Kartopu: En küçük borç en başta
             usort($activeDebts, fn($a, $b) => $a['remaining'] <=> $b['remaining']);

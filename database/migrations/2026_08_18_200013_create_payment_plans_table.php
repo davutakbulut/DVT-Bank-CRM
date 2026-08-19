@@ -12,7 +12,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->string('name');
-            $table->enum('strategy', ['avalanche', 'snowball', 'custom'])->default('avalanche');
+            $table->string('strategy', 50)->default('avalanche');
             $table->decimal('monthly_budget', 15, 2)->default(0.00); // borçlara ayrılan aylık toplam tutar
             $table->enum('status', ['draft', 'active', 'completed'])->default('draft');
             $table->enum('created_via', ['manual', 'wizard', 'ai'])->default('wizard');

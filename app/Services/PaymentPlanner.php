@@ -43,12 +43,20 @@ class PaymentPlanner
                 'remaining' => (float) $d->remaining,
                 'interest_rate' => (float) $d->interest_rate / 100,
                 'min_payment' => (float) ($d->installment_amount ?: ($d->remaining * 0.10)),
+                'days_overdue' => (int) ($d->days_overdue ?? 0),
             ];
         })->toArray();
 
         // Stratejiye göre sırala
         if ($strategy === 'avalanche') {
             usort($simDebts, fn($a, $b) => $b['interest_rate'] <=> $a['interest_rate']);
+        } elseif ($strategy === 'hybrid') {
+            usort($simDebts, function ($a, $b) {
+                if (($b['days_overdue'] ?? 0) !== ($a['days_overdue'] ?? 0)) {
+                    return ($b['days_overdue'] ?? 0) <=> ($a['days_overdue'] ?? 0);
+                }
+                return $b['interest_rate'] <=> $a['interest_rate'];
+            });
         } else {
             usort($simDebts, fn($a, $b) => $a['remaining'] <=> $b['remaining']);
         }
