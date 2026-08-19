@@ -294,11 +294,14 @@
             <div class="bg-white rounded-3xl p-5 sm:p-7 border border-gray-200/90 shadow-sm space-y-6">
                 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-gray-100 pb-4">
                     <div>
-                        <div class="flex items-center gap-2">
+                        <div class="flex items-center gap-2 flex-wrap">
                             <h2 class="text-lg sm:text-xl font-black text-gray-900">{{ $activePlan->name }}</h2>
                             <span class="px-2.5 py-0.5 rounded-full text-xs font-black bg-emerald-100 text-emerald-800">
                                 Aktif Plan
                             </span>
+                            <button wire:click="deletePlan" wire:confirm="Aktif ödeme planınızı ve tüm ödeme takvimini silmek istediğinizden emin misiniz?" class="px-2.5 py-0.5 bg-red-50 hover:bg-red-600 hover:text-white text-red-700 font-bold text-xs rounded-full border border-red-200 transition-all cursor-pointer">
+                                Planı Sil / Sıfırla
+                            </button>
                         </div>
                         <p class="text-xs text-gray-500 mt-0.5">
                             Strateji: <strong>{{ $activePlan->strategy === 'avalanche' ? 'Çığ (En Yüksek Faiz Öncelikli)' : ($activePlan->strategy === 'snowball' ? 'Kartopu' : '90 Gün Hibrit') }}</strong> · Aylık Bütçe: <strong>₺{{ number_format($activePlan->monthly_budget, 2, ',', '.') }}</strong>

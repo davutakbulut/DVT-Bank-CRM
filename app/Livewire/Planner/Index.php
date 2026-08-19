@@ -46,6 +46,13 @@ class Index extends Component
         session()->flash('message', 'Yeni borç kurtarma ödeme planınız başarıyla oluşturuldu!');
     }
 
+    public function deletePlan(): void
+    {
+        $user = Auth::user();
+        PaymentPlan::where('user_id', $user->id)->delete();
+        session()->flash('message', 'Aktif ödeme planınız ve tüm ödeme takviminiz başarıyla silindi.');
+    }
+
     public function markAsPaid(int $itemId): void
     {
         $item = PaymentPlanItem::with('debt')->findOrFail($itemId);
