@@ -14,7 +14,7 @@ class EnsureOnboardingIsCompleted
         $user = Auth::user();
 
         if ($user && !$user->onboarding_completed) {
-            if (!$request->routeIs('onboarding.*') && !$request->routeIs('logout')) {
+            if (!session('onboarding_skipped') && !$request->routeIs('onboarding.*') && !$request->routeIs('logout')) {
                 return redirect()->route('onboarding.index');
             }
         }

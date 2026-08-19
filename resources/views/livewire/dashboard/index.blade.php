@@ -8,6 +8,24 @@
         </div>
     @endif
 
+    @if (!Auth::user()->onboarding_completed)
+        <div class="bg-gradient-to-r from-amber-50 via-indigo-50 to-purple-50 border border-amber-200/90 p-4 rounded-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-xs">
+            <div class="flex items-center gap-3">
+                <div class="p-2.5 bg-amber-500/20 text-amber-700 rounded-xl shrink-0">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                </div>
+                <div>
+                    <h4 class="font-heading font-black text-xs sm:text-sm text-gray-900">İlk Kurulum Sihirbazını Henüz Tamamlamadınız!</h4>
+                    <p class="text-[11px] sm:text-xs text-gray-600">Gelir ve borç bilgilerinizi hızlıca aktararak borç kapatma simülasyonunu ve AI önerilerini tam kapasiteye çıkarın.</p>
+                </div>
+            </div>
+            <a href="{{ route('onboarding.index') }}" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-xl shadow-md transition-all shrink-0 flex items-center gap-1.5 whitespace-nowrap">
+                <span>Sihirbazı Tamamla</span>
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+            </a>
+        </div>
+    @endif
+
     <!-- 1. HOŞ GELDİNİZ VE HIZLI EYLEM ÇUBUĞU -->
     <div class="bg-white p-4 sm:p-5 rounded-2xl border border-gray-200 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>

@@ -28,7 +28,7 @@ class Index extends Component
     public function mount(): void
     {
         $user = Auth::user();
-        if ($user && !$user->onboarding_completed) {
+        if ($user && !$user->onboarding_completed && !session('onboarding_skipped')) {
             redirect()->route('onboarding.index');
         }
     }

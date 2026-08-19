@@ -179,6 +179,7 @@ class Wizard extends Component
     {
         $user = Auth::user();
         $user->update(['onboarding_completed' => true]);
+        session()->forget('onboarding_skipped');
 
         session()->flash('success', 'Tebrikler! Finansal kurtarma ve takip kontrol paneliniz hazırlandı.');
         redirect()->route('dashboard');
@@ -186,10 +187,9 @@ class Wizard extends Component
 
     public function skipOnboarding(): void
     {
-        $user = Auth::user();
-        $user->update(['onboarding_completed' => true]);
+        session(['onboarding_skipped' => true]);
 
-        session()->flash('info', 'Sihirbaz atlandı. Dilediğiniz zaman Borçlarım ve Hesaplarım sayfalarından verilerinizi ekleyebilirsiniz.');
+        session()->flash('info', 'Sihirbaz bu oturum için atlandı. Giriş-çıkış yaptığınızda sihirbaz yeniden hatırlatılacaktır. Dilediğiniz zaman üst menüden sihirbazı tamamlayabilirsiniz.');
         redirect()->route('dashboard');
     }
 

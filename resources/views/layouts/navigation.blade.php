@@ -56,6 +56,15 @@
 
             <!-- Right Side: User Profile Dropdown & Notifications (Desktop) -->
             <div class="hidden md:flex items-center gap-2.5 shrink-0">
+                @if (!Auth::user()->onboarding_completed)
+                    <a href="{{ route('onboarding.index') }}" 
+                       title="İlk Kurulum Sihirbazını Tamamlayın"
+                       class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-amber-50 hover:bg-amber-100 border border-amber-200 text-amber-800 text-xs font-bold rounded-xl transition-all shadow-2xs shrink-0">
+                        <svg class="w-3.5 h-3.5 text-amber-600 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                        <span>Sihirbazı Tamamla</span>
+                    </a>
+                @endif
+
                 <!-- Bildirim Zili Dropdown -->
                 @livewire('notifications.dropdown', key('notifications-dropdown-desktop'))
 
