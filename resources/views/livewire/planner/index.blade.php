@@ -9,6 +9,12 @@
             <p class="text-sm text-gray-600">Matematiksel Çığ (Avalanche), Psikolojik Kartopu (Snowball) ve 90 Gün Yasal Takip Kalkanı Simülatörü</p>
         </div>
         <div class="flex items-center gap-2.5 flex-wrap">
+            <!-- PDF Rapor İndirme / Yazdırma Butonu -->
+            <a href="{{ route('planner.print') }}" target="_blank" class="inline-flex items-center gap-1.5 px-3.5 py-2 bg-indigo-50 hover:bg-indigo-100 text-indigo-800 border border-indigo-300 font-bold text-xs sm:text-sm rounded-lg shadow-2xs transition-all active:scale-95 cursor-pointer">
+                <svg class="w-4 h-4 text-indigo-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/></svg>
+                <span>📄 PDF / AI Rapor İndir</span>
+            </a>
+
             <!-- Excel / CSV İndirme Butonu (Tooltip Popup ile) -->
             <div class="relative group/tooltip" x-data="{ show: false }">
                 <button wire:click="exportExcel" 
@@ -50,6 +56,41 @@
             <span>{{ session('message') }}</span>
         </div>
     @endif
+
+    <!-- 🚀 1. AI STRATEJİ ÖNERİ VE UYUM MOTORU BANNER -->
+    <div class="relative overflow-hidden rounded-2xl bg-gradient-to-r from-indigo-950 via-slate-900 to-indigo-900 border-2 border-indigo-500/40 p-5 sm:p-6 text-white shadow-xl">
+        <div class="absolute top-0 right-0 p-4 opacity-10 pointer-events-none text-7xl font-black">🤖</div>
+        <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div class="flex items-start gap-4">
+                <div class="w-12 h-12 rounded-2xl bg-indigo-600 text-white flex items-center justify-center font-black text-2xl shadow-lg shrink-0 animate-bounce">
+                    🤖
+                </div>
+                <div class="space-y-1">
+                    <div class="flex items-center gap-2 flex-wrap">
+                        <span class="px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 text-xs font-black uppercase tracking-wider">
+                            🤖 AI Strateji Tavsiyesi (%{{ $strategyScores['hybrid'] ?? 98 }} Uyum)
+                        </span>
+                        <span class="text-xs text-indigo-200 font-medium">Kişiselleştirilmiş Borç Analitiği</span>
+                    </div>
+                    <h3 class="text-base sm:text-lg font-black text-white">
+                        Önerilen Rota: <span class="text-emerald-400 font-extrabold">90 Gün Hibrit / Matematiksel Çığ Yöntemi</span>
+                    </h3>
+                    <p class="text-xs sm:text-sm text-slate-300 leading-relaxed max-w-3xl">
+                        Yapay zeka analizimize göre faiz oranı yüksek borçlarınıza öncelik vererek Kartopu yöntemine kıyasla tahmini 
+                        <strong class="text-emerald-300 font-black">₺{{ number_format($savedInterestVsBase, 0, ',', '.') }} daha az faiz</strong> öder 
+                        ve <strong class="text-emerald-300 font-black">{{ $savedMonthsVsBase }} ay daha erken</strong> borçsuzluğa kavuşursunuz!
+                    </p>
+                </div>
+            </div>
+
+            <div class="shrink-0 flex items-center gap-2">
+                <button wire:click="generateAiAudit" class="w-full sm:w-auto px-4 py-2.5 bg-emerald-600 hover:bg-emerald-500 active:scale-95 text-white font-black text-xs sm:text-sm rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer">
+                    <svg class="w-4 h-4 text-white animate-spin" x-show="$wire.isGeneratingAi" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                    <span>🤖 AI Teşhis Raporu Oluştur</span>
+                </button>
+            </div>
+        </div>
+    </div>
     <div class="relative rounded-2xl bg-gradient-to-br from-slate-950 via-indigo-950 to-slate-900 border border-indigo-500/30 p-6 sm:p-8 text-white shadow-2xl overflow-hidden">
         <div class="absolute -top-24 -right-24 w-96 h-96 bg-indigo-500/15 rounded-full blur-3xl pointer-events-none"></div>
         <div class="absolute -bottom-24 -left-24 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
@@ -475,5 +516,28 @@
                 </button>
             </div>
         @endif
+    @endif
+
+    <!-- 🎉 3. ÖDEME BAŞARI & MOTİVASYON MODALI -->
+    @if ($showMotivationModal)
+        <div class="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-md p-4">
+            <div class="relative w-full max-w-md bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 border-2 border-emerald-400/80 rounded-3xl p-6 sm:p-8 text-white shadow-2xl text-center space-y-5">
+                <div class="w-20 h-20 mx-auto rounded-full bg-emerald-500/20 border-2 border-emerald-400/50 flex items-center justify-center text-4xl shadow-inner animate-pulse">
+                    🏆
+                </div>
+                <div class="space-y-2">
+                    <span class="px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-400/40 text-emerald-300 text-xs font-black uppercase tracking-wider">
+                        Finansal Özgürlük Rozeti
+                    </span>
+                    <h3 class="text-xl font-black text-white">Harika Bir Adım Attınız!</h3>
+                    <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+                        {{ $motivationMessage }}
+                    </p>
+                </div>
+                <button wire:click="$set('showMotivationModal', false)" class="w-full py-3 bg-emerald-600 hover:bg-emerald-500 active:scale-95 text-white font-black text-sm rounded-xl shadow-lg transition-all cursor-pointer">
+                    🚀 Borçsuzluğa Devam Et!
+                </button>
+            </div>
+        </div>
     @endif
 </div>

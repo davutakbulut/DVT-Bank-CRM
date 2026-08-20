@@ -25,6 +25,8 @@ class Index extends Component
     public string $activeStrategyTab = 'avalanche'; // avalanche, snowball, hybrid
     public ?string $aiAnalysisResult = null;
     public bool $isGeneratingAi = false;
+    public bool $showMotivationModal = false;
+    public string $motivationMessage = '';
 
     public function mount(): void
     {
@@ -127,6 +129,12 @@ class Index extends Component
                 }
                 $item->debt->save();
             }
+
+            $bankTitle = $item->debt?->bank?->name . ' ' . $item->debt?->title;
+            $amountFormatted = number_format($item->allocated_amount, 2, ',', '.');
+            
+            $this->motivationMessage = "🏆 TEBRİKLER! {$bankTitle} kalemine ait ₺{$amountFormatted} ödemesini başarıyla tamamladınız. Toplam borç yükünüz hafifledi ve finansal özgürlüğünüze 1 adım daha yaklaştınız!";
+            $this->showMotivationModal = true;
 
             session()->flash('message', 'Plan ödemesi başarıyla işlendi ve borç bakiyesi düşürüldü.');
         }

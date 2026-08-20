@@ -101,6 +101,13 @@ Route::middleware(['auth', 'active'])->prefix('app')->group(function () {
         Route::get('/borclar', DebtsIndex::class)->name('debts.index');
         Route::get('/nakit', CashflowIndex::class)->name('cashflow.index');
         Route::get('/plan', PlannerIndex::class)->name('planner.index');
+        Route::get('/plan/yazdir', function () {
+            $user = auth()->user();
+            $activePlan = \App\Models\PaymentPlan::where('user_id', $user->id)->where('status', 'active')->with(['items.debt.bank'])->first();
+            $latestAdvice = \App\Models\AiAdvice::where('user_id', $user->id)->where('type', 'planner')->latest()->first();
+            $debts = \App\Models\Debt::where('user_id', $user->id)->where('status', 'active')->with('bank')->get();
+            return view('pages.planner-print', compact('user', 'activePlan', 'latestAdvice', 'debts'));
+        })->name('planner.print');
         Route::get('/koc', AiCoach::class)->name('ai.coach');
         Route::get('/takvim', CalendarIndex::class)->name('calendar.index');
         Route::get('/raporlar', ReportsIndex::class)->name('reports.index');
