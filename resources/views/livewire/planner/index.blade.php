@@ -132,6 +132,76 @@
         </div>
     </div>
 
+    <!-- 🤖 2. KAPSAMLI NAKİT AÇIĞI & BORÇSUZLUK TEŞHİS RAPORU (AÇILIR / KAPANIR ACCORDION) -->
+    <div x-data="{ open: false }" class="bg-slate-900 border border-slate-800 rounded-3xl shadow-xl overflow-hidden text-slate-100 transition-all">
+        <!-- Tıklanabilir Başlık / Açma-Kapama Çubuğu -->
+        <div @click="open = !open" 
+             class="p-5 sm:p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 cursor-pointer hover:bg-slate-800/60 transition-colors select-none">
+            <div class="flex items-start sm:items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-indigo-500/20 border border-indigo-500/30 flex items-center justify-center text-indigo-300 shrink-0 text-xl">
+                    🤖
+                </div>
+                <div>
+                    <div class="flex items-center gap-2 flex-wrap">
+                        <span class="px-2 py-0.5 rounded-md bg-indigo-500/20 text-indigo-300 text-[10px] font-black uppercase tracking-wider">
+                            Gemini AI Motoru
+                        </span>
+                        @if ($aiAnalysisResult)
+                            <span class="px-2 py-0.5 rounded-md bg-emerald-500/20 text-emerald-300 text-[10px] font-bold">
+                                ✓ Rapor Hazır
+                            </span>
+                        @endif
+                    </div>
+                    <h3 class="text-base sm:text-lg font-black text-white mt-0.5">
+                        Kapsamlı Nakit Açığı & Borçsuzluk Teşhis Raporu
+                    </h3>
+                    <p class="text-xs text-slate-400">Tüm borç, asgari ödeme, sabit gider ve beklenen gelirlerinizin yapay zeka 360° analizi</p>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-3 self-end sm:self-center shrink-0">
+                <button type="button"
+                        @click.stop="$wire.generateAiAudit(); open = true" 
+                        wire:loading.attr="disabled"
+                        class="px-4 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 active:scale-95 text-white font-bold text-xs rounded-xl shadow-md transition-all flex items-center gap-1.5 cursor-pointer disabled:opacity-50">
+                    <svg wire:loading.remove wire:target="generateAiAudit" class="w-3.5 h-3.5 text-purple-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z"/></svg>
+                    <svg wire:loading wire:target="generateAiAudit" class="animate-spin w-3.5 h-3.5 text-white" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                    <span>{{ $aiAnalysisResult ? 'Yenile' : 'Rapor Oluştur' }}</span>
+                </button>
+
+                <!-- Açılır Kapanır Oku -->
+                <div class="w-8 h-8 rounded-lg bg-slate-800 flex items-center justify-center text-slate-300 hover:text-white transition-transform duration-300"
+                     :class="open ? 'rotate-180 bg-indigo-600/40 text-white' : ''">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/></svg>
+                </div>
+            </div>
+        </div>
+
+        <!-- Açılan Gövde İçeriği -->
+        <div x-show="open" 
+             x-cloak
+             x-transition:enter="transition ease-out duration-200"
+             x-transition:enter-start="opacity-0 -translate-y-2"
+             x-transition:enter-end="opacity-100 translate-y-0"
+             class="px-5 pb-6 sm:px-6 border-t border-slate-800/80 pt-4">
+            @if ($aiAnalysisResult)
+                <div class="prose prose-invert max-w-none text-sm leading-relaxed space-y-4 bg-slate-950/80 p-6 rounded-2xl border border-slate-800/80 shadow-inner">
+                    {!! \Illuminate\Support\Str::markdown($aiAnalysisResult) !!}
+                </div>
+            @else
+                <div class="p-8 text-center bg-slate-950/50 rounded-2xl border border-dashed border-slate-800 space-y-3">
+                    <div class="w-12 h-12 rounded-2xl bg-indigo-500/10 border border-indigo-500/30 flex items-center justify-center mx-auto text-indigo-400">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z"/></svg>
+                    </div>
+                    <h4 class="font-bold text-white text-base">Henüz Gemini AI Teşhis Raporu Oluşturulmadı</h4>
+                    <p class="text-xs text-slate-400 max-w-md mx-auto">
+                        Yukarıdaki <strong>"Rapor Oluştur"</strong> butonuna basarak bu ay en az ne kadar para gerektiğini, borç kurtarma bütçenizi ve 3 adımlı acil eylem planınızı 10 saniyede hazırlatabilirsiniz.
+                    </p>
+                </div>
+            @endif
+        </div>
+    </div>
+
     <!-- 🎛️ CANLI BÜTÇE ESNETME & FAİZ TASARRUFU SİMÜLATÖRÜ SLIDER'I -->
     <div class="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 border border-indigo-500/40 rounded-2xl p-6 sm:p-8 space-y-6 shadow-2xl text-white">
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-indigo-800/40 pb-4">
@@ -382,39 +452,58 @@
             </div>
         </div>
     @else
-        <!-- AKTİF PLAN VE AYLIK ÖDEME DÖKÜMÜ -->
+        <!-- AKTİF PLAN VE AYLIK ÖDEME DÖKÜMÜ (AÇILIR / KAPANIR ACCORDION) -->
         @if ($activePlan && count($monthlyGroups) > 0)
-            <div class="bg-white rounded-3xl p-5 sm:p-7 border border-gray-200/90 shadow-sm space-y-6">
-                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-gray-100 pb-4">
-                    <div>
+            <div x-data="{ open: true }" class="bg-white rounded-3xl border border-gray-200/90 shadow-sm overflow-hidden transition-all">
+                <!-- Tıklanabilir Plan Başlığı / Açma-Kapama Çubuğu -->
+                <div @click="open = !open" 
+                     class="p-5 sm:p-7 flex flex-col sm:flex-row sm:items-center justify-between gap-4 cursor-pointer hover:bg-slate-50/80 transition-colors select-none">
+                    <div class="space-y-1">
                         <div class="flex items-center gap-2 flex-wrap">
                             <h2 class="text-lg sm:text-xl font-black text-gray-900">{{ $activePlan->name }}</h2>
                             <span class="px-2.5 py-0.5 rounded-full text-xs font-black bg-emerald-100 text-emerald-800">
                                 Aktif Plan
                             </span>
-                            <button wire:click="deletePlan" wire:confirm="Aktif ödeme planınızı ve tüm ödeme takvimini silmek istediğinizden emin misiniz?" class="px-2.5 py-0.5 bg-red-50 hover:bg-red-600 hover:text-white text-red-700 font-bold text-xs rounded-full border border-red-200 transition-all cursor-pointer">
+                            <button type="button" 
+                                    @click.stop 
+                                    wire:click="deletePlan" 
+                                    wire:confirm="Aktif ödeme planınızı ve tüm ödeme takvimini silmek istediğinizden emin misiniz?" 
+                                    class="px-2.5 py-0.5 bg-red-50 hover:bg-red-600 hover:text-white text-red-700 font-bold text-xs rounded-full border border-red-200 transition-all cursor-pointer">
                                 Planı Sil / Sıfırla
                             </button>
                         </div>
-                        <p class="text-xs text-gray-500 mt-0.5">
+                        <p class="text-xs text-gray-500">
                             Strateji: <strong>{{ $activePlan->strategy === 'avalanche' ? 'Çığ (En Yüksek Faiz Öncelikli)' : ($activePlan->strategy === 'snowball' ? 'Kartopu' : '90 Gün Hibrit') }}</strong> · Aylık Bütçe: <strong>₺{{ number_format($activePlan->monthly_budget, 2, ',', '.') }}</strong>
                         </p>
                     </div>
 
-                    <!-- Plan İlerleme Çubuğu -->
-                    <div class="w-full sm:w-64 space-y-1">
-                        <div class="flex justify-between text-xs font-bold text-gray-700">
-                            <span>Plan İlerlemesi</span>
-                            <span class="text-indigo-600 font-black">%{{ $planProgressPercent }}</span>
+                    <div class="flex items-center gap-4 self-end sm:self-center shrink-0">
+                        <!-- Plan İlerleme Çubuğu -->
+                        <div class="w-48 sm:w-60 space-y-1">
+                            <div class="flex justify-between text-xs font-bold text-gray-700">
+                                <span>Plan İlerlemesi</span>
+                                <span class="text-indigo-600 font-black">%{{ $planProgressPercent }}</span>
+                            </div>
+                            <div class="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
+                                <div class="h-full bg-indigo-600 transition-all duration-500" style="width: {{ $planProgressPercent }}%;"></div>
+                            </div>
                         </div>
-                        <div class="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
-                            <div class="h-full bg-indigo-600 transition-all duration-500" style="width: {{ $planProgressPercent }}%;"></div>
+
+                        <!-- Açılır Kapanır Oku -->
+                        <div class="w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center text-gray-600 transition-transform duration-300"
+                             :class="open ? 'rotate-180 bg-indigo-50 text-indigo-600' : ''">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/></svg>
                         </div>
                     </div>
                 </div>
 
-                <!-- Aylık Ödeme Kartları -->
-                <div class="space-y-4">
+                <!-- Aylık Ödeme Kartları (Açılan İçerik) -->
+                <div x-show="open" 
+                     x-cloak
+                     x-transition:enter="transition ease-out duration-200"
+                     x-transition:enter-start="opacity-0 -translate-y-2"
+                     x-transition:enter-end="opacity-100 translate-y-0"
+                     class="px-5 pb-6 sm:px-7 border-t border-gray-100 pt-5 space-y-4">
                     @foreach ($monthlyGroups as $month => $items)
                         <div class="border border-gray-200 rounded-2xl overflow-hidden shadow-2xs">
                             <div class="bg-gray-50 px-5 py-3 border-b border-gray-200 flex items-center justify-between">
