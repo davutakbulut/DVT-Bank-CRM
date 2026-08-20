@@ -15,6 +15,7 @@ class Wizard extends Component
 {
     public int $step = 1;
     public float $monthly_income = 0.0;
+    public float $monthly_expenses = 0.0;
     
     // Seçilen sistem banka id'leri
     public array $selected_banks = [];
@@ -30,6 +31,7 @@ class Wizard extends Component
         }
 
         $this->monthly_income = (float) ($user->monthly_income ?? 0);
+        $this->monthly_expenses = (float) ($user->monthly_expenses ?? 0);
     }
 
     public function nextStep(): void
@@ -37,12 +39,15 @@ class Wizard extends Component
         if ($this->step === 1) {
             $this->validate([
                 'monthly_income' => 'required|numeric|min:0',
+                'monthly_expenses' => 'required|numeric|min:0',
             ], [
                 'monthly_income.required' => 'Lütfen tahmini aylık net gelirinizi girin.',
+                'monthly_expenses.required' => 'Lütfen tahmini aylık sabit giderlerinizi girin.',
             ]);
 
             Auth::user()->update([
                 'monthly_income' => $this->monthly_income,
+                'monthly_expenses' => $this->monthly_expenses,
             ]);
 
             $this->step = 2;

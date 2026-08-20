@@ -26,6 +26,7 @@ class User extends Authenticatable implements FilamentUser
         'plan_id',
         'status',
         'monthly_income',
+        'monthly_expenses',
         'onboarding_completed',
         'last_login_at',
     ];
@@ -42,6 +43,7 @@ class User extends Authenticatable implements FilamentUser
             'last_login_at' => 'datetime',
             'password' => 'hashed',
             'monthly_income' => 'decimal:2',
+            'monthly_expenses' => 'decimal:2',
             'onboarding_completed' => 'boolean',
         ];
     }

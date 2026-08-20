@@ -22,23 +22,36 @@
     </div>
 
     <div class="bg-white rounded-2xl shadow-xl border border-gray-100 p-6 sm:p-10">
-        <!-- STEP 1: AYLIK GELİR -->
+        <!-- STEP 1: AYLIK GELİR VE SABİT GİDERLER -->
         @if ($step === 1)
             <div class="space-y-6">
                 <div>
-                    <h2 class="text-2xl font-black text-gray-900 tracking-tight">Aylık Düzenli Geliriniz Ne Kadar?</h2>
-                    <p class="text-sm text-gray-600 mt-1">Borç ödeme planınızı ve bütçenizi matematiksel olarak optimize edebilmemiz için aylık net elinize geçen ortalama geliri girin.</p>
+                    <h2 class="text-2xl font-black text-gray-900 tracking-tight">Aylık Gelir ve Sabit Giderleriniz</h2>
+                    <p class="text-sm text-gray-600 mt-1">AI Danışmanınızın ve Ödeme Planlayıcınızın net nakit açığınızı doğru hesaplayabilmesi için gelir ve gider bilgilerinizi girin.</p>
                 </div>
 
-                <div>
-                    <label class="block text-sm font-semibold text-gray-700 mb-1">Aylık Net Gelir (TL)</label>
-                    <div class="relative rounded-xl shadow-sm">
-                        <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
-                            <span class="text-gray-500 sm:text-lg font-bold">₺</span>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">Aylık Net Gelir (TL)</label>
+                        <div class="relative rounded-xl shadow-sm">
+                            <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
+                                <span class="text-gray-500 sm:text-lg font-bold">₺</span>
+                            </div>
+                            <input type="number" step="100" wire:model="monthly_income" class="block w-full rounded-xl border-gray-300 pl-10 pr-4 py-3 text-lg font-bold text-gray-900 focus:border-indigo-500 focus:ring-indigo-500" placeholder="65000">
                         </div>
-                        <input type="number" step="100" wire:model="monthly_income" class="block w-full rounded-xl border-gray-300 pl-10 pr-4 py-3 text-lg font-bold text-gray-900 focus:border-indigo-500 focus:ring-indigo-500" placeholder="65000">
+                        @error('monthly_income') <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span> @error
                     </div>
-                    @error('monthly_income') <span class="text-red-500 text-xs mt-1">{{ $message }}</span> @enderror
+
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">Aylık Sabit Giderler (Kira, Fatura, Yaşam)</label>
+                        <div class="relative rounded-xl shadow-sm">
+                            <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
+                                <span class="text-gray-500 sm:text-lg font-bold">₺</span>
+                            </div>
+                            <input type="number" step="100" wire:model="monthly_expenses" class="block w-full rounded-xl border-gray-300 pl-10 pr-4 py-3 text-lg font-bold text-gray-900 focus:border-indigo-500 focus:ring-indigo-500" placeholder="25000">
+                        </div>
+                        @error('monthly_expenses') <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span> @error
+                    </div>
                 </div>
 
                 <div class="pt-4 flex items-center justify-between">
@@ -46,7 +59,7 @@
                         Şimdilik Doldurmadan Geç
                     </button>
                     <button wire:click="nextStep" class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-xl shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors">
-                        Devam Et: Bankalarımı Seç
+                        Devam Et: Bankalarımı Seç →
                     </button>
                 </div>
             </div>

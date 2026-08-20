@@ -114,6 +114,10 @@ class UserContextBuilder
                 ->where('expense_date', '>=', Carbon::now()->subDays(30))
                 ->sum('amount');
         }
+
+        if ($fixedExpensesSum <= 0 && (float) ($user->monthly_expenses ?? 0) > 0) {
+            $fixedExpensesSum = (float) $user->monthly_expenses;
+        }
         $expectedIncomesSum = (float) \App\Models\ExpectedIncome::where('user_id', $user->id)->where('is_active', true)->sum('amount');
         $totalMonthlyCommitment = (float) $riskSummary['total_monthly_commitment'];
         $totalMonthlyIncome = $monthlyIncome + $expectedIncomesSum;
