@@ -489,10 +489,15 @@
                                         <div class="flex items-center gap-3 shrink-0">
                                             <span class="font-black text-sm text-gray-900">₺{{ number_format($item->allocated_amount, 2, ',', '.') }}</span>
                                             @if ($item->status === 'paid')
-                                                <span class="px-3 py-1 bg-emerald-100 text-emerald-800 font-black text-xs rounded-xl flex items-center gap-1">
-                                                    <svg class="w-3.5 h-3.5 text-emerald-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
-                                                    <span>Ödendi</span>
-                                                </span>
+                                                <div class="flex items-center gap-1.5">
+                                                    <span class="px-2.5 py-1 bg-emerald-100 text-emerald-800 font-black text-xs rounded-xl flex items-center gap-1">
+                                                        <svg class="w-3.5 h-3.5 text-emerald-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+                                                        <span>Ödendi</span>
+                                                    </span>
+                                                    <button wire:click="unmarkAsPaid({{ $item->id }})" wire:confirm="Bu ödeme kaydını geri almak ve borç bakiyesini tekrar eklemek istediğinize emin misiniz?" class="px-2 py-1 bg-slate-100 hover:bg-amber-100 hover:text-amber-900 text-slate-600 font-bold text-xs rounded-lg transition-all active:scale-95 cursor-pointer" title="Ödemeyi Geri Al">
+                                                        ↩️ Geri Al
+                                                    </button>
+                                                </div>
                                             @else
                                                 <button wire:click="markAsPaid({{ $item->id }})" class="px-3 py-1 bg-indigo-50 hover:bg-indigo-600 hover:text-white text-indigo-700 font-bold text-xs rounded-xl border border-indigo-200 transition-all active:scale-95">
                                                     Ödendi İşaretle

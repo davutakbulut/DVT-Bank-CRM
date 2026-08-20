@@ -140,6 +140,35 @@ class Index extends Component
         }
     }
 
+    public function unmarkAsPaid(int $itemId): void
+    {
+        $item = PaymentPlanItem::with('debt')->findOrFail($itemId);
+
+        if ($item->status === 'paid') {
+            $item->update(['status' => 'pending']);
+
+            if ($item->debt) {
+                // Payment log kaydını bul ve sil
+                PaymentLog::where('user_id', Auth::id())
+                    ->where('payable_type', Debt::class)
+                    ->where('payable_id', $item->debt->id)
+                    ->where('amount', $item->allocated_amount)
+                    ->latest()
+                    ->first()
+                    ?->delete();
+
+                // Borç bakiyesini geri ekle
+                $item->debt->remaining = (float) $item->debt->remaining + (float) $item->allocated_amount;
+                if ($item->debt->status === 'paid' && $item->debt->remaining > 0) {
+                    $item->debt->status = 'active';
+                }
+                $item->debt->save();
+            }
+
+            session()->flash('message', '↩️ Ödeme kaydı geri alındı! ₺' . number_format($item->allocated_amount, 2, ',', '.') . ' tutarı borç bakiyenize tekrar eklendi.');
+        }
+    }
+
     public function exportExcel()
     {
         $user = Auth::user();
