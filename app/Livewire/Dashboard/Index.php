@@ -117,6 +117,13 @@ class Index extends Component
             ->upcoming(15)
             ->get();
 
+        // Tüm Aktif Beklenen Gelirler (En yakın tarih en üstte olacak şekilde sıralı)
+        $allExpectedIncomes = \App\Models\ExpectedIncome::where('user_id', $user->id)
+            ->where('is_active', true)
+            ->whereIn('status', ['pending', 'delayed'])
+            ->orderBy('expected_date', 'asc')
+            ->get();
+
         // Yaklaşan ve geciken ödemeler (14 gün içinde)
         $upcomingDebts = Debt::where('user_id', $user->id)
             ->where('status', 'active')
@@ -228,6 +235,7 @@ class Index extends Component
             'riskSummary' => $riskSummary,
             'dueExpectedIncomes' => $dueExpectedIncomes,
             'upcomingExpectedIncomes' => $upcomingExpectedIncomes,
+            'allExpectedIncomes' => $allExpectedIncomes,
             'upcomingDebts' => $upcomingDebts,
             'bankDistribution' => $bankDistribution,
             'latestAdvice' => $latestAdvice,
