@@ -112,4 +112,12 @@ class FinancialPlannerTest extends TestCase
         $this->assertEquals('active', $plan->status);
         $this->assertGreaterThan(0, $plan->items()->count());
     }
+
+    public function test_user_can_access_planner_and_print_pages(): void
+    {
+        $user = User::factory()->create(['onboarding_completed' => true]);
+
+        $this->actingAs($user)->get('/app/plan')->assertSuccessful();
+        $this->actingAs($user)->get('/app/plan/yazdir')->assertSuccessful();
+    }
 }
