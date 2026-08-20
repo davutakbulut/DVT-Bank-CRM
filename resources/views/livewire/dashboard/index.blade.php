@@ -64,11 +64,12 @@
         </div>
     </div>
 
-    <!-- GELİR GERÇEKLEŞME & ONAY AKSİYON BİLDİRİMİ (KOMPAKT & GÖZE BATMAYAN İNCE ŞERİT) -->
+    <!-- GELİR GERÇEKLEŞME & ONAY AKSİYON BİLDİRİMİ -->
     @if ($dueExpectedIncomes->count() > 0)
         <div class="space-y-2">
             @foreach ($dueExpectedIncomes as $ei)
-                <div class="bg-emerald-950/50 border border-emerald-500/40 rounded-xl p-3 sm:px-4 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+                <!-- MASAÜSTÜ GÖRÜNÜM (sm:flex) -->
+                <div class="hidden sm:flex bg-emerald-950/50 border border-emerald-500/40 rounded-xl p-3 sm:px-4 shadow-sm items-center justify-between gap-2.5">
                     <div class="flex items-center gap-2.5 min-w-0">
                         <span class="px-2 py-0.5 rounded-md text-[10px] font-black uppercase tracking-wide shrink-0
                             {{ $ei->status === 'delayed' ? 'bg-rose-500/20 text-rose-300 border border-rose-500/30' : 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30' }}">
@@ -94,16 +95,46 @@
                         </button>
                     </div>
                 </div>
+
+                <!-- MOBİL GÖRÜNÜM (<640px) -->
+                <div class="block sm:hidden bg-gradient-to-r from-emerald-950/80 via-slate-900 to-slate-950 border border-emerald-500/40 backdrop-blur-md rounded-2xl p-3.5 shadow-lg space-y-2.5">
+                    <div class="flex items-center justify-between gap-2">
+                        <div class="flex items-center gap-1.5 min-w-0">
+                            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+                            <span class="px-2 py-0.5 rounded-md text-[10px] font-black uppercase tracking-wide
+                                {{ $ei->status === 'delayed' ? 'bg-rose-500/20 text-rose-300 border border-rose-500/30' : 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30' }}">
+                                {{ $ei->status === 'delayed' ? 'GECİKMELİ GELİR' : 'VADESİ GELEN' }}
+                            </span>
+                        </div>
+                        <span class="text-xs text-slate-400 font-medium">{{ $ei->expected_date?->format('d.m.Y') }}</span>
+                    </div>
+
+                    <div class="flex items-center justify-between gap-2">
+                        <h4 class="text-sm font-black text-white truncate">{{ $ei->title }}</h4>
+                        <span class="text-sm font-mono font-black text-emerald-400 shrink-0">₺{{ number_format($ei->amount, 2, ',', '.') }}</span>
+                    </div>
+
+                    <div class="grid grid-cols-3 gap-1.5 pt-2 border-t border-slate-800">
+                        <button wire:click="confirmExpectedIncome({{ $ei->id }})" class="col-span-2 py-2 bg-emerald-600 active:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow transition-all flex items-center justify-center gap-1 cursor-pointer">
+                            <svg class="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+                            <span>Hesaba Geçti</span>
+                        </button>
+                        <button wire:click="delayExpectedIncome({{ $ei->id }}, 3)" class="py-2 bg-slate-800 hover:bg-slate-700 text-amber-300 border border-amber-500/30 font-bold text-xs rounded-xl text-center">
+                            ⏱️ 3G Ertele
+                        </button>
+                    </div>
+                </div>
             @endforeach
         </div>
     @elseif ($upcomingExpectedIncomes->count() > 0)
-        <!-- YAKLAŞAN BEKLENEN GELİR BİLGİ ŞERİDİ (KOMPAKT & GÖZE BATMAYAN İNCE ŞERİT) -->
+        <!-- YAKLAŞAN BEKLENEN GELİR BİLGİ ŞERİDİ -->
         <div class="space-y-2">
             @foreach ($upcomingExpectedIncomes->take(1) as $uei)
                 @php
                     $daysLeft = (int) now()->startOfDay()->diffInDays($uei->expected_date?->startOfDay(), false);
                 @endphp
-                <div class="bg-slate-900 text-white border border-slate-800 rounded-xl p-3 sm:px-4 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+                <!-- MASAÜSTÜ GÖRÜNÜM (sm:flex) -->
+                <div class="hidden sm:flex bg-slate-900 text-white border border-slate-800 rounded-xl p-3 sm:px-4 shadow-sm items-center justify-between gap-2.5">
                     <div class="flex items-center gap-2.5 min-w-0">
                         <span class="px-2 py-0.5 rounded-md text-[10px] font-black bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 shrink-0">
                             {{ $daysLeft }} GÜN SONRA
@@ -121,6 +152,34 @@
                             <span>Hesaba Geçti</span>
                         </button>
                         <a href="{{ route('cashflow.index') }}" class="px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 font-bold text-xs rounded-lg transition-all">
+                            Nakit Akışı
+                        </a>
+                    </div>
+                </div>
+
+                <!-- MOBİL GÖRÜNÜM (<640px) -->
+                <div class="block sm:hidden bg-gradient-to-br from-slate-900 via-indigo-950/80 to-slate-900 border border-indigo-500/30 backdrop-blur-md rounded-2xl p-3.5 shadow-lg space-y-2.5">
+                    <div class="flex items-center justify-between gap-2">
+                        <div class="flex items-center gap-1.5 min-w-0">
+                            <span class="w-2 h-2 rounded-full bg-indigo-400 animate-ping"></span>
+                            <span class="px-2 py-0.5 rounded-md text-[10px] font-black bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
+                                {{ $daysLeft }} GÜN SONRA
+                            </span>
+                        </div>
+                        <span class="text-xs text-slate-400 font-medium">{{ $uei->expected_date?->format('d.m.Y') }}</span>
+                    </div>
+
+                    <div class="flex items-center justify-between gap-2">
+                        <h4 class="text-sm font-black text-white truncate">{{ $uei->title }}</h4>
+                        <span class="text-sm font-mono font-black text-emerald-400 shrink-0">₺{{ number_format($uei->amount, 2, ',', '.') }}</span>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-2 pt-2 border-t border-slate-800">
+                        <button wire:click="confirmExpectedIncome({{ $uei->id }})" class="py-2 bg-emerald-600 active:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow transition-all flex items-center justify-center gap-1 cursor-pointer">
+                            <svg class="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+                            <span>Hesaba Geçti</span>
+                        </button>
+                        <a href="{{ route('cashflow.index') }}" class="py-2 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 font-bold text-xs rounded-xl flex items-center justify-center text-center">
                             Nakit Akışı
                         </a>
                     </div>
