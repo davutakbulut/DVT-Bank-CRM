@@ -39,10 +39,10 @@
                         Gelir/Gider
                     </x-nav-link>
                     <x-nav-link :href="route('planner.index')" :active="request()->routeIs('planner.*')" class="px-2 lg:px-2.5 xl:px-3 py-2 text-xs lg:text-sm">
-                        Plan
+                        Ödeme Planı
                     </x-nav-link>
                     <x-nav-link :href="route('calendar.index')" :active="request()->routeIs('calendar.*')" class="px-2 lg:px-2.5 xl:px-3 py-2 text-xs lg:text-sm">
-                        Takvim
+                        Ödeme Takvimi
                     </x-nav-link>
                     <x-nav-link :href="route('reports.index')" :active="request()->routeIs('reports.*')" class="px-2 lg:px-2.5 xl:px-3 py-2 text-xs lg:text-sm">
                         Raporlar
@@ -147,22 +147,22 @@
 
                             <x-dropdown-link :href="route('banks.index')" class="flex items-center gap-2.5 px-2.5 py-2 rounded-lg hover:bg-gray-100 text-gray-700 font-bold">
                                 <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.5M4.5 21V10.5M3 21h18M3 9h18"/></svg>
-                                <span>Bankalarım & Kartlar</span>
+                                <span>Bankalarım</span>
                             </x-dropdown-link>
 
                             <x-dropdown-link :href="route('calendar.index')" class="flex items-center gap-2.5 px-2.5 py-2 rounded-lg hover:bg-gray-100 text-gray-700 font-bold">
                                 <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5"/></svg>
-                                <span>Ödeme Takvimi & Vadeler</span>
+                                <span>Ödeme Takvimi</span>
                             </x-dropdown-link>
 
                             <x-dropdown-link :href="route('reports.index')" class="flex items-center gap-2.5 px-2.5 py-2 rounded-lg hover:bg-gray-100 text-gray-700 font-bold">
                                 <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z"/></svg>
-                                <span>Finansal Raporlarım</span>
+                                <span>Raporlar</span>
                             </x-dropdown-link>
 
                             <x-dropdown-link :href="route('profile.edit')" class="flex items-center gap-2.5 px-2.5 py-2 rounded-lg hover:bg-gray-100 text-gray-700 font-bold">
                                 <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/></svg>
-                                <span>Profil & Hesap Güvenliği</span>
+                                <span>Profil & Güvenlik</span>
                             </x-dropdown-link>
                         </div>
 
@@ -255,77 +255,71 @@
                     </button>
                 </div>
 
-                <!-- Core Navigation Links (Clean Light Theme) -->
+                <!-- Core Navigation Links (Exact Same 10 Items as Desktop) -->
                 <div class="space-y-1">
                     <span class="text-[10px] font-black uppercase tracking-wider text-gray-400 px-1 block mb-1">Finansal Menü</span>
                     
+                    <!-- 1. Kontrol Paneli -->
                     <a href="{{ route('dashboard') }}" class="flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-bold transition-all {{ request()->routeIs('dashboard') ? 'bg-indigo-50 text-indigo-700 border-l-4 border-indigo-600' : 'text-gray-700 hover:bg-gray-50 hover:text-indigo-600' }}">
                         <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z"/></svg>
                         <span>Kontrol Paneli</span>
                     </a>
 
+                    <!-- 2. Bankalarım -->
+                    <a href="{{ route('banks.index') }}" class="flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-bold transition-all {{ request()->routeIs('banks.*') ? 'bg-indigo-50 text-indigo-700 border-l-4 border-indigo-600' : 'text-gray-700 hover:bg-gray-50 hover:text-indigo-600' }}">
+                        <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.5M4.5 21V10.5M3 21h18M3 9h18"/></svg>
+                        <span>Bankalarım</span>
+                    </a>
+
+                    <!-- 3. Borçlarım -->
                     <a href="{{ route('debts.index') }}" class="flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-bold transition-all {{ request()->routeIs('debts.*') ? 'bg-indigo-50 text-indigo-700 border-l-4 border-indigo-600' : 'text-gray-700 hover:bg-gray-50 hover:text-indigo-600' }}">
                         <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5z"/></svg>
                         <span>Borçlarım</span>
                     </a>
 
+                    <!-- 4. Kartlarım -->
                     <a href="{{ route('cards.index') }}" class="flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-bold transition-all {{ request()->routeIs('cards.*') ? 'bg-indigo-50 text-indigo-700 border-l-4 border-indigo-600' : 'text-gray-700 hover:bg-gray-50 hover:text-indigo-600' }}">
                         <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5z"/></svg>
                         <span>Kartlarım</span>
                     </a>
 
+                    <!-- 5. Hesaplarım -->
                     <a href="{{ route('accounts.index') }}" class="flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-bold transition-all {{ request()->routeIs('accounts.*') ? 'bg-indigo-50 text-indigo-700 border-l-4 border-indigo-600' : 'text-gray-700 hover:bg-gray-50 hover:text-indigo-600' }}">
                         <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.5M4.5 21V10.5M3 21h18M3 9h18"/></svg>
-                        <span>Hesaplarım & KMH</span>
+                        <span>Hesaplarım</span>
                     </a>
 
+                    <!-- 6. Gelir/Gider -->
                     <a href="{{ route('cashflow.index') }}" class="flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-bold transition-all {{ request()->routeIs('cashflow.*') ? 'bg-indigo-50 text-indigo-700 border-l-4 border-indigo-600' : 'text-gray-700 hover:bg-gray-50 hover:text-indigo-600' }}">
                         <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5h16.5a1.5 1.5 0 011.5 1.5v9a1.5 1.5 0 01-1.5 1.5H3.75a1.5 1.5 0 01-1.5-1.5v-9a1.5 1.5 0 011.5-1.5zM12 12.75a2.25 2.25 0 100-4.5 2.25 2.25 0 000 4.5z"/></svg>
-                        <span>Gelir / Gider</span>
+                        <span>Gelir/Gider</span>
                     </a>
 
+                    <!-- 7. Ödeme Planı -->
                     <a href="{{ route('planner.index') }}" class="flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-bold transition-all {{ request()->routeIs('planner.*') ? 'bg-indigo-50 text-indigo-700 border-l-4 border-indigo-600' : 'text-gray-700 hover:bg-gray-50 hover:text-indigo-600' }}">
                         <svg class="w-4 h-4 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15.59 14.37a6 6 0 01-5.84 7.38v-4.8m5.84-2.58a14.98 14.98 0 006.16-12.12A14.98 14.98 0 009.631 8.41m5.96 5.96a14.926 14.926 0 01-5.841 2.58m-.119-8.54a6 6 0 00-7.381 5.84h4.8m2.581-5.84a14.927 14.927 0 00-2.58 5.84m2.699 2.7c-.103.021-.207.041-.311.06a15.09 15.09 0 01-2.448-2.448 14.9 14.9 0 01.06-.312m-2.24 2.24a6 6 0 00-2.392 4.092m0 0a6 6 0 004.092-2.392m-4.092 2.392l2.392-2.392"/></svg>
-                        <span>Ödeme Planı (Çığ / Kartopu)</span>
+                        <span>Ödeme Planı</span>
                     </a>
 
+                    <!-- 8. Ödeme Takvimi -->
                     <a href="{{ route('calendar.index') }}" class="flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-bold transition-all {{ request()->routeIs('calendar.*') ? 'bg-indigo-50 text-indigo-700 border-l-4 border-indigo-600' : 'text-gray-700 hover:bg-gray-50 hover:text-indigo-600' }}">
                         <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5"/></svg>
-                        <span>Ödeme Takvimi & Vadeler</span>
+                        <span>Ödeme Takvimi</span>
                     </a>
 
+                    <!-- 9. Raporlar -->
                     <a href="{{ route('reports.index') }}" class="flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-bold transition-all {{ request()->routeIs('reports.*') ? 'bg-indigo-50 text-indigo-700 border-l-4 border-indigo-600' : 'text-gray-700 hover:bg-gray-50 hover:text-indigo-600' }}">
                         <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/></svg>
-                        <span>Finansal Raporlar</span>
+                        <span>Raporlar</span>
                     </a>
 
-                    <a href="{{ url('/app/bildirimler') }}" class="flex items-center justify-between px-3 py-2 rounded-lg text-xs font-bold transition-all {{ request()->routeIs('notifications.*') ? 'bg-indigo-50 text-indigo-700 border-l-4 border-indigo-600' : 'text-gray-700 hover:bg-gray-50 hover:text-indigo-600' }}">
-                        <span class="flex items-center gap-3">
-                            <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"/></svg>
-                            <span>Bildirimler</span>
-                        </span>
-                        @php
-                            $unreadNotifs = \App\Models\FinancialNotification::where('user_id', Auth::id())->unread()->count();
-                        @endphp
-                        @if ($unreadNotifs > 0)
-                            <span class="px-2 py-0.5 text-[10px] font-black rounded-full bg-rose-50 text-rose-600 border border-rose-200">
-                                {{ $unreadNotifs }}
-                            </span>
-                        @endif
-                    </a>
-
-                    <!-- AI Coach Highlight Link -->
+                    <!-- 10. AI Koç -->
                     <a href="{{ route('ai.coach') }}" class="flex items-center justify-between px-3 py-2 rounded-lg text-xs font-bold transition-all {{ request()->routeIs('ai.*') ? 'bg-indigo-100 text-indigo-800 border-l-4 border-indigo-600' : 'bg-indigo-50/80 border border-indigo-100 text-indigo-700 hover:bg-indigo-100' }}">
                         <span class="flex items-center gap-2">
                             <svg class="w-4 h-4 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456zM16.894 20.567L16.5 21.75l-.394-1.183a2.25 2.25 0 00-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 001.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 001.423 1.423l1.183.394-1.183.394a2.25 2.25 0 00-1.423 1.423z"/></svg>
-                            <span>AI Finans Koçu</span>
+                            <span>AI Koç</span>
                         </span>
-                        <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-                    </a>
-
-                    <a href="{{ route('banks.index') }}" class="flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-bold transition-all {{ request()->routeIs('banks.*') ? 'bg-indigo-50 text-indigo-700 border-l-4 border-indigo-600' : 'text-gray-700 hover:bg-gray-50 hover:text-indigo-600' }}">
-                        <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.5M4.5 21V10.5M3 21h18M3 9h18"/></svg>
-                        <span>Bankalarım</span>
+                        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
                     </a>
                 </div>
 
