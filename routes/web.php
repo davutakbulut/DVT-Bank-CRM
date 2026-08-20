@@ -25,8 +25,8 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    $plans = Plan::where('is_active', true)->get();
-    $faqs = Faq::where('is_published', true)->take(6)->get();
+    $plans = \Illuminate\Support\Facades\Cache::remember('public_plans', 3600, fn() => Plan::where('is_active', true)->get());
+    $faqs = \Illuminate\Support\Facades\Cache::remember('public_faqs_limit6', 3600, fn() => Faq::where('is_published', true)->take(6)->get());
     return view('welcome', compact('plans', 'faqs'));
 })->name('home');
 
@@ -39,12 +39,12 @@ Route::get('/ozellikler', function () {
 })->name('features');
 
 Route::get('/fiyatlandirma', function () {
-    $plans = Plan::where('is_active', true)->get();
+    $plans = \Illuminate\Support\Facades\Cache::remember('public_plans', 3600, fn() => Plan::where('is_active', true)->get());
     return view('pages.pricing', compact('plans'));
 })->name('pricing');
 
 Route::get('/sss', function () {
-    $faqs = Faq::where('is_published', true)->get();
+    $faqs = \Illuminate\Support\Facades\Cache::remember('public_faqs_all', 3600, fn() => Faq::where('is_published', true)->get());
     return view('pages.faq', compact('faqs'));
 })->name('faq');
 
