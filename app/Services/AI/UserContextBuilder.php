@@ -4,6 +4,8 @@ namespace App\Services\AI;
 
 use App\Models\CreditCard;
 use App\Models\Debt;
+use App\Models\Expense;
+use App\Models\ExpectedIncome;
 use App\Models\Income;
 use App\Models\PaymentPlan;
 use App\Models\User;
@@ -12,12 +14,22 @@ use Carbon\Carbon;
 
 class UserContextBuilder
 {
-    /**
-     * AI servisine gönderilecek anonimleştirilmiş finansal özet verisini üretir.
-     */
     public function build(User $user): array
     {
-        $monthlyIncome = (float) ($user->monthly_income ?: Income::where('user_id', $user->id)->sum('amount'));
+        // 1. Aylık Gelir Hesaplaması (Sadece İçinde Bulunulan Ay veya Son 30 Gün)
+        $monthlyIncome = (float) $user->monthly_income;
+        if ($monthlyIncome <= 0) {
+            $monthlyIncome = (float) Income::where('user_id', $user->id)
+                ->whereYear('income_date', Carbon::now()->year)
+                ->whereMonth('income_date', Carbon::now()->month)
+                ->sum('amount');
+
+            if ($monthlyIncome <= 0) {
+                $monthlyIncome = (float) Income::where('user_id', $user->id)
+                    ->where('income_date', '>=', Carbon::now()->subDays(30))
+                    ->sum('amount');
+            }
+        }
 
         $debts = Debt::where('user_id', $user->id)
             ->where('status', 'active')
@@ -91,18 +103,37 @@ class UserContextBuilder
                 ];
             })->toArray();
 
-        // Sabit Giderler
-        $fixedExpensesSum = (float) \App\Models\Expense::where('user_id', $user->id)->sum('amount');
+        // 2. Aylık Sabit Giderler Hesaplaması (Sadece İçinde Bulunulan Ay veya Son 30 Gün)
+        $fixedExpensesSum = (float) Expense::where('user_id', $user->id)
+            ->whereYear('expense_date', Carbon::now()->year)
+            ->whereMonth('expense_date', Carbon::now()->month)
+            ->sum('amount');
+
+        if ($fixedExpensesSum <= 0) {
+            $fixedExpensesSum = (float) Expense::where('user_id', $user->id)
+                ->where('expense_date', '>=', Carbon::now()->subDays(30))
+                ->sum('amount');
+        }
         $expectedIncomesSum = (float) \App\Models\ExpectedIncome::where('user_id', $user->id)->where('is_active', true)->sum('amount');
         $totalMonthlyCommitment = (float) $riskSummary['total_monthly_commitment'];
         $totalMonthlyIncome = $monthlyIncome + $expectedIncomesSum;
         $netCashflow = $totalMonthlyIncome - ($fixedExpensesSum + $totalMonthlyCommitment);
 
+        $incomeNote = $monthlyIncome > 0 
+            ? 'Kullanıcının kayıtlı aylık geliri mevcuttur.' 
+            : 'DİKKAT: Kullanıcı sisteme henüz aylık gelir kaydı girmemiştir (0 TL). Analizde gelirin henüz girilmediğini, bu yüzden açık hesabının gelir hariç yapıldığını belirtin.';
+
+        $expenseNote = $fixedExpensesSum > 0 
+            ? 'İçinde bulunulan ayki / son 30 günlük sabit giderler.' 
+            : 'Kullanıcının bu ay kayıtlı sabit gideri bulunmamaktadır.';
+
         return [
             'aylik_gelir' => $monthlyIncome,
+            'gelir_durumu_notu' => $incomeNote,
             'beklenen_gelirler_toplami' => $expectedIncomesSum,
             'toplam_aylik_gelir' => $totalMonthlyIncome,
             'sabit_giderler_toplami' => $fixedExpensesSum,
+            'gider_durumu_notu' => $expenseNote,
             'toplam_asgari_borc_odemesi' => $totalMonthlyCommitment,
             'bu_ayki_net_nakit_acigi_veya_fazlasi' => $netCashflow,
             'toplam_borc' => (float) $riskSummary['total_remaining'],
