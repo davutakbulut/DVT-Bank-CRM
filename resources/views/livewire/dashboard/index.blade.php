@@ -64,95 +64,64 @@
         </div>
     </div>
 
-    <!-- GELİR GERÇEKLEŞME & ONAY AKSİYON KARTI (HERO PROMPT) -->
+    <!-- GELİR GERÇEKLEŞME & ONAY AKSİYON BİLDİRİMİ (KOMPAKT & GÖZE BATMAYAN İNCE ŞERİT) -->
     @if ($dueExpectedIncomes->count() > 0)
-        <div class="space-y-3">
+        <div class="space-y-2">
             @foreach ($dueExpectedIncomes as $ei)
-                <div class="bg-gradient-to-r from-emerald-500/10 via-teal-500/10 to-emerald-500/5 border-2 border-emerald-400/80 rounded-2xl p-4 sm:p-5 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
-                    <div class="flex items-start sm:items-center gap-3.5">
-                        <div class="w-11 h-11 rounded-2xl bg-emerald-600 text-white flex items-center justify-center font-black text-xl shadow-md shrink-0 animate-pulse">
-                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5h16.5a1.5 1.5 0 011.5 1.5v9a1.5 1.5 0 01-1.5 1.5H3.75a1.5 1.5 0 01-1.5-1.5v-9a1.5 1.5 0 011.5-1.5zM12 12.75a2.25 2.25 0 100-4.5 2.25 2.25 0 000 4.5z"/></svg>
-                        </div>
-                        <div>
-                            <div class="flex items-center gap-2 flex-wrap">
-                                <span class="px-2 py-0.5 rounded-md text-[10px] font-black bg-emerald-100 text-emerald-800 uppercase tracking-wide flex items-center gap-1">
-                                    @if ($ei->status === 'delayed')
-                                        <svg class="w-3 h-3 text-amber-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                                        <span>GECİKMELİ GELİR</span>
-                                    @else
-                                        <svg class="w-3 h-3 text-emerald-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"/></svg>
-                                        <span>VADESİ GELEN GELİR</span>
-                                    @endif
-                                </span>
-                                <span class="text-xs text-gray-500 font-medium">
-                                    Beklenen Tarih: <strong>{{ $ei->expected_date?->format('d.m.Y') }}</strong>
-                                </span>
-                            </div>
-                            <h3 class="text-base sm:text-lg font-black text-gray-900 mt-1">
-                                {{ $ei->title }} — <span class="text-emerald-600">₺{{ number_format($ei->amount, 2, ',', '.') }}</span>
-                            </h3>
-                            <p class="text-xs text-gray-600 mt-0.5">
-                                Bu beklenen gelir tutarı hesabınıza geçti mi? Yanıtınıza göre ödeme planı ve risk rotası anında güncellenecektir.
-                            </p>
+                <div class="bg-emerald-950/50 border border-emerald-500/40 rounded-xl p-3 sm:px-4 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+                    <div class="flex items-center gap-2.5 min-w-0">
+                        <span class="px-2 py-0.5 rounded-md text-[10px] font-black uppercase tracking-wide shrink-0
+                            {{ $ei->status === 'delayed' ? 'bg-rose-500/20 text-rose-300 border border-rose-500/30' : 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30' }}">
+                            {{ $ei->status === 'delayed' ? 'GECİKMELİ GELİR' : 'VADESİ GELEN GELİR' }}
+                        </span>
+                        <div class="text-xs font-bold text-white truncate">
+                            <span>{{ $ei->title }}</span>
+                            <span class="text-emerald-400 font-mono ml-1">₺{{ number_format($ei->amount, 2, ',', '.') }}</span>
+                            <span class="text-[11px] text-slate-400 font-normal ml-1">({{ $ei->expected_date?->format('d.m.Y') }})</span>
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-2 sm:flex items-center gap-2 w-full md:w-auto shrink-0 pt-2 md:pt-0">
-                        <button wire:click="confirmExpectedIncome({{ $ei->id }})" class="w-full sm:w-auto px-3 sm:px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-black text-xs rounded-xl shadow-md transition-all flex items-center justify-center gap-1.5 cursor-pointer text-center">
-                            <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
-                            <span class="truncate">Hesaba Geçti</span>
+                    <div class="flex items-center gap-2 shrink-0">
+                        <button wire:click="confirmExpectedIncome({{ $ei->id }})" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 active:scale-95 text-white font-bold text-xs rounded-lg shadow transition-all cursor-pointer flex items-center gap-1">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+                            <span>Hesaba Geçti</span>
                         </button>
-                        <button wire:click="delayExpectedIncome({{ $ei->id }}, 3)" class="w-full sm:w-auto px-2.5 sm:px-3.5 py-2.5 bg-amber-50 hover:bg-amber-100 border border-amber-300 text-amber-900 font-bold text-xs rounded-xl transition-all flex items-center justify-center gap-1.5 cursor-pointer text-center" title="Bugünden itibaren 3 gün ertele">
-                            <svg class="w-4 h-4 text-amber-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                            <span class="truncate">3 Gün Ertele</span>
+                        <button wire:click="delayExpectedIncome({{ $ei->id }}, 3)" class="px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-amber-300 border border-amber-500/30 font-bold text-xs rounded-lg transition-all cursor-pointer" title="3 Gün Ertele">
+                            ⏱️ 3G Ertele
                         </button>
-                        <button wire:click="cancelExpectedIncome({{ $ei->id }})" wire:confirm="Bu geliri iptal etmek istediğinize emin misiniz?" class="col-span-2 sm:col-span-1 px-3 py-2 sm:py-2.5 bg-gray-100 hover:bg-red-50 hover:text-red-700 text-gray-600 font-bold text-xs rounded-xl transition-all flex items-center justify-center cursor-pointer" title="İptal Et">
-                            <span class="hidden sm:inline">✕</span>
-                            <span class="sm:hidden">✕ Gelir Kaydını İptal Et</span>
+                        <button wire:click="cancelExpectedIncome({{ $ei->id }})" wire:confirm="Bu geliri iptal etmek istediğinize emin misiniz?" class="p-1.5 text-slate-400 hover:text-rose-400 transition-colors cursor-pointer" title="İptal Et">
+                            ✕
                         </button>
                     </div>
                 </div>
             @endforeach
         </div>
     @elseif ($upcomingExpectedIncomes->count() > 0)
-        <!-- YAKLAŞAN BEKLENEN GELİR ÖN BİLGİLENDİRME (1 HAFTA İÇİNDE) -->
-        <div class="space-y-3">
+        <!-- YAKLAŞAN BEKLENEN GELİR BİLGİ ŞERİDİ (KOMPAKT & GÖZE BATMAYAN İNCE ŞERİT) -->
+        <div class="space-y-2">
             @foreach ($upcomingExpectedIncomes->take(1) as $uei)
                 @php
                     $daysLeft = (int) now()->startOfDay()->diffInDays($uei->expected_date?->startOfDay(), false);
                 @endphp
-                <div class="bg-slate-900 text-white border border-slate-700/80 rounded-2xl p-4 sm:p-5 shadow-lg flex flex-col md:flex-row md:items-center justify-between gap-4">
-                    <div class="flex items-start sm:items-center gap-3.5">
-                        <div class="w-11 h-11 rounded-2xl bg-indigo-600 text-white flex items-center justify-center font-black text-xl shadow-md shrink-0">
-                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5"/></svg>
-                        </div>
-                        <div>
-                            <div class="flex items-center gap-2 flex-wrap">
-                                <span class="px-2 py-0.5 rounded-md text-[10px] font-black bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 uppercase tracking-wide flex items-center gap-1">
-                                    <svg class="w-3 h-3 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5"/></svg>
-                                    <span>YAKLAŞAN BEKLENEN GELİR ({{ $daysLeft }} GÜN SONRA)</span>
-                                </span>
-                                <span class="text-xs text-slate-300 font-medium">
-                                    Beklenen Tarih: <strong class="text-white">{{ $uei->expected_date?->format('d.m.Y') }}</strong>
-                                </span>
-                            </div>
-                            <h3 class="text-base sm:text-lg font-black text-white mt-1">
-                                {{ $uei->title }} — <span class="text-emerald-400">₺{{ number_format($uei->amount, 2, ',', '.') }}</span>
-                            </h3>
-                            <p class="text-xs text-slate-400 mt-0.5">
-                                Yaklaşan bu geliriniz vadesi geldiğinde sorulacaktır. Şimdiden hesaba geçtiyse doğrudan onaylayabilirsiniz.
-                            </p>
+                <div class="bg-slate-900 text-white border border-slate-800 rounded-xl p-3 sm:px-4 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+                    <div class="flex items-center gap-2.5 min-w-0">
+                        <span class="px-2 py-0.5 rounded-md text-[10px] font-black bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 shrink-0">
+                            {{ $daysLeft }} GÜN SONRA
+                        </span>
+                        <div class="text-xs font-bold text-slate-200 truncate">
+                            <span>{{ $uei->title }}</span>
+                            <span class="text-emerald-400 font-mono ml-1">₺{{ number_format($uei->amount, 2, ',', '.') }}</span>
+                            <span class="text-[11px] text-slate-400 font-normal ml-1">({{ $uei->expected_date?->format('d.m.Y') }})</span>
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-2 gap-2 w-full md:w-auto md:flex md:items-center shrink-0 pt-2 md:pt-0">
-                        <button wire:click="confirmExpectedIncome({{ $uei->id }})" class="w-full md:w-auto px-3 sm:px-4 py-2.5 bg-emerald-600 hover:bg-emerald-500 active:scale-95 text-white font-black text-xs rounded-xl shadow-md transition-all flex items-center justify-center gap-1.5 cursor-pointer text-center">
-                            <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
-                            <span class="truncate">Hesaba Geçti</span>
+                    <div class="flex items-center gap-2 shrink-0">
+                        <button wire:click="confirmExpectedIncome({{ $uei->id }})" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 active:scale-95 text-white font-bold text-xs rounded-lg transition-all cursor-pointer flex items-center gap-1">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+                            <span>Hesaba Geçti</span>
                         </button>
-                        <a href="{{ route('cashflow.index') }}" class="w-full md:w-auto px-3 sm:px-3.5 py-2.5 bg-slate-800 hover:bg-slate-700 border border-slate-600 text-slate-200 font-bold text-xs rounded-xl transition-all flex items-center justify-center gap-1.5 text-center">
-                            <svg class="w-4 h-4 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/></svg>
-                            <span class="truncate">Nakit Akışı</span>
+                        <a href="{{ route('cashflow.index') }}" class="px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 font-bold text-xs rounded-lg transition-all">
+                            Nakit Akışı
                         </a>
                     </div>
                 </div>
