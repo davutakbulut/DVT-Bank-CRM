@@ -23,7 +23,7 @@
             </div>
         @endif
 
-        <form action="{{ route('contact.submit') }}" method="POST" class="bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 space-y-4 shadow-xl">
+        <form action="{{ url('/iletisim') }}" method="POST" class="bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 space-y-4 shadow-xl">
             @csrf
             <div>
                 <label class="block text-xs font-semibold text-slate-300 mb-1">Adınız Soyadınız</label>
