@@ -5,23 +5,23 @@
         </a>
 
         <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-slate-300">
-            <a href="{{ route('features') }}" class="hover:text-white transition-colors {{ request()->routeIs('features') ? 'text-indigo-400 font-bold' : '' }}">Özellikler</a>
-            <a href="{{ route('how-it-works') }}" class="hover:text-white transition-colors {{ request()->routeIs('how-it-works') ? 'text-indigo-400 font-bold' : '' }}">Nasıl Çalışır?</a>
-            <a href="{{ route('pricing') }}" class="hover:text-white transition-colors {{ request()->routeIs('pricing') ? 'text-indigo-400 font-bold' : '' }}">Fiyatlandırma</a>
-            <a href="{{ route('faq') }}" class="hover:text-white transition-colors {{ request()->routeIs('faq') ? 'text-indigo-400 font-bold' : '' }}">S.S.S.</a>
-            <a href="{{ route('contact') }}" class="hover:text-white transition-colors {{ request()->routeIs('contact') ? 'text-indigo-400 font-bold' : '' }}">İletişim</a>
+            <a href="{{ route('features') }}" wire:navigate class="hover:text-white transition-colors {{ request()->routeIs('features') ? 'text-indigo-400 font-bold' : '' }}">Özellikler</a>
+            <a href="{{ route('how-it-works') }}" wire:navigate class="hover:text-white transition-colors {{ request()->routeIs('how-it-works') ? 'text-indigo-400 font-bold' : '' }}">Nasıl Çalışır?</a>
+            <a href="{{ route('pricing') }}" wire:navigate class="hover:text-white transition-colors {{ request()->routeIs('pricing') ? 'text-indigo-400 font-bold' : '' }}">Fiyatlandırma</a>
+            <a href="{{ route('faq') }}" wire:navigate class="hover:text-white transition-colors {{ request()->routeIs('faq') ? 'text-indigo-400 font-bold' : '' }}">S.S.S.</a>
+            <a href="{{ route('contact') }}" wire:navigate class="hover:text-white transition-colors {{ request()->routeIs('contact') ? 'text-indigo-400 font-bold' : '' }}">İletişim</a>
         </nav>
 
         <div class="flex items-center gap-3">
             @auth
-                <a href="{{ route('dashboard') }}" class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-sm shadow-md transition-all">
+                <a href="{{ route('dashboard') }}" wire:navigate class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-sm shadow-md transition-all">
                     Kontrol Paneli →
                 </a>
             @else
-                <a href="{{ route('login') }}" class="px-4 py-2 rounded-xl text-sm font-bold text-slate-300 hover:text-white transition-colors">
+                <a href="{{ route('login') }}" wire:navigate class="px-4 py-2 rounded-xl text-sm font-bold text-slate-300 hover:text-white transition-colors">
                     Giriş Yap
                 </a>
-                <a href="{{ route('register') }}" class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-sm shadow-md transition-all">
+                <a href="{{ route('register') }}" wire:navigate class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-sm shadow-md transition-all">
                     Ücretsiz Başla
                 </a>
             @endauth
