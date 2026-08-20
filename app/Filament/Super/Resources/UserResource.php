@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Filament\Admin\Resources;
+namespace App\Filament\Super\Resources;
 
-use App\Filament\Admin\Resources\UserResource\Pages;
+use App\Filament\Super\Resources\UserResource\Pages;
 use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -13,8 +13,10 @@ use Filament\Tables\Table;
 class UserResource extends Resource
 {
     protected static ?string $model = User::class;
+
     protected static ?string $navigationIcon = 'heroicon-o-users';
-    protected static ?string $navigationLabel = 'Kullanıcılar';
+    protected static ?string $navigationLabel = 'Kullanıcılar & Roller';
+    protected static ?string $navigationGroup = 'Kullanıcı Yönetimi';
     protected static ?string $modelLabel = 'Kullanıcı';
     protected static ?string $pluralModelLabel = 'Kullanıcılar';
 
@@ -32,7 +34,7 @@ class UserResource extends Resource
                     ->required()
                     ->maxLength(255),
                 Forms\Components\Select::make('status')
-                    ->label('Hesap Durumu')
+                    ->label('Durum')
                     ->options([
                         'active' => 'Aktif',
                         'suspended' => 'Askıya Alındı',
@@ -40,8 +42,16 @@ class UserResource extends Resource
                     ])
                     ->required(),
                 Forms\Components\Select::make('plan_id')
-                    ->label('Abonelik Planı')
+                    ->label('Plan')
                     ->relationship('plan', 'name'),
+                Forms\Components\CheckboxList::make('roles')
+                    ->relationship('roles', 'name')
+                    ->label('Roller'),
+                Forms\Components\Toggle::make('onboarding_completed')
+                    ->label('Onboarding Tamamlandı'),
+                Forms\Components\TextInput::make('monthly_income')
+                    ->label('Aylık Gelir')
+                    ->numeric(),
             ]);
     }
 
@@ -58,11 +68,10 @@ class UserResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('plan.name')
                     ->label('Plan')
-                    ->badge()
-                    ->color(fn (string $state): string => match ($state) {
-                        'Pro Plan' => 'success',
-                        default => 'gray',
-                    }),
+                    ->badge(),
+                Tables\Columns\TextColumn::make('roles.name')
+                    ->label('Roller')
+                    ->badge(),
                 Tables\Columns\TextColumn::make('status')
                     ->label('Durum')
                     ->badge()
@@ -72,19 +81,28 @@ class UserResource extends Resource
                         'closed' => 'gray',
                         default => 'gray',
                     }),
+                Tables\Columns\IconColumn::make('onboarding_completed')
+                    ->label('Onboarding')
+                    ->boolean(),
                 Tables\Columns\TextColumn::make('created_at')
-                    ->label('Kayıt Tarihi')
+                    ->label('Oluşturulma')
                     ->dateTime('d.m.Y H:i')
                     ->sortable(),
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('status')
-                    ->label('Duruma Göre Filtrele')
+                    ->label('Durum')
                     ->options([
                         'active' => 'Aktif',
-                        'suspended' => 'Askıda',
-                        'closed' => 'Kapalı',
+                        'suspended' => 'Askıya Alındı',
+                        'closed' => 'Kapatıldı',
                     ]),
+                Tables\Filters\SelectFilter::make('plan_id')
+                    ->label('Plan')
+                    ->relationship('plan', 'name'),
+                Tables\Filters\SelectFilter::make('roles')
+                    ->label('Rol')
+                    ->relationship('roles', 'name'),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

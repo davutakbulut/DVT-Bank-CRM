@@ -1,9 +1,8 @@
 <?php
 
-namespace App\Filament\Admin\Resources;
+namespace App\Filament\Super\Resources;
 
-use App\Filament\Admin\Resources\SupportTicketResource\Pages;
-use App\Filament\Admin\Resources\SupportTicketResource\RelationManagers\TicketMessagesRelationManager;
+use App\Filament\Super\Resources\SupportTicketResource\Pages;
 use App\Models\SupportTicket;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -15,9 +14,10 @@ use Illuminate\Database\Eloquent\Builder;
 class SupportTicketResource extends Resource
 {
     protected static ?string $model = SupportTicket::class;
+
     protected static ?string $navigationIcon = 'heroicon-o-chat-bubble-left-right';
-    protected static ?string $navigationGroup = 'Destek & İletişim';
-    protected static ?string $navigationLabel = 'Destek Talepleri';
+    protected static ?string $navigationLabel = 'Tüm Destek Talepleri';
+    protected static ?string $navigationGroup = 'Destek';
     protected static ?string $modelLabel = 'Destek Talebi';
     protected static ?string $pluralModelLabel = 'Destek Talepleri';
 
@@ -35,12 +35,12 @@ class SupportTicketResource extends Resource
                     ->required()
                     ->maxLength(255),
                 Forms\Components\Select::make('status')
-                    ->label('Talep Durumu')
+                    ->label('Durum')
                     ->options([
                         'open' => 'Açık',
-                        'in_progress' => 'İnceleniyor',
+                        'in_progress' => 'İşlemde',
                         'resolved' => 'Çözüldü',
-                        'closed' => 'Kapatıldı',
+                        'closed' => 'Kapalı',
                     ])
                     ->required(),
                 Forms\Components\Select::make('priority')
@@ -52,9 +52,9 @@ class SupportTicketResource extends Resource
                         'critical' => 'Kritik',
                     ])
                     ->required(),
-                Forms\Components\Textarea::make('message')
-                    ->label('İlk Mesaj')
-                    ->columnSpanFull(),
+                Forms\Components\Select::make('assigned_to')
+                    ->label('Atanan Yetkili')
+                    ->relationship('assignedAgent', 'name'),
             ]);
     }
 
@@ -82,33 +82,28 @@ class SupportTicketResource extends Resource
                     ->label('Öncelik')
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {
-                        'low' => 'gray',
-                        'medium' => 'info',
-                        'high' => 'warning',
                         'critical' => 'danger',
+                        'high' => 'warning',
+                        'medium' => 'info',
+                        'low' => 'gray',
                         default => 'gray',
                     }),
+                Tables\Columns\TextColumn::make('assignedAgent.name')
+                    ->label('Atanan'),
                 Tables\Columns\TextColumn::make('created_at')
-                    ->label('Açılış')
-                    ->dateTime('d.m.Y H:i'),
+                    ->label('Oluşturulma')
+                    ->dateTime('d.m.Y H:i')
+                    ->sortable(),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
             ]);
     }
 
-    public static function getRelations(): array
-    {
-        return [
-            TicketMessagesRelationManager::class,
-        ];
-    }
-
     public static function getPages(): array
     {
         return [
             'index' => Pages\ListSupportTickets::route('/'),
-            'create' => Pages\CreateSupportTicket::route('/create'),
             'edit' => Pages\EditSupportTicket::route('/{record}/edit'),
         ];
     }
