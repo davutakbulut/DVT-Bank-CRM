@@ -3,11 +3,13 @@
 namespace App\Models;
 
 use App\Traits\BelongsToUser;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Crypt;
 
 class Account extends Model
 {
@@ -28,11 +30,9 @@ class Account extends Model
         'currency',
     ];
 
-
     protected function casts(): array
     {
         return [
-            'iban' => 'encrypted',
             'balance' => 'decimal:2',
             'kmh_limit' => 'decimal:2',
             'kmh_interest_rate' => 'decimal:4',
@@ -40,15 +40,48 @@ class Account extends Model
     }
 
     /**
+     * Güvenli Şifrelenmiş IBAN (Key değişimi veya bozuk MAC durumunda DecryptException fırlatmaz)
+     */
+    protected function iban(): Attribute
+    {
+        return Attribute::make(
+            get: function ($value) {
+                if (empty($value)) {
+                    return null;
+                }
+                try {
+                    return Crypt::decryptString($value);
+                } catch (\Throwable $e) {
+                    if (is_string($value) && (str_starts_with($value, 'eyJ') || str_contains($value, '"iv":') || str_contains($value, '"mac":'))) {
+                        return null;
+                    }
+                    return $value;
+                }
+            },
+            set: function ($value) {
+                if (empty($value)) {
+                    return null;
+                }
+                try {
+                    return Crypt::encryptString((string) $value);
+                } catch (\Throwable $e) {
+                    return $value;
+                }
+            }
+        );
+    }
+
+    /**
      * Güvenli Maskeli IBAN (Örn: TR•• •••• •••• •••• •••• ••34 56)
      */
     public function getMaskedIbanAttribute(): string
     {
-        if (empty($this->iban)) {
+        $rawIban = $this->iban;
+        if (empty($rawIban)) {
             return '-';
         }
 
-        $clean = strtoupper(preg_replace('/[^A-Za-z0-9]/', '', (string) $this->iban));
+        $clean = strtoupper(preg_replace('/[^A-Za-z0-9]/', '', (string) $rawIban));
         if (str_starts_with($clean, 'TR')) {
             $clean = substr($clean, 2);
         }
@@ -67,11 +100,12 @@ class Account extends Model
      */
     public function getFormattedIbanAttribute(): string
     {
-        if (empty($this->iban)) {
+        $rawIban = $this->iban;
+        if (empty($rawIban)) {
             return '-';
         }
 
-        $clean = strtoupper(preg_replace('/[^A-Za-z0-9]/', '', (string) $this->iban));
+        $clean = strtoupper(preg_replace('/[^A-Za-z0-9]/', '', (string) $rawIban));
         if (!str_starts_with($clean, 'TR')) {
             $clean = 'TR' . $clean;
         }
@@ -102,7 +136,6 @@ class Account extends Model
     }
 
     public function bank(): BelongsTo
-
     {
         return $this->belongsTo(Bank::class);
     }
@@ -117,5 +150,3 @@ class Account extends Model
         return $this->hasMany(Expense::class);
     }
 }
-
-

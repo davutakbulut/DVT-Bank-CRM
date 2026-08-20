@@ -3,11 +3,13 @@
 namespace App\Models;
 
 use App\Traits\BelongsToUser;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Crypt;
 
 class CreditCard extends Model
 {
@@ -42,7 +44,6 @@ class CreditCard extends Model
     protected function casts(): array
     {
         return [
-            'card_number' => 'encrypted',
             'credit_limit' => 'decimal:2',
             'cash_advance_limit' => 'decimal:2',
             'is_cash_advance_blocked' => 'boolean',
@@ -61,12 +62,45 @@ class CreditCard extends Model
         ];
     }
 
+    /**
+     * Güvenli Şifrelenmiş Kart Numarası (Key değişimi veya bozuk MAC durumunda DecryptException fırlatmaz)
+     */
+    protected function cardNumber(): Attribute
+    {
+        return Attribute::make(
+            get: function ($value) {
+                if (empty($value)) {
+                    return null;
+                }
+                try {
+                    return Crypt::decryptString($value);
+                } catch (\Throwable $e) {
+                    // Eğer şifreli formatta (base64 JSON vb.) ise ve decrypt edilemiyorsa null dön
+                    if (is_string($value) && (str_starts_with($value, 'eyJ') || str_contains($value, '"iv":') || str_contains($value, '"mac":'))) {
+                        return null;
+                    }
+                    return $value;
+                }
+            },
+            set: function ($value) {
+                if (empty($value)) {
+                    return null;
+                }
+                try {
+                    return Crypt::encryptString((string) $value);
+                } catch (\Throwable $e) {
+                    return $value;
+                }
+            }
+        );
+    }
 
     protected static function booted(): void
     {
         static::saving(function (CreditCard $card) {
-            if (!empty($card->card_number)) {
-                $digits = preg_replace('/\D/', '', (string) $card->card_number);
+            $rawNumber = $card->card_number;
+            if (!empty($rawNumber)) {
+                $digits = preg_replace('/\D/', '', (string) $rawNumber);
                 if (strlen($digits) >= 4) {
                     $card->last_four = substr($digits, -4);
                 }
@@ -82,7 +116,9 @@ class CreditCard extends Model
         $last4 = $this->last_four;
         if (empty($last4) && !empty($this->card_number)) {
             $digits = preg_replace('/\D/', '', (string) $this->card_number);
-            $last4 = substr($digits, -4);
+            if (!empty($digits)) {
+                $last4 = substr($digits, -4);
+            }
         }
 
         return $last4 ? '•••• •••• •••• ' . $last4 : '•••• •••• •••• ••••';
@@ -93,11 +129,15 @@ class CreditCard extends Model
      */
     public function getFormattedCardNumberAttribute(): string
     {
-        if (empty($this->card_number)) {
+        $num = $this->card_number;
+        if (empty($num)) {
             return $this->masked_card_number;
         }
 
-        $digits = preg_replace('/\D/', '', (string) $this->card_number);
+        $digits = preg_replace('/\D/', '', (string) $num);
+        if (empty($digits)) {
+            return $this->masked_card_number;
+        }
         return trim(chunk_split($digits, 4, ' '));
     }
 
@@ -116,5 +156,3 @@ class CreditCard extends Model
         return $this->hasMany(Expense::class);
     }
 }
-
-
