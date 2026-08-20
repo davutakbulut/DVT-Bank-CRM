@@ -12,15 +12,19 @@ use App\Services\DebtCalculator;
 use App\Services\PaymentPlanner;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use App\Models\AiAdvice;
 use Livewire\Component;
 
 class Index extends Component
 {
     public bool $isCreatingPlan = false;
     public float $monthlyBudget = 15000.0;
+    public float $simulatedBudget = 15000.0;
     public string $strategy = 'avalanche'; // avalanche (Çığ), snowball (Kartopu), hybrid (90 Gün Hibrit)
     public string $planName = 'Matematiksel Çığ Borç Kapatma Planı';
     public string $activeStrategyTab = 'avalanche'; // avalanche, snowball, hybrid
+    public ?string $aiAnalysisResult = null;
+    public bool $isGeneratingAi = false;
 
     public function mount(): void
     {
@@ -32,6 +36,7 @@ class Index extends Component
 
         if ($activePlan) {
             $this->monthlyBudget = (float) $activePlan->monthly_budget;
+            $this->simulatedBudget = (float) $activePlan->monthly_budget;
             $this->strategy = $activePlan->strategy;
             $this->activeStrategyTab = $activePlan->strategy;
             $this->planName = $activePlan->name;
@@ -41,6 +46,34 @@ class Index extends Component
             $availableNet = max(0.0, $totalIncome - $totalExpense);
             
             $this->monthlyBudget = $availableNet > 500 ? $availableNet : 15000.0;
+            $this->simulatedBudget = $this->monthlyBudget;
+        }
+
+        // Son oluşturulan AI analiz raporunu çek
+        $latestAdvice = AiAdvice::where('user_id', $user->id)
+            ->where('type', 'planner')
+            ->latest()
+            ->first();
+
+        if ($latestAdvice) {
+            $this->aiAnalysisResult = $latestAdvice->content;
+        }
+    }
+
+    public function generateAiAudit(): void
+    {
+        $this->isGeneratingAi = true;
+        try {
+            $user = Auth::user();
+            $aiManager = new \App\Services\AI\AiManager();
+            $advice = $aiManager->generateAdviceForUser($user, 'planner');
+
+            $this->aiAnalysisResult = $advice->content;
+            session()->flash('message', 'Gemini AI Kapsamlı Borç ve Nakit Açığı Analiz Raporunuz Hazırlandı!');
+        } catch (\Throwable $e) {
+            session()->flash('error', 'AI Analiz raporu oluşturulurken bir hata oluştu: ' . $e->getMessage());
+        } finally {
+            $this->isGeneratingAi = false;
         }
     }
 
@@ -218,10 +251,32 @@ class Index extends Component
         $freedomMonths = $activeStrategyResult['months'] ?? 12;
         $freedomDate = Carbon::now()->addMonths($freedomMonths)->translatedFormat('F Y');
 
+        // Canlı Bütçe Simülatörü Hesaplaması
+        $simulatedComparison = $calc->compareStrategies($debts->toArray(), (float) $this->simulatedBudget);
+        $simulatedResult = $simulatedComparison[$effectiveStrategy] ?? ($simulatedComparison['avalanche'] ?? ['months' => 12, 'total_interest' => 0]);
+        $savedInterestVsBase = max(0, ($comparison[$effectiveStrategy]['total_interest'] ?? 0) - ($simulatedResult['total_interest'] ?? 0));
+        $savedMonthsVsBase = max(0, ($comparison[$effectiveStrategy]['months'] ?? 12) - ($simulatedResult['months'] ?? 12));
+
+        // Strateji Uyum Skorları (% Hesabı)
+        $avgInterest = $debts->avg('interest_rate') ?? 0;
+        $hasOverdue = $debts->where('days_overdue', '>', 0)->count() > 0;
+        $hasSmallDebt = $debts->min('remaining') < 20000;
+
+        $strategyScores = [
+            'avalanche' => $avgInterest > 3.0 ? 94 : 82,
+            'hybrid' => $hasOverdue ? 98 : 88,
+            'snowball' => $hasSmallDebt ? 86 : 70,
+        ];
+
         return view('livewire.planner.index', [
             'activePlan' => $activePlan,
             'monthlyGroups' => $monthlyGroups,
             'comparison' => $comparison,
+            'simulatedComparison' => $simulatedComparison,
+            'simulatedResult' => $simulatedResult,
+            'savedInterestVsBase' => $savedInterestVsBase,
+            'savedMonthsVsBase' => $savedMonthsVsBase,
+            'strategyScores' => $strategyScores,
             'debts' => $debts,
             'roadmap' => $roadmap,
             'totalDebtSum' => $totalDebtSum,

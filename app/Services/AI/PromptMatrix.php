@@ -94,4 +94,38 @@ Rapor şunları içermelidir:
 4. Bankalarla Yapılandırma Görüşmesi için Taktikler.
 EOT;
     }
+
+    /**
+     * Kapsamlı Ödeme Planı, Acil Nakit Hedefi ve Bütçe Analizi Promptu (/app/plan)
+     */
+    public static function plannerDeepAuditPrompt(array $context): string
+    {
+        $json = json_encode($context, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+
+        return <<<EOT
+Kullanıcının Canlı Finansal Veri Tablosu:
+{$json}
+
+GÖREV:
+Kullanıcının Ödeme Planı (/app/plan) için derinlemesine finansal teşhis ve stratejik yol haritası oluştur.
+Rapor mutlaka şu 4 ana başlığı ve detaylı analizleri İÇERMELİDİR:
+
+1. **🔴 BU AY EN AZ NE KADAR PARA LAZIM? (Acil Nakit İhtiyacı ve Açık Analizi):**
+   - Kullanıcının tüm borçlarının aylık asgari ödemeleri + sabit giderleri toplamını hesapla.
+   - Mevcut gelir ve beklenen alacakları düşerek bu ayki NAKİT AÇIĞI veya NAKİT FAZLASI rakamını net olarak ver (Örn: `Bu ay en az 24.500 ₺ nakit gereklidir. Geliriniz 20.000 ₺ olduğu için en az 4.500 ₺ ek kaynak veya erteleme şarttır.`).
+
+2. **🟢 BU İŞİN İÇİNDEN ÇIKIŞ RAKAMI (Önerilen Aylık Bütçe ve Süre):**
+   - Borçların tamamen sıfırlanması için ayrılması gereken en ideal aylık bütçeyi (TL) ve bu bütçeyle kaç ayda borçsuzluğa ulaşılacağını hesapla.
+
+3. **🎯 KİŞİSELLEŞTİRİLMİŞ 3 ADIMLI ACİL EYLEM PLANI:**
+   - Öncelikli kapatılacak 1. borç (en yüksek faiz veya yasal takip riski en yakın banka).
+   - Bu ay ertelenebilecek veya asgari tutarla idare edilecek borçlar.
+   - Faiz kartopunu yavaşlatacak taktik hamleler.
+
+4. **📅 NAKİT AKIŞI VE ÖDEME ARALIĞI UYARISI:**
+   - Ayın hangi günlerinde sıkışma yaşandığını (son ödeme tarihleri kümelenmesi) ve hangi alacakların takip edilmesi gerektiğini vurgula.
+
+Yanıtı temiz Markdown başlıkları, standart Markdown tablosu ve belirgin vurgularla oluştur.
+EOT;
+    }
 }

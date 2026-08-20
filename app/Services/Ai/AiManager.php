@@ -53,9 +53,11 @@ EOT;
         $contextBuilder = new UserContextBuilder();
         $context = $contextBuilder->build($user);
 
-        $userPrompt = ($type === 'analysis') 
-            ? PromptMatrix::deepAnalysisPrompt($context) 
-            : PromptMatrix::dailyAdvicePrompt($context);
+        $userPrompt = match ($type) {
+            'planner', 'planner_deep_audit' => PromptMatrix::plannerDeepAuditPrompt($context),
+            'analysis' => PromptMatrix::deepAnalysisPrompt($context),
+            default => PromptMatrix::dailyAdvicePrompt($context),
+        };
 
         $systemPrompt = PromptMatrix::baseSystemPrompt();
 

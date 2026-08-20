@@ -50,8 +50,6 @@
             <span>{{ session('message') }}</span>
         </div>
     @endif
-
-    <!-- 2. FİNANSAL ÖZGÜRLÜK & KURTULUŞ SKOR PANOSU -->
     <div class="relative rounded-2xl bg-gradient-to-br from-slate-950 via-indigo-950 to-slate-900 border border-indigo-500/30 p-6 sm:p-8 text-white shadow-2xl overflow-hidden">
         <div class="absolute -top-24 -right-24 w-96 h-96 bg-indigo-500/15 rounded-full blur-3xl pointer-events-none"></div>
         <div class="absolute -bottom-24 -left-24 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
@@ -100,6 +98,103 @@
         </div>
     </div>
 
+    <!-- 🤖 GEMİNI AI TEŞHİS, ACİL NAKİT VE DERİNLEMESİNE FİNANSAL TEŞHİS PANELİ -->
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 space-y-6 shadow-2xl text-slate-100">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-4">
+            <div>
+                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-md bg-indigo-500/20 border border-indigo-500/40 text-indigo-300 text-[11px] font-black uppercase tracking-wider mb-2">
+                    🤖 Gemini AI Finansal Teşhir Motoru
+                </span>
+                <h3 class="text-xl font-black text-white flex items-center gap-2">
+                    <span>Kapsamlı Nakit Açığı & Borçsuzluk Teşhis Raporu</span>
+                </h3>
+                <p class="text-xs text-slate-400 mt-1">Tüm borç, asgari ödeme, sabit gider ve beklenen gelirlerinizin yapay zeka tarafından 360° analizi</p>
+            </div>
+            
+            <button wire:click="generateAiAudit" 
+                    wire:loading.attr="disabled"
+                    class="px-5 py-2.5 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 active:scale-95 text-white font-black text-xs sm:text-sm rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50">
+                <svg wire:loading.remove wire:target="generateAiAudit" class="w-4 h-4 text-purple-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z"/></svg>
+                <svg wire:loading wire:target="generateAiAudit" class="animate-spin w-4 h-4 text-white" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                <span>{{ $aiAnalysisResult ? '🔄 Analiz Raporunu Yenile' : '🤖 Gemini AI Analizi Başlat' }}</span>
+            </button>
+        </div>
+
+        @if ($aiAnalysisResult)
+            <div class="prose prose-invert max-w-none text-sm leading-relaxed space-y-4 bg-slate-950/80 p-6 rounded-xl border border-slate-800/80 shadow-inner">
+                {!! \Illuminate\Support\Str::markdown($aiAnalysisResult) !!}
+            </div>
+        @else
+            <div class="p-8 text-center bg-slate-950/50 rounded-xl border border-dashed border-slate-800 space-y-3">
+                <div class="w-12 h-12 rounded-2xl bg-indigo-500/10 border border-indigo-500/30 flex items-center justify-center mx-auto text-indigo-400">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z"/></svg>
+                </div>
+                <h4 class="font-bold text-white text-base">Henüz Gemini AI Teşhis Raporu Oluşturulmadı</h4>
+                <p class="text-xs text-slate-400 max-w-md mx-auto">
+                    Yukarıdaki <strong>"Gemini AI Analizi Başlat"</strong> butonuna basarak bu ay en az ne kadar para gerektiğini, borç kurtarma bütçenizi ve 3 adımlı acil eylem planınızı 10 saniyede hazırlatabilirsiniz.
+                </p>
+            </div>
+        @endif
+    </div>
+
+    <!-- 🎛️ CANLI BÜTÇE ESNETME & FAİZ TASARRUFU SİMÜLATÖRÜ SLIDER'I -->
+    <div class="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 border border-indigo-500/40 rounded-2xl p-6 sm:p-8 space-y-6 shadow-2xl text-white">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-indigo-800/40 pb-4">
+            <div>
+                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-md bg-emerald-500/20 border border-emerald-400/40 text-emerald-300 text-[11px] font-black uppercase tracking-wider mb-2">
+                    🎛️ Ne Olur? (What-If) Canlı Simülatör
+                </span>
+                <h3 class="text-xl font-black text-white">Aylık Bütçe Esnetme & Faiz Tasarrufu Simülatörü</h3>
+                <p class="text-xs text-slate-300 mt-1">Ödeme bütçenizi değiştirdiğinizde kaç ay erken kurtulacağınızı ve kaç ₺ faiz tasarrufu sağlayacağınızı canlı görün</p>
+            </div>
+
+            <div class="px-4 py-2 bg-emerald-500/10 border border-emerald-500/30 rounded-xl text-left md:text-right">
+                <span class="text-[10px] text-emerald-300 font-bold uppercase block">Simüle Edilen Bütçe</span>
+                <span class="text-2xl font-black text-emerald-400">₺{{ number_format($simulatedBudget, 0, ',', '.') }}</span>
+            </div>
+        </div>
+
+        <div class="space-y-4">
+            <div class="flex items-center justify-between text-xs font-bold text-slate-300">
+                <span>Min Bütçe: ₺2.000</span>
+                <span class="text-indigo-300">Kaydırıcıyı Sürükleyin ↔</span>
+                <span>Maks Bütçe: ₺100.000</span>
+            </div>
+
+            <input type="range" 
+                   min="2000" 
+                   max="100000" 
+                   step="1000" 
+                   wire:model.live.debounce.150ms="simulatedBudget" 
+                   class="w-full h-3 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-indigo-500 hover:accent-indigo-400 transition-all">
+
+            <!-- Simülasyon Canlı Sonuç Kartları -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
+                <div class="p-4 rounded-xl bg-slate-950/80 border border-slate-800 text-center">
+                    <span class="text-[11px] text-slate-400 block font-bold uppercase">Borçsuzluk Süresi</span>
+                    <span class="text-2xl font-black text-indigo-300 mt-1 block">{{ $simulatedResult['months'] ?? 0 }} Ay</span>
+                    @if ($savedMonthsVsBase > 0)
+                        <span class="text-[11px] text-emerald-400 font-bold mt-1 inline-block">⚡ {{ $savedMonthsVsBase }} Ay Erken Özgürlük!</span>
+                    @endif
+                </div>
+
+                <div class="p-4 rounded-xl bg-slate-950/80 border border-slate-800 text-center">
+                    <span class="text-[11px] text-slate-400 block font-bold uppercase">Ekstra Ödeme Avantajı</span>
+                    <span class="text-2xl font-black text-emerald-400 mt-1 block">₺{{ number_format($savedInterestVsBase, 0, ',', '.') }}</span>
+                    <span class="text-[11px] text-emerald-300 font-bold mt-1 inline-block">Cebinizde Kalan Faiz Tasarrufu</span>
+                </div>
+
+                <div class="p-4 rounded-xl bg-slate-950/80 border border-slate-800 text-center flex flex-col justify-center items-center">
+                    <button wire:click="$set('monthlyBudget', {{ $simulatedBudget }})" 
+                            wire:click="generateNewPlan"
+                            class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-black text-xs rounded-xl shadow-md transition-all active:scale-95 cursor-pointer">
+                        ✓ Bu Bütçeyi Yeni Plan Olarak Uygula
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- 3. STRATEJİ KARŞILAŞTIRMA & EĞİTİCİ REHBER LABORATUVARI -->
     <div class="bg-white rounded-2xl border border-slate-200 shadow-2xs p-5 sm:p-6 space-y-5">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-3.5">
@@ -108,19 +203,22 @@
                     <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 18v-5.25m0 0a6.01 6.01 0 001.5-.189m-1.5.189a6.01 6.01 0 01-1.5-.189m3.75 7.478a12.06 12.06 0 01-4.5 0m3.75 2.383a14.406 14.406 0 01-3 0M14.25 18v-.192c0-.983.658-1.823 1.508-2.316a7.5 7.5 0 10-7.516 0c.85.493 1.508 1.333 1.508 2.316V18"/></svg>
                     <span>Stratejiler Nasıl Çalışır? Hangisini Seçmeliyim?</span>
                 </h3>
-                <p class="text-xs text-gray-500">Borç kapatırken kullanılan 3 altın metodun akılda kalıcı çalışma mantığı</p>
+                <p class="text-xs text-gray-500">Borç kapatırken kullanılan 3 altın metodun akılda kalıcı çalışma mantığı ve AI uyum yüzdeleri</p>
             </div>
 
             <!-- Strateji Sekmeleri (Segmented Bar) -->
-            <div class="inline-flex p-1 bg-slate-100 rounded-lg border border-slate-200/80 text-xs font-bold">
-                <button wire:click="$set('activeStrategyTab', 'avalanche')" class="px-3 py-1.5 rounded-md transition-all cursor-pointer {{ $activeStrategyTab === 'avalanche' ? 'bg-white text-slate-900 shadow-2xs border border-slate-200/60 font-black' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/40' }}">
-                    Çığ (En Kârlı)
+            <div class="inline-flex p-1 bg-slate-100 rounded-lg border border-slate-200/80 text-xs font-bold gap-1">
+                <button wire:click="$set('activeStrategyTab', 'avalanche')" class="px-3 py-1.5 rounded-md transition-all cursor-pointer flex items-center gap-1.5 {{ $activeStrategyTab === 'avalanche' ? 'bg-white text-slate-900 shadow-2xs border border-slate-200/60 font-black' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/40' }}">
+                    <span>Çığ (En Kârlı)</span>
+                    <span class="px-1.5 py-0.5 rounded bg-indigo-100 text-indigo-700 text-[10px]">%{{ $strategyScores['avalanche'] }} Uyum</span>
                 </button>
-                <button wire:click="$set('activeStrategyTab', 'snowball')" class="px-3 py-1.5 rounded-md transition-all cursor-pointer {{ $activeStrategyTab === 'snowball' ? 'bg-white text-slate-900 shadow-2xs border border-slate-200/60 font-black' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/40' }}">
-                    Kartopu (Motivasyon)
+                <button wire:click="$set('activeStrategyTab', 'snowball')" class="px-3 py-1.5 rounded-md transition-all cursor-pointer flex items-center gap-1.5 {{ $activeStrategyTab === 'snowball' ? 'bg-white text-slate-900 shadow-2xs border border-slate-200/60 font-black' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/40' }}">
+                    <span>Kartopu (Motivasyon)</span>
+                    <span class="px-1.5 py-0.5 rounded bg-amber-100 text-amber-700 text-[10px]">%{{ $strategyScores['snowball'] }} Uyum</span>
                 </button>
-                <button wire:click="$set('activeStrategyTab', 'hybrid')" class="px-3 py-1.5 rounded-md transition-all cursor-pointer {{ $activeStrategyTab === 'hybrid' ? 'bg-white text-slate-900 shadow-2xs border border-slate-200/60 font-black' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/40' }}">
-                    90 Gün Hibrit
+                <button wire:click="$set('activeStrategyTab', 'hybrid')" class="px-3 py-1.5 rounded-md transition-all cursor-pointer flex items-center gap-1.5 {{ $activeStrategyTab === 'hybrid' ? 'bg-white text-slate-900 shadow-2xs border border-slate-200/60 font-black' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/40' }}">
+                    <span>90 Gün Hibrit</span>
+                    <span class="px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-700 text-[10px]">%{{ $strategyScores['hybrid'] }} Uyum</span>
                 </button>
             </div>
         </div>

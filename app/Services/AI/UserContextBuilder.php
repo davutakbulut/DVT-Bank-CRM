@@ -91,10 +91,22 @@ class UserContextBuilder
                 ];
             })->toArray();
 
+        // Sabit Giderler
+        $fixedExpensesSum = (float) \App\Models\Expense::where('user_id', $user->id)->sum('amount');
+        $expectedIncomesSum = (float) \App\Models\ExpectedIncome::where('user_id', $user->id)->where('is_active', true)->sum('amount');
+        $totalMonthlyCommitment = (float) $riskSummary['total_monthly_commitment'];
+        $totalMonthlyIncome = $monthlyIncome + $expectedIncomesSum;
+        $netCashflow = $totalMonthlyIncome - ($fixedExpensesSum + $totalMonthlyCommitment);
+
         return [
             'aylik_gelir' => $monthlyIncome,
+            'beklenen_gelirler_toplami' => $expectedIncomesSum,
+            'toplam_aylik_gelir' => $totalMonthlyIncome,
+            'sabit_giderler_toplami' => $fixedExpensesSum,
+            'toplam_asgari_borc_odemesi' => $totalMonthlyCommitment,
+            'bu_ayki_net_nakit_acigi_veya_fazlasi' => $netCashflow,
             'toplam_borc' => (float) $riskSummary['total_remaining'],
-            'bu_ay_yukumluluk' => (float) $riskSummary['total_monthly_commitment'],
+            'bu_ay_yukumluluk' => $totalMonthlyCommitment,
             'en_yuksek_faizli' => $highestInterestDebt ?: 'Belirtilmedi',
             'yasal_takip_riski' => $legalRisks,
             'borclar' => $debtList,
