@@ -64,13 +64,13 @@
         </div>
     </div>
 
-    <!-- GELİR GERÇEKLEŞME & ONAY AKSİYON KARTI (ÜST ÜSTE İSTİFLENEN KOMPAKT KART STACK) -->
+    <!-- GELİR GERÇEKLEŞME & ONAY AKSİYON KARTI (DİKEY KAYDIRMALI NET KART DESTESİ) -->
     @if ($allExpectedIncomes->count() > 0)
-        <div x-data="{ activeIndex: 0, total: {{ $allExpectedIncomes->count() }} }" class="relative bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-5 shadow-2xl space-y-4">
-            <!-- Başlık ve Kaydırma Kontrolleri -->
+        <div class="relative bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-5 shadow-xl space-y-3">
+            <!-- Başlık ve Yönlendirme Bilgisi -->
             <div class="flex items-center justify-between border-b border-slate-800 pb-3">
-                <div class="flex items-center gap-2">
-                    <div class="w-8 h-8 rounded-xl bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center text-emerald-400 font-bold text-sm">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-8 h-8 rounded-xl bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center text-emerald-400 font-bold text-sm shrink-0">
                         💰
                     </div>
                     <div>
@@ -80,23 +80,20 @@
                                 {{ $allExpectedIncomes->count() }} Kayıt
                             </span>
                         </h3>
-                        <p class="text-[11px] text-slate-400">En yakın tarihli alacaklar sırasıyla üst üste istiflenmiştir</p>
+                        <p class="text-[11px] text-slate-400">En yakın tarihten itibaren sıralanmıştır. Aşağı kaydırarak diğer alacakları görebilirsiniz.</p>
                     </div>
                 </div>
 
                 @if ($allExpectedIncomes->count() > 1)
-                    <div class="flex items-center gap-2 text-xs font-bold text-slate-300">
-                        <span x-text="(activeIndex + 1) + ' / ' + total" class="text-[11px] font-mono text-emerald-400"></span>
-                        <div class="inline-flex rounded-lg border border-slate-700 bg-slate-800 p-0.5">
-                            <button @click="if(activeIndex > 0) activeIndex--" :disabled="activeIndex === 0" class="px-2 py-0.5 hover:bg-slate-700 rounded transition-colors disabled:opacity-30 cursor-pointer">←</button>
-                            <button @click="if(activeIndex < total - 1) activeIndex++" :disabled="activeIndex === total - 1" class="px-2 py-0.5 hover:bg-slate-700 rounded transition-colors disabled:opacity-30 cursor-pointer">→</button>
-                        </div>
+                    <div class="hidden sm:flex items-center gap-1.5 text-[11px] font-bold text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-lg border border-emerald-500/20">
+                        <svg class="w-3.5 h-3.5 text-emerald-400 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 13.5L12 21m0 0l-7.5-7.5M12 21V3"/></svg>
+                        <span>Dikey Kaydırın (↕)</span>
                     </div>
                 @endif
             </div>
 
-            <!-- Üst Üste İstiflenen Kart Alanı (Stacked Cards Deck) -->
-            <div class="relative min-h-[135px] sm:min-h-[90px] flex items-start justify-center">
+            <!-- Dikey Kaydırmalı Kart Listesi (Max 2 kart yüksekliğinde, dikeyde scroll edilir) -->
+            <div class="max-h-[280px] overflow-y-auto space-y-3 pr-1 snap-y snap-mandatory scrollbar-thin scrollbar-thumb-slate-700 scrollbar-track-slate-900">
                 @foreach ($allExpectedIncomes as $index => $ei)
                     @php
                         $isOverdue = $ei->expected_date && $ei->expected_date->format('Y-m-d') < now()->format('Y-m-d');
@@ -104,19 +101,10 @@
                         $daysLeft = $ei->expected_date ? (int) now()->startOfDay()->diffInDays($ei->expected_date->startOfDay(), false) : 0;
                     @endphp
 
-                    <div x-show="{{ $index }} >= activeIndex && {{ $index }} <= activeIndex + 2"
-                         x-transition:enter="transition ease-out duration-300"
-                         x-transition:enter-start="opacity-0 translate-y-4 scale-95"
-                         x-transition:enter-end="opacity-100 translate-y-0 scale-100"
-                         :class="{
-                            'z-30 opacity-100 scale-100 translate-y-0 border-emerald-400/80 bg-gradient-to-r from-emerald-950/90 via-slate-900 to-slate-950 shadow-xl': activeIndex === {{ $index }},
-                            'z-20 opacity-70 scale-95 translate-y-3 border-emerald-500/40 bg-slate-900/90 pointer-events-none': activeIndex + 1 === {{ $index }},
-                            'z-10 opacity-35 scale-90 translate-y-6 border-emerald-500/20 bg-slate-900/70 pointer-events-none': activeIndex + 2 === {{ $index }}
-                         }"
-                         class="absolute top-0 left-0 right-0 w-full rounded-xl border p-3 sm:p-3.5 transition-all duration-300 ease-out backdrop-blur-md flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div class="snap-start rounded-xl border p-3.5 sm:p-4 transition-all duration-200 bg-gradient-to-r from-emerald-950/40 via-slate-900 to-slate-950 border-emerald-500/30 hover:border-emerald-400/60 shadow-md flex flex-col md:flex-row md:items-center justify-between gap-3.5">
                         
-                        <div class="flex items-center gap-3">
-                            <div class="w-9 h-9 rounded-xl bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 flex items-center justify-center font-bold text-sm shrink-0">
+                        <div class="flex items-start sm:items-center gap-3">
+                            <div class="w-10 h-10 rounded-xl bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 flex items-center justify-center font-bold text-base shrink-0">
                                 @if ($isOverdue)
                                     ⚠️
                                 @elseif ($isToday)
@@ -126,7 +114,7 @@
                                 @endif
                             </div>
 
-                            <div>
+                            <div class="space-y-1">
                                 <div class="flex items-center gap-2 flex-wrap">
                                     <span class="px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-wide
                                         {{ $isOverdue ? 'bg-rose-500/20 text-rose-300 border border-rose-500/30' : ($isToday ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30' : 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30') }}">
@@ -138,29 +126,29 @@
                                             {{ $daysLeft }} GÜN SONRA
                                         @endif
                                     </span>
-                                    <span class="text-[11px] text-slate-400 font-medium">
+                                    <span class="text-xs text-slate-400 font-medium">
                                         Tarih: <strong class="text-white">{{ $ei->expected_date?->format('d.m.Y') }}</strong>
                                     </span>
                                 </div>
-                                <h4 class="text-sm font-black text-white mt-0.5">
-                                    {{ $ei->title }} — <span class="text-emerald-400 font-mono">₺{{ number_format($ei->amount, 2, ',', '.') }}</span>
+                                <h4 class="text-base font-black text-white">
+                                    {{ $ei->title }} — <span class="text-emerald-400 font-mono font-bold">₺{{ number_format($ei->amount, 2, ',', '.') }}</span>
                                 </h4>
                             </div>
                         </div>
 
-                        <!-- Aksiyon Butonları (Sadece En Üstteki Aktif Kartta Tıklanabilir) -->
-                        <div class="flex items-center gap-2 shrink-0 pt-2 sm:pt-0 border-t sm:border-t-0 border-slate-800">
-                            <button wire:click="confirmExpectedIncome({{ $ei->id }})" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-lg shadow transition-all active:scale-95 cursor-pointer flex items-center gap-1">
-                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+                        <!-- Aksiyon Butonları -->
+                        <div class="grid grid-cols-2 sm:flex items-center gap-2 shrink-0 pt-2 sm:pt-0 border-t sm:border-t-0 border-slate-800/80">
+                            <button wire:click="confirmExpectedIncome({{ $ei->id }})" class="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-500 active:scale-95 text-white font-bold text-xs rounded-xl shadow transition-all cursor-pointer flex items-center justify-center gap-1.5">
+                                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
                                 <span>Hesaba Geçti</span>
                             </button>
 
-                            <button wire:click="delayExpectedIncome({{ $ei->id }}, 3)" class="px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-amber-300 border border-amber-500/30 font-bold text-xs rounded-lg transition-all active:scale-95 cursor-pointer" title="3 Gün Ertele">
-                                ⏱️ 3G Ertele
+                            <button wire:click="delayExpectedIncome({{ $ei->id }}, 3)" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-amber-300 border border-amber-500/30 font-bold text-xs rounded-xl transition-all active:scale-95 cursor-pointer flex items-center justify-center gap-1" title="3 Gün Ertele">
+                                ⏱️ <span>3G Ertele</span>
                             </button>
 
-                            <button wire:click="cancelExpectedIncome({{ $ei->id }})" wire:confirm="Bu geliri iptal etmek istediğinize emin misiniz?" class="p-1.5 text-slate-400 hover:text-rose-400 transition-colors cursor-pointer" title="İptal Et">
-                                ✕
+                            <button wire:click="cancelExpectedIncome({{ $ei->id }})" wire:confirm="Bu geliri iptal etmek istediğinize emin misiniz?" class="col-span-2 sm:col-span-1 p-2 text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 rounded-xl transition-all cursor-pointer text-center" title="İptal Et">
+                                ✕ <span class="sm:hidden text-xs">İptal Et</span>
                             </button>
                         </div>
                     </div>
