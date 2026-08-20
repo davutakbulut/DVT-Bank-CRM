@@ -82,13 +82,6 @@
                     </p>
                 </div>
             </div>
-
-            <div class="shrink-0 flex items-center gap-2">
-                <button wire:click="generateAiAudit" class="w-full sm:w-auto px-4 py-2.5 bg-emerald-600 hover:bg-emerald-500 active:scale-95 text-white font-black text-xs sm:text-sm rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer">
-                    <svg class="w-4 h-4 text-white animate-spin" x-show="$wire.isGeneratingAi" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
-                    <span>🤖 AI Teşhis Raporu Oluştur</span>
-                </button>
-            </div>
         </div>
     </div>
     <div class="relative rounded-2xl bg-gradient-to-br from-slate-950 via-indigo-950 to-slate-900 border border-indigo-500/30 p-6 sm:p-8 text-white shadow-2xl overflow-hidden">
@@ -137,45 +130,6 @@
                 </div>
             </div>
         </div>
-    </div>
-
-    <!-- 🤖 GEMİNI AI TEŞHİS, ACİL NAKİT VE DERİNLEMESİNE FİNANSAL TEŞHİS PANELİ -->
-    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 space-y-6 shadow-2xl text-slate-100">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-4">
-            <div>
-                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-md bg-indigo-500/20 border border-indigo-500/40 text-indigo-300 text-[11px] font-black uppercase tracking-wider mb-2">
-                    🤖 Gemini AI Finansal Teşhir Motoru
-                </span>
-                <h3 class="text-xl font-black text-white flex items-center gap-2">
-                    <span>Kapsamlı Nakit Açığı & Borçsuzluk Teşhis Raporu</span>
-                </h3>
-                <p class="text-xs text-slate-400 mt-1">Tüm borç, asgari ödeme, sabit gider ve beklenen gelirlerinizin yapay zeka tarafından 360° analizi</p>
-            </div>
-            
-            <button wire:click="generateAiAudit" 
-                    wire:loading.attr="disabled"
-                    class="px-5 py-2.5 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 active:scale-95 text-white font-black text-xs sm:text-sm rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50">
-                <svg wire:loading.remove wire:target="generateAiAudit" class="w-4 h-4 text-purple-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z"/></svg>
-                <svg wire:loading wire:target="generateAiAudit" class="animate-spin w-4 h-4 text-white" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
-                <span>{{ $aiAnalysisResult ? '🔄 Analiz Raporunu Yenile' : '🤖 Gemini AI Analizi Başlat' }}</span>
-            </button>
-        </div>
-
-        @if ($aiAnalysisResult)
-            <div class="prose prose-invert max-w-none text-sm leading-relaxed space-y-4 bg-slate-950/80 p-6 rounded-xl border border-slate-800/80 shadow-inner">
-                {!! \Illuminate\Support\Str::markdown($aiAnalysisResult) !!}
-            </div>
-        @else
-            <div class="p-8 text-center bg-slate-950/50 rounded-xl border border-dashed border-slate-800 space-y-3">
-                <div class="w-12 h-12 rounded-2xl bg-indigo-500/10 border border-indigo-500/30 flex items-center justify-center mx-auto text-indigo-400">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z"/></svg>
-                </div>
-                <h4 class="font-bold text-white text-base">Henüz Gemini AI Teşhis Raporu Oluşturulmadı</h4>
-                <p class="text-xs text-slate-400 max-w-md mx-auto">
-                    Yukarıdaki <strong>"Gemini AI Analizi Başlat"</strong> butonuna basarak bu ay en az ne kadar para gerektiğini, borç kurtarma bütçenizi ve 3 adımlı acil eylem planınızı 10 saniyede hazırlatabilirsiniz.
-                </p>
-            </div>
-        @endif
     </div>
 
     <!-- 🎛️ CANLI BÜTÇE ESNETME & FAİZ TASARRUFU SİMÜLATÖRÜ SLIDER'I -->

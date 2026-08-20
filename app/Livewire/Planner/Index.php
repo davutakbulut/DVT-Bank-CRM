@@ -23,8 +23,6 @@ class Index extends Component
     public string $strategy = 'avalanche'; // avalanche (Çığ), snowball (Kartopu), hybrid (90 Gün Hibrit)
     public string $planName = 'Matematiksel Çığ Borç Kapatma Planı';
     public string $activeStrategyTab = 'avalanche'; // avalanche, snowball, hybrid
-    public ?string $aiAnalysisResult = null;
-    public bool $isGeneratingAi = false;
     public bool $showMotivationModal = false;
     public string $motivationMessage = '';
 
@@ -49,33 +47,6 @@ class Index extends Component
             
             $this->monthlyBudget = $availableNet > 500 ? $availableNet : 15000.0;
             $this->simulatedBudget = $this->monthlyBudget;
-        }
-
-        // Son oluşturulan AI analiz raporunu çek
-        $latestAdvice = AiAdvice::where('user_id', $user->id)
-            ->where('type', 'planner')
-            ->latest()
-            ->first();
-
-        if ($latestAdvice) {
-            $this->aiAnalysisResult = $latestAdvice->content;
-        }
-    }
-
-    public function generateAiAudit(): void
-    {
-        $this->isGeneratingAi = true;
-        try {
-            $user = Auth::user();
-            $aiManager = new \App\Services\AI\AiManager();
-            $advice = $aiManager->generateAdviceForUser($user, 'planner');
-
-            $this->aiAnalysisResult = $advice->content;
-            session()->flash('message', 'Gemini AI Kapsamlı Borç ve Nakit Açığı Analiz Raporunuz Hazırlandı!');
-        } catch (\Throwable $e) {
-            session()->flash('error', 'AI Analiz raporu oluşturulurken bir hata oluştu: ' . $e->getMessage());
-        } finally {
-            $this->isGeneratingAi = false;
         }
     }
 
