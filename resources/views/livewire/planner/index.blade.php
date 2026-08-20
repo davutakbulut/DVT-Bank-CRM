@@ -57,33 +57,6 @@
         </div>
     @endif
 
-    <!-- 🚀 1. AI STRATEJİ ÖNERİ VE UYUM MOTORU BANNER -->
-    <div class="relative overflow-hidden rounded-2xl bg-gradient-to-r from-indigo-950 via-slate-900 to-indigo-900 border-2 border-indigo-500/40 p-5 sm:p-6 text-white shadow-xl">
-        <div class="absolute top-0 right-0 p-4 opacity-10 pointer-events-none text-7xl font-black">🤖</div>
-        <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <div class="flex items-start gap-4">
-                <div class="w-12 h-12 rounded-2xl bg-indigo-600 text-white flex items-center justify-center font-black text-2xl shadow-lg shrink-0 animate-bounce">
-                    🤖
-                </div>
-                <div class="space-y-1">
-                    <div class="flex items-center gap-2 flex-wrap">
-                        <span class="px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 text-xs font-black uppercase tracking-wider">
-                            🤖 AI Strateji Tavsiyesi (%{{ $strategyScores['hybrid'] ?? 98 }} Uyum)
-                        </span>
-                        <span class="text-xs text-indigo-200 font-medium">Kişiselleştirilmiş Borç Analitiği</span>
-                    </div>
-                    <h3 class="text-base sm:text-lg font-black text-white">
-                        Önerilen Rota: <span class="text-emerald-400 font-extrabold">90 Gün Hibrit / Matematiksel Çığ Yöntemi</span>
-                    </h3>
-                    <p class="text-xs sm:text-sm text-slate-300 leading-relaxed max-w-3xl">
-                        Yapay zeka analizimize göre faiz oranı yüksek borçlarınıza öncelik vererek Kartopu yöntemine kıyasla tahmini 
-                        <strong class="text-emerald-300 font-black">₺{{ number_format($savedInterestVsBase, 0, ',', '.') }} daha az faiz</strong> öder 
-                        ve <strong class="text-emerald-300 font-black">{{ $savedMonthsVsBase }} ay daha erken</strong> borçsuzluğa kavuşursunuz!
-                    </p>
-                </div>
-            </div>
-        </div>
-    </div>
     <div class="relative rounded-2xl bg-gradient-to-br from-slate-950 via-indigo-950 to-slate-900 border border-indigo-500/30 p-6 sm:p-8 text-white shadow-2xl overflow-hidden">
         <div class="absolute -top-24 -right-24 w-96 h-96 bg-indigo-500/15 rounded-full blur-3xl pointer-events-none"></div>
         <div class="absolute -bottom-24 -left-24 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
@@ -268,22 +241,19 @@
                     <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 18v-5.25m0 0a6.01 6.01 0 001.5-.189m-1.5.189a6.01 6.01 0 01-1.5-.189m3.75 7.478a12.06 12.06 0 01-4.5 0m3.75 2.383a14.406 14.406 0 01-3 0M14.25 18v-.192c0-.983.658-1.823 1.508-2.316a7.5 7.5 0 10-7.516 0c.85.493 1.508 1.333 1.508 2.316V18"/></svg>
                     <span>Stratejiler Nasıl Çalışır? Hangisini Seçmeliyim?</span>
                 </h3>
-                <p class="text-xs text-gray-500">Borç kapatırken kullanılan 3 altın metodun akılda kalıcı çalışma mantığı ve AI uyum yüzdeleri</p>
+                <p class="text-xs text-gray-500">Borç kapatırken kullanılan 3 altın metodun çalışma mantığı ve karşılaştırması</p>
             </div>
 
             <!-- Strateji Sekmeleri (Segmented Bar) -->
             <div class="inline-flex p-1 bg-slate-100 rounded-lg border border-slate-200/80 text-xs font-bold gap-1">
-                <button wire:click="$set('activeStrategyTab', 'avalanche')" class="px-3 py-1.5 rounded-md transition-all cursor-pointer flex items-center gap-1.5 {{ $activeStrategyTab === 'avalanche' ? 'bg-white text-slate-900 shadow-2xs border border-slate-200/60 font-black' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/40' }}">
+                <button wire:click="$set('activeStrategyTab', 'avalanche')" class="px-3.5 py-1.5 rounded-md transition-all cursor-pointer flex items-center gap-1.5 {{ $activeStrategyTab === 'avalanche' ? 'bg-white text-slate-900 shadow-2xs border border-slate-200/60 font-black' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/40' }}">
                     <span>Çığ (En Kârlı)</span>
-                    <span class="px-1.5 py-0.5 rounded bg-indigo-100 text-indigo-700 text-[10px]">%{{ $strategyScores['avalanche'] }} Uyum</span>
                 </button>
-                <button wire:click="$set('activeStrategyTab', 'snowball')" class="px-3 py-1.5 rounded-md transition-all cursor-pointer flex items-center gap-1.5 {{ $activeStrategyTab === 'snowball' ? 'bg-white text-slate-900 shadow-2xs border border-slate-200/60 font-black' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/40' }}">
+                <button wire:click="$set('activeStrategyTab', 'snowball')" class="px-3.5 py-1.5 rounded-md transition-all cursor-pointer flex items-center gap-1.5 {{ $activeStrategyTab === 'snowball' ? 'bg-white text-slate-900 shadow-2xs border border-slate-200/60 font-black' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/40' }}">
                     <span>Kartopu (Motivasyon)</span>
-                    <span class="px-1.5 py-0.5 rounded bg-amber-100 text-amber-700 text-[10px]">%{{ $strategyScores['snowball'] }} Uyum</span>
                 </button>
-                <button wire:click="$set('activeStrategyTab', 'hybrid')" class="px-3 py-1.5 rounded-md transition-all cursor-pointer flex items-center gap-1.5 {{ $activeStrategyTab === 'hybrid' ? 'bg-white text-slate-900 shadow-2xs border border-slate-200/60 font-black' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/40' }}">
+                <button wire:click="$set('activeStrategyTab', 'hybrid')" class="px-3.5 py-1.5 rounded-md transition-all cursor-pointer flex items-center gap-1.5 {{ $activeStrategyTab === 'hybrid' ? 'bg-white text-slate-900 shadow-2xs border border-slate-200/60 font-black' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/40' }}">
                     <span>90 Gün Hibrit</span>
-                    <span class="px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-700 text-[10px]">%{{ $strategyScores['hybrid'] }} Uyum</span>
                 </button>
             </div>
         </div>

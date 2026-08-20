@@ -294,17 +294,6 @@ class Index extends Component
         $savedInterestVsBase = max(0, ($comparison[$effectiveStrategy]['total_interest'] ?? 0) - ($simulatedResult['total_interest'] ?? 0));
         $savedMonthsVsBase = max(0, ($comparison[$effectiveStrategy]['months'] ?? 12) - ($simulatedResult['months'] ?? 12));
 
-        // Strateji Uyum Skorları (% Hesabı)
-        $avgInterest = $debts->avg('interest_rate') ?? 0;
-        $hasOverdue = $debts->where('days_overdue', '>', 0)->count() > 0;
-        $hasSmallDebt = $debts->min('remaining') < 20000;
-
-        $strategyScores = [
-            'avalanche' => $avgInterest > 3.0 ? 94 : 82,
-            'hybrid' => $hasOverdue ? 98 : 88,
-            'snowball' => $hasSmallDebt ? 86 : 70,
-        ];
-
         return view('livewire.planner.index', [
             'activePlan' => $activePlan,
             'monthlyGroups' => $monthlyGroups,
@@ -313,7 +302,6 @@ class Index extends Component
             'simulatedResult' => $simulatedResult,
             'savedInterestVsBase' => $savedInterestVsBase,
             'savedMonthsVsBase' => $savedMonthsVsBase,
-            'strategyScores' => $strategyScores,
             'debts' => $debts,
             'roadmap' => $roadmap,
             'totalDebtSum' => $totalDebtSum,
