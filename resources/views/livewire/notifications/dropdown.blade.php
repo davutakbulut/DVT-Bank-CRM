@@ -52,7 +52,7 @@
         <!-- Bildirim Listesi -->
         <div class="max-h-80 overflow-y-auto divide-y divide-slate-100">
             @forelse ($notifications as $n)
-                <a href="{{ $n->action_url ?: route('notifications.index') }}" 
+                <a href="{{ $n->action_url ?: url('/app/bildirimler') }}" 
                    wire:click="markAsRead({{ $n->id }})" 
                    class="p-3.5 hover:bg-slate-50 transition-colors cursor-pointer flex items-start gap-3 {{ is_null($n->read_at) ? 'bg-indigo-50/30' : '' }}">
                     
@@ -103,7 +103,7 @@
 
         <!-- Alt Bağlantı -->
         <div class="px-4 py-2 bg-slate-50 border-t border-slate-100 text-center">
-            <a href="{{ route('notifications.index') }}" class="text-xs font-bold text-indigo-600 hover:text-indigo-800 transition-colors inline-flex items-center gap-1">
+            <a href="{{ url('/app/bildirimler') }}" class="text-xs font-bold text-indigo-600 hover:text-indigo-800 transition-colors inline-flex items-center gap-1">
                 <span>Tüm Bildirimleri Görüntüle</span>
                 <span>→</span>
             </a>

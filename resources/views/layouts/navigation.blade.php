@@ -185,7 +185,7 @@
                 @php
                     $mobileUnreadCount = Auth::user() ? \App\Models\FinancialNotification::where('user_id', Auth::id())->unread()->count() : 0;
                 @endphp
-                <a href="{{ route('notifications.index') }}" 
+                <a href="{{ url('/app/bildirimler') }}" 
                    title="Bildirimler"
                    class="relative p-2 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-all flex items-center justify-center">
                     <svg class="w-5 h-5 text-slate-600" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
@@ -299,7 +299,7 @@
                         <span>Finansal Raporlar</span>
                     </a>
 
-                    <a href="{{ route('notifications.index') }}" class="flex items-center justify-between px-3 py-2 rounded-lg text-xs font-bold transition-all {{ request()->routeIs('notifications.*') ? 'bg-indigo-50 text-indigo-700 border-l-4 border-indigo-600' : 'text-gray-700 hover:bg-gray-50 hover:text-indigo-600' }}">
+                    <a href="{{ url('/app/bildirimler') }}" class="flex items-center justify-between px-3 py-2 rounded-lg text-xs font-bold transition-all {{ request()->routeIs('notifications.*') ? 'bg-indigo-50 text-indigo-700 border-l-4 border-indigo-600' : 'text-gray-700 hover:bg-gray-50 hover:text-indigo-600' }}">
                         <span class="flex items-center gap-3">
                             <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"/></svg>
                             <span>Bildirimler</span>
